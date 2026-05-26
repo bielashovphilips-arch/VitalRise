@@ -1,0 +1,39 @@
+{
+  "orders": [
+    {
+      "id": "order_ba97afc197469701c298b7976cf7ff2d",
+      "email": "client@example.com",
+      "plan": "start",
+      "amount": 499,
+      "currency": "UAH",
+      "status": "paid",
+      "createdAt": "2026-05-18T10:30:00.853Z",
+      "paidAt": "2026-05-18T10:30:00.855Z",
+      "provider": "mock"
+    }
+  ],
+  "codes": [
+    {
+      "id": "code_8d440f7d9800c90c4c11167b10e4c764",
+      "codeHash": "c10275e3607020151ba80e38eee120ccdec432cd6586b9e7102e7571ec7c3b6d",
+      "email": "client@example.com",
+      "plan": "start",
+      "orderId": "order_ba97afc197469701c298b7976cf7ff2d",
+      "createdAt": "2026-05-18T10:30:00.855Z",
+      "expiresAt": "2026-06-17T10:30:00.855Z",
+      "redeemedAt": null
+    }
+  ],
+  "tokens": [
+    {
+      "id": "token_0f36a0241b651b956b81e64cf1e8267b",
+      "tokenHash": "707e35081e4825d700412d4970c65548e0b9f346274a8487aa94964f69256caf",
+      "email": "client@example.com",
+      "plan": "start",
+      "orderId": "order_ba97afc197469701c298b7976cf7ff2d",
+      "createdAt": "2026-05-18T10:30:00.855Z",
+      "expiresAt": "2026-06-17T10:30:00.855Z",
+      "revokedAt": null
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "vitalrise",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VitalRise static athlete dashboard and calculators.",
+  "scripts": {
+    "dev": "powershell -ExecutionPolicy Bypass -File tools/dev-server.ps1",
+    "dev:access": "node tools/access-server.js",
+    "dev:access:mock": "set ACCESS_MOCK_PAYMENTS=1&& node tools/access-server.js",
+    "check": "powershell -ExecutionPolicy Bypass -File tools/check-project.ps1"
+  }
+}
