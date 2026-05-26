@@ -1,0 +1,29 @@
+# Логи
+*.log
+
+# node modules
+node_modules/
+
+# VS Code локальные настройки
+.vscode/
+
+# Временные файлы Windows
+Thumbs.db
+Desktop.ini
+
+# Кеш
+.cache/
+.tmp/
+
+# Системные файлы
+.DS_Store
+
+# Локальные AI/служебные данные
+.vitalrise-access/
+
+# Dev output
+dist/
+build/
+
+# Env
+.env
