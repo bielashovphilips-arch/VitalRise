@@ -263,7 +263,18 @@
       function dataUrlToBlob(dataUrl, callback) {
         try {
           const arr = dataUrl.split(",");
-          const mime = arr[0].match(/:(.*?);/)[1];
+          if (arr.length < 2) {
+            console.error("Invalid dataURL format");
+            callback(null);
+            return;
+          }
+
+          let mime = "image/png";
+          const mimeMatch = arr[0].match(/:(.*?);/);
+          if (mimeMatch && mimeMatch[1]) {
+            mime = mimeMatch[1];
+          }
+
           const bstr = atob(arr[1]);
           const n = bstr.length;
           const u8arr = new Uint8Array(n);

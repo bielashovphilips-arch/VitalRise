@@ -15,9 +15,9 @@
 
   const bgImages = {
     nutrition:
-      'linear-gradient(90deg, rgba(5, 6, 8, 0.94) 0%, rgba(5, 6, 8, 0.72) 42%, rgba(5, 6, 8, 0.56) 100%), url("assets/images/nutrition-athlete.jpg") center center / cover no-repeat',
+      'linear-gradient(90deg, rgba(5, 6, 8, 0.94) 0%, rgba(5, 6, 8, 0.72) 42%, rgba(5, 6, 8, 0.56) 100%)',
     training:
-      'linear-gradient(90deg, rgba(5, 6, 8, 0.94) 0%, rgba(5, 6, 8, 0.72) 42%, rgba(5, 6, 8, 0.56) 100%), url("assets/images/training-athlete.jpg") center center / cover no-repeat'
+      'linear-gradient(90deg, rgba(5, 6, 8, 0.94) 0%, rgba(5, 6, 8, 0.72) 42%, rgba(5, 6, 8, 0.56) 100%)'
   };
 
   function setCalculatorBackground(tabName) {
