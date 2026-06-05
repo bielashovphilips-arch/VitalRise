@@ -128,21 +128,59 @@
   }
 
   function exportReportAsPDF(target, layout) {
-    if (!target || !hasResultContent(target) || !window.html2pdf) return;
+    if (!target || !hasResultContent(target)) return;
 
-    const element = document.createElement("div");
-    element.innerHTML = buildReportContent(target);
+    const source = $(target);
+    if (!source) return;
 
     const fileName = "vitalrise-" + target.replace("-result", "") + "-" + new Date().toISOString().slice(0, 10) + ".pdf";
-    const options = {
-      margin: layout === "mobile" ? 5 : 14,
-      filename: fileName,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, backgroundColor: "#fff" },
-      jsPDF: layout === "mobile" ? { format: [100, 160], orientation: "portrait" } : { format: "a4", orientation: "portrait" }
-    };
 
-    window.html2pdf().set(options).from(element).save();
+    // Якщо html2pdf доступна, використовуємо її
+    if (typeof window.html2pdf !== "undefined") {
+      try {
+        const element = source.cloneNode(true);
+        const opt = {
+          margin: layout === "mobile" ? 5 : 14,
+          filename: fileName,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, backgroundColor: "#fff" },
+          jsPDF: layout === "mobile" ? { format: [100, 160], orientation: "portrait" } : { format: "a4", orientation: "portrait" }
+        };
+        window.html2pdf().set(opt).from(element).save();
+        return;
+      } catch (error) {
+        console.error("html2pdf export failed:", error);
+      }
+    }
+
+    // Fallback: використовуємо print dialog
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("title", "VitalRise PDF");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    iframe.style.opacity = "0";
+    document.body.appendChild(iframe);
+
+    const frameWindow = iframe.contentWindow;
+    const frameDocument = iframe.contentDocument || (frameWindow && frameWindow.document);
+
+    if (frameWindow && frameDocument) {
+      frameDocument.open();
+      frameDocument.write(buildPrintDocument(target, layout));
+      frameDocument.close();
+
+      window.setTimeout(function () {
+        frameWindow.focus();
+        frameWindow.print();
+        window.setTimeout(function () {
+          if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+        }, 1500);
+      }, 250);
+    }
   }
 
   function printIsolatedReport(target, layout) {
@@ -151,15 +189,13 @@
   }
 
   function exportReportAsPNG(target) {
-    if (!target || !hasResultContent(target) || !window.html2canvas) {
-      const exportBtn = document.querySelector("[data-export-png]");
-      const originalText = exportBtn ? exportBtn.textContent : "";
-      if (exportBtn) {
-        exportBtn.textContent = t("Експорт недоступний", "Export unavailable", "Экспорт недоступен");
-        setTimeout(function () {
-          exportBtn.textContent = originalText;
-        }, 1500);
-      }
+    if (!target || !hasResultContent(target)) {
+      alert(t("Нема результату для експорту", "No result to export", "Нет результата для экспорта"));
+      return;
+    }
+
+    if (!window.html2canvas) {
+      alert(t("Бібліотека експорту не завантажилась", "Export library not loaded", "Библиотека экспорта не загружена"));
       return;
     }
 
@@ -510,5 +546,11 @@
 
   window.VitalRiseSystem = system;
 
-  document.addEventListener("DOMContentLoaded", bindPrintButtons);
+  document.addEventListener("DOMContentLoaded", function () {
+    bindPrintButtons();
+    console.log("Print module loaded. Libraries available:", {
+      html2canvas: typeof window.html2canvas !== "undefined",
+      html2pdf: typeof window.html2pdf !== "undefined"
+    });
+  });
 })();
