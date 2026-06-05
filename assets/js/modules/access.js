@@ -4,6 +4,7 @@
   const TOKEN_KEY = "vitalrise:access:token";
   const EMAIL_KEY = "vitalrise:access:email";
   const EXPIRES_KEY = "vitalrise:access:expires";
+  const NEWSLETTER_PENDING_KEY = "vitalrise:newsletter:pending";
   const tierRank = { free: 0, start: 1, pro: 2, premium: 3, admin: 4 };
 
   const plans = {
@@ -63,7 +64,9 @@
         codeFail: "Код не підійшов або вже використаний.",
         serverUnavailable: "Сервер доступу не відповідає. Запусти access server або спробуй пізніше.",
         invalidEmail: "Введи коректний email.",
-        newsletterSuccess: "Готово. Email збережено.",
+        newsletterSuccess: "Готово. Email додано до списку.",
+        newsletterSubmitting: "Відправляємо...",
+        newsletterQueued: "Готово. Email прийнято.",
         newsletterPlaceholder: "Твій email",
         admin: "Admin-доступ активний",
         current: "Поточний доступ"
@@ -86,7 +89,9 @@
         codeFail: "Code did not match or was already used.",
         serverUnavailable: "Access server is not responding. Start the access server or try later.",
         invalidEmail: "Enter a valid email.",
-        newsletterSuccess: "Done. Email saved.",
+        newsletterSuccess: "Done. Email added to the list.",
+        newsletterSubmitting: "Sending...",
+        newsletterQueued: "Done. Email received.",
         newsletterPlaceholder: "Your email",
         admin: "Admin access active",
         current: "Current access"
@@ -109,7 +114,9 @@
         codeFail: "Код не подошел или уже использован.",
         serverUnavailable: "Сервер доступа не отвечает. Запусти access server или попробуй позже.",
         invalidEmail: "Введи корректный email.",
-        newsletterSuccess: "Готово. Email сохранен.",
+        newsletterSuccess: "Готово. Email добавлен в список.",
+        newsletterSubmitting: "Отправляем...",
+        newsletterQueued: "Готово. Email принят.",
         newsletterPlaceholder: "Твой email",
         admin: "Admin-доступ активен",
         current: "Текущий доступ"
@@ -193,8 +200,12 @@
 
   function activateAdminFromUrl() {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("access") === "admin") {
+    const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname) || window.location.protocol === "file:";
+    if (isLocalPreview && params.get("access") === "admin") {
       setTier("admin");
+      params.delete("access");
+      const cleanUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
+      window.history.replaceState({}, document.title, cleanUrl);
     }
   }
 
@@ -204,11 +215,65 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload || {})
     });
-    const data = await response.json();
+    const text = await response.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch (error) {
+      data = { ok: false, error: text || "Invalid server response" };
+    }
     if (!response.ok || !data.ok) {
       throw new Error(data.error || "Request failed");
     }
     return data;
+  }
+
+  function getPendingNewsletter() {
+    try {
+      return JSON.parse(window.localStorage.getItem(NEWSLETTER_PENDING_KEY) || "[]");
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function setPendingNewsletter(items) {
+    try {
+      window.localStorage.setItem(NEWSLETTER_PENDING_KEY, JSON.stringify(items || []));
+    } catch (error) {
+      return;
+    }
+  }
+
+  function rememberPendingNewsletter(email) {
+    const items = getPendingNewsletter();
+    if (!items.some((item) => item.email === email)) {
+      items.push({ email: email, createdAt: new Date().toISOString() });
+      setPendingNewsletter(items);
+    }
+  }
+
+  async function submitNewsletterEmail(email) {
+    return postJson("/api/newsletter", {
+      email: email,
+      language: getLanguage(),
+      source: "pricing",
+      page: window.location.pathname || "index.html"
+    });
+  }
+
+  async function flushPendingNewsletter() {
+    const items = getPendingNewsletter();
+    if (!items.length) return;
+
+    const remaining = [];
+    for (const item of items) {
+      try {
+        await submitNewsletterEmail(item.email);
+      } catch (error) {
+        remaining.push(item);
+      }
+    }
+    setPendingNewsletter(remaining);
   }
 
   async function verifyStoredToken() {
@@ -320,7 +385,7 @@
     
     // Track checkout start
     if (window.VitalRiseAnalytics && typeof window.VitalRiseAnalytics.trackCheckoutStart === 'function') {
-      window.VitalRiseAnalytics.trackCheckoutStart(tier, email);
+      window.VitalRiseAnalytics.trackCheckoutStart(tier);
     }
 
     try {
@@ -456,26 +521,46 @@
     form.addEventListener("submit", async function(event) {
       event.preventDefault();
       const input = form.querySelector('input[type="email"]');
+      const button = form.querySelector('button[type="submit"]');
+      const status = document.getElementById("newsletter-status");
+      if (!input) return;
+
       const email = (input.value || "").trim().toLowerCase();
       
       if (!isValidEmail(email)) {
-        const status = document.getElementById("newsletter-status");
         if (status) status.textContent = phrase("invalidEmail");
         return;
       }
       
       // Store email for future use
       setStored(EMAIL_KEY, email);
-      
-      // Log newsletter signup
-      if (window.VitalRiseAnalytics && typeof window.VitalRiseAnalytics.trackNewsletterSignup === "function") {
-        window.VitalRiseAnalytics.trackNewsletterSignup();
+
+      let message = phrase("newsletterSuccess");
+      const originalButtonText = button ? button.textContent : "";
+      if (button) {
+        button.disabled = true;
+        button.textContent = phrase("newsletterSubmitting");
       }
-      
-      const status = document.getElementById("newsletter-status");
+      if (status) status.textContent = phrase("newsletterSubmitting");
+
+      try {
+        await submitNewsletterEmail(email);
+
+        if (window.VitalRiseAnalytics && typeof window.VitalRiseAnalytics.trackNewsletterSignup === "function") {
+          window.VitalRiseAnalytics.trackNewsletterSignup();
+        }
+      } catch (error) {
+        rememberPendingNewsletter(email);
+        message = phrase("newsletterQueued");
+      }
+
       input.value = "";
-      input.placeholder = phrase("newsletterSuccess");
-      if (status) status.textContent = phrase("newsletterSuccess");
+      input.placeholder = message;
+      if (status) status.textContent = message;
+      if (button) {
+        button.disabled = false;
+        button.textContent = originalButtonText || phrase("newsletterPlaceholder");
+      }
       setTimeout(() => {
         input.placeholder = phrase("newsletterPlaceholder");
         if (status) status.textContent = "";
@@ -489,6 +574,7 @@
     ensurePaymentModal();
     bindPricingButtons();
     bindNewsletterForm();
+    flushPendingNewsletter().catch(function () {});
     applyAccessState();
     verifyStoredToken();
 

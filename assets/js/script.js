@@ -645,8 +645,15 @@ function getMealMacroTargets(targets, mealKey) {
 }
 
 function getBuilderRowsForMeal(category, mealKey, targetValue) {
+  const activeTargets = getCurrentDayTargets();
   return nutritionModule
-    ? nutritionModule.getBuilderRowsForMeal(category, mealKey, targetValue, nutritionState.selected)
+    ? nutritionModule.getBuilderRowsForMeal(
+        category,
+        mealKey,
+        targetValue,
+        nutritionState.selected,
+        activeTargets ? activeTargets.goal : null
+      )
     : [];
 }
 
@@ -699,10 +706,25 @@ function ensureMealSelectionCategory(dayType, mealKey, category) {
 
 function setMealSelectionValue(dayType, mealKey, category, foodId, amount) {
   const categorySelections = ensureMealSelectionCategory(dayType, mealKey, category);
+  const isAlreadySelected = Object.prototype.hasOwnProperty.call(categorySelections, foodId);
 
-  if (Object.prototype.hasOwnProperty.call(categorySelections, foodId)) {
-    delete categorySelections[foodId];
-  } else {
+  Object.keys(categorySelections).forEach(function (id) {
+    delete categorySelections[id];
+  });
+
+  if (!isAlreadySelected) {
+    categorySelections[foodId] = Number(amount) || null;
+  }
+}
+
+function replaceMealSelectionValue(dayType, mealKey, category, foodId, amount) {
+  const categorySelections = ensureMealSelectionCategory(dayType, mealKey, category);
+
+  Object.keys(categorySelections).forEach(function (id) {
+    delete categorySelections[id];
+  });
+
+  if (foodId) {
     categorySelections[foodId] = Number(amount) || null;
   }
 }
@@ -1161,6 +1183,23 @@ function buildMealConstructorMarkup(targets) {
           target.dataset.id,
           target.checked
         );
+        return;
+      }
+
+      if (target.classList.contains("meal-choice-select")) {
+        const option = target.selectedOptions && target.selectedOptions.length
+          ? target.selectedOptions[0]
+          : null;
+
+        replaceMealSelectionValue(
+          target.dataset.day,
+          target.dataset.meal,
+          target.dataset.category,
+          target.value,
+          option ? option.dataset.amount : null
+        );
+
+        nutritionResult.innerHTML = buildMealConstructorMarkup(getCurrentDayTargets());
       }
     });
   }

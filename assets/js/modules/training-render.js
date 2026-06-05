@@ -34,7 +34,11 @@
       "Наступний крок": { en: "Next step", ru: "Следующий шаг" },
       "Після контрольного блоку": { en: "After the control block", ru: "После контрольного блока" },
       "Корекція": { en: "Correction", ru: "Коррекция" },
-      "Як змінювати план": { en: "How to change the plan", ru: "Как менять план" }
+      "Як змінювати план": { en: "How to change the plan", ru: "Как менять план" },
+      "Відпочинок": { en: "Rest", ru: "Отдых" },
+      "за протоколом вправи": { en: "by exercise protocol", ru: "по протоколу упражнения" },
+      "за таймером": { en: "by timer", ru: "по таймеру" },
+      "60-90 сек між колами": { en: "60-90 sec between rounds", ru: "60-90 сек между кругами" }
     };
 
     if (translated === text && fallback[text] && fallback[text][language]) {
@@ -58,12 +62,14 @@
       .map(function (exercise) {
         const exerciseName = t(exercise.name);
         const setsText = exercise.setsLabel ? t(exercise.setsLabel) : formatSets(exercise.sets);
+
         return (
           '<div class="exercise-item">' +
             '<strong>' + exerciseName + '</strong>' +
             '<div class="exercise-meta">' + setsText + '</div>' +
             '<div class="exercise-meta">' + t(exercise.reps) + '</div>' +
             '<div class="exercise-meta">' + t(exercise.weightText) + '</div>' +
+            '<div class="exercise-meta exercise-rest">' + t('Відпочинок') + ': ' + t(exercise.restText || '60-90 сек') + '</div>' +
             '<button type="button" class="atlas-inline-btn" data-exercise-name="' + escapeAttr(exercise.name) + '">' + t('Техніка') + '</button>' +
           '</div>' +
           '<div class="exercise-item" style="margin-top: -2px;">' +
@@ -77,6 +83,26 @@
       .join("");
   }
 
+  function renderOrderedExerciseGroups(exercises) {
+    const groups = [];
+    (exercises || []).forEach(function (exercise) {
+      const label = exercise.muscleGroupLabel || "";
+      const lastGroup = groups[groups.length - 1];
+      if (!lastGroup || lastGroup.label !== label) {
+        groups.push({ label: label, exercises: [exercise] });
+      } else {
+        lastGroup.exercises.push(exercise);
+      }
+    });
+
+    return groups.map(function (group) {
+      return (
+        '<div class="exercise-group-title">' + t(group.label || 'Послідовність вправ') + '</div>' +
+        '<div class="exercise-list">' + renderExercises(group.exercises) + '</div>'
+      );
+    }).join("");
+  }
+
   function renderWeekDays(days) {
     return days
       .map(function (day) {
@@ -88,19 +114,26 @@
             '</div>'
           : "";
 
-        const basicMarkup = day.basic && day.basic.length
-          ? '<div class="exercise-group-title">' + t('Базові вправи') + '</div><div class="exercise-list">' + renderExercises(day.basic) + '</div>'
+        const orderedMarkup = day.orderedExercises && day.orderedExercises.length
+          ? renderOrderedExerciseGroups(day.orderedExercises)
           : "";
 
+        const basicMarkup = !orderedMarkup && day.basic && day.basic.length
+          ? '<div class="exercise-group-title">' + t('Базові вправи') + '</div><div class="exercise-list">' + renderExercises(day.basic) + '</div>'
+          : "";
+        const accessoryMarkup = !orderedMarkup
+          ? '<div class="exercise-group-title">' + t('Допоміжні вправи') + '</div>' +
+            '<div class="exercise-list">' + renderExercises(day.accessory || []) + '</div>'
+          : "";
         return (
           '<div class="training-day-card">' +
             '<div class="training-day-header">' +
               '<h4 class="training-day-title">' + t(day.title) + '</h4>' +
               '<span class="training-day-badge">' + t(day.badge) + '</span>' +
             '</div>' +
+            orderedMarkup +
             basicMarkup +
-            '<div class="exercise-group-title">' + t('Допоміжні вправи') + '</div>' +
-            '<div class="exercise-list">' + renderExercises(day.accessory) + '</div>' +
+            accessoryMarkup +
             cardioMarkup +
           '</div>'
         );
@@ -140,6 +173,26 @@
     );
   }
 
+  function renderProgramRecommendation(recommendation) {
+    if (!recommendation) return "";
+
+    const reasonsMarkup = renderGuidanceItems(recommendation.reasons || [], "training-guidance-item");
+
+    return (
+      '<div class="training-guidance-card training-program-recommendation">' +
+        '<span>' + t('\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u043e\u0432\u0430\u043d\u0438\u0439 \u0442\u0438\u043f') + '</span>' +
+        '<h4>' + t(recommendation.appliedLabel || recommendation.recommendedLabel || '\u0423\u043d\u0456\u0432\u0435\u0440\u0441\u0430\u043b\u044c\u043d\u0430') + '</h4>' +
+        '<p class="training-guidance-note">' + t(recommendation.summary || '') + '</p>' +
+        '<div class="training-passport-grid training-program-mini-grid">' +
+          '<div class="training-passport-card"><span>' + t('\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0456\u044f') + '</span><strong>' + t(recommendation.recommendedLabel || '') + '</strong></div>' +
+          '<div class="training-passport-card"><span>' + t('\u0412\u0438\u0431\u0456\u0440') + '</span><strong>' + t(recommendation.selectedLabel || '') + '</strong></div>' +
+          '<div class="training-passport-card"><span>' + t('\u0414\u043e\u0432\u0456\u0440\u0430') + '</span><strong>' + t(recommendation.confidence || '') + '</strong></div>' +
+        '</div>' +
+        '<div class="training-guidance-list">' + reasonsMarkup + '</div>' +
+      '</div>'
+    );
+  }
+
   function renderTrainingResult(result, formatters) {
     const formatKcal = getFormatter(formatters, "formatKcal");
 
@@ -166,6 +219,7 @@
 
     const guidance = result.guidance || {};
     const coachBlocksMarkup = renderTrainingCoachBlocks(guidance.coachBlocks);
+    const programRecommendationMarkup = renderProgramRecommendation(result.programRecommendation);
     const warningMarkup = guidance.warnings && guidance.warnings.length
       ? '<div class="training-guidance-card training-guidance-warning">' +
           '<span>' + t('Контроль ризику') + '</span>' +
@@ -207,6 +261,7 @@
       '<h3 class="result-title">' + t('Структура тренувального плану на ' + result.weeks.length + ' тиж.') + '</h3>' +
       '<div class="kcal-badge">' + t('Орієнтовне спалювання за тренування: ' + formatKcal(result.caloriesBurned)) + '</div>' +
       '<p class="result-note">' + t(result.volumeNote) + '</p>' +
+      programRecommendationMarkup +
       guidanceMarkup +
       coachBlocksMarkup +
       weeksMarkup +

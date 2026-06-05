@@ -16,19 +16,48 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="assets/css/style.css?v=training-control-1" />
+  <link rel="stylesheet" href="assets/css/style.css?v=platform-modules-25" />
   
   <!-- Google Analytics 4 -->
   <script>
-    window.VITALRISE_GA_ID = "";
+    window.VITALRISE_GA_ID = "G-ZWZ69L25NR";
     window.dataLayer = window.dataLayer || [];
     function gtag(){window.dataLayer.push(arguments);}
+    function vitalRiseGaPlanValue(tier) {
+      return ({ start: 499, pro: 1499, premium: 3500 })[tier] || 0;
+    }
     window.VitalRiseAnalytics = {
-      trackTierView: function (tier) { gtag("event", "view_tier", { tier: tier }); },
-      trackCheckoutStart: function (tier, email) { gtag("event", "begin_checkout", { tier: tier, email_hash: email }); },
-      trackPurchase: function (tier, orderId) { gtag("event", "purchase", { tier: tier, order_id: orderId }); },
+      trackTierView: function (tier) {
+        gtag("event", "view_tier", {
+          tier: tier,
+          value: vitalRiseGaPlanValue(tier),
+          currency: "UAH"
+        });
+      },
+      trackCheckoutStart: function (tier) {
+        gtag("event", "begin_checkout", {
+          tier: tier,
+          value: vitalRiseGaPlanValue(tier),
+          currency: "UAH",
+          items: [{ item_id: tier, item_name: "VitalRise " + tier, price: vitalRiseGaPlanValue(tier), quantity: 1 }]
+        });
+      },
+      trackPurchase: function (tier, orderId) {
+        gtag("event", "purchase", {
+          transaction_id: orderId || ("manual-" + Date.now()),
+          tier: tier,
+          value: vitalRiseGaPlanValue(tier),
+          currency: "UAH",
+          items: [{ item_id: tier, item_name: "VitalRise " + tier, price: vitalRiseGaPlanValue(tier), quantity: 1 }]
+        });
+      },
       trackCodeRedeemed: function (tier) { gtag("event", "redeem_code", { tier: tier }); },
-      trackNewsletterSignup: function () { gtag("event", "newsletter_signup"); }
+      trackNewsletterSignup: function () {
+        gtag("event", "newsletter_signup", {
+          source: "pricing",
+          language: document.documentElement.lang || "uk"
+        });
+      }
     };
     (function () {
       var gaId = String(window.VITALRISE_GA_ID || "").trim();
@@ -50,7 +79,7 @@
   <div class="site-shell">
     <header class="site-header">
       <div class="container header-inner">
-        <a href="#" class="brand-mark" aria-label="VitalRise головна">
+        <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
           <span>VR</span>
           <strong>VitalRise</strong>
         </a>
@@ -60,11 +89,11 @@
         </button>
 
         <nav class="site-nav" aria-label="Головна навігація">
-          <a href="#labs" data-i18n="nav.labs">Аналізи</a>
-          <a href="#calculator" data-i18n="nav.calculator">Калькулятор</a>
-          <a href="#supplements" data-i18n="nav.supplements">Спортпіт</a>
+          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
+          <a href="nutrition.html" data-i18n="nav.calculator">Калькулятор</a>
+          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
           <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
-          <a href="#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
+          <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
         </nav>
 
         <div class="language-switcher" aria-label="Мова сайту">
@@ -73,13 +102,13 @@
           <button type="button" data-lang-switch="ru" aria-pressed="false">RU</button>
         </div>
 
-        <a href="#labs" class="header-cta" data-i18n="cta.startLabs">Почати з аналізів</a>
+        <a href="labs.html" class="header-cta" data-i18n="cta.startLabs">Почати з аналізів</a>
       </div>
     </header>
 
     <header class="hero">
       <div class="hero-overlay"></div>
-      <div class="container hero-content hero-command-layout">
+      <div class="container hero-content">
         <div class="hero-main">
           <div class="hero-badge reveal">VitalRise Athlete Blueprint</div>
 
@@ -112,83 +141,39 @@
           </div>
 
           <div class="hero-actions reveal">
-            <a href="#labs" class="btn btn-primary" data-i18n="cta.startLabs">Почати з аналізів</a>
+            <a href="labs.html" class="btn btn-primary" data-i18n="cta.startLabs">Почати з аналізів</a>
             <a href="#features" class="btn btn-secondary" data-i18n="cta.controlSystem">Система контролю</a>
           </div>
         </div>
 
-        <aside class="hero-command-panel reveal" aria-label="Поточний стан Athlete Command Center">
-          <div class="hero-command-head">
-            <span>Command Center</span>
-            <strong id="command-readiness">Готовність 0%</strong>
-          </div>
-
-          <div class="hero-command-grid">
-            <div class="hero-command-tile hero-command-tile-accent">
-              <span>Ціль</span>
-              <strong id="command-goal">Рекомпозиція</strong>
-            </div>
-            <div class="hero-command-tile">
-              <span>Тіло</span>
-              <strong id="command-body">Профіль не заповнений</strong>
-            </div>
-            <div class="hero-command-tile">
-              <span>Тренування</span>
-              <strong id="command-training">Середній / 3 дні</strong>
-            </div>
-            <div class="hero-command-tile">
-              <span>Раціон</span>
-              <strong id="command-calories">Після розрахунку</strong>
-            </div>
-          </div>
-
-          <div class="hero-command-focus">
-            <span>Головний фокус</span>
-            <strong id="command-focus">Створити Blueprint</strong>
-            <small id="command-labs">Аналізи: дата не вказана</small>
-          </div>
-
-          <div class="hero-command-actions">
-            <a href="#dashboard" class="btn btn-secondary">Оновити профіль</a>
-            <a href="#coach" class="btn btn-primary">Відкрити Coach</a>
-          </div>
-        </aside>
       </div>
     </header>
 
     <section class="brand-rail-section">
       <div class="container">
-        <section class="brand-rail reveal" aria-label="Популярні виробники спортпіту для порівняння">
+        <section class="brand-rail reveal" aria-label="Місця для партнерських логотипів">
           <div class="brand-rail-head">
-            <span data-i18n="brands.title">Виробники спортпіту та wellness-добавок</span>
-            <strong data-i18n="brands.text">Партнерські бренди для підбору протеїну, креатину, вітамінів і відновлення</strong>
+            <span data-i18n="brands.title">Партнерський блок</span>
+            <strong data-i18n="brands.text">Тут може бути ваш логотип: спортпіт, лабораторії, харчування, екіпірування або wellness-сервіси</strong>
           </div>
           <div class="brand-marquee">
             <div class="brand-track">
-              <div class="brand-logo brand-logo-on"><span>ON</span><strong>Optimum Nutrition</strong></div>
-              <div class="brand-logo brand-logo-mp"><span>MP</span><strong>Myprotein</strong></div>
-              <div class="brand-logo brand-logo-os"><span>OS</span><strong>OstroVit</strong></div>
-              <div class="brand-logo brand-logo-bt"><span>BT</span><strong>BioTechUSA</strong></div>
-              <div class="brand-logo brand-logo-sc"><span>SC</span><strong>Scitec Nutrition</strong></div>
-              <div class="brand-logo brand-logo-now"><span>NW</span><strong>NOW Sports</strong></div>
-              <div class="brand-logo brand-logo-sol"><span>SG</span><strong>Solgar</strong></div>
-              <div class="brand-logo brand-logo-ol"><span>OL</span><strong>Olimp</strong></div>
-              <div class="brand-logo brand-logo-dy"><span>DY</span><strong>Dymatize</strong></div>
-              <div class="brand-logo brand-logo-un"><span>UN</span><strong>Universal</strong></div>
-              <div class="brand-logo brand-logo-r1"><span>R1</span><strong>Rule 1</strong></div>
-              <div class="brand-logo brand-logo-mut"><span>MT</span><strong>Mutant</strong></div>
-              <div class="brand-logo brand-logo-on"><span>ON</span><strong>Optimum Nutrition</strong></div>
-              <div class="brand-logo brand-logo-mp"><span>MP</span><strong>Myprotein</strong></div>
-              <div class="brand-logo brand-logo-os"><span>OS</span><strong>OstroVit</strong></div>
-              <div class="brand-logo brand-logo-bt"><span>BT</span><strong>BioTechUSA</strong></div>
-              <div class="brand-logo brand-logo-sc"><span>SC</span><strong>Scitec Nutrition</strong></div>
-              <div class="brand-logo brand-logo-now"><span>NW</span><strong>NOW Sports</strong></div>
-              <div class="brand-logo brand-logo-sol"><span>SG</span><strong>Solgar</strong></div>
-              <div class="brand-logo brand-logo-ol"><span>OL</span><strong>Olimp</strong></div>
-              <div class="brand-logo brand-logo-dy"><span>DY</span><strong>Dymatize</strong></div>
-              <div class="brand-logo brand-logo-un"><span>UN</span><strong>Universal</strong></div>
-              <div class="brand-logo brand-logo-r1"><span>R1</span><strong>Rule 1</strong></div>
-              <div class="brand-logo brand-logo-mut"><span>MT</span><strong>Mutant</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>01</span><strong data-i18n="brands.slot1">Ваш логотип</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>02</span><strong data-i18n="brands.slot2">Місце партнера</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>03</span><strong data-i18n="brands.slot3">Спортпіт</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>04</span><strong data-i18n="brands.slot4">Лабораторія</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>05</span><strong data-i18n="brands.slot5">Харчування</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>06</span><strong data-i18n="brands.slot6">Wellness</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>07</span><strong data-i18n="brands.slot7">Екіпірування</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>08</span><strong data-i18n="brands.slot8">Ваш бренд</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>01</span><strong data-i18n="brands.slot1">Ваш логотип</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>02</span><strong data-i18n="brands.slot2">Місце партнера</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>03</span><strong data-i18n="brands.slot3">Спортпіт</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>04</span><strong data-i18n="brands.slot4">Лабораторія</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>05</span><strong data-i18n="brands.slot5">Харчування</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>06</span><strong data-i18n="brands.slot6">Wellness</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>07</span><strong data-i18n="brands.slot7">Екіпірування</strong></div>
+              <div class="brand-logo brand-logo-slot"><span>08</span><strong data-i18n="brands.slot8">Ваш бренд</strong></div>
             </div>
           </div>
         </section>
@@ -196,1410 +181,63 @@
     </section>
 
     <main>
-      <section id="features" class="features-section">
+      <section id="features" class="platform-section">
         <div class="container">
-          <div class="section-head reveal">
-            <span class="section-label" data-i18n="features.label">Система контролю</span>
-            <h2 data-i18n="features.title">Спочатку стан здоров’я, потім план навантаження</h2>
-            <p data-i18n="features.text">
-              VitalRise починає не з випадкової дієти, а з моніторингу стану:
-              аналізи показують ресурс, дефіцити й ризики, а вже після цього
-              підбираються харчування, тренування, спортпіт і методи відновлення.
-            </p>
-          </div>
-
-          <div class="features-grid">
-            <article class="feature-card reveal">
-              <div class="feature-icon">01</div>
-              <h3 data-i18n="features.healthTitle">Моніторинг здоров’я</h3>
-              <p data-i18n="features.healthText">
-                Феритин, вітамін D, глюкоза, ліпіди, печінка, нирки й гормональні
-                маркери допомагають не працювати наосліп і не маскувати дефіцити.
-              </p>
-            </article>
-
-            <article class="feature-card reveal">
-              <div class="feature-icon">02</div>
-              <h3 data-i18n="features.nutritionTitle">Харчування</h3>
-              <p data-i18n="features.nutritionText">
-                Калорії, білки, жири, вуглеводи, вода, сіль і конструктор
-                прийомів їжі зі стабільним раціоном та протоколом гідратації.
-              </p>
-            </article>
-
-            <article class="feature-card reveal">
-              <div class="feature-icon">03</div>
-              <h3 data-i18n="features.trainingTitle">Тренування</h3>
-              <p data-i18n="features.trainingText">
-                Програма на 4 тижні для залу або дому: базові вправи, допоміжна
-                робота, прогресія ваг і контроль об’єму.
-              </p>
-            </article>
-
-            <article class="feature-card reveal">
-              <div class="feature-icon">04</div>
-              <h3 data-i18n="features.supplementsTitle">Спортпіт</h3>
-              <p data-i18n="features.supplementsText">
-                Протеїн, креатин, омега-3, вітамін D, магній та електроліти
-                підбираються під ціль, раціон, аналізи, сон і переносимість.
-              </p>
-            </article>
-
-            <article class="feature-card reveal">
-              <div class="feature-icon">05</div>
-              <h3 data-i18n="features.recoveryTitle">Відновлення</h3>
-              <p data-i18n="features.recoveryText">
-                Масаж, сауна, банки, сон і вода подаються як частина плану:
-                коли доречно, коли варто відкласти і що контролювати після.
-              </p>
-            </article>
-
-            <article class="feature-card feature-card-accent reveal">
-              <div class="feature-icon">VR</div>
-              <h3>Athlete Blueprint</h3>
-              <p data-i18n="features.blueprintText">
-                Фінальна ціль: персональний паспорт тіла з харчуванням,
-                тренуваннями, добавками, відновленням, ризиками й наступним кроком.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="dashboard" class="dashboard-section">
-        <div class="container">
-          <div class="section-head reveal">
-            <span class="section-label">Athlete Profile</span>
-            <h2>Профіль атлета і живий dashboard</h2>
-            <p>
-              Заповни базовий профіль один раз. VitalRise підставить ці дані в
-              калькулятори й покаже короткий стан системи: ціль, тіло,
-              тренування, лабораторний контекст і головний фокус.
-            </p>
-          </div>
-
-          <div class="dashboard-layout reveal">
-            <form id="athlete-profile-form" class="profile-panel form-grid">
-              <div class="form-group">
-                <label for="profile-gender">Стать</label>
-                <select id="profile-gender" name="profile-gender">
-                  <option value="male">Чоловік</option>
-                  <option value="female">Жінка</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="profile-age">Вік</label>
-                <input type="number" id="profile-age" name="profile-age" min="12" max="90" step="1" inputmode="numeric" placeholder="28" />
-              </div>
-
-              <div class="form-group">
-                <label for="profile-height">Зріст (см)</label>
-                <input type="number" id="profile-height" name="profile-height" min="120" max="230" step="1" inputmode="numeric" placeholder="178" />
-              </div>
-
-              <div class="form-group">
-                <label for="profile-weight">Вага (кг)</label>
-                <input type="number" id="profile-weight" name="profile-weight" min="35" max="250" step="0.1" inputmode="decimal" placeholder="86" />
-              </div>
-
-              <div class="form-group">
-                <label for="profile-goal">Ціль</label>
-                <select id="profile-goal" name="profile-goal">
-                  <option value="recomp">Рекомпозиція</option>
-                  <option value="cut">Зниження жиру</option>
-                  <option value="gain">Набір м’язів</option>
-                  <option value="performance">Сила / продуктивність</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="profile-level">Рівень</label>
-                <select id="profile-level" name="profile-level">
-                  <option value="beginner">Новачок</option>
-                  <option value="intermediate" selected>Середній</option>
-                  <option value="advanced">Просунутий</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="profile-days">Тренувань/тиждень</label>
-                <select id="profile-days" name="profile-days">
-                  <option value="2">2 дні</option>
-                  <option value="3" selected>3 дні</option>
-                  <option value="4">4 дні</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="profile-pain">Обмеження</label>
-                <select id="profile-pain" name="profile-pain">
-                  <option value="none" selected>Немає болю</option>
-                  <option value="shoulder">Плече</option>
-                  <option value="elbow">Лікоть</option>
-                  <option value="knee">Коліно</option>
-                  <option value="back">Поперек</option>
-                  <option value="fatigue">Сильна втома</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="profile-labs-date">Дата останніх аналізів</label>
-                <input type="date" id="profile-labs-date" name="profile-labs-date" />
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="profile-apply">Застосувати профіль</button>
-              </div>
-            </form>
-
-            <aside class="dashboard-panel" aria-label="Поточний стан VitalRise">
-              <div class="dashboard-card dashboard-card-accent">
-                <span>Ціль</span>
-                <strong id="dashboard-goal">Рекомпозиція</strong>
-              </div>
-              <div class="dashboard-card">
-                <span>Тіло</span>
-                <strong id="dashboard-body">Профіль не заповнений</strong>
-              </div>
-              <div class="dashboard-card">
-                <span>Раціон</span>
-                <strong id="dashboard-calories">Після розрахунку</strong>
-              </div>
-              <div class="dashboard-card">
-                <span>Тренування</span>
-                <strong id="dashboard-training">Середній / 3 дні</strong>
-              </div>
-              <div class="dashboard-card">
-                <span>Аналізи</span>
-                <strong id="dashboard-labs">Дата не вказана</strong>
-              </div>
-              <div class="dashboard-card dashboard-card-accent">
-                <span>Фокус</span>
-                <strong id="dashboard-focus">Створити Blueprint</strong>
-              </div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section id="calculator" class="calculator-section">
-        <div class="calculator-bg"></div>
-        <div class="calculator-gradient"></div>
-
-        <div class="container calculator-wrap">
-          <div class="calculator-intro reveal">
-            <span class="section-label">Athlete Blueprint</span>
-            <h2>Обери напрям і отримай протокол дій</h2>
-            <p>
-              Після базового моніторингу здоров’я калькулятор переводить дані
-              в практику: формує харчування і тренування, а далі підключає
-              спортпіт, відновлення, прогрес і фінальний Blueprint.
-            </p>
-          </div>
-
-          <div class="blueprint-rail reveal" aria-label="Рівні контролю VitalRise">
-            <div class="blueprint-step active">
-              <span>01</span>
-              <strong>Тіло</strong>
-              <small>вага, ціль, активність</small>
-            </div>
-            <div class="blueprint-step active">
-              <span>02</span>
-              <strong>Раціон</strong>
-              <small>калорії, БЖВ, вода</small>
-            </div>
-            <div class="blueprint-step">
-              <span>03</span>
-              <strong>Навантаження</strong>
-              <small>план, прогресія, об’єм</small>
-            </div>
-            <div class="blueprint-step">
-              <span>04</span>
-              <strong>Контроль</strong>
-              <small>спортпіт, аналізи, прогрес</small>
+          <div class="platform-shell reveal">
+            <div class="platform-copy">
+              <span class="section-label">VitalRise Platform</span>
+              <h2>Що дає VitalRise</h2>
             </div>
           </div>
 
-          <div class="calculator-card reveal">
-            <aside class="calculator-console" aria-label="Поточний стан калькулятора">
-              <div class="console-topline">
-                <span class="console-kicker">VitalRise Performance Lab</span>
-                <span class="console-live">Live</span>
+          <div class="module-grid reveal" aria-label="Модулі VitalRise">
+            <a class="module-card module-card-primary" href="nutrition.html" aria-label="Відкрити модуль Харчування">
+              <div class="module-card-head">
+                <strong class="module-card-title">Харчування</strong>
               </div>
+              <div class="module-card-meta">Меню / БЖВ / заміни</div>
+              <i class="module-card-arrow" aria-hidden="true">→</i>
+            </a>
 
-              <div class="console-score-card">
-                <span class="console-score-label">Protocol readiness</span>
-                <strong id="calculator-readiness-score">0%</strong>
-                <small id="calculator-readiness-value">0/3 дані</small>
+            <a class="module-card" href="training.html" aria-label="Відкрити модуль Тренування">
+              <div class="module-card-head">
+                <strong class="module-card-title">Тренування</strong>
               </div>
+              <div class="module-card-meta">PPL / сила / об’єм</div>
+              <i class="module-card-arrow" aria-hidden="true">→</i>
+            </a>
 
-              <h3>Командний центр атлета</h3>
-              <p id="calculator-coach-note">
-                Заповни ключові дані, щоб активувати персональний протокол.
-              </p>
-
-              <div class="console-status-grid">
-                <div class="console-status console-status-wide">
-                  <span>Модуль</span>
-                  <strong id="calculator-mode-label">Харчування</strong>
-                </div>
-                <div class="console-status">
-                  <span>Фокус</span>
-                  <strong id="calculator-focus-value">Рекомпозиція</strong>
-                </div>
-                <div class="console-status">
-                  <span>Контекст</span>
-                  <strong id="calculator-context-value">4 прийоми</strong>
-                </div>
+            <a class="module-card" href="progress.html" aria-label="Відкрити модуль Прогрес">
+              <div class="module-card-head">
+                <strong class="module-card-title">Прогрес</strong>
               </div>
+              <div class="module-card-meta">Check-in / 14 днів</div>
+              <i class="module-card-arrow" aria-hidden="true">→</i>
+            </a>
 
-              <div class="console-track" aria-hidden="true">
-                <span class="active"></span>
-                <span></span>
-                <span></span>
-                <span></span>
+            <a class="module-card" href="labs.html" aria-label="Відкрити модуль Аналізи">
+              <div class="module-card-head">
+                <strong class="module-card-title">Аналізи</strong>
               </div>
-            </aside>
+              <div class="module-card-meta">Маркери / ризики</div>
+              <i class="module-card-arrow" aria-hidden="true">→</i>
+            </a>
 
-            <div class="calculator-main">
-              <div class="calculator-tabs">
-                <button class="tab-btn active" type="button" data-tab="nutrition">
-                  <span>01</span>
-                  Харчування
-                </button>
-                <button class="tab-btn" type="button" data-tab="training">
-                  <span>02</span>
-                  Тренування
-                </button>
+            <a class="module-card" href="supplements.html" aria-label="Відкрити модуль Добавки">
+              <div class="module-card-head">
+                <strong class="module-card-title">Добавки</strong>
               </div>
+              <div class="module-card-meta">Спортпіт / ШКТ</div>
+              <i class="module-card-arrow" aria-hidden="true">→</i>
+            </a>
 
-            <div class="tab-panel active" id="nutrition-panel">
-              <div class="panel-head">
-                <span class="panel-chip">Nutrition Engine</span>
-                <h3>Розрахунок харчування</h3>
-                <p>
-                  Розрахуй добову калорійність, макронутрієнти, воду та сіль
-                  відповідно до своєї цілі.
-                </p>
+            <a class="module-card" href="recovery.html" aria-label="Відкрити модуль Відновлення">
+              <div class="module-card-head">
+                <strong class="module-card-title">Відновлення</strong>
               </div>
-
-              <form id="nutrition-form" class="form-grid">
-  <div class="form-group">
-    <label for="gender">Стать</label>
-    <select id="gender" name="gender">
-      <option value="male">Чоловік</option>
-      <option value="female">Жінка</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="age">Вік</label>
-    <input type="number" id="age" name="age" min="12" max="90" step="1" inputmode="numeric" placeholder="Наприклад: 28" required />
-  </div>
-
-  <div class="form-group">
-    <label for="height">Зріст (см)</label>
-    <input type="number" id="height" name="height" min="120" max="230" step="1" inputmode="numeric" placeholder="Наприклад: 178" required />
-  </div>
-
-  <div class="form-group">
-    <label for="weight">Вага (кг)</label>
-    <input type="number" id="weight" name="weight" min="35" max="250" step="0.1" inputmode="decimal" placeholder="Наприклад: 86" required />
-  </div>
-
-  <div class="form-group">
-    <label for="activity" data-i18n="activity">Рівень активності</label>
-    <select id="activity" name="activity">
-      <option value="1.2" data-i18n="lowActivity">Низька: до 5 000 кроків/день, без тренувань</option>
-      <option value="1.375" data-i18n="moderateActivity">Помірна: 5 000-8 000 кроків або 2-3 легкі тренування/тиждень</option>
-      <option value="1.55" data-i18n="mediumActivity">Середня: 8 000-12 000 кроків і 3-4 тренування/тиждень</option>
-      <option value="1.725" data-i18n="highActivity">Висока: 12 000+ кроків або 4-5 інтенсивних тренувань/тиждень</option>
-      <option value="1.9" data-i18n="veryHighActivity">Дуже висока: фізична робота і 5+ важких тренувань/тиждень</option>
-    </select>
-    <small class="field-hint" data-i18n="activityHint">Якщо сумніваєшся між двома рівнями, для схуднення обирай нижчий.</small>
-  </div>
-
-  <div class="form-group">
-    <label for="goal" data-i18n="goal">Ціль</label>
-    <select id="goal" name="goal">
-      <option value="recomp" selected data-i18n="recomp">Рекомпозиція тіла</option>
-      <option value="cut" data-i18n="weightLoss">Зниження ваги</option>
-      <option value="maintain" data-i18n="maintain">Підтримка форми</option>
-      <option value="gain" data-i18n="massGain">Набір маси</option>
-    </select>
-    <small class="field-hint" data-i18n="goalHint">Рекомпозиція: вага може змінюватися повільно, мета — менше жиру і збереження/набір м’язів. Зниження ваги: головна мета — мінус на вагах через дефіцит калорій із контролем сили й самопочуття.</small>
-  </div>
-
-  <div class="form-group">
-    <label for="nutrition-profile">Рівень підготовки</label>
-    <select id="nutrition-profile" name="nutrition-profile">
-      <option value="start">Починаю</option>
-      <option value="fitness" selected>Регулярно</option>
-      <option value="athlete">Атлет</option>
-      <option value="advanced">Просунутий</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-  <label for="program-phase">Етап програми</label>
-  <select id="program-phase" name="program-phase">
-    <option value="adaptation" selected>Перші 4 тижні (адаптація)</option>
-    <option value="progression">Після 4 тижнів (продовження)</option>
-  </select>
-</div>
-
-<div class="form-group" id="progress-week-group" style="display: none;">
-  <label for="progress-week">Тиждень прогресії</label>
-  <select id="progress-week" name="progress-week">
-    <option value="1" selected>1 тиждень</option>
-    <option value="2">2 тиждень</option>
-    <option value="3">3 тиждень</option>
-    <option value="4">4 тиждень</option>
-  </select>
-</div>
-
-  <div class="form-group load-context-group">
-    <label for="load-context" data-i18n="nutrition.loadContext">Контекст навантаження</label>
-    <select id="load-context" name="load-context">
-      <option value="standard" selected data-i18n="nutrition.loadStandard">Стабільний день</option>
-      <option value="heavy" data-i18n="nutrition.loadHeavy">Перед важкою сесією</option>
-      <option value="heat" data-i18n="nutrition.loadHeat">Підвищене потовиділення</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="meals-count">Прийомів їжі</label>
-    <select id="meals-count" name="meals-count">
-      <option value="3">3 прийоми</option>
-      <option value="4" selected>4 прийоми</option>
-      <option value="5">5 прийомів</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="diet-style">Стиль харчування</label>
-    <select id="diet-style" name="diet-style">
-      <option value="standard" selected>Звичайний</option>
-      <option value="simple">Простий</option>
-      <option value="sport">Спортивний</option>
-    </select>
-  </div>
-
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary">Розрахувати</button>
-    <button type="button" class="btn btn-secondary" id="nutrition-reset">
-      Очистити
-    </button>
-  </div>
-</form>
-
-              <div id="nutrition-result" class="result-box" aria-live="polite">
-  <div class="result-placeholder">
-    Заповни поля та натисни «Розрахувати», щоб перейти до формування раціону.
-  </div>
-  </div>
-  <div class="result-export-actions" data-plan-required="start">
-    <button type="button" class="btn btn-secondary" data-print-target="nutrition-result">
-      Відкрити звіт
-    </button>
-  </div>
-  </div>
-
-
-            <div class="tab-panel" id="training-panel">
-              <div class="panel-head">
-                <span class="panel-chip">Training Engine</span>
-                <h3>Розрахунок тренувань</h3>
-                <p>
-                  Обери формат тренувань, ціль та рівень підготовки. Калькулятор
-                  сформує структуру плану і покаже орієнтовну витрату калорій.
-                </p>
-              </div>
-
-              <div class="exercise-atlas-launch">
-                <button type="button" class="atlas-open-btn" id="exercise-atlas-open">Атлас вправ</button>
-              </div>
-
-              <form id="training-form" class="form-grid">
-                <div class="form-group">
-                  <label for="training-place">Формат</label>
-                  <select id="training-place" name="training-place">
-                    <option value="gym">Зал</option>
-                    <option value="home">Дім</option>
-                    <option value="outdoor">Вулиця</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="training-level">Рівень</label>
-                  <select id="training-level" name="training-level">
-                    <option value="beginner">Новачок</option>
-                    <option value="intermediate">Середній</option>
-                    <option value="advanced">Просунутий</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="training-goal">Ціль</label>
-                  <select id="training-goal" name="training-goal">
-                    <option value="strength">Сила</option>
-                    <option value="mass">Маса</option>
-                    <option value="endurance">Силова витривалість</option>
-                    <option value="fatloss">Жироспалення</option>
-                    <option value="support">Підтримка форми</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="training-program-mode">Тип програми</label>
-                  <select id="training-program-mode" name="training-program-mode">
-                    <option value="neutral" selected>Універсальна</option>
-                    <option value="prison_workout">Вулична сила / драбинки</option>
-                    <option value="tabata_circuit">Інтервали 1:1 / кругове</option>
-                    <option value="female_balanced">Жіноча збалансована</option>
-                    <option value="female_glutes">Жіноча: сідниці та ноги</option>
-                    <option value="female_strength">Жіноча силова</option>
-                    <option value="female_fatloss">Жіноча для зниження жиру</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="cycle-phase">Фаза циклу</label>
-                  <select id="cycle-phase" name="cycle-phase">
-                    <option value="none" selected>Не враховувати</option>
-                    <option value="menstruation">Менструація</option>
-                    <option value="follicular">Після менструації</option>
-                    <option value="ovulation">Середина циклу</option>
-                    <option value="luteal">Передменструальний період</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="training-days">Днів на тиждень</label>
-                  <select id="training-days" name="training-days">
-                    <option value="2">2 дні</option>
-                    <option value="3" selected>3 дні</option>
-                    <option value="4">4 дні</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="body-weight">Вага тіла (кг)</label>
-                  <input type="number" id="body-weight" name="body-weight" min="35" max="250" step="0.1" inputmode="decimal" placeholder="Наприклад: 90" required />
-                </div>
-
-                <div class="form-group">
-                  <label for="duration">Тривалість (хв)</label>
-                  <input type="number" id="duration" name="duration" min="20" max="180" step="5" inputmode="numeric" placeholder="Наприклад: 75" required />
-                </div>
-
-                <div class="form-group">
-                  <label for="pullups-max">Макс. підтягувань</label>
-                  <input type="number" id="pullups-max" name="pullups-max" min="0" max="80" step="1" inputmode="numeric" placeholder="Наприклад: 8" />
-                </div>
-
-                <div class="form-group">
-                  <label for="dips-max">Макс. брусів</label>
-                  <input type="number" id="dips-max" name="dips-max" min="0" max="100" step="1" inputmode="numeric" placeholder="Наприклад: 25" />
-                </div>
-
-                <div class="form-group">
-                  <label for="pushups-max">Макс. віджимань</label>
-                  <input type="number" id="pushups-max" name="pushups-max" min="0" max="200" step="1" inputmode="numeric" placeholder="Наприклад: 40" />
-                </div>
-
-                <div class="form-group">
-                  <label for="training-equipment">Інвентар</label>
-                  <select id="training-equipment" name="training-equipment">
-                    <option value="minimal">Тільки база</option>
-                    <option value="bands">Резина</option>
-                    <option value="backpack">Рюкзак</option>
-                    <option value="bands_backpack" selected>Резина + рюкзак</option>
-                    <option value="dumbbells">Гантелі / інше</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="pain-status">Обмеження</label>
-                  <select id="pain-status" name="pain-status">
-                    <option value="none" selected>Немає болю</option>
-                    <option value="shoulder">Плече</option>
-                    <option value="elbow">Лікоть</option>
-                    <option value="knee">Коліно</option>
-                    <option value="back">Поперек</option>
-                    <option value="fatigue">Сильна втома</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="bench-1rm">1ПМ жим (кг)</label>
-                  <input type="number" id="bench-1rm" name="bench-1rm" min="20" max="400" step="2.5" inputmode="decimal" placeholder="Необов’язково" />
-                </div>
-
-                <div class="form-group">
-                  <label for="squat-1rm">1ПМ присід (кг)</label>
-                  <input type="number" id="squat-1rm" name="squat-1rm" min="20" max="500" step="2.5" inputmode="decimal" placeholder="Необов’язково" />
-                </div>
-
-                <div class="form-group">
-                  <label for="deadlift-1rm">1ПМ тяга (кг)</label>
-                  <input type="number" id="deadlift-1rm" name="deadlift-1rm" min="20" max="550" step="2.5" inputmode="decimal" placeholder="Необов’язково" />
-                </div>
-
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary">Сформувати план</button>
-                  <button type="button" class="btn btn-secondary" id="training-reset">
-                    Очистити
-                  </button>
-                </div>
-              </form>
-
-              <div id="training-result" class="result-box" aria-live="polite">
-                <div class="result-placeholder">
-                  Обери параметри тренування та натисни «Сформувати план».
-                </div>
-              </div>
-              <div class="result-export-actions">
-                <button type="button" class="btn btn-secondary" data-print-target="training-result">
-                  Відкрити звіт
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
-      </section>
-
-      <section id="supplements" class="supplements-section">
-        <div class="container">
-          <div class="section-head reveal">
-            <span class="section-label">Спортпіт</span>
-            <h2>Добавки тільки там, де вони мають сенс</h2>
-            <p>
-              Модуль спортпіту не продає баночки. Він пояснює, що може бути
-              доречним для спортсмена, що контролювати і коли краще не
-              експериментувати без консультації фахівця.
-            </p>
-          </div>
-
-          <div class="supplement-grid">
-            <article class="supplement-card reveal">
-              <span class="supplement-index">01</span>
-              <h3>Протеїн за типом</h3>
-              <p>Яловичий, казеїн або гідролізат підбираються за переносимістю, часом прийому і бюджетом.</p>
-              <div class="supplement-meta">Контроль: білок, ШКТ, молочні продукти</div>
-            </article>
-
-            <article class="supplement-card reveal">
-              <span class="supplement-index">02</span>
-              <h3>Креатин</h3>
-              <p>Базова добавка для силової роботи, об’єму тренувань і повторюваної потужності.</p>
-              <div class="supplement-meta">Контроль: вода, вага, ниркові маркери за потреби</div>
-            </article>
-
-            <article class="supplement-card reveal">
-              <span class="supplement-index">03</span>
-              <h3>Омега-3</h3>
-              <p>Має сенс, якщо в раціоні мало жирної риби та якісних джерел жирів.</p>
-              <div class="supplement-meta">Контроль: раціон, ліпідограма</div>
-            </article>
-
-            <article class="supplement-card reveal">
-              <span class="supplement-index">04</span>
-              <h3>Вітамін D</h3>
-              <p>Не вгадується “на око”: найкраще працює через лабораторний контроль.</p>
-              <div class="supplement-meta">Контроль: 25(OH)D, рекомендація лікаря</div>
-            </article>
-
-            <article class="supplement-card reveal">
-              <span class="supplement-index">05</span>
-              <h3>Форми магнію</h3>
-              <p>Гліцинат, цитрат, малат або треонат мають різні задачі: сон, травлення, втома або фокус.</p>
-              <div class="supplement-meta">Контроль: ШКТ, сон, нирки, ліки</div>
-            </article>
-
-            <article class="supplement-card reveal">
-              <span class="supplement-index">06</span>
-              <h3>Підтримка тестостерону</h3>
-              <p>Для чоловіків: цинк, вітамін D3, магній, ашваганда і тонгкат Алі мають сенс тільки під дефіцити, стрес, сон і аналізи.</p>
-              <div class="supplement-meta">Контроль: сон, стрес, 25(OH)D, цинк, ранковий тестостерон</div>
-            </article>
-
-            <article class="supplement-card supplement-card-accent reveal">
-              <span class="supplement-index">VR</span>
-              <h3>Фільтр зайвого</h3>
-              <p>Гейнери, жироспалювачі й предтрени мають проходити перевірку ціллю, тиском, сном і раціоном.</p>
-              <div class="supplement-meta">Принцип: спочатку база, потім добавки</div>
-            </article>
-          </div>
-
-          <div class="supplement-protocol reveal">
-            <div class="protocol-head">
-              <span class="section-label">Протокол спортпіту</span>
-              <h3>Зібрати базовий стек</h3>
-              <p>
-                Це не медичне призначення, а спортивна навігація: що може бути
-                доречним, що краще перевірити аналізами і що не варто додавати
-                поверх слабкої бази.
-              </p>
-            </div>
-
-            <form id="supplement-form" class="form-grid">
-              <div class="form-group">
-                <label for="supplement-goal">Ціль</label>
-                <select id="supplement-goal" name="supplement-goal">
-                  <option value="strength">Сила / продуктивність</option>
-                  <option value="mass">Набір м’язів</option>
-                  <option value="fatloss">Жироспалення</option>
-                  <option value="health">Здоров’я / відновлення</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="supplement-level">Рівень</label>
-                <select id="supplement-level" name="supplement-level">
-                  <option value="beginner">Початковий</option>
-                  <option value="intermediate" selected>Середній</option>
-                  <option value="advanced">Просунутий</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="protein-coverage">Білок з їжі</label>
-                <select id="protein-coverage" name="protein-coverage">
-                  <option value="low">Часто не добираю</option>
-                  <option value="ok">Майже добираю</option>
-                  <option value="high">Добираю стабільно</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="fish-intake">Жирна риба</label>
-                <select id="fish-intake" name="fish-intake">
-                  <option value="rare">Рідко</option>
-                  <option value="weekly">1-2 рази на тиждень</option>
-                  <option value="often">3+ рази на тиждень</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="vitamin-d-status">Вітамін D за аналізом</label>
-                <select id="vitamin-d-status" name="vitamin-d-status">
-                  <option value="unknown">Не знаю</option>
-                  <option value="low">Низький</option>
-                  <option value="ok">У нормі</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="sleep-quality">Сон / відновлення</label>
-                <select id="sleep-quality" name="sleep-quality">
-                  <option value="poor">Часто погано</option>
-                  <option value="medium">Нестабільно</option>
-                  <option value="good">Добре</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="brain-focus">Мозок / фокус</label>
-                <select id="brain-focus" name="brain-focus">
-                  <option value="none">Не пріоритет</option>
-                  <option value="focus">Фокус і концентрація</option>
-                  <option value="memory">Пам’ять / навчання</option>
-                  <option value="stress">Стрес / напруга</option>
-                  <option value="fatigue">Ментальна втома</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="stimulant-tolerance">Кофеїн / предтрен</label>
-                <select id="stimulant-tolerance" name="stimulant-tolerance">
-                  <option value="sensitive">Погано переношу</option>
-                  <option value="normal">Переношу нормально</option>
-                  <option value="avoid">Не хочу стимулятори</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="male-hormone-support">Чоловіча гормональна підтримка</label>
-                <select id="male-hormone-support" name="male-hormone-support">
-                  <option value="none">Не пріоритет</option>
-                  <option value="stress">Стрес / сон / відновлення</option>
-                  <option value="performance">Сила / набір м'язів</option>
-                  <option value="low-labs">Є низькі ранкові аналізи</option>
-                </select>
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Сформувати стек</button>
-                <button type="button" class="btn btn-secondary" id="supplement-reset">
-                  Очистити
-                </button>
-              </div>
-            </form>
-
-            <div id="supplement-result" class="supplement-result" aria-live="polite">
-              <div class="result-placeholder">
-                Обери параметри, щоб отримати базовий протокол спортпіту.
-              </div>
-            </div>
-            <div class="result-export-actions">
-              <button type="button" class="btn btn-secondary" data-print-target="supplement-result">
-                Відкрити звіт
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="recovery" class="recovery-section">
-        <div class="container">
-          <div class="section-head reveal">
-            <span class="section-label" data-i18n="recovery.label">Відновлення</span>
-            <h2 data-i18n="recovery.title">Методи відновлення, які доповнюють план, а не замінюють його</h2>
-            <p data-i18n="recovery.text">
-              Відновлення потрібне новачку так само, як харчування і тренування:
-              воно впливає на сон, біль, тонус м’язів, готовність до навантаження
-              і ризик перевтоми. VitalRise пояснює, коли метод доречний, а коли
-              краще спочатку знизити навантаження або порадитись із фахівцем.
-            </p>
-          </div>
-
-          <div class="recovery-grid">
-            <article class="recovery-card reveal">
-              <span class="recovery-index">01</span>
-              <h3 data-i18n="recovery.massageTitle">Масаж</h3>
-              <p data-i18n="recovery.massageText">
-                Підходить після важких циклів, при відчутті “забитості”, стресі
-                і порушенні розслаблення. Не варто робити глибокий масаж одразу
-                перед силовим тренуванням або при гострому болю.
-              </p>
-              <div class="recovery-meta" data-i18n="recovery.massageMeta">
-                Види: спортивний, міофасціальний, лімфодренажний, релакс. Частота: 1 раз на 1-2 тижні або точково після пікових навантажень.
-              </div>
-            </article>
-
-            <article class="recovery-card reveal">
-              <span class="recovery-index">02</span>
-              <h3 data-i18n="recovery.saunaTitle">Сауна</h3>
-              <p data-i18n="recovery.saunaText">
-                Починай поступово: перший захід 50-60°C приблизно 5 хв, далі підвищуй температуру і час за самопочуттям.
-                Це дає тілу адаптуватися до тепла, розігріває шкіру, відкриває пори, посилює потовиділення і знижує різкий стрес для серця та тиску.
-              </p>
-              <div class="recovery-meta" data-i18n="recovery.saunaMeta">
-                Орієнтир: 1-3 заходи, без гонитви за максимальною температурою. Вода: 500-1000 мл, при сильному потовиділенні електроліти.
-              </div>
-            </article>
-
-            <article class="recovery-card reveal">
-              <span class="recovery-index">03</span>
-              <h3 data-i18n="recovery.cupsTitle">Банки</h3>
-              <p data-i18n="recovery.cupsText">
-                Можуть використовуватись для локального тонусу і відчуття
-                розслаблення тканин, але це не лікування травм і не заміна
-                діагностики. Після процедури не плануй рекордні навантаження.
-              </p>
-              <div class="recovery-meta" data-i18n="recovery.cupsMeta">
-                Коли: локальна скутість, відчуття перенапруги. Обережно: синці, варикоз, проблеми зі згортанням крові, подразнення шкіри.
-              </div>
-            </article>
-
-            <article class="recovery-card recovery-card-accent reveal">
-              <span class="recovery-index">VR</span>
-              <h3 data-i18n="recovery.readinessTitle">Контроль готовності</h3>
-              <p data-i18n="recovery.readinessText">
-                Якщо сон погіршився, пульс у спокої зріс, мотивація впала, а біль
-                тримається кілька днів, відновлення починається не з процедури,
-                а з корекції навантаження, калорій, води і сну.
-              </p>
-              <div class="recovery-meta" data-i18n="recovery.readinessMeta">
-                Правило: метод відновлення має покращувати наступний тиждень тренувань, а не приховувати перевтому.
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="labs" class="labs-section" data-plan-required="pro">
-        <div class="container">
-          <div class="section-head reveal">
-            <span class="section-label">Лабораторія</span>
-            <h2>Перший крок: зрозуміти стан організму</h2>
-            <p>
-              Рекомпозиція тіла залежить не тільки від калорій і тренувань.
-              Якщо вага, сила, сон, цикл, лібідо або відновлення “стоять”,
-              лабораторні маркери допомагають побачити, що варто обговорити
-              з лікарем або спортивним фахівцем. Тому аналізи стоять на початку:
-              вони допомагають не будувати план поверх дефіцитів, перевтоми або
-              прихованих обмежень.
-            </p>
-          </div>
-
-          <div class="labs-grid">
-            <article class="lab-card reveal">
-              <span class="lab-index">01</span>
-              <h3>База атлета</h3>
-              <p>ЗАК, феритин, B12, фолат, вітамін D, CRP і електроліти дають картину ресурсу та відновлення.</p>
-            </article>
-
-            <article class="lab-card reveal">
-              <span class="lab-index">02</span>
-              <h3>Метаболізм</h3>
-              <p>Глюкоза, інсулін, HbA1c і ліпідограма важливі для енергії, апетиту та довгої роботи на форму.</p>
-            </article>
-
-            <article class="lab-card reveal">
-              <span class="lab-index">03</span>
-              <h3>Печінка і нирки</h3>
-              <p>ALT, AST, GGT, білірубін, креатинін, сечовина й eGFR особливо важливі при високому білку та добавках.</p>
-            </article>
-
-            <article class="lab-card lab-card-accent reveal">
-              <span class="lab-index">04</span>
-              <h3>Гормони</h3>
-              <p>Тестостерон, естрадіол, SHBG, LH, FSH, пролактин і щитоподібна залоза оцінюються окремо для чоловіків і жінок.</p>
-            </article>
-          </div>
-
-          <div class="lab-protocol reveal">
-            <div class="protocol-head">
-              <span class="section-label">Bloodwork Protocol</span>
-              <h3>Підібрати панель аналізів</h3>
-              <p>
-                Обери стать і контекст. VitalRise сформує список маркерів,
-                які корисно обговорити з лікарем для рекомпозиції тіла,
-                продуктивності й відновлення.
-              </p>
-            </div>
-
-            <form id="lab-form" class="form-grid">
-              <div class="form-group">
-                <label for="lab-sex">Стать</label>
-                <select id="lab-sex" name="lab-sex">
-                  <option value="male">Чоловік</option>
-                  <option value="female">Жінка</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="lab-goal">Контекст</label>
-                <select id="lab-goal" name="lab-goal">
-                  <option value="recomp">Рекомпозиція тіла</option>
-                  <option value="plateau">Плато у вазі / силі</option>
-                  <option value="fatigue">Втома / погане відновлення</option>
-                  <option value="hormones">Підозра на гормональний дисбаланс</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="lab-training-load">Навантаження</label>
-                <select id="lab-training-load" name="lab-training-load">
-                  <option value="moderate">3-4 тренування на тиждень</option>
-                  <option value="high">5+ тренувань або висока інтенсивність</option>
-                  <option value="cut">Дефіцит калорій / сушка</option>
-                </select>
-              </div>
-
-              <div class="form-group" id="lab-cycle-group">
-                <label for="lab-cycle">Жіночий цикл / гормональний контекст</label>
-                <select id="lab-cycle" name="lab-cycle">
-                  <option value="not_applicable">Не актуально</option>
-                  <option value="regular">Регулярний цикл</option>
-                  <option value="irregular">Нерегулярний цикл</option>
-                  <option value="contraception">Гормональна контрацепція</option>
-                  <option value="postpartum">Після пологів / лактація</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="lab-symptoms">Симптоми</label>
-                <select id="lab-symptoms" name="lab-symptoms">
-                  <option value="none">Без явних симптомів</option>
-                  <option value="libido">Лібідо / еректильна функція / цикл</option>
-                  <option value="recovery">Сон, втома, слабке відновлення</option>
-                  <option value="hair_skin">Волосся, шкіра, акне, набряки</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="lab-last-check">Коли здавались аналізи</label>
-                <select id="lab-last-check" name="lab-last-check">
-                  <option value="never">Не здавались / не пам’ятаю</option>
-                  <option value="old">Більше 6 місяців тому</option>
-                  <option value="recent">До 6 місяців тому</option>
-                </select>
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Сформувати панель</button>
-                <button type="button" class="btn btn-secondary" id="lab-reset">
-                  Очистити
-                </button>
-              </div>
-            </form>
-
-            <div id="lab-result" class="lab-result" aria-live="polite">
-              <div class="result-placeholder">
-                Обери параметри, щоб отримати лабораторну панель для рекомпозиції.
-              </div>
-            </div>
-            <div class="result-export-actions">
-              <button type="button" class="btn btn-secondary" data-print-target="lab-result">
-                Відкрити звіт
-              </button>
-            </div>
-
-            <details class="lab-evaluator lab-review-panel" id="lab-review-panel">
-              <summary class="lab-review-summary">
-                <span class="section-label">Lab Result Review</span>
-                <strong>Оцінити отримані результати</strong>
-                <small id="lab-review-summary-note">Спочатку сформуй Bloodwork Protocol, потім відкрий цей блок.</small>
-              </summary>
-
-              <div class="lab-review-body">
-                <div class="lab-review-gate" id="lab-review-gate">
-                  Сформуй панель у Bloodwork Protocol вище. Після цього тут з'являться тільки ті поля, які входять у рекомендований список аналізів.
-                </div>
-
-              <form id="lab-review-form" class="form-grid lab-review-grid" hidden>
-                <div class="form-group">
-                  <label for="review-sex">Стать</label>
-                  <select id="review-sex" name="review-sex">
-                    <option value="male">Чоловік</option>
-                    <option value="female">Жінка</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="review-cycle">Жіночий контекст</label>
-                  <select id="review-cycle" name="review-cycle">
-                    <option value="not_applicable">Не актуально</option>
-                    <option value="follicular">Фолікулярна фаза</option>
-                    <option value="luteal">Лютеїнова фаза</option>
-                    <option value="irregular">Нерегулярний цикл</option>
-                    <option value="contraception">Гормональна контрацепція</option>
-                    <option value="postpartum">Після пологів / лактація</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="review-date">Дата аналізів</label>
-                  <input type="date" id="review-date" name="review-date" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-fasting">Умови здачі</label>
-                  <select id="review-fasting" name="review-fasting">
-                    <option value="unknown">Не вказано</option>
-                    <option value="fasting">Натще</option>
-                    <option value="not_fasting">Не натще</option>
-                    <option value="after_training">Після важкого тренування</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="review-ferritin">Феритин (нг/мл)</label>
-                  <input type="number" step="0.1" min="0" max="1000" inputmode="decimal" id="review-ferritin" name="review-ferritin" placeholder="Наприклад: 42" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-hemoglobin">Гемоглобін / ЗАК (г/л)</label>
-                  <input type="number" step="1" min="0" max="300" inputmode="numeric" id="review-hemoglobin" name="review-hemoglobin" placeholder="Наприклад: 145" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-leukocytes">Лейкоцити / ЗАК (10^9/л)</label>
-                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-leukocytes" name="review-leukocytes" placeholder="Наприклад: 6.2" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-platelets">Тромбоцити / ЗАК (10^9/л)</label>
-                  <input type="number" step="1" min="0" max="2000" inputmode="numeric" id="review-platelets" name="review-platelets" placeholder="Наприклад: 240" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-vitamin-d">25(OH)D, вітамін D (нг/мл)</label>
-                  <input type="number" step="0.1" min="0" max="200" inputmode="decimal" id="review-vitamin-d" name="review-vitamin-d" placeholder="Наприклад: 28" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-b12">B12 (пг/мл)</label>
-                  <input type="number" step="1" min="0" max="3000" inputmode="numeric" id="review-b12" name="review-b12" placeholder="Наприклад: 420" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-iron">Сироваткове залізо (мкмоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-iron" name="review-iron" placeholder="Наприклад: 18" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-folate">Фолат (нг/мл)</label>
-                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-folate" name="review-folate" placeholder="Наприклад: 8" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-crp">CRP / С-реактивний білок (мг/л)</label>
-                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-crp" name="review-crp" placeholder="Наприклад: 1.2" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-glucose">Глюкоза натще (ммоль/л)</label>
-                  <input type="number" step="0.01" min="0" max="30" inputmode="decimal" id="review-glucose" name="review-glucose" placeholder="Наприклад: 5.1" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-hba1c">HbA1c (%)</label>
-                  <input type="number" step="0.1" min="3" max="15" inputmode="decimal" id="review-hba1c" name="review-hba1c" placeholder="Наприклад: 5.4" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-insulin">Інсулін натще (мкОд/мл)</label>
-                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-insulin" name="review-insulin" placeholder="Наприклад: 7.5" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-total-cholesterol">Загальний холестерин (ммоль/л)</label>
-                  <input type="number" step="0.01" min="0" max="20" inputmode="decimal" id="review-total-cholesterol" name="review-total-cholesterol" placeholder="Наприклад: 4.8" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-ldl">LDL (ммоль/л)</label>
-                  <input type="number" step="0.01" min="0" max="20" inputmode="decimal" id="review-ldl" name="review-ldl" placeholder="Наприклад: 2.7" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-hdl">HDL (ммоль/л)</label>
-                  <input type="number" step="0.01" min="0" max="10" inputmode="decimal" id="review-hdl" name="review-hdl" placeholder="Наприклад: 1.3" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-triglycerides">Тригліцериди (ммоль/л)</label>
-                  <input type="number" step="0.01" min="0" max="20" inputmode="decimal" id="review-triglycerides" name="review-triglycerides" placeholder="Наприклад: 1.1" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-tsh">TSH (мМО/л)</label>
-                  <input type="number" step="0.01" min="0" max="100" inputmode="decimal" id="review-tsh" name="review-tsh" placeholder="Наприклад: 2.1" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-free-t4">Вільний T4 (пмоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-free-t4" name="review-free-t4" placeholder="Наприклад: 14" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-free-t3">Вільний T3 (пмоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="50" inputmode="decimal" id="review-free-t3" name="review-free-t3" placeholder="Наприклад: 4.8" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-anti-tpo">Anti-TPO (Од/мл)</label>
-                  <input type="number" step="0.1" min="0" max="3000" inputmode="decimal" id="review-anti-tpo" name="review-anti-tpo" placeholder="За показами" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-alt">ALT (Од/л)</label>
-                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-alt" name="review-alt" placeholder="Наприклад: 25" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-ast">AST (Од/л)</label>
-                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-ast" name="review-ast" placeholder="Наприклад: 29" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-ggt">GGT (Од/л)</label>
-                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-ggt" name="review-ggt" placeholder="Наприклад: 22" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-bilirubin">Білірубін загальний (мкмоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="500" inputmode="decimal" id="review-bilirubin" name="review-bilirubin" placeholder="Наприклад: 12" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-creatinine">Креатинін (мкмоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-creatinine" name="review-creatinine" placeholder="Наприклад: 88" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-egfr">eGFR</label>
-                  <input type="number" step="1" min="0" max="200" inputmode="numeric" id="review-egfr" name="review-egfr" placeholder="Наприклад: 96" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-urea">Сечовина (ммоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-urea" name="review-urea" placeholder="Наприклад: 5.2" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-sodium">Натрій (ммоль/л)</label>
-                  <input type="number" step="0.1" min="100" max="180" inputmode="decimal" id="review-sodium" name="review-sodium" placeholder="Наприклад: 140" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-potassium">Калій (ммоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="15" inputmode="decimal" id="review-potassium" name="review-potassium" placeholder="Наприклад: 4.4" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-magnesium">Магній (ммоль/л)</label>
-                  <input type="number" step="0.01" min="0" max="5" inputmode="decimal" id="review-magnesium" name="review-magnesium" placeholder="Наприклад: 0.82" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-prolactin">Пролактин (нг/мл)</label>
-                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-prolactin" name="review-prolactin" placeholder="Наприклад: 14" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-testosterone">Тестостерон загальний (нмоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="80" inputmode="decimal" id="review-testosterone" name="review-testosterone" placeholder="Наприклад: 18" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-free-testosterone">Вільний тестостерон / індекс</label>
-                  <input type="number" step="0.1" min="0" max="500" inputmode="decimal" id="review-free-testosterone" name="review-free-testosterone" placeholder="За бланком лабораторії" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-shbg">SHBG (нмоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-shbg" name="review-shbg" placeholder="Наприклад: 35" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-lh">LH (мМО/мл)</label>
-                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-lh" name="review-lh" placeholder="Наприклад: 4.2" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-fsh">FSH (мМО/мл)</label>
-                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-fsh" name="review-fsh" placeholder="Наприклад: 5.1" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-estradiol">Естрадіол (пг/мл)</label>
-                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-estradiol" name="review-estradiol" placeholder="Наприклад: 32" />
-                </div>
-
-                <div class="form-group review-female-field">
-                  <label for="review-progesterone">Прогестерон (нг/мл)</label>
-                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-progesterone" name="review-progesterone" placeholder="Залежить від фази циклу" />
-                </div>
-
-                <div class="form-group review-female-field">
-                  <label for="review-dhea-s">DHEA-S (мкг/дл)</label>
-                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-dhea-s" name="review-dhea-s" placeholder="За бланком лабораторії" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-ck">Креатинкіназа / CK (Од/л)</label>
-                  <input type="number" step="1" min="0" max="100000" inputmode="numeric" id="review-ck" name="review-ck" placeholder="За показами" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-cortisol">Кортизол (мкг/дл або нмоль/л)</label>
-                  <input type="number" step="0.1" min="0" max="3000" inputmode="decimal" id="review-cortisol" name="review-cortisol" placeholder="Одиниці див. у бланку" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-total-protein">Загальний білок (г/л)</label>
-                  <input type="number" step="0.1" min="0" max="150" inputmode="decimal" id="review-total-protein" name="review-total-protein" placeholder="Наприклад: 72" />
-                </div>
-
-                <div class="form-group">
-                  <label for="review-albumin">Альбумін (г/л)</label>
-                  <input type="number" step="0.1" min="0" max="80" inputmode="decimal" id="review-albumin" name="review-albumin" placeholder="Наприклад: 44" />
-                </div>
-
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary">Оцінити результати</button>
-                  <button type="button" class="btn btn-secondary" id="lab-review-reset">
-                    Очистити
-                  </button>
-                </div>
-              </form>
-
-              <div id="lab-review-result" class="lab-result" aria-live="polite">
-                <div class="result-placeholder">
-                  Введи показники з бланку, щоб отримати спортивну оцінку ризиків.
-                </div>
-              </div>
-              <div class="result-export-actions" id="lab-review-export-actions" hidden>
-                <button type="button" class="btn btn-secondary" data-print-target="lab-review-result">
-                  Відкрити звіт
-                </button>
-              </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section id="coach" class="coach-section" data-plan-required="pro"></section>
-
-      <section id="progress" class="progress-section" data-plan-required="pro">
-        <div class="container">
-          <div class="section-head reveal">
-            <span class="section-label">Progress Command</span>
-            <h2>Контроль прогресу без хаотичних правок</h2>
-            <p>
-              Щотижневий check-in допомагає новачку бачити рух і не панікувати.
-              Корекція калорій робиться після контрольних 14 днів, якщо план реально виконувався.
-            </p>
-          </div>
-
-          <div class="progress-panel reveal">
-            <div class="protocol-head">
-              <span class="section-label">Progress Check-In</span>
-              <h3>Оцінити прогрес</h3>
-              <p>
-                Обери щотижневий контроль для підтримки курсу або контроль 14 днів для реальної корекції раціону.
-              </p>
-            </div>
-
-            <form id="progress-form" class="form-grid">
-              <div class="form-group">
-                <label for="checkin-mode">Режим контролю</label>
-                <select id="checkin-mode" name="checkin-mode">
-                  <option value="weekly" selected>Щотижневий контроль без зміни калорій</option>
-                  <option value="biweekly">Контроль 14 днів з корекцією раціону</option>
-                </select>
-                <small class="field-hint" id="progress-mode-note">Щотижня сайт дає рішення по дисципліні, воді, сну, кроках і тренуваннях, але не змінює калорії.</small>
-              </div>
-
-              <div class="form-group">
-                <label for="progress-goal">Ціль</label>
-                <select id="progress-goal" name="progress-goal">
-                  <option value="recomp">Рекомпозиція</option>
-                  <option value="cut">Зниження жиру</option>
-                  <option value="gain">Набір м’язів</option>
-                  <option value="maintain">Підтримка</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="weight-change">Зміна ваги за період (%)</label>
-                <input type="number" step="0.1" min="-10" max="10" inputmode="decimal" id="weight-change" name="weight-change" placeholder="Наприклад: -0.4" />
-              </div>
-
-              <div class="form-group">
-                <label for="waist-change">Зміна талії за період (см)</label>
-                <input type="number" step="0.1" min="-20" max="20" inputmode="decimal" id="waist-change" name="waist-change" placeholder="Наприклад: -1.0" />
-              </div>
-
-              <div class="form-group">
-                <label for="strength-trend">Силові показники</label>
-                <select id="strength-trend" name="strength-trend">
-                  <option value="up">Ростуть</option>
-                  <option value="stable">Стабільні</option>
-                  <option value="down">Падають</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="sleep-score">Сон, год/ніч</label>
-                <input type="number" step="0.1" min="0" max="16" inputmode="decimal" id="sleep-score" name="sleep-score" placeholder="Наприклад: 7.2" />
-              </div>
-
-              <div class="form-group">
-                <label for="energy-score">Енергія</label>
-                <select id="energy-score" name="energy-score">
-                  <option value="good">Добра</option>
-                  <option value="medium">Середня</option>
-                  <option value="low">Низька</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="steps-average">Кроки в середньому/день</label>
-                <input type="number" step="100" min="0" max="50000" inputmode="numeric" id="steps-average" name="steps-average" placeholder="Наприклад: 8500" />
-                <small class="field-hint">Для зниження ваги кроки дуже важливі: навіть при крепатурі легка ходьба допомагає відновленню і підтримує витрати енергії.</small>
-              </div>
-
-              <div class="form-group">
-                <label for="nutrition-adherence">Дотримання раціону (%)</label>
-                <input type="number" step="1" min="0" max="100" inputmode="numeric" id="nutrition-adherence" name="nutrition-adherence" placeholder="Наприклад: 85" />
-              </div>
-
-              <div class="form-group">
-                <label for="hunger-level">Голод / тяга до їжі</label>
-                <select id="hunger-level" name="hunger-level">
-                  <option value="controlled">Контрольований</option>
-                  <option value="medium">Помітний</option>
-                  <option value="high">Високий</option>
-                </select>
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Отримати рішення</button>
-                <button type="button" class="btn btn-secondary" id="progress-reset">
-                  Очистити
-                </button>
-              </div>
-            </form>
-
-            <div id="progress-result" class="progress-result" aria-live="polite">
-              <div class="result-placeholder">
-                Обери режим контролю і заповни дані, щоб отримати рішення.
-              </div>
-            </div>
-            <div class="result-export-actions">
-              <button type="button" class="btn btn-secondary" data-print-target="progress-result">
-                Відкрити звіт
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="knowledge" class="knowledge-section">
-        <div class="container">
-          <div class="section-head reveal">
-            <span class="section-label" data-i18n="knowledge.label">База знань</span>
-          </div>
-
-          <div class="knowledge-grid reveal">
-            <article class="knowledge-card">
-              <span>01</span>
-              <h3 data-i18n="knowledge.cutTitle">Схуднення без зривів</h3>
-              <p data-i18n="knowledge.cutText">
-                Стійкий дефіцит калорій має бути помірним. Якщо занадто різко урізати їжу, падає енергія,
-                тренування стають гіршими, а дотримання плану ламається.
-              </p>
-              <a href="#calculator" class="knowledge-link" data-i18n="knowledge.cutCta">Розрахувати дефіцит</a>
-            </article>
-
-            <article class="knowledge-card">
-              <span>02</span>
-              <h3 data-i18n="knowledge.gainTitle">Набір ваги без зайвого жиру</h3>
-              <p data-i18n="knowledge.gainText">
-                Для набору потрібен профіцит, достатній білок і прогресія навантажень. Контроль талії показує,
-                чи росте м’язова маса, чи калорій уже забагато.
-              </p>
-              <a href="#calculator" class="knowledge-link" data-i18n="knowledge.gainCta">Підібрати профіцит</a>
-            </article>
-
-            <article class="knowledge-card">
-              <span>03</span>
-              <h3 data-i18n="knowledge.nutritionTitle">Раціон, який реально виконувати</h3>
-              <p data-i18n="knowledge.nutritionText">
-                Хороший план харчування не повинен бути ідеальним на папері. Він має збігатися з графіком,
-                бюджетом, кількістю прийомів їжі і продуктами, які людина готова їсти.
-              </p>
-              <a href="#calculator" class="knowledge-link" data-i18n="knowledge.nutritionCta">Зібрати раціон</a>
-            </article>
-
-            <article class="knowledge-card">
-              <span>04</span>
-              <h3 data-i18n="knowledge.healthTitle">Здоров’я і стоп-сигнали</h3>
-              <p data-i18n="knowledge.healthText">
-                Сон, втома, цикл, лібідо, тиск, травлення і аналізи можуть пояснити, чому вага або сила стоять.
-                VitalRise не ставить діагноз, але допомагає зрозуміти, що обговорити з фахівцем.
-              </p>
-              <a href="#labs" class="knowledge-link" data-i18n="knowledge.healthCta">Перевірити маркери</a>
-            </article>
+              <div class="module-card-meta">Сон / масаж / вода</div>
+              <i class="module-card-arrow" aria-hidden="true">→</i>
+            </a>
           </div>
         </div>
       </section>
@@ -1611,8 +249,8 @@
           </div>
 
           <div class="newsletter-capture reveal">
-            <h3 data-i18n="newsletter.title">Отримати ранній доступ і знижку</h3>
-            <p data-i18n="newsletter.text">Email для оновлень, запуску нових модулів і першої персональної пропозиції.</p>
+            <h3 data-i18n="newsletter.title">Отримати оновлення про запуск</h3>
+            <p data-i18n="newsletter.text">Email для повідомлень про запуск, нові модулі та відкриття оплати.</p>
             <form id="newsletter-form">
               <input type="email" data-i18n-placeholder="newsletter.placeholder" placeholder="Твій email" required />
               <button type="submit" data-i18n="newsletter.cta">Підписатися</button>
@@ -1637,7 +275,7 @@
                     <li data-i18n="pricing.freeItem4">Частковий атлас вправ</li>
                     <li data-i18n="pricing.freeItem5">Базовий модуль спортпіту</li>
                   </ul>
-                  <a href="#calculator" class="btn btn-secondary" data-i18n="pricing.freeCta">Спробувати безкоштовно</a>
+                  <a href="nutrition.html" class="btn btn-secondary" data-i18n="pricing.freeCta">Спробувати безкоштовно</a>
                 </div>
                 <div class="pricing-card-face pricing-card-back">
                   <span class="pricing-back-kicker" data-i18n="pricing.freeBackLabel">Для старту</span>
@@ -1648,7 +286,7 @@
                     <span data-i18n="pricing.backPointSample">Приклад раціону</span>
                     <span data-i18n="pricing.backPointBase">База системи</span>
                   </div>
-                  <a href="#calculator" class="btn btn-secondary" data-i18n="pricing.freeCta">Спробувати безкоштовно</a>
+                  <a href="nutrition.html" class="btn btn-secondary" data-i18n="pricing.freeCta">Спробувати безкоштовно</a>
                 </div>
               </div>
             </article>
@@ -1770,18 +408,38 @@
 
             <section class="conversion-block">
               <span class="section-label" data-i18n="faq.label">FAQ</span>
-              <h3 data-i18n="faq.title">Перед оплатою</h3>
+              <h3 data-i18n="faq.title">Питання перед стартом</h3>
               <details open>
-                <summary data-i18n="faq.q1">Коли відкривається доступ?</summary>
-                <p data-i18n="faq.a1">Після підтвердження оплати сервер видає персональний доступ для email, який був вказаний при оплаті.</p>
+                <summary data-i18n="faq.q1">Як працює ранній доступ?</summary>
+                <p data-i18n="faq.a1">Залиш email у формі вище. Ми збережемо його в базі раннього доступу і повідомимо про запуск, нові модулі та відкриття оплати.</p>
               </details>
               <details>
-                <summary data-i18n="faq.q2">Чи можна спочатку подивитися безкоштовно?</summary>
+                <summary data-i18n="faq.q2">Що можна подивитися безкоштовно?</summary>
                 <p data-i18n="faq.a2">Так. Калькулятор, базовий раціон, спортпіт і частина тренувань доступні без оплати.</p>
               </details>
               <details>
-                <summary data-i18n="faq.q3">Що робити, якщо план не підходить?</summary>
-                <p data-i18n="faq.a3">План можна коригувати через check-in і 14-денний контроль прогресу.</p>
+                <summary data-i18n="faq.q3">Коли буде доступна оплата?</summary>
+                <p data-i18n="faq.a3">Після підключення платіжного сервісу кнопки тарифів відкриватимуть оплату. Після підтвердження покупки доступ буде прив'язаний до email.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q4">Що робити, якщо план не підходить?</summary>
+                <p data-i18n="faq.a4">План не повинен бути статичним. Корекція робиться через check-in, 14-денний контроль прогресу, талію, вагу, самопочуття і тренувальну продуктивність.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q5">Чи потрібні аналізи всім?</summary>
+                <p data-i18n="faq.a5">Ні, але якщо є симптоми, фармакологічний контекст, гормональні питання, проблеми з тиском або різкі зміни самопочуття, аналізи допомагають не діяти наосліп.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q6">VitalRise замінює лікаря?</summary>
+                <p data-i18n="faq.a6">Ні. Сайт не ставить діагнози і не призначає лікування. Лабораторні маркери, препарати, гормони й АС/ААС потрібно обговорювати з лікарем.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q7">Що буде з моїм email?</summary>
+                <p data-i18n="faq.a7">Email використовується для раннього доступу, повідомлень про запуск і майбутнього доступу до покупки. Деталі описані в Privacy Policy.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q8">Чи можна буде повернути оплату?</summary>
+                <p data-i18n="faq.a8">Після підключення оплати умови повернення будуть прописані окремо. Базовий принцип: якщо доступ не активований або технічну помилку не вирішено, покупка перевіряється вручну.</p>
               </details>
             </section>
 
@@ -1795,133 +453,12 @@
 
         </div>
       </section>
-
-      <section id="blueprint" class="blueprint-section" data-plan-required="start">
-        <div class="container">
-          <div class="section-head reveal">
-            <span class="section-label">Athlete Blueprint</span>
-            <h2>Паспорт тіла і головний пріоритет</h2>
-            <p>
-              Коли дані зібрані, найважливіше — не робити все одразу.
-              Blueprint зводить ціль, рівень, лабораторний статус, прогрес і
-              відновлення в один порядок дій.
-            </p>
-          </div>
-
-          <div class="blueprint-panel reveal">
-            <div class="protocol-head">
-              <span class="section-label">Command Center</span>
-              <h3>Зібрати фінальний протокол</h3>
-              <p>
-                Обери поточну ситуацію після калькуляторів. VitalRise покаже,
-                що має бути першим, другим і третім фокусом на найближчі 4 тижні.
-              </p>
-            </div>
-
-            <form id="blueprint-form" class="form-grid">
-              <div class="form-group">
-                <label for="blueprint-goal">Головна ціль</label>
-                <select id="blueprint-goal" name="blueprint-goal">
-                  <option value="recomp">Рекомпозиція</option>
-                  <option value="cut">Зниження жиру</option>
-                  <option value="gain">Набір м’язів</option>
-                  <option value="performance">Сила / продуктивність</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="blueprint-level">Рівень</label>
-                <select id="blueprint-level" name="blueprint-level">
-                  <option value="beginner">Новачок</option>
-                  <option value="intermediate">Середній</option>
-                  <option value="advanced">Просунутий</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="blueprint-nutrition">Харчування</label>
-                <select id="blueprint-nutrition" name="blueprint-nutrition">
-                  <option value="stable">Стабільне</option>
-                  <option value="chaotic">Нестабільне</option>
-                  <option value="unknown">Не рахую</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="blueprint-training">Тренування</label>
-                <select id="blueprint-training" name="blueprint-training">
-                  <option value="progressing">Є прогресія</option>
-                  <option value="flat">Стоїть на місці</option>
-                  <option value="too_much">Забагато втоми</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="blueprint-labs">Лабораторний статус</label>
-                <select id="blueprint-labs" name="blueprint-labs">
-                  <option value="green">Без явних стоп-сигналів</option>
-                  <option value="yellow">Є маркери уваги</option>
-                  <option value="red">Є червоні маркери</option>
-                  <option value="unknown">Ще не здавав/ла</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="blueprint-progress">Прогрес</label>
-                <select id="blueprint-progress" name="blueprint-progress">
-                  <option value="moving">Рухається</option>
-                  <option value="plateau">Плато</option>
-                  <option value="regressing">Регрес</option>
-                  <option value="unknown">Немає трекінгу</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="blueprint-recovery">Відновлення</label>
-                <select id="blueprint-recovery" name="blueprint-recovery">
-                  <option value="good">Добре</option>
-                  <option value="medium">Середнє</option>
-                  <option value="poor">Погане</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="blueprint-supplements">Спортпіт</label>
-                <select id="blueprint-supplements" name="blueprint-supplements">
-                  <option value="minimal">Тільки база</option>
-                  <option value="random">Хаотично</option>
-                  <option value="none">Не використовую</option>
-                </select>
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Створити Blueprint</button>
-                <button type="button" class="btn btn-secondary" id="blueprint-reset">
-                  Очистити
-                </button>
-              </div>
-            </form>
-
-            <div id="blueprint-result" class="blueprint-result" aria-live="polite">
-              <div class="result-placeholder">
-                Обери стан системи, щоб отримати паспорт пріоритетів.
-              </div>
-            </div>
-
-            <div class="blueprint-export-actions">
-              <button type="button" class="btn btn-secondary" id="blueprint-print" data-print-target="blueprint-result" disabled>
-                Відкрити звіт
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <a href="#" class="brand-mark" aria-label="VitalRise головна">
+          <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
             <span>VR</span>
             <strong>VitalRise</strong>
           </a>
@@ -1932,17 +469,22 @@
         </div>
 
         <div class="footer-links" aria-label="Швидкі посилання">
-          <a href="#features">Система</a>
-          <a href="#labs">Аналізи</a>
-          <a href="#calculator">Харчування / тренування</a>
-          <a href="#supplements">Спортпіт</a>
+          <a href="index.html#features">Система</a>
+          <a href="profile.html">Профіль</a>
+          <a href="labs.html">Аналізи</a>
+          <a href="nutrition.html">Харчування</a>
+          <a href="training.html">Тренування</a>
+          <a href="supplements.html">Спортпіт</a>
           <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
-          <a href="#recovery">Відновлення</a>
-          <a href="#coach">Coach</a>
-          <a href="#progress">Прогрес</a>
-          <a href="#knowledge" data-i18n="nav.knowledge">База знань</a>
-          <a href="#pricing" data-i18n="nav.pricing">Тарифи</a>
-          <a href="#blueprint">Blueprint</a>
+          <a href="recovery.html">Відновлення</a>
+          <a href="progress.html">Coach</a>
+          <a href="progress.html">Прогрес</a>
+          <a href="progress.html#knowledge" data-i18n="nav.knowledge">База знань</a>
+          <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
+          <a href="blueprint.html">Blueprint</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms</a>
+          <a href="disclaimer.html">Medical / AAS Disclaimer</a>
         </div>
 
         <div class="footer-note">
@@ -2065,24 +607,28 @@
   </div>
 
   <script src="assets/js/modules/system.js"></script>
-  <script src="assets/js/modules/i18n.js?v=training-control-1"></script>
+  <script src="assets/js/modules/i18n.js?v=newsletter-copy-1"></script>
   <script src="assets/js/modules/mobile-menu.js"></script>
   <script src="assets/js/modules/storage.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="assets/js/modules/print.js"></script>
   <script src="assets/js/modules/data-portability.js"></script>
-  <script src="assets/js/modules/calculator-shell.js?v=load-context-1"></script>
+  <script src="assets/js/modules/calculator-shell.js?v=single-module-1"></script>
   <script src="assets/js/modules/reveal.js"></script>
   <script src="assets/js/modules/dashboard.js"></script>
+  <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
+  <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
   <script src="assets/js/modules/nutrition-custom.js"></script>
-  <script src="assets/js/modules/nutrition.js?v=profile-correction-2"></script>
-  <script src="assets/js/modules/nutrition-render.js?v=profile-correction-2"></script>
+  <script src="assets/js/modules/nutrition.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/nutrition-render.js?v=free-cottage-meals-1"></script>
   <script src="assets/js/modules/training.js"></script>
-  <script src="assets/js/modules/training-templates.js"></script>
+  <script src="assets/js/modules/training-templates.js?v=training-days-6-1"></script>
   <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
   <script src="assets/js/modules/training-progression.js"></script>
-  <script src="assets/js/modules/training-render.js?v=training-control-1"></script>
-  <script src="assets/js/modules/training-builder.js"></script>
-  <script src="assets/js/modules/exercise-atlas-data.js?v=bulgarian-photo-1"></script>
+  <script src="assets/js/modules/training-render.js?v=smart-program-1"></script>
+  <script src="assets/js/modules/training-builder.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/exercise-atlas-data.js?v=seated-db-press-photo-1"></script>
   <script src="assets/js/modules/exercise-atlas.js"></script>
   <script src="assets/js/modules/labs.js"></script>
   <script src="assets/js/modules/lab-protocols.js"></script>
@@ -2090,7 +636,7 @@
   <script src="assets/js/modules/blueprint.js"></script>
   <script src="assets/js/modules/supplements.js"></script>
   <script src="assets/js/modules/coach.js?v=quick-profiles-2"></script>
-  <script src="assets/js/modules/access.js?v=roadmap-1"></script>
-  <script src="assets/js/script.js?v=profile-correction-2"></script>
+  <script src="assets/js/modules/access.js?v=analytics-1"></script>
+  <script src="assets/js/script.js?v=free-cottage-meals-1"></script>
 </body>
 </html>

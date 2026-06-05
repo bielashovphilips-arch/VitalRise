@@ -1,0 +1,415 @@
+      <section id="labs" class="labs-section" data-plan-required="pro">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-label">Лабораторія</span>
+            <h2>Перший крок: зрозуміти стан організму</h2>
+            <p>
+              Рекомпозиція тіла залежить не тільки від калорій і тренувань.
+              Якщо вага, сила, сон, цикл, лібідо або відновлення “стоять”,
+              лабораторні маркери допомагають побачити, що варто обговорити
+              з лікарем або спортивним фахівцем. Тому аналізи стоять на початку:
+              вони допомагають не будувати план поверх дефіцитів, перевтоми або
+              прихованих обмежень.
+            </p>
+          </div>
+
+          <div class="labs-grid">
+            <article class="lab-card reveal">
+              <span class="lab-index">01</span>
+              <h3>База атлета</h3>
+              <p>ЗАК, феритин, B12, фолат, вітамін D, CRP і електроліти дають картину ресурсу та відновлення.</p>
+            </article>
+
+            <article class="lab-card reveal">
+              <span class="lab-index">02</span>
+              <h3>Метаболізм</h3>
+              <p>Глюкоза, інсулін, HbA1c і ліпідограма важливі для енергії, апетиту та довгої роботи на форму.</p>
+            </article>
+
+            <article class="lab-card reveal">
+              <span class="lab-index">03</span>
+              <h3>Печінка і нирки</h3>
+              <p>ALT, AST, GGT, білірубін, креатинін, сечовина й eGFR особливо важливі при високому білку та добавках.</p>
+            </article>
+
+            <article class="lab-card lab-card-accent reveal">
+              <span class="lab-index">04</span>
+              <h3>Гормони</h3>
+              <p>Тестостерон, естрадіол, SHBG, LH, FSH, пролактин і щитоподібна залоза оцінюються окремо для чоловіків і жінок.</p>
+            </article>
+          </div>
+
+          <div class="lab-protocol reveal">
+            <div class="protocol-head">
+              <span class="section-label">Bloodwork Protocol</span>
+              <h3>Підібрати панель аналізів</h3>
+              <p>
+                Обери стать і контекст. VitalRise сформує список маркерів,
+                які корисно обговорити з лікарем для рекомпозиції тіла,
+                продуктивності й відновлення.
+              </p>
+            </div>
+
+            <form id="lab-form" class="form-grid">
+              <div class="form-group">
+                <label for="lab-sex">Стать</label>
+                <select id="lab-sex" name="lab-sex">
+                  <option value="male">Чоловік</option>
+                  <option value="female">Жінка</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="lab-goal">Контекст</label>
+                <select id="lab-goal" name="lab-goal">
+                  <option value="recomp">Рекомпозиція тіла</option>
+                  <option value="plateau">Плато у вазі / силі</option>
+                  <option value="fatigue">Втома / погане відновлення</option>
+                  <option value="hormones">Підозра на гормональний дисбаланс</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="lab-training-load">Навантаження</label>
+                <select id="lab-training-load" name="lab-training-load">
+                  <option value="moderate">3-4 тренування на тиждень</option>
+                  <option value="high">5+ тренувань або висока інтенсивність</option>
+                  <option value="cut">Дефіцит калорій / сушка</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="lab-cycle-group">
+                <label for="lab-cycle">Жіночий цикл / гормональний контекст</label>
+                <select id="lab-cycle" name="lab-cycle">
+                  <option value="not_applicable">Не актуально</option>
+                  <option value="regular">Регулярний цикл</option>
+                  <option value="irregular">Нерегулярний цикл</option>
+                  <option value="contraception">Гормональна контрацепція</option>
+                  <option value="postpartum">Після пологів / лактація</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="lab-symptoms">Симптоми</label>
+                <select id="lab-symptoms" name="lab-symptoms">
+                  <option value="none">Без явних симптомів</option>
+                  <option value="libido">Лібідо / еректильна функція / цикл</option>
+                  <option value="recovery">Сон, втома, слабке відновлення</option>
+                  <option value="hair_skin">Волосся, шкіра, акне, набряки</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="lab-last-check">Коли здавались аналізи</label>
+                <select id="lab-last-check" name="lab-last-check">
+                  <option value="never">Не здавались / не пам’ятаю</option>
+                  <option value="old">Більше 6 місяців тому</option>
+                  <option value="recent">До 6 місяців тому</option>
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Сформувати панель</button>
+                <button type="button" class="btn btn-secondary" id="lab-reset">
+                  Очистити
+                </button>
+              </div>
+            </form>
+
+            <div id="lab-result" class="lab-result" aria-live="polite">
+              <div class="result-placeholder">
+                Обери параметри, щоб отримати лабораторну панель для рекомпозиції.
+              </div>
+            </div>
+            <div class="result-export-actions">
+              <button type="button" class="btn btn-secondary" data-print-target="lab-result">
+                Відкрити звіт
+              </button>
+            </div>
+
+            <details class="lab-evaluator lab-review-panel" id="lab-review-panel">
+              <summary class="lab-review-summary">
+                <span class="section-label">Lab Result Review</span>
+                <strong>Оцінити отримані результати</strong>
+                <small id="lab-review-summary-note">Спочатку сформуй Bloodwork Protocol, потім відкрий цей блок.</small>
+              </summary>
+
+              <div class="lab-review-body">
+                <div class="lab-review-gate" id="lab-review-gate">
+                  Сформуй панель у Bloodwork Protocol вище. Після цього тут з'являться тільки ті поля, які входять у рекомендований список аналізів.
+                </div>
+
+              <form id="lab-review-form" class="form-grid lab-review-grid" hidden>
+                <div class="form-group">
+                  <label for="review-sex">Стать</label>
+                  <select id="review-sex" name="review-sex">
+                    <option value="male">Чоловік</option>
+                    <option value="female">Жінка</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="review-cycle">Жіночий контекст</label>
+                  <select id="review-cycle" name="review-cycle">
+                    <option value="not_applicable">Не актуально</option>
+                    <option value="follicular">Фолікулярна фаза</option>
+                    <option value="luteal">Лютеїнова фаза</option>
+                    <option value="irregular">Нерегулярний цикл</option>
+                    <option value="contraception">Гормональна контрацепція</option>
+                    <option value="postpartum">Після пологів / лактація</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="review-date">Дата аналізів</label>
+                  <input type="date" id="review-date" name="review-date" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-fasting">Умови здачі</label>
+                  <select id="review-fasting" name="review-fasting">
+                    <option value="unknown">Не вказано</option>
+                    <option value="fasting">Натще</option>
+                    <option value="not_fasting">Не натще</option>
+                    <option value="after_training">Після важкого тренування</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="review-ferritin">Феритин (нг/мл)</label>
+                  <input type="number" step="0.1" min="0" max="1000" inputmode="decimal" id="review-ferritin" name="review-ferritin" placeholder="Наприклад: 42" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-hemoglobin">Гемоглобін / ЗАК (г/л)</label>
+                  <input type="number" step="1" min="0" max="300" inputmode="numeric" id="review-hemoglobin" name="review-hemoglobin" placeholder="Наприклад: 145" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-leukocytes">Лейкоцити / ЗАК (10^9/л)</label>
+                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-leukocytes" name="review-leukocytes" placeholder="Наприклад: 6.2" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-platelets">Тромбоцити / ЗАК (10^9/л)</label>
+                  <input type="number" step="1" min="0" max="2000" inputmode="numeric" id="review-platelets" name="review-platelets" placeholder="Наприклад: 240" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-vitamin-d">25(OH)D, вітамін D (нг/мл)</label>
+                  <input type="number" step="0.1" min="0" max="200" inputmode="decimal" id="review-vitamin-d" name="review-vitamin-d" placeholder="Наприклад: 28" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-b12">B12 (пг/мл)</label>
+                  <input type="number" step="1" min="0" max="3000" inputmode="numeric" id="review-b12" name="review-b12" placeholder="Наприклад: 420" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-iron">Сироваткове залізо (мкмоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-iron" name="review-iron" placeholder="Наприклад: 18" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-folate">Фолат (нг/мл)</label>
+                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-folate" name="review-folate" placeholder="Наприклад: 8" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-crp">CRP / С-реактивний білок (мг/л)</label>
+                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-crp" name="review-crp" placeholder="Наприклад: 1.2" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-glucose">Глюкоза натще (ммоль/л)</label>
+                  <input type="number" step="0.01" min="0" max="30" inputmode="decimal" id="review-glucose" name="review-glucose" placeholder="Наприклад: 5.1" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-hba1c">HbA1c (%)</label>
+                  <input type="number" step="0.1" min="3" max="15" inputmode="decimal" id="review-hba1c" name="review-hba1c" placeholder="Наприклад: 5.4" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-insulin">Інсулін натще (мкОд/мл)</label>
+                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-insulin" name="review-insulin" placeholder="Наприклад: 7.5" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-total-cholesterol">Загальний холестерин (ммоль/л)</label>
+                  <input type="number" step="0.01" min="0" max="20" inputmode="decimal" id="review-total-cholesterol" name="review-total-cholesterol" placeholder="Наприклад: 4.8" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-ldl">LDL (ммоль/л)</label>
+                  <input type="number" step="0.01" min="0" max="20" inputmode="decimal" id="review-ldl" name="review-ldl" placeholder="Наприклад: 2.7" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-hdl">HDL (ммоль/л)</label>
+                  <input type="number" step="0.01" min="0" max="10" inputmode="decimal" id="review-hdl" name="review-hdl" placeholder="Наприклад: 1.3" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-triglycerides">Тригліцериди (ммоль/л)</label>
+                  <input type="number" step="0.01" min="0" max="20" inputmode="decimal" id="review-triglycerides" name="review-triglycerides" placeholder="Наприклад: 1.1" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-tsh">TSH (мМО/л)</label>
+                  <input type="number" step="0.01" min="0" max="100" inputmode="decimal" id="review-tsh" name="review-tsh" placeholder="Наприклад: 2.1" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-free-t4">Вільний T4 (пмоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-free-t4" name="review-free-t4" placeholder="Наприклад: 14" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-free-t3">Вільний T3 (пмоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="50" inputmode="decimal" id="review-free-t3" name="review-free-t3" placeholder="Наприклад: 4.8" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-anti-tpo">Anti-TPO (Од/мл)</label>
+                  <input type="number" step="0.1" min="0" max="3000" inputmode="decimal" id="review-anti-tpo" name="review-anti-tpo" placeholder="За показами" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-alt">ALT (Од/л)</label>
+                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-alt" name="review-alt" placeholder="Наприклад: 25" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-ast">AST (Од/л)</label>
+                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-ast" name="review-ast" placeholder="Наприклад: 29" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-ggt">GGT (Од/л)</label>
+                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-ggt" name="review-ggt" placeholder="Наприклад: 22" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-bilirubin">Білірубін загальний (мкмоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="500" inputmode="decimal" id="review-bilirubin" name="review-bilirubin" placeholder="Наприклад: 12" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-creatinine">Креатинін (мкмоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-creatinine" name="review-creatinine" placeholder="Наприклад: 88" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-egfr">eGFR</label>
+                  <input type="number" step="1" min="0" max="200" inputmode="numeric" id="review-egfr" name="review-egfr" placeholder="Наприклад: 96" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-urea">Сечовина (ммоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-urea" name="review-urea" placeholder="Наприклад: 5.2" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-sodium">Натрій (ммоль/л)</label>
+                  <input type="number" step="0.1" min="100" max="180" inputmode="decimal" id="review-sodium" name="review-sodium" placeholder="Наприклад: 140" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-potassium">Калій (ммоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="15" inputmode="decimal" id="review-potassium" name="review-potassium" placeholder="Наприклад: 4.4" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-magnesium">Магній (ммоль/л)</label>
+                  <input type="number" step="0.01" min="0" max="5" inputmode="decimal" id="review-magnesium" name="review-magnesium" placeholder="Наприклад: 0.82" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-prolactin">Пролактин (нг/мл)</label>
+                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-prolactin" name="review-prolactin" placeholder="Наприклад: 14" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-testosterone">Тестостерон загальний (нмоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="80" inputmode="decimal" id="review-testosterone" name="review-testosterone" placeholder="Наприклад: 18" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-free-testosterone">Вільний тестостерон / індекс</label>
+                  <input type="number" step="0.1" min="0" max="500" inputmode="decimal" id="review-free-testosterone" name="review-free-testosterone" placeholder="За бланком лабораторії" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-shbg">SHBG (нмоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-shbg" name="review-shbg" placeholder="Наприклад: 35" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-lh">LH (мМО/мл)</label>
+                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-lh" name="review-lh" placeholder="Наприклад: 4.2" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-fsh">FSH (мМО/мл)</label>
+                  <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-fsh" name="review-fsh" placeholder="Наприклад: 5.1" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-estradiol">Естрадіол (пг/мл)</label>
+                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-estradiol" name="review-estradiol" placeholder="Наприклад: 32" />
+                </div>
+
+                <div class="form-group review-female-field">
+                  <label for="review-progesterone">Прогестерон (нг/мл)</label>
+                  <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="review-progesterone" name="review-progesterone" placeholder="Залежить від фази циклу" />
+                </div>
+
+                <div class="form-group review-female-field">
+                  <label for="review-dhea-s">DHEA-S (мкг/дл)</label>
+                  <input type="number" step="0.1" min="0" max="2000" inputmode="decimal" id="review-dhea-s" name="review-dhea-s" placeholder="За бланком лабораторії" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-ck">Креатинкіназа / CK (Од/л)</label>
+                  <input type="number" step="1" min="0" max="100000" inputmode="numeric" id="review-ck" name="review-ck" placeholder="За показами" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-cortisol">Кортизол (мкг/дл або нмоль/л)</label>
+                  <input type="number" step="0.1" min="0" max="3000" inputmode="decimal" id="review-cortisol" name="review-cortisol" placeholder="Одиниці див. у бланку" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-total-protein">Загальний білок (г/л)</label>
+                  <input type="number" step="0.1" min="0" max="150" inputmode="decimal" id="review-total-protein" name="review-total-protein" placeholder="Наприклад: 72" />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-albumin">Альбумін (г/л)</label>
+                  <input type="number" step="0.1" min="0" max="80" inputmode="decimal" id="review-albumin" name="review-albumin" placeholder="Наприклад: 44" />
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Оцінити результати</button>
+                  <button type="button" class="btn btn-secondary" id="lab-review-reset">
+                    Очистити
+                  </button>
+                </div>
+              </form>
+
+              <div id="lab-review-result" class="lab-result" aria-live="polite">
+                <div class="result-placeholder">
+                  Введи показники з бланку, щоб отримати спортивну оцінку ризиків.
+                </div>
+              </div>
+              <div class="result-export-actions" id="lab-review-export-actions" hidden>
+                <button type="button" class="btn btn-secondary" data-print-target="lab-review-result">
+                  Відкрити звіт
+                </button>
+              </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>

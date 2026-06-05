@@ -120,7 +120,8 @@
     "Тяга верхнього блоку вузьким хватом": "assets/images/exercises/OIP (7).webp",
     "Тяга горизонтального блоку": "assets/images/exercises/OIP (9).webp",
     "Тяга нижнього блоку": "assets/images/exercises/OIP (8).webp",
-    "Тяга Т-грифа": "assets/images/exercises/OIP (10).webp",
+    "Тяга Т-грифа": "assets/images/exercises/t-bar-row-to-waist.webp",
+    "Тяга штанги / Т-грифа до пояса": "assets/images/exercises/t-bar-row-to-waist.webp",
     "Тяга до поясу": "assets/images/exercises/OIP (11).webp",
     "Тяга резини до поясу": "assets/images/exercises/R (2).jpg",
     "Тяга рюкзака / гантелі в нахилі": "assets/images/exercises/a677f6f824a40f9cef4bd671ca778bd3.jpg",
@@ -131,7 +132,8 @@
     "Жим сидячи в тренажері": "assets/images/exercises/zhim-sidya-v-trenazhere.jpg",
     "Жим ногами": "assets/images/exercises/OIP (13).webp",
     "Жим резини над головою": "assets/images/exercises/sportsman-with-elastic-band-holding-arms-raised_128034-174.avif",
-    "Плечовий жим гантелей": "assets/images/exercises/1695985178_sport-photosota-club-p-zhim-gantelei-na-plechi-1.jpg",
+    "Плечовий жим гантелей": "assets/images/exercises/seated-dumbbell-press-form.jpg",
+    "Жим штанги або гантелей сидячи": "assets/images/exercises/seated-dumbbell-press-form.jpg",
     "Махи через сторони": "assets/images/exercises/Dumbbell-Lateral-Raise-1.webp",
     "Махи гантелями в сторони": "assets/images/exercises/Dumbbell-Lateral-Raise-1-1.webp",
     "Підйоми через сторони": "assets/images/exercises/Dumbbell-Lateral-Raise-1-1.webp",
@@ -167,10 +169,14 @@
     "Підйом колін у висі": "assets/images/exercises/Підйоми-ніг-у-висі-Основні-задіяні-мязи-1.gif",
     "Підйом прямих ніг у висі": "assets/images/exercises/3604.png",
     "Прес: підйом ніг лежачи / hollow body": "assets/images/exercises/pidjom-nih-lezhachy.webp",
-    "Розведення в тренажері / кросовері": "assets/images/exercises/OIP (19).webp",
+    "Зведення рук у тренажері / кросовері": "assets/images/exercises/13f33-16909862664255-1920.avif",
+    "Зведення рук в кросовері": "assets/images/exercises/13f33-16909862664255-1920.avif",
+    "Розведення в тренажері / кросовері": "assets/images/exercises/13f33-16909862664255-1920.avif",
     "Тяга к обличчу з резиною / задня дельта": "assets/images/exercises/5607 (1).webp",
     "Розведення на задню дельту резиною / нахил": "assets/images/exercises/5607 (1).webp",
-    "Пуловер з гантеллю": "assets/images/exercises/625117de68fa4111e4e0eb313f06a1c6.gif"
+    "Пуловер з гантеллю": "assets/images/exercises/625117de68fa4111e4e0eb313f06a1c6.gif",
+    "Пуловер у блоці": "assets/images/exercises/cable-pullover-back.jpg",
+    "Пуловер у тренажері або блоці": "assets/images/exercises/cable-pullover-back.jpg"
   };
 
   const missingExercisePhotoBacklog = [];

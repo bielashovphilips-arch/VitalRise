@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Добавки VitalRise</title>
+  <meta name="description" content="Модуль добавок VitalRise: спортпіт, ферменти, підтримка травлення, ШКТ, печінки, нирок і відновлення." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css?v=platform-modules-25" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+          <span>VR</span>
+          <strong>VitalRise</strong>
+        </a>
+
+        <button class="mobile-menu-toggle" type="button" aria-label="Меню" aria-expanded="false" data-mobile-menu-toggle>
+          <span class="mobile-menu-dots" aria-hidden="true">...</span>
+        </button>
+
+        <nav class="site-nav" aria-label="Головна навігація">
+          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
+          <a href="nutrition.html" data-i18n="nav.calculator">Калькулятор</a>
+          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
+          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
+          <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
+        </nav>
+
+        <div class="language-switcher" aria-label="Мова сайту">
+          <button type="button" data-lang-switch="uk" aria-pressed="true">UA</button>
+          <button type="button" data-lang-switch="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang-switch="ru" aria-pressed="false">RU</button>
+        </div>
+
+        <a href="labs.html" class="header-cta" data-i18n="cta.startLabs">Почати з аналізів</a>
+      </div>
+    </header>
+    <main class="module-page-main">
+      <section class="module-hero">
+        <div class="container">
+          <div class="module-hero-copy reveal">
+            <span class="section-label">Supplement Command</span>
+            <h1>Добавки тільки там, де є сенс</h1>
+            <p>Спортпіт, ферменти, електроліти й підтримка травлення підбираються під ціль, раціон, переносимість і лабораторний контекст.</p>
+          </div>
+          <aside class="module-hero-panel reveal">
+            <span>Фокус</span>
+            <strong>Спочатку база, потім добавки</strong>
+            <p>Додаткові вуглеводи та гейнери доречні переважно на наборі маси або легкій рекомпозиції, не на зниженні ваги.</p>
+          </aside>
+        </div>
+      </section>
+      <section id="supplements" class="supplements-section">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-label">Спортпіт</span>
+            <h2>Добавки тільки там, де вони мають сенс</h2>
+            <p>
+              Модуль спортпіту не продає баночки. Він пояснює, що може бути
+              доречним для спортсмена, що контролювати і коли краще не
+              експериментувати без консультації фахівця.
+            </p>
+          </div>
+
+          <div class="supplement-grid">
+            <article class="supplement-card reveal">
+              <span class="supplement-index">01</span>
+              <h3>Протеїн за типом</h3>
+              <p>Яловичий, казеїн або гідролізат підбираються за переносимістю, часом прийому і бюджетом.</p>
+              <div class="supplement-meta">Контроль: білок, ШКТ, молочні продукти</div>
+            </article>
+
+            <article class="supplement-card reveal">
+              <span class="supplement-index">02</span>
+              <h3>Креатин</h3>
+              <p>Базова добавка для силової роботи, об’єму тренувань і повторюваної потужності.</p>
+              <div class="supplement-meta">Контроль: вода, вага, ниркові маркери за потреби</div>
+            </article>
+
+            <article class="supplement-card reveal">
+              <span class="supplement-index">03</span>
+              <h3>Омега-3</h3>
+              <p>Має сенс, якщо в раціоні мало жирної риби та якісних джерел жирів.</p>
+              <div class="supplement-meta">Контроль: раціон, ліпідограма</div>
+            </article>
+
+            <article class="supplement-card reveal">
+              <span class="supplement-index">04</span>
+              <h3>Вітамін D</h3>
+              <p>Не вгадується “на око”: найкраще працює через лабораторний контроль.</p>
+              <div class="supplement-meta">Контроль: 25(OH)D, рекомендація лікаря</div>
+            </article>
+
+            <article class="supplement-card reveal">
+              <span class="supplement-index">05</span>
+              <h3>Форми магнію</h3>
+              <p>Гліцинат, цитрат, малат або треонат мають різні задачі: сон, травлення, втома або фокус.</p>
+              <div class="supplement-meta">Контроль: ШКТ, сон, нирки, ліки</div>
+            </article>
+
+            <article class="supplement-card reveal">
+              <span class="supplement-index">06</span>
+              <h3>Підтримка тестостерону</h3>
+              <p>Для чоловіків: цинк, вітамін D3, магній, ашваганда і тонгкат Алі мають сенс тільки під дефіцити, стрес, сон і аналізи.</p>
+              <div class="supplement-meta">Контроль: сон, стрес, 25(OH)D, цинк, ранковий тестостерон</div>
+            </article>
+
+            <article class="supplement-card supplement-card-accent reveal">
+              <span class="supplement-index">VR</span>
+              <h3>Фільтр зайвого</h3>
+              <p>Гейнери, жироспалювачі й предтрени мають проходити перевірку ціллю, тиском, сном і раціоном.</p>
+              <div class="supplement-meta">Принцип: спочатку база, потім добавки</div>
+            </article>
+          </div>
+
+          <div class="supplement-protocol reveal">
+            <div class="protocol-head">
+              <span class="section-label">Протокол спортпіту</span>
+              <h3>Зібрати базовий стек</h3>
+              <p>
+                Це не медичне призначення, а спортивна навігація: що може бути
+                доречним, що краще перевірити аналізами і що не варто додавати
+                поверх слабкої бази.
+              </p>
+            </div>
+
+            <form id="supplement-form" class="form-grid">
+              <div class="form-group">
+                <label for="supplement-goal">Ціль</label>
+                <select id="supplement-goal" name="supplement-goal">
+                  <option value="strength">Сила / продуктивність</option>
+                  <option value="mass">Набір м’язів</option>
+                  <option value="fatloss">Жироспалення</option>
+                  <option value="health">Здоров’я / відновлення</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="supplement-level">Рівень</label>
+                <select id="supplement-level" name="supplement-level">
+                  <option value="beginner">Початковий</option>
+                  <option value="intermediate" selected>Середній</option>
+                  <option value="advanced">Просунутий</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="protein-coverage">Білок з їжі</label>
+                <select id="protein-coverage" name="protein-coverage">
+                  <option value="low">Часто не добираю</option>
+                  <option value="ok">Майже добираю</option>
+                  <option value="high">Добираю стабільно</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="fish-intake">Жирна риба</label>
+                <select id="fish-intake" name="fish-intake">
+                  <option value="rare">Рідко</option>
+                  <option value="weekly">1-2 рази на тиждень</option>
+                  <option value="often">3+ рази на тиждень</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="vitamin-d-status">Вітамін D за аналізом</label>
+                <select id="vitamin-d-status" name="vitamin-d-status">
+                  <option value="unknown">Не знаю</option>
+                  <option value="low">Низький</option>
+                  <option value="ok">У нормі</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="sleep-quality">Сон / відновлення</label>
+                <select id="sleep-quality" name="sleep-quality">
+                  <option value="poor">Часто погано</option>
+                  <option value="medium">Нестабільно</option>
+                  <option value="good">Добре</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="brain-focus">Мозок / фокус</label>
+                <select id="brain-focus" name="brain-focus">
+                  <option value="none">Не пріоритет</option>
+                  <option value="focus">Фокус і концентрація</option>
+                  <option value="memory">Пам’ять / навчання</option>
+                  <option value="stress">Стрес / напруга</option>
+                  <option value="fatigue">Ментальна втома</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="stimulant-tolerance">Кофеїн / предтрен</label>
+                <select id="stimulant-tolerance" name="stimulant-tolerance">
+                  <option value="sensitive">Погано переношу</option>
+                  <option value="normal">Переношу нормально</option>
+                  <option value="avoid">Не хочу стимулятори</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="male-hormone-support">Чоловіча гормональна підтримка</label>
+                <select id="male-hormone-support" name="male-hormone-support">
+                  <option value="none">Не пріоритет</option>
+                  <option value="stress">Стрес / сон / відновлення</option>
+                  <option value="performance">Сила / набір м'язів</option>
+                  <option value="low-labs">Є низькі ранкові аналізи</option>
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Сформувати стек</button>
+                <button type="button" class="btn btn-secondary" id="supplement-reset">
+                  Очистити
+                </button>
+              </div>
+            </form>
+
+            <div id="supplement-result" class="supplement-result" aria-live="polite">
+              <div class="result-placeholder">
+                Обери параметри, щоб отримати базовий протокол спортпіту.
+              </div>
+            </div>
+            <div class="result-export-actions">
+              <button type="button" class="btn btn-secondary" data-print-target="supplement-result">
+                Відкрити звіт
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+            <span>VR</span>
+            <strong>VitalRise</strong>
+          </a>
+          <p>
+            Атлетична система для харчування, тренувань, спортпіту, лабораторного
+            контролю, прогресу і фінального Blueprint.
+          </p>
+        </div>
+
+        <div class="footer-links" aria-label="Швидкі посилання">
+          <a href="index.html#features">Система</a>
+          <a href="profile.html">Профіль</a>
+          <a href="labs.html">Аналізи</a>
+          <a href="nutrition.html">Харчування</a>
+          <a href="training.html">Тренування</a>
+          <a href="supplements.html">Спортпіт</a>
+          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
+          <a href="recovery.html">Відновлення</a>
+          <a href="progress.html">Coach</a>
+          <a href="progress.html">Прогрес</a>
+          <a href="progress.html#knowledge" data-i18n="nav.knowledge">База знань</a>
+          <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
+          <a href="blueprint.html">Blueprint</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms</a>
+          <a href="disclaimer.html">Medical / AAS Disclaimer</a>
+        </div>
+
+        <div class="footer-note">
+          <strong>Важливо</strong>
+          <p>
+            VitalRise не ставить діагнози й не призначає лікування. Лабораторні
+            показники, гормони, пролактин, щитоподібну залозу, печінкові й
+            ниркові маркери потрібно трактувати з лікарем.
+          </p>
+          <button type="button" class="footer-clear-data" id="clear-saved-data">
+            Очистити збережені дані
+          </button>
+          <div class="footer-data-actions" aria-label="Експорт та імпорт даних VitalRise">
+            <button type="button" class="footer-clear-data" id="export-saved-data">
+              Експорт JSON
+            </button>
+            <button type="button" class="footer-clear-data" id="import-saved-data">
+              Імпорт JSON
+            </button>
+            <label class="visually-hidden" for="import-saved-data-file">Файл резервної копії VitalRise</label>
+            <input type="file" id="import-saved-data-file" accept="application/json,.json" hidden />
+          </div>
+        </div>
+      </div>
+
+      <div class="container footer-bottom">
+        <span>© VitalRise</span>
+        <span>High-level control for athletic recomposition.</span>
+      </div>
+    </footer>
+  </div>
+  <div class="exercise-atlas-modal" id="exercise-atlas-modal" aria-hidden="true">
+    <div class="exercise-atlas-backdrop" data-atlas-close></div>
+    <section class="exercise-atlas-dialog" role="dialog" aria-modal="true" aria-labelledby="exercise-atlas-title">
+      <div class="exercise-atlas-head">
+        <div>
+          <span class="section-label">Exercise Atlas</span>
+          <h2 id="exercise-atlas-title">Атлас вправ</h2>
+        </div>
+        <button type="button" class="exercise-atlas-close" data-atlas-close aria-label="Закрити">×</button>
+      </div>
+
+      <div class="exercise-atlas-filters" id="exercise-atlas-filters"></div>
+      <div class="exercise-photo-backlog" id="exercise-photo-backlog" aria-live="polite"></div>
+      <div class="exercise-atlas-grid" id="exercise-atlas-grid"></div>
+
+      <div class="exercise-atlas-legend">
+        <span><i class="legend-main"></i> Основні</span>
+        <span><i class="legend-secondary"></i> Допоміжні</span>
+        <span><i class="legend-other"></i> Стабілізатори</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="payment-modal" id="payment-modal" aria-hidden="true">
+    <div class="payment-backdrop" data-payment-close></div>
+    <section class="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-title">
+      <button type="button" class="payment-close" data-payment-close aria-label="Close">×</button>
+      <span class="section-label" id="payment-kicker"></span>
+      <h2 id="payment-title"></h2>
+      <p id="payment-plan-note"></p>
+      <div class="payment-summary">
+        <div><span id="payment-plan-label"></span><strong id="payment-plan-value"></strong></div>
+        <div><span id="payment-price-label"></span><strong id="payment-price-value"></strong></div>
+      </div>
+      <p id="payment-text"></p>
+      <div class="payment-steps" aria-label="Checkout steps">
+        <span data-i18n="payment.stepEmail">Email</span>
+        <span data-i18n="payment.stepPay">Оплата</span>
+        <span data-i18n="payment.stepAccess">Доступ</span>
+      </div>
+      <label class="payment-code-field" for="payment-email">
+        <span id="payment-email-label"></span>
+        <input type="email" id="payment-email" autocomplete="email" placeholder="client@example.com" />
+      </label>
+      <label class="payment-code-field" for="payment-access-code">
+        <span id="payment-code-label"></span>
+        <input type="text" id="payment-access-code" autocomplete="one-time-code" placeholder="VR-START-XXXX" />
+      </label>
+      <p class="payment-demo-note" id="payment-code-hint"></p>
+      <div class="payment-actions">
+        <button type="button" class="btn btn-secondary" data-payment-close id="payment-close-button"></button>
+        <button type="button" class="btn btn-secondary" id="payment-redeem-button"></button>
+        <button type="button" class="btn btn-primary" id="payment-checkout-button"></button>
+      </div>
+      <div class="payment-status" id="payment-status" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <div class="mobile-report-modal" id="mobile-report-modal" aria-hidden="true">
+    <div class="mobile-report-backdrop" data-report-close></div>
+    <div class="mobile-report-panel" role="dialog" aria-modal="true" aria-label="VitalRise report">
+      <div class="mobile-report-toolbar">
+        <div>
+          <span class="mobile-report-kicker">VitalRise</span>
+          <strong id="mobile-report-toolbar-title">Report</strong>
+        </div>
+        <button type="button" class="mobile-report-icon-btn" data-report-close aria-label="Закрити">×</button>
+      </div>
+      <div class="mobile-report-controls" id="mobile-report-controls">
+        <label class="visually-hidden" for="mobile-report-scope">Формат звіту</label>
+        <select id="mobile-report-scope" hidden>
+          <option value="current">Поточний тиждень</option>
+        </select>
+        <label class="visually-hidden" for="mobile-report-week">Тиждень</label>
+        <select id="mobile-report-week" hidden>
+          <option value="1">Тиждень 1</option>
+        </select>
+      </div>
+      <div class="mobile-report-phone" id="mobile-report-phone"></div>
+      <div class="mobile-report-actions">
+        <button type="button" class="btn btn-secondary" data-report-close>Закрити</button>
+        <div class="mobile-report-save-actions">
+          <button type="button" class="btn btn-secondary" id="mobile-report-print-mobile">PDF для телефона</button>
+          <button type="button" class="btn btn-primary" id="mobile-report-print-a4">PDF A4</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/modules/system.js"></script>
+  <script src="assets/js/modules/i18n.js?v=newsletter-copy-1"></script>
+  <script src="assets/js/modules/mobile-menu.js"></script>
+  <script src="assets/js/modules/storage.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="assets/js/modules/print.js"></script>
+  <script src="assets/js/modules/data-portability.js"></script>
+  <script src="assets/js/modules/calculator-shell.js?v=single-module-1"></script>
+  <script src="assets/js/modules/reveal.js"></script>
+  <script src="assets/js/modules/dashboard.js"></script>
+  <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
+  <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
+  <script src="assets/js/modules/nutrition-custom.js"></script>
+  <script src="assets/js/modules/nutrition.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/nutrition-render.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/training.js"></script>
+  <script src="assets/js/modules/training-templates.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
+  <script src="assets/js/modules/training-progression.js"></script>
+  <script src="assets/js/modules/training-render.js?v=smart-program-1"></script>
+  <script src="assets/js/modules/training-builder.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/exercise-atlas-data.js?v=seated-db-press-photo-1"></script>
+  <script src="assets/js/modules/exercise-atlas.js"></script>
+  <script src="assets/js/modules/labs.js"></script>
+  <script src="assets/js/modules/lab-protocols.js"></script>
+  <script src="assets/js/modules/progress-decision.js?v=biweekly-correction-1"></script>
+  <script src="assets/js/modules/blueprint.js"></script>
+  <script src="assets/js/modules/supplements.js"></script>
+  <script src="assets/js/modules/coach.js?v=quick-profiles-2"></script>
+  <script src="assets/js/modules/access.js?v=analytics-1"></script>
+  <script src="assets/js/script.js?v=free-cottage-meals-1"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
   const system = window.VitalRiseSystem || {};
 
   const defaultSelection = {
-    protein: ["eggs", "cottage_cheese", "hard_cheese", "chicken", "turkey", "white_fish", "salmon", "tuna", "greek_yogurt", "whey_protein", "skyr", "shrimp", "tofu"],
+    protein: ["eggs", "cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "chicken", "turkey", "white_fish", "salmon", "tuna", "greek_yogurt", "whey_protein", "skyr", "shrimp", "tofu"],
     carb: ["oatmeal", "banana", "rice", "buckwheat", "potato", "sweet_potato", "bulgur", "quinoa", "berries", "apple", "lentils", "beans"],
     extra_carb: ["whole_bread", "rice_cakes"],
     fat: ["olive_oil", "avocado", "nuts", "peanut_butter", "pumpkin_seeds", "dark_chocolate"],
@@ -33,8 +33,21 @@
       min: 150,
       max: 300,
       defaultAmount: 200,
-      allowedMeals: ["breakfast", "second_breakfast", "snack"],
+      allowedMeals: ["breakfast", "second_breakfast", "lunch", "snack", "dinner"],
       macrosPer100: { p: 17, f: 5, c: 3, kcal: 121 }
+    },
+    {
+      id: "cottage_cheese_lowfat",
+      name: "Сир кисломолочний 0-0.2%",
+      category: "protein",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 50,
+      min: 150,
+      max: 300,
+      defaultAmount: 200,
+      allowedMeals: ["breakfast", "second_breakfast", "lunch", "snack", "dinner"],
+      macrosPer100: { p: 18, f: 0.2, c: 3, kcal: 86 }
     },
     {
       id: "hard_cheese",
@@ -507,6 +520,96 @@
   macrosPer100: { p: 7, f: 3, c: 80, kcal: 380 }
 },
 {
+  id: "honey",
+  name: "Мед",
+  category: "extra_carb",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 5,
+  min: 10,
+  max: 30,
+  defaultAmount: 15,
+  allowedMeals: ["breakfast", "second_breakfast", "snack"],
+  goalUse: ["gain", "recomp"],
+  note: "Рідко: набір маси або легка рекомпозиція, не для зниження ваги.",
+  macrosPer100: { p: 0.3, f: 0, c: 82, kcal: 304 }
+},
+{
+  id: "jam",
+  name: "Джем / варення",
+  category: "extra_carb",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 5,
+  min: 10,
+  max: 35,
+  defaultAmount: 20,
+  allowedMeals: ["breakfast", "second_breakfast", "snack"],
+  goalUse: ["gain", "recomp"],
+  note: "Рідко: набір маси або легка рекомпозиція, не для зниження ваги.",
+  macrosPer100: { p: 0.3, f: 0.1, c: 60, kcal: 250 }
+},
+{
+  id: "dates",
+  name: "Фініки",
+  category: "extra_carb",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 10,
+  min: 20,
+  max: 50,
+  defaultAmount: 30,
+  allowedMeals: ["second_breakfast", "snack"],
+  goalUse: ["gain", "recomp"],
+  note: "Рідко: набір маси або легка рекомпозиція, не для зниження ваги.",
+  macrosPer100: { p: 2.5, f: 0.4, c: 75, kcal: 282 }
+},
+{
+  id: "raisins",
+  name: "Родзинки",
+  category: "extra_carb",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 5,
+  min: 15,
+  max: 40,
+  defaultAmount: 25,
+  allowedMeals: ["breakfast", "second_breakfast", "snack"],
+  goalUse: ["gain", "recomp"],
+  note: "Рідко: набір маси або легка рекомпозиція, не для зниження ваги.",
+  macrosPer100: { p: 3.1, f: 0.5, c: 79, kcal: 299 }
+},
+{
+  id: "tortilla",
+  name: "Лаваш / тортилья",
+  category: "extra_carb",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 10,
+  min: 30,
+  max: 80,
+  defaultAmount: 50,
+  allowedMeals: ["lunch", "snack"],
+  goalUse: ["gain", "recomp"],
+  note: "Рідко: набір маси або легка рекомпозиція, не для зниження ваги.",
+  macrosPer100: { p: 8, f: 4, c: 50, kcal: 270 }
+},
+{
+  id: "fruit_juice",
+  name: "Фруктовий сік",
+  category: "extra_carb",
+  unitType: "grams",
+  unitLabel: "мл",
+  portionStep: 50,
+  min: 150,
+  max: 250,
+  defaultAmount: 200,
+  allowedMeals: ["second_breakfast", "snack"],
+  goalUse: ["gain", "recomp"],
+  note: "Краще біля тренування. Не використовувати як базу при зниженні ваги.",
+  macrosPer100: { p: 0.4, f: 0.1, c: 11, kcal: 45 }
+},
+{
   id: "pumpkin_seeds",
   name: "Гарбузове насіння",
   category: "fat",
@@ -650,14 +753,14 @@
 
 const autoMealTemplates = {
   breakfast: {
-    protein: ["eggs", "cottage_cheese", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+    protein: ["eggs", "cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
     carb: ["oatmeal", "berries", "apple"],
     extra_carb: ["banana", "whole_bread", "rice_cakes"],
     fat: ["butter", "peanut_butter", "avocado", "pumpkin_seeds"],
     vegetables: false
   },
   second_breakfast: {
-    protein: ["cottage_cheese", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+    protein: ["cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
     carb: ["banana", "berries", "apple"],
     extra_carb: ["whole_bread", "rice_cakes"],
     fat: ["nuts", "peanut_butter", "pumpkin_seeds"],
@@ -671,7 +774,7 @@ const autoMealTemplates = {
     vegetables: true
   },
   snack: {
-    protein: ["cottage_cheese", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+    protein: ["cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
     carb: ["banana", "berries", "apple"],
     extra_carb: ["whole_bread", "rice_cakes"],
     fat: ["nuts", "peanut_butter", "seeds", "pumpkin_seeds", "dark_chocolate"],
@@ -1043,7 +1146,7 @@ const autoMealTemplates = {
     if (ids.includes("yolks")) return false;
     if (meal.mealKey === "lunch" && ids.includes("banana")) return false;
     if (meal.mealKey === "dinner" && ids.includes("banana")) return false;
-    if (ids.includes("cottage_cheese") && ids.includes("avocado") && ids.includes("eggs")) return false;
+    if ((ids.includes("cottage_cheese") || ids.includes("cottage_cheese_lowfat")) && ids.includes("avocado") && ids.includes("eggs")) return false;
     if (meal.items.length === 0) return false;
 
     return true;
@@ -1613,26 +1716,11 @@ const autoMealTemplates = {
     };
   }
 
-  function getMealDistribution(mealCount) {
-    if (mealCount === 5) {
-      return [
-        { key: "breakfast", ratio: 0.22 },
-        { key: "second_breakfast", ratio: 0.13 },
-        { key: "lunch", ratio: 0.30 },
-        { key: "snack", ratio: 0.13 },
-        { key: "dinner", ratio: 0.22 }
-      ];
+  function getManualMealDistribution(mealCount) {
+    if (mealCount === 3) {
+      return ["breakfast", "lunch", "dinner"];
     }
 
-    return [
-      { key: "breakfast", ratio: 0.25 },
-      { key: "lunch", ratio: 0.35 },
-      { key: "snack", ratio: 0.15 },
-      { key: "dinner", ratio: 0.25 }
-    ];
-  }
-
-  function getManualMealDistribution(mealCount) {
     if (mealCount === 5) {
       return ["breakfast", "second_breakfast", "lunch", "snack", "dinner"];
     }
@@ -1640,10 +1728,25 @@ const autoMealTemplates = {
     return ["breakfast", "lunch", "snack", "dinner"];
   }
 
+  function getMealDistribution(mealCount) {
+    const keys = getManualMealDistribution(mealCount);
+    const ratio = keys.length ? +(1 / keys.length).toFixed(4) : 0.25;
+
+    return keys.map(function (key, index) {
+      const isLast = index === keys.length - 1;
+      const usedRatio = ratio * index;
+
+      return {
+        key: key,
+        ratio: isLast ? +(1 - usedRatio).toFixed(4) : ratio
+      };
+    });
+  }
+
   function getAllowedIdsForMeal(mealKey) {
     if (mealKey === "breakfast") {
       return {
-        protein: ["eggs", "cottage_cheese", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+        protein: ["eggs", "cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
         carb: ["oatmeal", "banana", "berries", "apple"],
         fat: ["avocado", "butter", "peanut_butter", "pumpkin_seeds"],
         vegetable: [],
@@ -1653,7 +1756,7 @@ const autoMealTemplates = {
 
     if (mealKey === "second_breakfast") {
       return {
-        protein: ["cottage_cheese", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+        protein: ["cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
         carb: ["banana", "oatmeal", "berries", "apple"],
         fat: ["nuts", "peanut_butter", "seeds", "pumpkin_seeds"],
         vegetable: [],
@@ -1663,7 +1766,7 @@ const autoMealTemplates = {
 
     if (mealKey === "lunch") {
       return {
-        protein: ["chicken", "turkey", "beef", "tuna", "white_fish", "salmon", "chicken_thigh", "shrimp", "tofu", "pork_tenderloin"],
+        protein: ["chicken", "turkey", "beef", "tuna", "white_fish", "salmon", "chicken_thigh", "shrimp", "tofu", "pork_tenderloin", "cottage_cheese", "cottage_cheese_lowfat"],
         carb: ["rice", "buckwheat", "potato", "pasta", "sweet_potato", "bulgur", "couscous", "quinoa", "lentils", "beans"],
         fat: ["olive_oil", "avocado", "butter"],
         vegetable: ["spinach", "broccoli", "cucumber", "tomato", "zucchini", "bell_pepper", "asparagus"],
@@ -1673,7 +1776,7 @@ const autoMealTemplates = {
 
     if (mealKey === "snack") {
       return {
-        protein: ["cottage_cheese", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+        protein: ["cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
         carb: ["banana", "berries", "apple"],
         fat: ["nuts", "peanut_butter", "seeds", "pumpkin_seeds", "dark_chocolate"],
         vegetable: [],
@@ -1682,7 +1785,7 @@ const autoMealTemplates = {
     }
 
     return {
-      protein: ["chicken", "turkey", "beef", "tuna", "white_fish", "salmon", "eggs", "hard_cheese", "chicken_thigh", "shrimp", "tofu", "pork_tenderloin"],
+      protein: ["chicken", "turkey", "beef", "tuna", "white_fish", "salmon", "eggs", "hard_cheese", "chicken_thigh", "shrimp", "tofu", "pork_tenderloin", "cottage_cheese", "cottage_cheese_lowfat"],
       carb: ["rice", "buckwheat", "potato", "sweet_potato", "bulgur", "quinoa", "lentils", "beans"],
       fat: ["olive_oil", "avocado", "pumpkin_seeds"],
       vegetable: ["spinach", "broccoli", "cucumber", "tomato", "zucchini", "bell_pepper", "asparagus"],
@@ -1699,7 +1802,7 @@ const autoMealTemplates = {
 
     if (food.id === "hard_cheese") return goal === "gain" ? 50 : 40;
 
-    if (food.id === "cottage_cheese") return 200;
+    if (food.id === "cottage_cheese" || food.id === "cottage_cheese_lowfat") return 200;
 
     if (food.id === "banana") return 100;
 
@@ -1800,7 +1903,12 @@ const autoMealTemplates = {
     };
   }
 
-  function getBuilderRowsForMeal(category, mealKey, targetValue, selected) {
+  function isFoodAllowedForGoal(food, goal) {
+    if (!food || !food.goalUse || !food.goalUse.length) return true;
+    return food.goalUse.includes(goal || "maintain");
+  }
+
+  function getBuilderRowsForMeal(category, mealKey, targetValue, selected, goal) {
     const allowed = getAllowedIdsForMeal(mealKey);
     const allowedIds = allowed[category] || [];
     const selectedIds = (selected && selected[category]) || [];
@@ -1809,6 +1917,10 @@ const autoMealTemplates = {
       .map(getFoodById)
       .filter(Boolean)
       .filter(function (food) {
+        return isFoodAllowedForGoal(food, goal);
+      })
+      .filter(function (food) {
+        if (["protein", "carb", "extra_carb", "fat"].includes(category)) return true;
         if (!food.allowedMeals || !food.allowedMeals.length) return true;
         return food.allowedMeals.includes(mealKey);
       })
@@ -1933,11 +2045,12 @@ const autoMealTemplates = {
       };
 
       ["protein", "carb", "extra_carb", "fat"].forEach(function (category) {
-        const entries = getSelectionEntries(mealSelection[category]);
+        const entries = getSelectionEntries(mealSelection[category]).slice(0, 1);
 
         entries.forEach(function (entry) {
           const food = getFoodById(entry.id);
           if (!food) return;
+          if (!isFoodAllowedForGoal(food, targets.goal)) return;
 
           const macroTargets = getMealMacroTargets(targets, mealKey);
           const targetValue = macroTargets[getMacroKeyByCategory(category)];

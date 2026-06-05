@@ -57,22 +57,28 @@
       '@page{margin:0;}' +
       '*{box-sizing:border-box;}' +
       'html,body{min-height:100%;}' +
-      'body{margin:0;background:#05060a;color:#eef2f7;font-family:Arial,Inter,sans-serif;font-size:11pt;line-height:1.45;-webkit-print-color-adjust:exact;print-color-adjust:exact;}' +
-      '.mobile-report-document{width:430px;max-width:100%;margin:0 auto;background:linear-gradient(180deg,#151821 0%,#07080c 100%);box-shadow:none;overflow:hidden;}' +
-      '.mobile-report-hero{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.1);background:linear-gradient(135deg,rgba(240,214,117,.16),transparent 62%),rgba(255,255,255,.025);}' +
-      '.mobile-report-logo{display:flex;align-items:center;gap:10px;margin-bottom:18px;}' +
-      '.mobile-report-logo span{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#d4af37,#f0d675);color:#111216;font-size:12px;font-weight:950;}' +
-      '.mobile-report-logo strong{color:#fff;font-size:18px;}' +
-      '.mobile-report-hero p,.mobile-report-hero small{margin:0;color:rgba(236,240,248,.7);font-size:12px;font-weight:700;}' +
-      '.mobile-report-hero h2{margin:6px 0 8px;color:#fff;font-size:28px;line-height:1.04;}' +
-      '.mobile-report-content{display:grid;gap:14px;padding:18px 14px 20px;}' +
-      '.result-title,.result-subtitle,h3,h4,h5{margin:8px 0;color:#fff;line-height:1.16;}' +
-      '.result-title{font-size:20px;}.result-subtitle{font-size:17px;color:#f0d675;}' +
-      'p,li,span,small,.exercise-meta,.result-item-label,.tip-item{font-size:10.5pt;line-height:1.45;color:rgba(236,240,248,.76);}' +
-      'strong,b,.result-item-value{color:#fff;}' +
-      '.result-grid,.nutrition-delta-grid,.training-days-list,.supplement-stack-grid,.lab-result-grid,.lab-findings-grid,.progress-columns,.blueprint-priority-grid,.blueprint-weeks,.training-passport-grid,.training-guidance-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:8px 0;}' +
-      'article,section,.nutrition-summary,.nutrition-accuracy-card,.result-item,.tip-item,.exercise-item,.lab-status,.lab-finding,.supplement-stack-card,.training-day-card,.auto-meal-card,.selected-day-card,.phase-recommendation-card,.blueprint-priority,.blueprint-week,.training-passport-card,.training-guidance-card{break-inside:avoid;page-break-inside:avoid;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;margin:0;background:rgba(255,255,255,.05);color:#eef2f7;}' +
-      '.exercise-item{display:grid;grid-template-columns:1fr;gap:7px;}' +
+      'body{margin:0;background:#05060a;color:#eef2f7;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:11pt;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;-webkit-font-smoothing:antialiased;}' +
+      '.mobile-report-document{width:430px;max-width:100%;margin:0 auto;background:linear-gradient(180deg,#0f1117 0%,#05060a 100%);box-shadow:none;overflow:hidden;}' +
+      '.mobile-report-hero{padding:28px 24px 24px;border-bottom:2px solid rgba(212,175,55,.3);background:linear-gradient(135deg,rgba(212,175,55,.08),transparent 62%),rgba(255,255,255,.01);}' +
+      '.mobile-report-logo{display:flex;align-items:center;gap:12px;margin-bottom:20px;}' +
+      '.mobile-report-logo span{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#d4af37,#f0d675);color:#111216;font-size:14px;font-weight:900;box-shadow:0 4px 12px rgba(212,175,55,.2);}' +
+      '.mobile-report-logo strong{color:#fff;font-size:20px;font-weight:700;}' +
+      '.mobile-report-hero p{margin:0;color:rgba(236,240,248,.6);font-size:11pt;font-weight:500;text-transform:uppercase;letter-spacing:.5px;}' +
+      '.mobile-report-hero small{margin:0;display:block;margin-top:8px;color:rgba(212,175,55,.8);font-size:10pt;font-weight:500;}' +
+      '.mobile-report-hero h2{margin:10px 0 12px;color:#fff;font-size:32px;font-weight:700;line-height:1.1;}' +
+      '.mobile-report-content{display:grid;gap:16px;padding:24px 20px 28px;}' +
+      '.result-title{margin:16px 0 12px;color:#fff;font-size:22px;font-weight:700;line-height:1.2;border-bottom:2px solid rgba(212,175,55,.2);padding-bottom:10px;}' +
+      '.result-subtitle{margin:14px 0 10px;color:#f0d675;font-size:16px;font-weight:600;line-height:1.3;}' +
+      'h3,h4,h5{margin:10px 0 8px;color:#fff;line-height:1.3;font-weight:600;}' +
+      'h3{font-size:18px;}h4{font-size:15px;}h5{font-size:13px;}' +
+      'p,li,span,small,.exercise-meta,.result-item-label,.tip-item{font-size:11pt;line-height:1.6;color:rgba(236,240,248,.8);}' +
+      'strong,b,.result-item-value{color:#fff;font-weight:600;}' +
+      '.result-grid,.nutrition-delta-grid,.training-days-list,.supplement-stack-grid,.lab-result-grid,.lab-findings-grid,.progress-columns,.blueprint-priority-grid,.blueprint-weeks,.training-passport-grid,.training-guidance-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:12px 0;}' +
+      '.result-item,.nutrition-delta-item{display:grid;grid-template-columns:1fr;gap:4px;padding:14px;border:1px solid rgba(212,175,55,.2);border-radius:12px;background:rgba(212,175,55,.04);}' +
+      'article,section,.nutrition-summary,.nutrition-accuracy-card,.tip-item,.exercise-item,.lab-status,.lab-finding,.supplement-stack-card,.training-day-card,.auto-meal-card,.selected-day-card,.phase-recommendation-card,.blueprint-priority,.blueprint-week,.training-passport-card,.training-guidance-card{break-inside:avoid;page-break-inside:avoid;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px;margin:0;background:rgba(255,255,255,.04);color:#eef2f7;}' +
+      '.exercise-item{display:grid;grid-template-columns:1fr;gap:8px;padding:12px;border:1px solid rgba(255,255,255,.1);}' +
+      '.exercise-meta{font-size:10.5pt;color:rgba(212,175,55,.9);font-weight:500;}' +
+      '.meal-summary{padding:10px;background:rgba(212,175,55,.08);border-radius:10px;font-size:10.5pt;font-weight:500;color:rgba(236,240,248,.85);}' +
       'button,input,select,textarea,details,summary,.atlas-inline-btn,.builder-actions,.mode-switch,.day-switcher,.nutrition-custom-tools,.nutrition-menu-template-tools{display:none!important;}' +
       'a[href]::after{content:"";}'
     );
@@ -121,42 +127,88 @@
     );
   }
 
+  function exportReportAsPDF(target, layout) {
+    if (!target || !hasResultContent(target) || !window.html2pdf) return;
+
+    const element = document.createElement("div");
+    element.innerHTML = buildReportContent(target);
+
+    const fileName = "vitalrise-" + target.replace("-result", "") + "-" + new Date().toISOString().slice(0, 10) + ".pdf";
+    const options = {
+      margin: layout === "mobile" ? 5 : 14,
+      filename: fileName,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, backgroundColor: "#fff" },
+      jsPDF: layout === "mobile" ? { format: [100, 160], orientation: "portrait" } : { format: "a4", orientation: "portrait" }
+    };
+
+    window.html2pdf().set(options).from(element).save();
+  }
+
   function printIsolatedReport(target, layout) {
     if (!target || !hasResultContent(target)) return;
+    exportReportAsPDF(target, layout);
+  }
 
-    const iframe = document.createElement("iframe");
-    iframe.setAttribute("title", "VitalRise PDF");
-    iframe.style.position = "fixed";
-    iframe.style.right = "0";
-    iframe.style.bottom = "0";
-    iframe.style.width = "0";
-    iframe.style.height = "0";
-    iframe.style.border = "0";
-    iframe.style.opacity = "0";
-
-    document.body.appendChild(iframe);
-
-    const frameWindow = iframe.contentWindow;
-    const frameDocument = iframe.contentDocument || (frameWindow && frameWindow.document);
-
-    if (!frameWindow || !frameDocument) {
-      document.body.removeChild(iframe);
-      document.body.classList.add("is-mobile-report-print");
-      window.print();
+  function exportReportAsPNG(target) {
+    if (!target || !hasResultContent(target) || !window.html2canvas) {
+      const exportBtn = document.querySelector("[data-export-png]");
+      const originalText = exportBtn ? exportBtn.textContent : "";
+      if (exportBtn) {
+        exportBtn.textContent = t("Експорт недоступний", "Export unavailable", "Экспорт недоступен");
+        setTimeout(function () {
+          exportBtn.textContent = originalText;
+        }, 1500);
+      }
       return;
     }
 
-    frameDocument.open();
-    frameDocument.write(buildPrintDocument(target, layout));
-    frameDocument.close();
+    const sourceEl = $(target);
+    if (!sourceEl) return;
 
-    window.setTimeout(function () {
-      frameWindow.focus();
-      frameWindow.print();
-      window.setTimeout(function () {
-        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-      }, 1500);
-    }, 250);
+    const exportBtn = document.querySelector("[data-export-png]");
+    const originalText = exportBtn ? exportBtn.textContent : "";
+    const fileName = "vitalrise-" + target.replace("-result", "") + "-" + new Date().toISOString().slice(0, 10) + ".png";
+
+    if (exportBtn) {
+      exportBtn.textContent = t("Обробка...", "Processing...", "Обработка...");
+      exportBtn.disabled = true;
+    }
+
+    window.html2canvas(sourceEl, {
+      allowTaint: true,
+      useCORS: true,
+      backgroundColor: "#05060a",
+      scale: 2,
+      logging: false,
+      windowHeight: sourceEl.scrollHeight,
+      windowWidth: 430
+    }).then(function (canvas) {
+      canvas.toBlob(function (blob) {
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        if (exportBtn) {
+          exportBtn.textContent = originalText;
+          exportBtn.disabled = false;
+          window.setTimeout(function () {
+            exportBtn.textContent = originalText;
+          }, 2000);
+        }
+      }, "image/png");
+    }).catch(function (error) {
+      console.error("PNG export error:", error);
+      if (exportBtn) {
+        exportBtn.textContent = originalText;
+        exportBtn.disabled = false;
+      }
+    });
   }
 
   function createReportModal() {
@@ -182,6 +234,7 @@
           '<div class="mobile-report-actions">' +
             '<button type="button" class="btn btn-secondary" data-report-close>' + t("Закрити", "Close", "Закрыть") + '</button>' +
             '<div class="mobile-report-save-actions">' +
+              '<button type="button" class="btn btn-secondary" id="mobile-report-export-png" data-export-png>' + t("Зберегти PNG", "Save as PNG", "Сохранить PNG") + '</button>' +
               '<button type="button" class="btn btn-secondary" id="mobile-report-print-mobile">' + t("PDF для телефона", "Mobile PDF", "PDF для телефона") + '</button>' +
               '<button type="button" class="btn btn-primary" id="mobile-report-print-a4">' + t("PDF A4", "PDF A4", "PDF A4") + '</button>' +
             '</div>' +
@@ -191,10 +244,11 @@
     }
 
     const actions = modal.querySelector(".mobile-report-actions");
-    if (actions && !modal.querySelector("#mobile-report-print-a4")) {
+    if (actions && !modal.querySelector("#mobile-report-export-png")) {
       actions.innerHTML =
         '<button type="button" class="btn btn-secondary" data-report-close>' + t("Закрити", "Close", "Закрыть") + '</button>' +
         '<div class="mobile-report-save-actions">' +
+          '<button type="button" class="btn btn-secondary" id="mobile-report-export-png" data-export-png>' + t("Зберегти PNG", "Save as PNG", "Сохранить PNG") + '</button>' +
           '<button type="button" class="btn btn-secondary" id="mobile-report-print-mobile">' + t("PDF для телефона", "Mobile PDF", "PDF для телефона") + '</button>' +
           '<button type="button" class="btn btn-primary" id="mobile-report-print-a4">' + t("PDF A4", "PDF A4", "PDF A4") + '</button>' +
         '</div>';
@@ -208,6 +262,13 @@
         closeReportModal();
       }
     });
+
+    const pngButton = modal.querySelector("#mobile-report-export-png");
+    if (pngButton) {
+      pngButton.addEventListener("click", function () {
+        exportReportAsPNG(activeTarget);
+      });
+    }
 
     const mobilePrintButton = modal.querySelector("#mobile-report-print-mobile");
     if (mobilePrintButton) {

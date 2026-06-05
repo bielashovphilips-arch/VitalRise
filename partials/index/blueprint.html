@@ -1,0 +1,120 @@
+      <section id="blueprint" class="blueprint-section" data-plan-required="start">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-label">Athlete Blueprint</span>
+            <h2>Паспорт тіла і головний пріоритет</h2>
+            <p>
+              Коли дані зібрані, найважливіше — не робити все одразу.
+              Blueprint зводить ціль, рівень, лабораторний статус, прогрес і
+              відновлення в один порядок дій.
+            </p>
+          </div>
+
+          <div class="blueprint-panel reveal">
+            <div class="protocol-head">
+              <span class="section-label">Command Center</span>
+              <h3>Зібрати фінальний протокол</h3>
+              <p>
+                Обери поточну ситуацію після калькуляторів. VitalRise покаже,
+                що має бути першим, другим і третім фокусом на найближчі 4 тижні.
+              </p>
+            </div>
+
+            <form id="blueprint-form" class="form-grid">
+              <div class="form-group">
+                <label for="blueprint-goal">Головна ціль</label>
+                <select id="blueprint-goal" name="blueprint-goal">
+                  <option value="recomp">Рекомпозиція</option>
+                  <option value="cut">Зниження жиру</option>
+                  <option value="gain">Набір м’язів</option>
+                  <option value="performance">Сила / продуктивність</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-level">Рівень</label>
+                <select id="blueprint-level" name="blueprint-level">
+                  <option value="beginner">Новачок</option>
+                  <option value="intermediate">Середній</option>
+                  <option value="advanced">Просунутий</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-nutrition">Харчування</label>
+                <select id="blueprint-nutrition" name="blueprint-nutrition">
+                  <option value="stable">Стабільне</option>
+                  <option value="chaotic">Нестабільне</option>
+                  <option value="unknown">Не рахую</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-training">Тренування</label>
+                <select id="blueprint-training" name="blueprint-training">
+                  <option value="progressing">Є прогресія</option>
+                  <option value="flat">Стоїть на місці</option>
+                  <option value="too_much">Забагато втоми</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-labs">Лабораторний статус</label>
+                <select id="blueprint-labs" name="blueprint-labs">
+                  <option value="green">Без явних стоп-сигналів</option>
+                  <option value="yellow">Є маркери уваги</option>
+                  <option value="red">Є червоні маркери</option>
+                  <option value="unknown">Ще не здавав/ла</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-progress">Прогрес</label>
+                <select id="blueprint-progress" name="blueprint-progress">
+                  <option value="moving">Рухається</option>
+                  <option value="plateau">Плато</option>
+                  <option value="regressing">Регрес</option>
+                  <option value="unknown">Немає трекінгу</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-recovery">Відновлення</label>
+                <select id="blueprint-recovery" name="blueprint-recovery">
+                  <option value="good">Добре</option>
+                  <option value="medium">Середнє</option>
+                  <option value="poor">Погане</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-supplements">Спортпіт</label>
+                <select id="blueprint-supplements" name="blueprint-supplements">
+                  <option value="minimal">Тільки база</option>
+                  <option value="random">Хаотично</option>
+                  <option value="none">Не використовую</option>
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Створити Blueprint</button>
+                <button type="button" class="btn btn-secondary" id="blueprint-reset">
+                  Очистити
+                </button>
+              </div>
+            </form>
+
+            <div id="blueprint-result" class="blueprint-result" aria-live="polite">
+              <div class="result-placeholder">
+                Обери стан системи, щоб отримати паспорт пріоритетів.
+              </div>
+            </div>
+
+            <div class="blueprint-export-actions">
+              <button type="button" class="btn btn-secondary" id="blueprint-print" data-print-target="blueprint-result" disabled>
+                Відкрити звіт
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>

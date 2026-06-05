@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Прогрес VitalRise</title>
+  <meta name="description" content="Модуль прогресу VitalRise: check-in, вага, талія, фото, дисципліна, сон і корекція плану після 14 днів." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css?v=platform-modules-25" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+          <span>VR</span>
+          <strong>VitalRise</strong>
+        </a>
+
+        <button class="mobile-menu-toggle" type="button" aria-label="Меню" aria-expanded="false" data-mobile-menu-toggle>
+          <span class="mobile-menu-dots" aria-hidden="true">...</span>
+        </button>
+
+        <nav class="site-nav" aria-label="Головна навігація">
+          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
+          <a href="nutrition.html" data-i18n="nav.calculator">Калькулятор</a>
+          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
+          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
+          <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
+        </nav>
+
+        <div class="language-switcher" aria-label="Мова сайту">
+          <button type="button" data-lang-switch="uk" aria-pressed="true">UA</button>
+          <button type="button" data-lang-switch="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang-switch="ru" aria-pressed="false">RU</button>
+        </div>
+
+        <a href="labs.html" class="header-cta" data-i18n="cta.startLabs">Почати з аналізів</a>
+      </div>
+    </header>
+    <main class="module-page-main">
+      <section class="module-hero">
+        <div class="container">
+          <div class="module-hero-copy reveal">
+            <span class="section-label">Progress Command</span>
+            <h1>Прогрес без панічних правок</h1>
+            <p>VitalRise оцінює динаміку через check-in, талію, вагу, силу, сон, кроки й виконання раціону.</p>
+          </div>
+          <aside class="module-hero-panel reveal">
+            <span>Фокус</span>
+            <strong>Корекція після даних, а не після емоцій</strong>
+            <p>Калорії варто змінювати після контрольного періоду, якщо план справді виконувався.</p>
+          </aside>
+        </div>
+      </section>
+      <section id="coach" class="coach-section" data-plan-required="pro"></section>
+
+      <section id="progress" class="progress-section" data-plan-required="pro">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-label">Progress Command</span>
+            <h2>Контроль прогресу без хаотичних правок</h2>
+            <p>
+              Щотижневий check-in допомагає новачку бачити рух і не панікувати.
+              Корекція калорій робиться після контрольних 14 днів, якщо план реально виконувався.
+            </p>
+          </div>
+
+          <div class="progress-panel reveal">
+            <div class="protocol-head">
+              <span class="section-label">Progress Check-In</span>
+              <h3>Оцінити прогрес</h3>
+              <p>
+                Обери щотижневий контроль для підтримки курсу або контроль 14 днів для реальної корекції раціону.
+              </p>
+            </div>
+
+            <form id="progress-form" class="form-grid">
+              <div class="form-group">
+                <label for="checkin-mode">Режим контролю</label>
+                <select id="checkin-mode" name="checkin-mode">
+                  <option value="weekly" selected>Щотижневий контроль без зміни калорій</option>
+                  <option value="biweekly">Контроль 14 днів з корекцією раціону</option>
+                </select>
+                <small class="field-hint" id="progress-mode-note">Щотижня сайт дає рішення по дисципліні, воді, сну, кроках і тренуваннях, але не змінює калорії.</small>
+              </div>
+
+              <div class="form-group">
+                <label for="progress-goal">Ціль</label>
+                <select id="progress-goal" name="progress-goal">
+                  <option value="recomp">Рекомпозиція</option>
+                  <option value="cut">Зниження жиру</option>
+                  <option value="gain">Набір м’язів</option>
+                  <option value="maintain">Підтримка</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="weight-change">Зміна ваги за період (%)</label>
+                <input type="number" step="0.1" min="-10" max="10" inputmode="decimal" id="weight-change" name="weight-change" placeholder="Наприклад: -0.4" />
+              </div>
+
+              <div class="form-group">
+                <label for="waist-change">Зміна талії за період (см)</label>
+                <input type="number" step="0.1" min="-20" max="20" inputmode="decimal" id="waist-change" name="waist-change" placeholder="Наприклад: -1.0" />
+              </div>
+
+              <div class="form-group">
+                <label for="strength-trend">Силові показники</label>
+                <select id="strength-trend" name="strength-trend">
+                  <option value="up">Ростуть</option>
+                  <option value="stable">Стабільні</option>
+                  <option value="down">Падають</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="sleep-score">Сон, год/ніч</label>
+                <input type="number" step="0.1" min="0" max="16" inputmode="decimal" id="sleep-score" name="sleep-score" placeholder="Наприклад: 7.2" />
+              </div>
+
+              <div class="form-group">
+                <label for="energy-score">Енергія</label>
+                <select id="energy-score" name="energy-score">
+                  <option value="good">Добра</option>
+                  <option value="medium">Середня</option>
+                  <option value="low">Низька</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="steps-average">Кроки в середньому/день</label>
+                <input type="number" step="100" min="0" max="50000" inputmode="numeric" id="steps-average" name="steps-average" placeholder="Наприклад: 8500" />
+                <small class="field-hint">Для зниження ваги кроки дуже важливі: навіть при крепатурі легка ходьба допомагає відновленню і підтримує витрати енергії.</small>
+              </div>
+
+              <div class="form-group">
+                <label for="nutrition-adherence">Дотримання раціону (%)</label>
+                <input type="number" step="1" min="0" max="100" inputmode="numeric" id="nutrition-adherence" name="nutrition-adherence" placeholder="Наприклад: 85" />
+              </div>
+
+              <div class="form-group">
+                <label for="hunger-level">Голод / тяга до їжі</label>
+                <select id="hunger-level" name="hunger-level">
+                  <option value="controlled">Контрольований</option>
+                  <option value="medium">Помітний</option>
+                  <option value="high">Високий</option>
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Отримати рішення</button>
+                <button type="button" class="btn btn-secondary" id="progress-reset">
+                  Очистити
+                </button>
+              </div>
+            </form>
+
+            <div id="progress-result" class="progress-result" aria-live="polite">
+              <div class="result-placeholder">
+                Обери режим контролю і заповни дані, щоб отримати рішення.
+              </div>
+            </div>
+            <div class="result-export-actions">
+              <button type="button" class="btn btn-secondary" data-print-target="progress-result">
+                Відкрити звіт
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="knowledge" class="knowledge-section">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-label" data-i18n="knowledge.label">База знань</span>
+          </div>
+
+          <div class="knowledge-grid reveal">
+            <article class="knowledge-card">
+              <span>01</span>
+              <h3 data-i18n="knowledge.cutTitle">Схуднення без зривів</h3>
+              <p data-i18n="knowledge.cutText">
+                Стійкий дефіцит калорій має бути помірним. Якщо занадто різко урізати їжу, падає енергія,
+                тренування стають гіршими, а дотримання плану ламається.
+              </p>
+              <a href="nutrition.html" class="knowledge-link" data-i18n="knowledge.cutCta">Розрахувати дефіцит</a>
+            </article>
+
+            <article class="knowledge-card">
+              <span>02</span>
+              <h3 data-i18n="knowledge.gainTitle">Набір ваги без зайвого жиру</h3>
+              <p data-i18n="knowledge.gainText">
+                Для набору потрібен профіцит, достатній білок і прогресія навантажень. Контроль талії показує,
+                чи росте м’язова маса, чи калорій уже забагато.
+              </p>
+              <a href="nutrition.html" class="knowledge-link" data-i18n="knowledge.gainCta">Підібрати профіцит</a>
+            </article>
+
+            <article class="knowledge-card">
+              <span>03</span>
+              <h3 data-i18n="knowledge.nutritionTitle">Раціон, який реально виконувати</h3>
+              <p data-i18n="knowledge.nutritionText">
+                Хороший план харчування не повинен бути ідеальним на папері. Він має збігатися з графіком,
+                бюджетом, кількістю прийомів їжі і продуктами, які людина готова їсти.
+              </p>
+              <a href="nutrition.html" class="knowledge-link" data-i18n="knowledge.nutritionCta">Зібрати раціон</a>
+            </article>
+
+            <article class="knowledge-card">
+              <span>04</span>
+              <h3 data-i18n="knowledge.healthTitle">Здоров’я і стоп-сигнали</h3>
+              <p data-i18n="knowledge.healthText">
+                Сон, втома, цикл, лібідо, тиск, травлення і аналізи можуть пояснити, чому вага або сила стоять.
+                VitalRise не ставить діагноз, але допомагає зрозуміти, що обговорити з фахівцем.
+              </p>
+              <a href="labs.html" class="knowledge-link" data-i18n="knowledge.healthCta">Перевірити маркери</a>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+            <span>VR</span>
+            <strong>VitalRise</strong>
+          </a>
+          <p>
+            Атлетична система для харчування, тренувань, спортпіту, лабораторного
+            контролю, прогресу і фінального Blueprint.
+          </p>
+        </div>
+
+        <div class="footer-links" aria-label="Швидкі посилання">
+          <a href="index.html#features">Система</a>
+          <a href="profile.html">Профіль</a>
+          <a href="labs.html">Аналізи</a>
+          <a href="nutrition.html">Харчування</a>
+          <a href="training.html">Тренування</a>
+          <a href="supplements.html">Спортпіт</a>
+          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
+          <a href="recovery.html">Відновлення</a>
+          <a href="progress.html">Coach</a>
+          <a href="progress.html">Прогрес</a>
+          <a href="progress.html#knowledge" data-i18n="nav.knowledge">База знань</a>
+          <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
+          <a href="blueprint.html">Blueprint</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms</a>
+          <a href="disclaimer.html">Medical / AAS Disclaimer</a>
+        </div>
+
+        <div class="footer-note">
+          <strong>Важливо</strong>
+          <p>
+            VitalRise не ставить діагнози й не призначає лікування. Лабораторні
+            показники, гормони, пролактин, щитоподібну залозу, печінкові й
+            ниркові маркери потрібно трактувати з лікарем.
+          </p>
+          <button type="button" class="footer-clear-data" id="clear-saved-data">
+            Очистити збережені дані
+          </button>
+          <div class="footer-data-actions" aria-label="Експорт та імпорт даних VitalRise">
+            <button type="button" class="footer-clear-data" id="export-saved-data">
+              Експорт JSON
+            </button>
+            <button type="button" class="footer-clear-data" id="import-saved-data">
+              Імпорт JSON
+            </button>
+            <label class="visually-hidden" for="import-saved-data-file">Файл резервної копії VitalRise</label>
+            <input type="file" id="import-saved-data-file" accept="application/json,.json" hidden />
+          </div>
+        </div>
+      </div>
+
+      <div class="container footer-bottom">
+        <span>© VitalRise</span>
+        <span>High-level control for athletic recomposition.</span>
+      </div>
+    </footer>
+  </div>
+  <div class="exercise-atlas-modal" id="exercise-atlas-modal" aria-hidden="true">
+    <div class="exercise-atlas-backdrop" data-atlas-close></div>
+    <section class="exercise-atlas-dialog" role="dialog" aria-modal="true" aria-labelledby="exercise-atlas-title">
+      <div class="exercise-atlas-head">
+        <div>
+          <span class="section-label">Exercise Atlas</span>
+          <h2 id="exercise-atlas-title">Атлас вправ</h2>
+        </div>
+        <button type="button" class="exercise-atlas-close" data-atlas-close aria-label="Закрити">×</button>
+      </div>
+
+      <div class="exercise-atlas-filters" id="exercise-atlas-filters"></div>
+      <div class="exercise-photo-backlog" id="exercise-photo-backlog" aria-live="polite"></div>
+      <div class="exercise-atlas-grid" id="exercise-atlas-grid"></div>
+
+      <div class="exercise-atlas-legend">
+        <span><i class="legend-main"></i> Основні</span>
+        <span><i class="legend-secondary"></i> Допоміжні</span>
+        <span><i class="legend-other"></i> Стабілізатори</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="payment-modal" id="payment-modal" aria-hidden="true">
+    <div class="payment-backdrop" data-payment-close></div>
+    <section class="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-title">
+      <button type="button" class="payment-close" data-payment-close aria-label="Close">×</button>
+      <span class="section-label" id="payment-kicker"></span>
+      <h2 id="payment-title"></h2>
+      <p id="payment-plan-note"></p>
+      <div class="payment-summary">
+        <div><span id="payment-plan-label"></span><strong id="payment-plan-value"></strong></div>
+        <div><span id="payment-price-label"></span><strong id="payment-price-value"></strong></div>
+      </div>
+      <p id="payment-text"></p>
+      <div class="payment-steps" aria-label="Checkout steps">
+        <span data-i18n="payment.stepEmail">Email</span>
+        <span data-i18n="payment.stepPay">Оплата</span>
+        <span data-i18n="payment.stepAccess">Доступ</span>
+      </div>
+      <label class="payment-code-field" for="payment-email">
+        <span id="payment-email-label"></span>
+        <input type="email" id="payment-email" autocomplete="email" placeholder="client@example.com" />
+      </label>
+      <label class="payment-code-field" for="payment-access-code">
+        <span id="payment-code-label"></span>
+        <input type="text" id="payment-access-code" autocomplete="one-time-code" placeholder="VR-START-XXXX" />
+      </label>
+      <p class="payment-demo-note" id="payment-code-hint"></p>
+      <div class="payment-actions">
+        <button type="button" class="btn btn-secondary" data-payment-close id="payment-close-button"></button>
+        <button type="button" class="btn btn-secondary" id="payment-redeem-button"></button>
+        <button type="button" class="btn btn-primary" id="payment-checkout-button"></button>
+      </div>
+      <div class="payment-status" id="payment-status" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <div class="mobile-report-modal" id="mobile-report-modal" aria-hidden="true">
+    <div class="mobile-report-backdrop" data-report-close></div>
+    <div class="mobile-report-panel" role="dialog" aria-modal="true" aria-label="VitalRise report">
+      <div class="mobile-report-toolbar">
+        <div>
+          <span class="mobile-report-kicker">VitalRise</span>
+          <strong id="mobile-report-toolbar-title">Report</strong>
+        </div>
+        <button type="button" class="mobile-report-icon-btn" data-report-close aria-label="Закрити">×</button>
+      </div>
+      <div class="mobile-report-controls" id="mobile-report-controls">
+        <label class="visually-hidden" for="mobile-report-scope">Формат звіту</label>
+        <select id="mobile-report-scope" hidden>
+          <option value="current">Поточний тиждень</option>
+        </select>
+        <label class="visually-hidden" for="mobile-report-week">Тиждень</label>
+        <select id="mobile-report-week" hidden>
+          <option value="1">Тиждень 1</option>
+        </select>
+      </div>
+      <div class="mobile-report-phone" id="mobile-report-phone"></div>
+      <div class="mobile-report-actions">
+        <button type="button" class="btn btn-secondary" data-report-close>Закрити</button>
+        <div class="mobile-report-save-actions">
+          <button type="button" class="btn btn-secondary" id="mobile-report-print-mobile">PDF для телефона</button>
+          <button type="button" class="btn btn-primary" id="mobile-report-print-a4">PDF A4</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/modules/system.js"></script>
+  <script src="assets/js/modules/i18n.js?v=newsletter-copy-1"></script>
+  <script src="assets/js/modules/mobile-menu.js"></script>
+  <script src="assets/js/modules/storage.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="assets/js/modules/print.js"></script>
+  <script src="assets/js/modules/data-portability.js"></script>
+  <script src="assets/js/modules/calculator-shell.js?v=single-module-1"></script>
+  <script src="assets/js/modules/reveal.js"></script>
+  <script src="assets/js/modules/dashboard.js"></script>
+  <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
+  <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
+  <script src="assets/js/modules/nutrition-custom.js"></script>
+  <script src="assets/js/modules/nutrition.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/nutrition-render.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/training.js"></script>
+  <script src="assets/js/modules/training-templates.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
+  <script src="assets/js/modules/training-progression.js"></script>
+  <script src="assets/js/modules/training-render.js?v=smart-program-1"></script>
+  <script src="assets/js/modules/training-builder.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/exercise-atlas-data.js?v=seated-db-press-photo-1"></script>
+  <script src="assets/js/modules/exercise-atlas.js"></script>
+  <script src="assets/js/modules/labs.js"></script>
+  <script src="assets/js/modules/lab-protocols.js"></script>
+  <script src="assets/js/modules/progress-decision.js?v=biweekly-correction-1"></script>
+  <script src="assets/js/modules/blueprint.js"></script>
+  <script src="assets/js/modules/supplements.js"></script>
+  <script src="assets/js/modules/coach.js?v=quick-profiles-2"></script>
+  <script src="assets/js/modules/access.js?v=analytics-1"></script>
+  <script src="assets/js/script.js?v=free-cottage-meals-1"></script>
+</body>
+</html>

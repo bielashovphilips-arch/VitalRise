@@ -2,9 +2,40 @@ const crypto = require("crypto");
 const fs = require("fs");
 const http = require("http");
 const path = require("path");
-const url = require("url");
 
 const ROOT = path.resolve(__dirname, "..");
+
+function loadEnvFile() {
+  const candidates = [
+    path.join(ROOT, ".env"),
+    path.join(ROOT, "docs", ".env")
+  ];
+
+  candidates.forEach((envPath) => {
+    if (!fs.existsSync(envPath)) return;
+    const lines = fs.readFileSync(envPath, "utf8").replace(/^\uFEFF/, "").split(/\r?\n/);
+    lines.forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) return;
+      const separator = trimmed.indexOf("=");
+      if (separator < 1) return;
+      const key = trimmed.slice(0, separator).trim();
+      let value = trimmed.slice(separator + 1).trim();
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
+        process.env[key] = value;
+      }
+    });
+  });
+}
+
+loadEnvFile();
+
 const PORT = Number(process.env.PORT || 4175);
 const HOST = process.env.HOST || "127.0.0.1";
 const DATA_DIR = path.join(ROOT, ".vitalrise-access");
@@ -12,6 +43,7 @@ const DB_FILE = path.join(DATA_DIR, "access-db.json");
 const ADMIN_SECRET = process.env.ACCESS_ADMIN_SECRET || "";
 const MOCK_PAYMENTS = process.env.ACCESS_MOCK_PAYMENTS === "1";
 const CHECKOUT_URL_TEMPLATE = process.env.CHECKOUT_URL_TEMPLATE || "";
+const NEWSLETTER_WEBHOOK_URL = process.env.NEWSLETTER_WEBHOOK_URL || "";
 
 const PLANS = {
   start: { tier: "start", price: 499, days: 30 },
@@ -40,16 +72,30 @@ const MIME_TYPES = {
   ".md": "text/markdown; charset=utf-8"
 };
 
+const SECURITY_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+};
+
 function ensureDb() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify({ orders: [], codes: [], tokens: [] }, null, 2));
+    fs.writeFileSync(DB_FILE, JSON.stringify({ orders: [], codes: [], tokens: [], newsletter: [] }, null, 2));
   }
 }
 
 function readDb() {
   ensureDb();
-  return JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
+  let raw = fs.readFileSync(DB_FILE, "utf8").replace(/^\uFEFF/, "");
+  const jsonStart = raw.indexOf("{");
+  if (jsonStart > 0) raw = raw.slice(jsonStart);
+  const db = JSON.parse(raw);
+  if (!Array.isArray(db.orders)) db.orders = [];
+  if (!Array.isArray(db.codes)) db.codes = [];
+  if (!Array.isArray(db.tokens)) db.tokens = [];
+  if (!Array.isArray(db.newsletter)) db.newsletter = [];
+  return db;
 }
 
 function writeDb(db) {
@@ -85,6 +131,15 @@ function isValidEmail(email) {
 
 function readJsonBody(request) {
   return new Promise((resolve, reject) => {
+    if (typeof request.rawBody === "string") {
+      if (!request.rawBody) return resolve({});
+      try {
+        return resolve(JSON.parse(request.rawBody));
+      } catch (error) {
+        return reject(new Error("Invalid JSON"));
+      }
+    }
+
     let body = "";
     request.on("data", (chunk) => {
       body += chunk;
@@ -107,6 +162,7 @@ function readJsonBody(request) {
 function sendJson(response, statusCode, payload) {
   const body = Buffer.from(JSON.stringify(payload, null, 2), "utf8");
   response.writeHead(statusCode, {
+    ...SECURITY_HEADERS,
     "Content-Type": "application/json; charset=utf-8",
     "Content-Length": body.length,
     "Cache-Control": "no-store"
@@ -118,6 +174,7 @@ function sendFile(response, filePath) {
   const ext = path.extname(filePath).toLowerCase();
   const body = fs.readFileSync(filePath);
   response.writeHead(200, {
+    ...SECURITY_HEADERS,
     "Content-Type": MIME_TYPES[ext] || "application/octet-stream",
     "Content-Length": body.length
   });
@@ -127,7 +184,8 @@ function sendFile(response, filePath) {
 function safeFilePath(pathname) {
   const decoded = decodeURIComponent(pathname === "/" ? "/index.html" : pathname);
   const candidate = path.resolve(ROOT, decoded.replace(/^\/+/, ""));
-  if (!candidate.startsWith(ROOT)) return "";
+  const relative = path.relative(ROOT, candidate);
+  if (relative.startsWith("..") || path.isAbsolute(relative)) return "";
   if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
     return path.join(candidate, "index.html");
   }
@@ -223,8 +281,72 @@ function verifyMonoSignature(body, xSignHeader) {
 }
 
 async function handleApi(request, response, pathname) {
+  if (request.method === "POST" && pathname === "/api/newsletter") {
+    const body = await readJsonBody(request);
+    const email = String(body.email || "").trim().toLowerCase();
+    const language = String(body.language || "uk").trim().toLowerCase();
+    const source = String(body.source || "site").trim().slice(0, 80);
+    const page = String(body.page || "").trim().slice(0, 180);
+
+    if (!isValidEmail(email)) return sendJson(response, 400, { ok: false, error: "Invalid email" });
+
+    const db = readDb();
+    const existing = db.newsletter.find((item) => item.email === email);
+    const payload = {
+      email,
+      language,
+      source,
+      page,
+      createdAt: existing ? existing.createdAt : nowIso(),
+      updatedAt: nowIso()
+    };
+
+    if (existing) {
+      existing.language = payload.language;
+      existing.source = payload.source;
+      existing.page = payload.page;
+      existing.updatedAt = payload.updatedAt;
+      existing.count = Number(existing.count || 1) + 1;
+    } else {
+      db.newsletter.push(Object.assign({ id: randomId("lead"), count: 1 }, payload));
+    }
+
+    writeDb(db);
+
+    let forwarded = false;
+    let forwardStatus = null;
+    let forwardError = "";
+    if (NEWSLETTER_WEBHOOK_URL && typeof fetch === "function") {
+      try {
+        const forwardResponse = await fetch(NEWSLETTER_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        forwardStatus = forwardResponse.status;
+        forwarded = forwardResponse.ok;
+      } catch (error) {
+        forwardError = error.message || "Forward failed";
+        forwarded = false;
+      }
+    }
+
+    return sendJson(response, 200, {
+      ok: true,
+      stored: true,
+      forwarded,
+      forwardStatus,
+      forwardError,
+      newsletterWebhook: Boolean(NEWSLETTER_WEBHOOK_URL)
+    });
+  }
+
   if (request.method === "GET" && pathname === "/api/access/health") {
-    return sendJson(response, 200, { ok: true, mockPayments: MOCK_PAYMENTS });
+    return sendJson(response, 200, {
+      ok: true,
+      mockPayments: MOCK_PAYMENTS,
+      newsletterWebhook: Boolean(NEWSLETTER_WEBHOOK_URL)
+    });
   }
 
   if (request.method === "POST" && pathname === "/api/access/checkout") {
@@ -481,8 +603,8 @@ async function handleApi(request, response, pathname) {
 }
 
 const server = http.createServer(async (request, response) => {
-  const parsed = url.parse(request.url);
-  const pathname = parsed.pathname || "/";
+  const requestUrl = new URL(request.url || "/", `http://${request.headers.host || HOST}`);
+  const pathname = requestUrl.pathname || "/";
 
   try {
     // Capture raw body for webhook signature verification
@@ -493,20 +615,24 @@ const server = http.createServer(async (request, response) => {
       });
       request.on("end", () => {
         request.rawBody = rawBody;
-        handleRequest();
+        handleRequest().catch((error) => {
+          if (!response.headersSent) {
+            sendJson(response, 500, { ok: false, error: error.message || "Server error" });
+          }
+        });
       });
     } else {
-      handleRequest();
+      await handleRequest();
     }
 
-    function handleRequest() {
-      if (pathname.startsWith("/api/access/")) {
-        return handleApi(request, response, pathname);
+    async function handleRequest() {
+      if (pathname === "/api/newsletter" || pathname.startsWith("/api/access/")) {
+        return await handleApi(request, response, pathname);
       }
 
       const filePath = safeFilePath(pathname);
       if (!filePath || !fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
-        response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+        response.writeHead(404, { ...SECURITY_HEADERS, "Content-Type": "text/plain; charset=utf-8" });
         return response.end("404 Not Found");
       }
 

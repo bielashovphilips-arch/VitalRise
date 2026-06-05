@@ -11,6 +11,7 @@
   const calculatorReadinessScore = document.getElementById("calculator-readiness-score");
   const calculatorCoachNote = document.getElementById("calculator-coach-note");
   const calculatorTrackItems = document.querySelectorAll(".console-track span");
+  const calculatorSection = document.querySelector(".calculator-section");
 
   const bgImages = {
     nutrition:
@@ -40,6 +41,26 @@
 
     setCalculatorBackground(tabName);
     updateCalculatorConsole(tabName);
+  }
+
+  function applySingleModuleCopy() {
+    if (!calculatorSection || !calculatorSection.dataset.singleModule) return;
+
+    const title = calculatorSection.querySelector(".calculator-intro h2");
+    const text = calculatorSection.querySelector(".calculator-intro p");
+
+    if (calculatorSection.dataset.singleModule === "training") {
+      if (title) title.textContent = "Отримай окремий тренувальний протокол";
+      if (text) {
+        text.textContent = "Модуль тренувань формує структуру навантаження, програму, прогресію і контроль відновлення без перемикання на харчування.";
+      }
+      return;
+    }
+
+    if (title) title.textContent = "Отримай окремий протокол харчування";
+    if (text) {
+      text.textContent = "Модуль харчування рахує калорії, БЖВ, воду, сіль і прийоми їжі без перемикання на тренувальний калькулятор.";
+    }
   }
 
   function getFieldText(id, fallback) {
@@ -217,6 +238,11 @@
   };
   window.VitalRiseSystem = system;
 
-  activateTab("nutrition");
+  const defaultTab = calculatorSection && calculatorSection.dataset.defaultTab === "training"
+    ? "training"
+    : "nutrition";
+
+  applySingleModuleCopy();
+  activateTab(defaultTab);
   });
 })();

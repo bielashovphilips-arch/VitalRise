@@ -114,7 +114,10 @@
             '<label class="product-item">' +
               '<span class="product-item-left">' +
                 '<input type="checkbox" class="nutrition-product-checkbox" data-group="' + category + '" data-id="' + product.id + '"' + (checked ? " checked" : "") + '>' +
-                '<span class="product-item-name">' + escapeHtml(product.name) + '</span>' +
+                '<span class="product-item-copy">' +
+                  '<span class="product-item-name">' + escapeHtml(product.name) + '</span>' +
+                  (product.note ? '<small>' + escapeHtml(product.note) + '</small>' : '') +
+                '</span>' +
               '</span>' +
             '</label>'
           );
@@ -246,6 +249,12 @@
     );
   }
 
+  function getSelectedChoiceId(selectedAmounts) {
+    const amounts = selectedAmounts || {};
+    const ids = Object.keys(amounts);
+    return ids.length ? ids[0] : "";
+  }
+
   function buildChoiceSectionMarkup(title, category, rows, mealKey, dayType, selectedAmounts) {
     if (!rows.length) {
       return (
@@ -256,14 +265,46 @@
       );
     }
 
+    const selectedId = getSelectedChoiceId(selectedAmounts);
+    const selectedRow = rows.find(function (row) {
+      return row.id === selectedId;
+    });
+    const activeAmount = selectedRow
+      ? Number((selectedAmounts || {})[selectedRow.id]) || selectedRow.amount
+      : 0;
+
     return (
       '<div class="meal-choice-section">' +
-        '<div class="meal-choice-section-title">' + title + '</div>' +
-        '<div class="meal-choice-chips">' +
-          rows.map(function (row) {
-            return buildChoiceChipMarkup(dayType, mealKey, category, row, selectedAmounts);
-          }).join("") +
+        '<div class="meal-choice-section-head">' +
+          '<div class="meal-choice-section-title">' + title + '</div>' +
+          '<div class="meal-choice-section-hint">Один вибір на прийом: новий продукт замінить поточний.</div>' +
         '</div>' +
+        '<div class="meal-choice-select-wrap">' +
+          '<select class="meal-choice-select" ' +
+            'data-day="' + dayType + '" ' +
+            'data-meal="' + mealKey + '" ' +
+            'data-category="' + category + '">' +
+            '<option value="">Обрати продукт</option>' +
+            rows.map(function (row) {
+              const rowAmount = selectedRow && selectedRow.id === row.id
+                ? activeAmount
+                : row.amount;
+              return (
+                '<option value="' + escapeHtml(row.id) + '" data-amount="' + rowAmount + '"' + (row.id === selectedId ? " selected" : "") + '>' +
+                  escapeHtml(row.name) + ' - ' + rowAmount + ' ' + escapeHtml(row.unitLabel) +
+                '</option>'
+              );
+            }).join("") +
+          '</select>' +
+          '<span class="meal-choice-select-arrow">⌄</span>' +
+        '</div>' +
+        (selectedRow
+          ? '<div class="meal-choice-controls meal-choice-select-controls">' +
+              '<button type="button" aria-label="Зменшити" data-action="adjust-meal-choice" data-direction="decrease" data-day="' + dayType + '" data-meal="' + mealKey + '" data-category="' + category + '" data-id="' + selectedRow.id + '">-</button>' +
+              '<strong>' + activeAmount + ' ' + escapeHtml(selectedRow.unitLabel) + '</strong>' +
+              '<button type="button" aria-label="Збільшити" data-action="adjust-meal-choice" data-direction="increase" data-day="' + dayType + '" data-meal="' + mealKey + '" data-category="' + category + '" data-id="' + selectedRow.id + '">+</button>' +
+            '</div>'
+          : '') +
       '</div>'
     );
   }
@@ -291,6 +332,7 @@
       '<div class="builder-grid">' +
         productSelectionMarkup +
         (view.selectedSummaryMarkup || "") +
+        '<div class="builder-note">Додаткові вуглеводи — це не база раціону, а рідкісний інструмент. Мед, джем, фініки, родзинки, лаваш/тортилью та сік краще використовувати мінімально, переважно на наборі маси або легкій рекомпозиції; при зниженні ваги вони не пропонуються в прийомах їжі.</div>' +
         '<div class="builder-note">Яйця рахуються тільки в штуках. Жовтків окремо немає. Автоматичні прийоми їжі будуються за шаблонами: сніданок, обід, перекус, вечеря.</div>' +
         (view.errorMarkup || "") +
         '<div class="builder-actions">' +

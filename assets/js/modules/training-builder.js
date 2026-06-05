@@ -48,15 +48,229 @@
       : { name: name, sets: sets, reps: reps, weightText: weightText, percentText: progressionPlan[0], progressionType: "outdoor", progressionPlan: progressionPlan };
   }
 
+  function getDefaultRestText(exercise, group, context) {
+    const place = context.place;
+    const goal = context.goal;
+    const level = context.level;
+    const text = [
+      exercise.name,
+      exercise.reps,
+      exercise.weightText,
+      exercise.percentText
+    ].join(" ").toLowerCase();
+
+    if (text.indexOf("робота /") !== -1 || text.indexOf("work /") !== -1) return "за протоколом вправи";
+    if (text.indexOf("emom") !== -1 || text.indexOf("щохвилини") !== -1) return "за таймером";
+    if (text.indexOf("коло") !== -1 || text.indexOf("раун") !== -1 || text.indexOf("суперсет") !== -1) return "60-90 сек між колами";
+
+    if (place === "gym") {
+      if (goal === "strength" && group === "basic") return level === "beginner" ? "120-180 сек" : "180-240 сек";
+      if (group === "basic") return goal === "fatloss" || goal === "endurance" ? "60-90 сек" : "90-150 сек";
+      return goal === "fatloss" || goal === "endurance" ? "45-75 сек" : "60-90 сек";
+    }
+
+    if (place === "outdoor") {
+      if (goal === "strength" && group === "basic") return "120-180 сек";
+      if (goal === "fatloss" || goal === "endurance") return "60-75 сек";
+      if (group === "basic") return "90 сек";
+      return "60-90 сек";
+    }
+
+    if (goal === "strength" && group === "basic") return "90 сек";
+    if (goal === "fatloss" || goal === "endurance") return "60-75 сек";
+    return group === "basic" ? "90 сек" : "60-90 сек";
+  }
+
+  function annotateRestInDays(days, context) {
+    return deepClone(days).map(function (day) {
+      ["basic", "accessory"].forEach(function (group) {
+        if (!Array.isArray(day[group])) return;
+        day[group].forEach(function (exercise) {
+          if (!exercise.restText) exercise.restText = getDefaultRestText(exercise, group, context);
+        });
+      });
+      return day;
+    });
+  }
+
+  const muscleGroupMeta = {
+    chest: { label: "Груди", rank: 10 },
+    back: { label: "Спина", rank: 20 },
+    legs: { label: "Ноги", rank: 30 },
+    shoulders: { label: "Плечі", rank: 40 },
+    triceps: { label: "Трицепс", rank: 50 },
+    biceps: { label: "Біцепс", rank: 60 },
+    core: { label: "Корпус / прес", rank: 70 },
+    calves: { label: "Литки", rank: 80 },
+    conditioning: { label: "Фінішер / кардіо", rank: 90 },
+    other: { label: "Додатково", rank: 100 }
+  };
+
+  function getExerciseMuscleGroup(exercise) {
+    const text = [
+      exercise && exercise.name,
+      exercise && exercise.percentText
+    ].join(" ").toLowerCase();
+
+    if (/зведення|груд|жим лежачи|жим гантелей лежачи|жим гантелей під кутом|жим в хамері|віджимання/.test(text)) return "chest";
+    if (/підтяг|тяга верх|тяга ниж|тяга горизонт|тяга т-грифа|тяга штанги|тяга сидячи|тяга до поясу|найширш|спина|пуловер/.test(text)) return "back";
+    if (/присі|ног|випад|болгар|румун|станов|згинання ніг|розгинання ніг|хіп-траст|сіднич|стегн|жим ногами/.test(text)) return "legs";
+    if (/плеч|дельт|махи|підйоми через сторони|тяга до підборіддя|жим штанги або гантелей сидячи|плечовий жим|жим сидячи/.test(text)) return "shoulders";
+    if (/трицепс|розгинання рук|вузький жим|брус/.test(text)) return "triceps";
+    if (/біцепс|згинання рук|молот/.test(text)) return "biceps";
+    if (/прес|планка|корпус|скручування|підйом.*ніг|hollow|антиобертання/.test(text)) return "core";
+    if (/литк|носки/.test(text)) return "calves";
+    if (/кардіо|ходьба|велосипед|фінішер|emom|коло|інтервал/.test(text)) return "conditioning";
+    return "other";
+  }
+
+  function buildGymExerciseSequence(day) {
+    const exercises = [];
+    ["basic", "accessory"].forEach(function (group) {
+      (day[group] || []).forEach(function (exercise, index) {
+        const muscleGroup = getExerciseMuscleGroup(exercise);
+        const meta = muscleGroupMeta[muscleGroup] || muscleGroupMeta.other;
+        exercises.push(Object.assign({}, exercise, {
+          sourceGroup: group,
+          sourceIndex: index,
+          muscleGroup: muscleGroup,
+          muscleGroupLabel: meta.label
+        }));
+      });
+    });
+
+    if (!exercises.length) return [];
+
+    const firstGroup = exercises[0].muscleGroup;
+    return exercises.sort(function (left, right) {
+      const leftPrimary = left.muscleGroup === firstGroup ? 0 : 1;
+      const rightPrimary = right.muscleGroup === firstGroup ? 0 : 1;
+      if (leftPrimary !== rightPrimary) return leftPrimary - rightPrimary;
+
+      const leftRank = (muscleGroupMeta[left.muscleGroup] || muscleGroupMeta.other).rank;
+      const rightRank = (muscleGroupMeta[right.muscleGroup] || muscleGroupMeta.other).rank;
+      if (leftRank !== rightRank) return leftRank - rightRank;
+
+      if (left.sourceGroup !== right.sourceGroup) return left.sourceGroup === "basic" ? -1 : 1;
+      return left.sourceIndex - right.sourceIndex;
+    });
+  }
+
+  function applyGymExerciseSequence(days, enabled) {
+    if (!enabled) return days;
+    return days.map(function (day) {
+      const nextDay = Object.assign({}, day);
+      nextDay.orderedExercises = buildGymExerciseSequence(day);
+      return nextDay;
+    });
+  }
+
+  const programLabels = {
+    neutral: "Універсальна",
+    prison_workout: "Вулична сила / драбинки",
+    tabata_circuit: "Інтервали 1:1 / кругове",
+    ppl_3_1: "PPL 3+1: штовхай / тягни / ноги",
+    female_balanced: "Жіноча збалансована",
+    female_glutes: "Жіноча: сідниці та ноги",
+    female_strength: "Жіноча силова",
+    female_fatloss: "Жіноча для зниження жиру"
+  };
+
+  function getProgramLabel(mode) {
+    return programLabels[mode] || programLabels.neutral;
+  }
+
+  function buildProgramRecommendation(data, outdoorMetrics) {
+    const place = data["training-place"];
+    const level = data["training-level"];
+    const goal = data["training-goal"];
+    const days = Number(data["training-days"]);
+    const duration = Number(data["duration"]);
+    const selectedMode = data["training-program-mode"] || "neutral";
+    const cyclePhase = data["cycle-phase"] || "none";
+    const painStatus = outdoorMetrics.painStatus || "none";
+    const hasPainOrFatigue = painStatus !== "none";
+    const selectedIsManual = selectedMode !== "neutral";
+
+    let recommendedMode = "neutral";
+    let confidence = "стандартна";
+    const reasons = [];
+
+    if (cyclePhase !== "none") {
+      if (goal === "fatloss") {
+        recommendedMode = "female_fatloss";
+        reasons.push("врахована фаза циклу і ціль зниження жиру");
+      } else if (goal === "strength") {
+        recommendedMode = "female_strength";
+        reasons.push("врахована фаза циклу і силова ціль");
+      } else if (goal === "mass") {
+        recommendedMode = "female_glutes";
+        reasons.push("врахована фаза циклу і ціль набору/форми нижньої частини");
+      } else {
+        recommendedMode = "female_balanced";
+        reasons.push("врахована фаза циклу, тому потрібен контроль об'єму і самопочуття");
+      }
+      confidence = "висока";
+    } else if (place === "gym" && goal === "mass" && level !== "beginner" && days >= 4 && !hasPainOrFatigue) {
+      recommendedMode = "ppl_3_1";
+      confidence = "висока";
+      reasons.push("зал, набір м'язів, 4 тренувальні дні і достатній рівень підготовки");
+      reasons.push("PPL 3+1 краще працює під високий калораж, якщо відновлення не просідає");
+    } else if (place === "outdoor" && (goal === "strength" || goal === "endurance")) {
+      recommendedMode = "prison_workout";
+      confidence = "висока";
+      reasons.push("вуличний формат краще розкривається через драбинки, турнік, бруси і контроль об'єму");
+    } else if ((goal === "fatloss" || goal === "endurance") && duration <= 50 && !hasPainOrFatigue) {
+      recommendedMode = "tabata_circuit";
+      confidence = "середня";
+      reasons.push("коротка сесія і ціль витрати енергії краще підходять для інтервалів або кругового формату");
+    } else if (place === "home" && (goal === "fatloss" || goal === "endurance") && !hasPainOrFatigue) {
+      recommendedMode = "tabata_circuit";
+      confidence = "середня";
+      reasons.push("домашній формат без великого обладнання добре працює через щільність і контроль темпу");
+    } else {
+      recommendedMode = "neutral";
+      confidence = "стабільна";
+      reasons.push("універсальна програма краще підходить, коли потрібна базова структура без вузької спеціалізації");
+    }
+
+    if (hasPainOrFatigue && recommendedMode === "ppl_3_1") {
+      recommendedMode = "neutral";
+      confidence = "обережна";
+      reasons.push("через біль або сильну втому PPL краще не форсувати");
+    }
+
+    if (hasPainOrFatigue) {
+      reasons.push("обмеження у формі зменшують пріоритет агресивних схем і збільшують роль корекції навантаження");
+    }
+
+    const appliedMode = selectedIsManual ? selectedMode : recommendedMode;
+    const summary = selectedIsManual
+      ? (selectedMode === recommendedMode
+        ? "Обраний вручну тип збігається з рекомендацією."
+        : "Ти обрав тип вручну. Нижче показана рекомендація системи для порівняння.")
+      : (recommendedMode === "neutral"
+        ? "Система залишила універсальну програму як найстабільніший варіант."
+        : "Система автоматично застосувала рекомендований тип програми.");
+
+    return {
+      selectedMode: selectedMode,
+      recommendedMode: recommendedMode,
+      appliedMode: appliedMode,
+      selectedLabel: getProgramLabel(selectedMode),
+      recommendedLabel: getProgramLabel(recommendedMode),
+      appliedLabel: getProgramLabel(appliedMode),
+      confidence: confidence,
+      summary: summary,
+      reasons: reasons
+    };
+  }
+
   function buildTrainingPlan(data) {
     const place = data["training-place"];
     const level = data["training-level"];
     const goal = data["training-goal"];
-    const programMode = data["training-program-mode"] || "neutral";
     const cyclePhase = data["cycle-phase"] || "none";
-    const isFemaleMode = programMode.indexOf("female_") === 0;
-    const isPrisonMode = programMode === "prison_workout";
-    const isTabataCircuitMode = programMode === "tabata_circuit";
     const days = Number(data["training-days"]);
     const bodyWeight = Number(data["body-weight"]);
     const duration = Number(data["duration"]);
@@ -74,9 +288,17 @@
       deadlift: Number(data["deadlift-1rm"])
     };
 
-    let caloriesBurned = calculateTrainingCalories(place, goal, bodyWeight, duration);
+    const programRecommendation = buildProgramRecommendation(data, outdoorMetrics);
+    const programMode = programRecommendation.appliedMode;
+    const isFemaleMode = programMode.indexOf("female_") === 0;
+    const isPrisonMode = programMode === "prison_workout";
+    const isTabataCircuitMode = programMode === "tabata_circuit";
+    const isPplMode = programMode === "ppl_3_1";
+
+    let caloriesBurned = calculateTrainingCalories(isPplMode ? "gym" : place, goal, bodyWeight, duration);
     if (isPrisonMode) caloriesBurned *= 1.08;
     if (isTabataCircuitMode) caloriesBurned *= 1.18;
+    if (isPplMode) caloriesBurned *= 1.05;
     const trainingTemplates = window.VitalRiseSystem && window.VitalRiseSystem.trainingTemplates
       ? window.VitalRiseSystem.trainingTemplates
       : null;
@@ -98,11 +320,14 @@
           deloadRules: [],
           warnings: ["Модуль шаблонів тренувань не завантажився."]
         },
+        programRecommendation: programRecommendation,
         weeks: []
       };
     }
 
-    if (isPrisonMode) {
+    if (isPplMode) {
+      basePlan = trainingTemplates.getGymPushPullLegsPlan(goal, level, oneRM, days);
+    } else if (isPrisonMode) {
       basePlan = trainingTemplates.getPrisonWorkoutPlan(level, days, outdoorMetrics);
     } else if (isTabataCircuitMode) {
       basePlan = trainingTemplates.getTabataCircuitPlan(goal, level, days, duration);
@@ -131,18 +356,24 @@
     const weekScheme = trainingProgression
       ? trainingProgression.getWeekScheme(goal)
       : [{ week: 1, label: "Тиждень 1 — стабільний старт", baseKg: 0, accessoryKg: 0, cardioMinutes: 0 }];
+    const useGymExerciseSequence = (isPplMode || (!isPrisonMode && !isTabataCircuitMode && place === "gym"));
     const weeks = weekScheme.map(function (weekInfo) {
+      const weekDays = trainingProgression
+        ? annotateRestInDays(trainingProgression.applyWeekProgression(basePlan, goal, weekInfo, oneRM), { place: isPplMode ? "gym" : place, goal: goal, level: level })
+        : annotateRestInDays(basePlan, { place: isPplMode ? "gym" : place, goal: goal, level: level });
+
       return {
         title: weekInfo.label,
-        days: trainingProgression
-          ? trainingProgression.applyWeekProgression(basePlan, goal, weekInfo, oneRM)
-          : deepClone(basePlan)
+        days: applyGymExerciseSequence(weekDays, useGymExerciseSequence)
       };
     });
 
     let volumeNote = "";
 
-    if (isPrisonMode) {
+    if (isPplMode) {
+      volumeNote =
+        "PPL 3+1 - це один із найкращих форматів для набору м'язів під великий калораж: 3 базові тренування поспіль (штовхай верх, тягни верх, ноги), 1 день відпочинку, потім 3 тренажерні дні з легко-середньою вагою. Тренажерні дні не мають добивати нервову систему: їх задача - об'єм, техніка, памп і відновлювана прогресія. Обов'язкова умова - сон від 8 годин і мінімум масаж як регулярна відновлювальна процедура.";
+    } else if (isPrisonMode) {
       volumeNote =
         "Вулична сила / драбинки - це режим без складного обладнання: драбинки, кола, власна вага і контроль об'єму. Він підходить для дисципліни, витривалості і жорсткого, але керованого навантаження.";
     } else if (isTabataCircuitMode) {
@@ -153,13 +384,13 @@
     } else if (place === "outdoor") {
       volumeNote =
         goal === "strength"
-          ? "Вулична сила: якщо виконав робочий діапазон чисто, наступного тижня підтягування +2.5 кг, бруси +5 кг, а діапазон повторів зменшується. Понад 20 повторів у сеті не женемо: після верхньої межі додаємо складність або вагу."
+          ? "Вулична сила: якщо робочий діапазон виконаний чисто, наступний тиждень уже прописує нижчий діапазон повторів і контрольовану вагу. Понад 20 повторів у сеті не женемо: спочатку тримаємо амплітуду й поступово скорочуємо відпочинок між підходами."
           : goal === "fatloss"
             ? "Вуличне схуднення: додаткова вага не додається. Головна прогресія — прибрати резину, робити чисті повтори без знімання навантаження і додати просту ходьбу 40-60 хв."
             : "Вуличний план побудований навколо силової витривалості: турнік, бруси, резина, власна вага й рюкзак. Прогресія йде через більше чистих повторів, більше підходів, коротший відпочинок, меншу допомогу резини і тільки потім додаткову вагу.";
     } else if (place === "home" && goal === "strength") {
       volumeNote =
-        "Домашня сила не будується на легких віджиманнях і присіданнях. План використовує рюкзак, резину, важкі варіації, односторонні ноги і діапазон до 20 повторів, після якого треба додавати складність або вагу.";
+        "Домашня сила не будується на легких віджиманнях і присіданнях. План використовує рюкзак, резину, важкі варіації, односторонні ноги, контроль темпу і заданий відпочинок між підходами.";
     } else if (place === "home" && goal === "mass") {
       volumeNote =
         "Домашній набір маси потребує достатнього об'єму: для середнього і просунутого рівня основні рухи мають 5-8 робочих підходів, а прогрес іде через рюкзак, резину, амплітуду і складніші варіації.";
@@ -213,10 +444,23 @@
       );
     }
 
+    if (isPplMode) {
+      tips.unshift(
+        "Це пріоритетний варіант для набору м'язів, коли є високий калораж, достатньо білка і нормальне відновлення.",
+        "Сон - від 8 годин. Якщо стабільно спиш менше, не форсуй PPL 3+1: спочатку зменш об'єм або обери універсальну програму.",
+        "З відновлювальних процедур мінімум має бути масаж: 1 раз на тиждень або частіше за відчуттями, особливо ноги, спина, грудний відділ і плечовий пояс.",
+        "У PPL 3+1 не став важкі рекорди шість разів поспіль: важкі тільки перші 3 базові дні, друга половина циклу - тренажери легко-середньо.",
+        "Схема циклу: День 1 штовхай, День 2 тягни, День 3 ноги, День 4 відпочинок, День 5 штовхай тренажери, День 6 тягни тренажери, День 7 ноги тренажери, потім відпочинок або повтор за готовністю.",
+        "Якщо сон, апетит або суглоби просідають - прибери 1-2 допоміжні вправи з тренажерних днів, а не чіпай техніку бази."
+      );
+    }
+
     if (place === "outdoor") {
       tips.unshift(
         "Головна довга ціль для власної ваги — не тільки важчий рюкзак, а поступовий вихід до 8-10 якісних підходів.",
-        "Діапазон повторів у брусах і віджиманнях не піднімаємо вище 20: після верхньої межі додається складність або вага.",
+        "Довга ціль по відпочинку - поступово прийти до 1 хв між підходами, але тільки без втрати амплітуди, темпу і контролю плечей/ліктів.",
+        "Якщо в плані є піднята вага або рюкзак, пріоритет - якісна вага і чисті повтори; відпочинок тримай близько 1.5 хв.",
+        "Діапазон повторів у брусах і віджиманнях не піднімаємо вище 20: після верхньої межі тримай план і скорочуй відпочинок між підходами на 10-15 сек поступово.",
         "Для підтягувань і брусів головний критерій прогресу: чиста амплітуда без болю в плечі або лікті.",
         "Резина — це інструмент прогресії: з часом переходь на слабшу допомогу, а не просто женись за кількістю.",
         "Не роби всі підходи до відмови. Для великого об'єму залишай 1-3 повтори в запасі."
@@ -233,7 +477,7 @@
 
     const guidance = window.VitalRiseSystem && window.VitalRiseSystem.trainingGuidance
       ? window.VitalRiseSystem.trainingGuidance.buildTrainingGuidance({
-        place: place,
+        place: isPplMode ? "gym" : place,
         level: place === "outdoor" || place === "home" ? trainingTemplates.getOutdoorEffectiveLevel(level, outdoorMetrics) : level,
         goal: goal,
         days: days,
@@ -271,7 +515,7 @@
       guidance.progressionRules = [
         "Додай одну сходинку в драбинці або одне коло тільки після чистого тижня.",
         "Скорочуй відпочинок поступово: 10-15 секунд за раз.",
-        "Якщо повторів вже багато, ускладнюй варіацію або додавай рюкзак, а не гони хаотичний темп."
+        "Якщо повторів вже багато, не гони хаотичний темп: тримай діапазон і скорочуй відпочинок поступово."
       ];
       guidance.deloadRules = [
         "Якщо лікті або плечі забиті - мінус 30% кіл і без відмови.",
@@ -300,11 +544,41 @@
       ];
     }
 
+    if (isPplMode) {
+      guidance.format = "PPL 3+1: штовхай / тягни / ноги";
+      guidance.focus = "3 базові дні + 3 тренажерні дні легко-середньо";
+      guidance.rirRules = [
+        "Базові дні: тримай RIR 1-2, без відмови у присіданні, жимі й важких тягах.",
+        "Тренажерні дні: RIR 2-3, відчуй м'яз, але не добивайся до стану, коли наступний базовий цикл сиплеться.",
+        "Якщо після дня ніг потрібен повний день відпочинку - це частина схеми 3+1, а не слабкість."
+      ];
+      guidance.progressionRules = [
+        "Для набору м'язів прогрес має йти на фоні великого калоражу, стабільного білка і сну від 8 годин.",
+        "У базових вправах додавай вагу тільки після чистого верхнього діапазону повторів.",
+        "У тренажерах прогресуй спочатку повтором і амплітудою, потім малим кроком ваги.",
+        "Після трьох важких базових днів не став четверте важке тренування: наступний блок має бути легше-середнім."
+      ];
+      guidance.deloadRules = [
+        "Якщо немає 8 годин сну кілька днів поспіль - не прогресуй вагу, залиш поточний об'єм або зменш допоміжні вправи.",
+        "Масаж - мінімальна відновлювальна процедура для цього режиму; якщо м'язи й фасції постійно забиті, прогресія ваги відкладається.",
+        "Якщо два цикли поспіль падають повтори у базі - мінус 20-30% допоміжного об'єму.",
+        "Біль у плечі, лікті, коліні або попереку - заміни провокуючу вправу тренажером і зменш вагу.",
+        "Кожні 4-6 тижнів зроби полегшений цикл: базу на RIR 3, тренажери без прогресії ваги."
+      ];
+      guidance.warnings = [
+        "PPL 3+1 не підходить при сильній втомі, поганому сні або болю в суглобах без корекції об'єму.",
+        "Якщо сон менше 8 годин, калораж низький або немає відновлювальних процедур, ця схема може швидше накопичувати втому, ніж давати м'язовий ріст.",
+        "Не перетворюй тренажерні дні на другий важкий цикл: тоді схема перестає відновлюватися.",
+        "Новачку краще стартувати з універсальної програми; PPL 3+1 логічніший для середнього і просунутого рівня."
+      ].concat(guidance.warnings || []);
+    }
+
     return {
       caloriesBurned: caloriesBurned,
       volumeNote: volumeNote,
       tips: tips,
       guidance: guidance,
+      programRecommendation: programRecommendation,
       weeks: weeks
     };
   }

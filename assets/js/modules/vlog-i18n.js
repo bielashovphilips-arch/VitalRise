@@ -392,6 +392,644 @@
     }
   ];
 
+  const supportGuideTranslations = {
+    en: {
+      label: "Digestion and organ support",
+      title: "GI tract, enzymes, sports nutrition, and tolerance control",
+      intro: "This block is not about treatment or \"detox\". It is a practical map: what may help you tolerate nutrition, protein, fiber, water, electrolytes, and training load, and where you should stop and see a doctor.",
+      tabsLabel: "Support areas",
+      tabs: ["Digestion", "Gut", "Liver / bile", "Kidneys / electrolytes", "Stop signals"],
+      cards: [
+        {
+          label: "Digestion",
+          title: "Enzymes and lactase",
+          text: "Enzymes can be useful as a short-term tool with large meals, high protein, fatty meals, or a transition to higher calories. Lactase is a separate option when dairy causes bloating, rumbling, or discomfort.",
+          items: [
+            ["Appropriate", "mass gain, 4-5 meals, heaviness after protein/fats, dairy intolerance issues."],
+            ["Caution", "pain, heartburn, gastritis/ulcer, diarrhea, pancreatic or biliary symptoms."],
+            ["Does not replace", "diagnosis of the cause if discomfort repeats."]
+          ],
+          marketTitle: "Pharmacy names in Ukraine",
+          marketItems: [
+            ["Pancreatin capsules/microgranules", "Creon 10000/25000, Hermital 10000/25000/36000, Mezym capsules 10000/25000."],
+            ["Working alternatives", "Panzynorm 10000, Panzynorm forte 20000, Creazym 20000, Festal Neo 10000."],
+            ["For dairy products", "Sunlife Laktase 6000, Scitec Nutrition Lactase, Nature's Way Lactase Enzyme, NOW Dairy Digest Complete, Metagenics EnzyDigest Lactose."],
+            ["Selection criterion", "look at lipase activity, enteric-coated form, tolerability, and the task, not only the brand."]
+          ]
+        },
+        {
+          label: "Gut",
+          title: "Psyllium, fiber, prebiotics",
+          text: "Fiber is useful only when introduced gradually. Psyllium may help with stool, satiety, and appetite control, but without enough water it can worsen well-being.",
+          items: [
+            ["Appropriate", "low fiber intake, constipation, fat loss, hunger control."],
+            ["Start", "small doses, with water, without a sharp jump in fiber."],
+            ["Caution", "bloating, pain, irritable bowel syndrome, chronic diarrhea."]
+          ]
+        },
+        {
+          label: "Gut",
+          title: "Probiotics and fermented foods",
+          text: "Probiotics are not a universal supplement \"for everyone\". It is better to view them for a specific context: after antibiotics, during a diet change, or with unstable digestion.",
+          items: [
+            ["Appropriate", "limited course, specific task, reaction assessment."],
+            ["Caution", "immunodeficiency, severe disease, fever, blood in stool."],
+            ["Rule", "if a product worsens symptoms, it is not \"cleansing\"; it is a signal to stop."]
+          ]
+        },
+        {
+          label: "Sports nutrition",
+          title: "Protein, gainer, and tolerability",
+          text: "If protein causes bloating, look at the type: concentrate, isolate, hydrolysate, casein, or plant protein. Gainers are often poorly tolerated because of a large portion, milk, sugars, or maltodextrin.",
+          items: [
+            ["Appropriate", "isolate when concentrate is poorly tolerated, smaller portions, water instead of milk."],
+            ["Caution", "gainers during fat loss, insulin resistance, reflux, or strong bloating."],
+            ["Rule", "sports nutrition should make the diet easier, not break the GI tract."]
+          ]
+        },
+        {
+          label: "Liver / bile",
+          title: "NAC, TUDCA, silymarin, choline",
+          text: "This is not \"detox\" and not permission to overload the liver. Liver support only makes sense next to control of ALT, AST, GGT, bilirubin, lipids, alcohol, medications, and pharmacological load.",
+          items: [
+            ["Appropriate", "educationally, with lab control and a clear reason for the load."],
+            ["Caution", "jaundice, dark urine, right upper abdominal pain, itching, high bilirubin."],
+            ["Rule", "a supplement does not cancel toxic behavior, alcohol, or dangerous drugs."]
+          ]
+        },
+        {
+          label: "Bile / fats",
+          title: "Fat digestion",
+          text: "Heaviness after fatty food is not always solved by enzymes. It is important to assess dietary fat, the gallbladder, liver markers, stool, and the reaction to large meals.",
+          items: [
+            ["Appropriate", "smaller fat portions, even distribution across meals, symptom control."],
+            ["Caution", "sharp pain, nausea after fat, pale stool, dark urine, jaundice."],
+            ["Do not do", "do not try to \"push bile\" with supplements without understanding the cause."]
+          ]
+        },
+        {
+          label: "Kidneys / water",
+          title: "Electrolytes, magnesium, creatine",
+          text: "For kidneys, the main things are not \"special sports supplements\", but water, blood pressure, sodium/potassium, labs, and health context. Creatine can change creatinine as a marker, so it is important to look beyond one number: eGFR, symptoms, kidney history, and medication context.",
+          items: [
+            ["Appropriate", "water, electrolytes with sweating, magnesium if tolerated, blood pressure control."],
+            ["Caution", "chronic kidney disease, edema, high blood pressure, poor creatinine/eGFR."],
+            ["Rule", "with kidney disease, supplements only with a doctor."]
+          ]
+        },
+        {
+          label: "Stop signals",
+          title: "When not to experiment",
+          text: "If red flags are present, supplements do not \"support the body\"; they can delay proper diagnosis.",
+          plainItems: [
+            "Blood in stool, black stool, persistent diarrhea, or sharp abdominal pain.",
+            "Jaundice, dark urine, pale stool, itching, pain on the right under the ribs.",
+            "Edema, high blood pressure, sharp decrease in urine, poor creatinine/eGFR.",
+            "Sharp weight loss, fever, night sweats, severe weakness."
+          ]
+        }
+      ],
+      sourcesTitle: "Sources for verification",
+      sources: [
+        "NIH ODS: Probiotics fact sheet",
+        "NCCIH: Probiotics usefulness and safety",
+        "NIH ODS: Magnesium fact sheet",
+        "National Kidney Foundation: Creatinine",
+        "Tabletki.ua: digestive enzymes in Ukrainian pharmacies",
+        "Apteka 9-1-1: digestive enzymes"
+      ]
+    },
+    ru: {
+      label: "Пищеварение и поддержка органов",
+      title: "ЖКТ, ферменты, спортпит и контроль переносимости",
+      intro: "Этот блок не о лечении и не о \"детоксе\". Это практическая карта: что может помочь переносить рацион, белок, клетчатку, воду, электролиты и тренировочную нагрузку, а где нужно остановиться и идти к врачу.",
+      tabsLabel: "Направления поддержки",
+      tabs: ["Пищеварение", "Кишечник", "Печень / желчь", "Почки / электролиты", "Стоп-сигналы"],
+      cards: [
+        {
+          label: "Пищеварение",
+          title: "Ферменты и лактаза",
+          text: "Ферменты уместны как короткий инструмент при больших приемах пищи, высоком белке, жирных блюдах или переходе на более высокий калораж. Лактаза - отдельная опция, если молочные продукты дают вздутие, бурление или дискомфорт.",
+          items: [
+            ["Уместно", "набор массы, 4-5 приемов, тяжесть после белка/жиров, проблемы с молочкой."],
+            ["Осторожно", "боль, изжога, гастрит/язва, диарея, панкреатические или желчные симптомы."],
+            ["Не заменяет", "диагностику причин, если дискомфорт повторяется."]
+          ],
+          marketTitle: "Аптечные названия в Украине",
+          marketItems: [
+            ["Капсулы/микрогранулы панкреатина", "Креон 10000/25000, Эрмиталь 10000/25000/36000, Мезим капсулы 10000/25000."],
+            ["Рабочие альтернативы", "Панзинорм 10000, Панзинорм форте 20000, Креазим 20000, Фестал Нео 10000."],
+            ["Для молочных продуктов", "Sunlife Laktase 6000, Scitec Nutrition Lactase, Nature's Way Lactase Enzyme, NOW Dairy Digest Complete, Metagenics EnzyDigest Lactose."],
+            ["Критерий выбора", "смотреть на активность липазы, кишечнорастворимую форму, переносимость и задачу, а не только на бренд."]
+          ]
+        },
+        {
+          label: "Кишечник",
+          title: "Псиллиум, клетчатка, пребиотики",
+          text: "Клетчатка полезна только тогда, когда ее вводят постепенно. Псиллиум может помогать со стулом, сытостью и контролем аппетита, но без достаточной воды может ухудшить самочувствие.",
+          items: [
+            ["Уместно", "низкая клетчатка, запоры, похудение, контроль голода."],
+            ["Старт", "малыми дозами, с водой, без резкого скачка клетчатки."],
+            ["Осторожно", "вздутие, боль, синдром раздраженного кишечника, хроническая диарея."]
+          ]
+        },
+        {
+          label: "Кишечник",
+          title: "Пробиотики и ферментированные продукты",
+          text: "Пробиотики не являются универсальной добавкой \"для всех\". Их лучше рассматривать под конкретный контекст: после антибиотиков, при изменении рациона или при нестабильном пищеварении.",
+          items: [
+            ["Уместно", "ограниченный курс, конкретная задача, оценка реакции."],
+            ["Осторожно", "иммунодефицит, тяжелые болезни, температура, кровь в стуле."],
+            ["Правило", "если продукт ухудшает симптомы - это не \"очищение\", а сигнал остановиться."]
+          ]
+        },
+        {
+          label: "Спортпит",
+          title: "Протеин, гейнер и переносимость",
+          text: "Если протеин дает вздутие, стоит смотреть на тип: концентрат, изолят, гидролизат, казеин или растительный протеин. Гейнер часто плохо переносится из-за большой порции, молока, сахаров или мальтодекстрина.",
+          items: [
+            ["Уместно", "изолят при плохой переносимости концентрата, меньшие порции, вода вместо молока."],
+            ["Осторожно", "гейнеры при похудении, инсулинорезистентности, рефлюксе или сильном вздутии."],
+            ["Правило", "спортпит должен облегчать рацион, а не ломать ЖКТ."]
+          ]
+        },
+        {
+          label: "Печень / желчь",
+          title: "NAC, TUDCA, силимарин, холин",
+          text: "Это не \"детокс\" и не разрешение перегружать печень. Поддержка печени имеет смысл только рядом с контролем ALT, AST, GGT, билирубина, липидов, алкоголя, лекарств и фармакологической нагрузки.",
+          items: [
+            ["Уместно", "образовательно, при контроле анализов и понятной причине нагрузки."],
+            ["Осторожно", "желтуха, темная моча, боль справа под ребрами, зуд, высокий билирубин."],
+            ["Правило", "добавка не перекрывает токсичное поведение, алкоголь или опасные препараты."]
+          ]
+        },
+        {
+          label: "Желчь / жиры",
+          title: "Переваривание жиров",
+          text: "Тяжесть после жирной еды не всегда решается ферментами. Важно оценить жиры в рационе, желчный пузырь, печеночные маркеры, стул и реакцию на большие приемы.",
+          items: [
+            ["Уместно", "меньшие порции жира, равномерное распределение по приемам, контроль симптомов."],
+            ["Осторожно", "острая боль, тошнота после жирного, светлый стул, темная моча, желтуха."],
+            ["Не делать", "не \"гонять желчь\" добавками без понимания причины."]
+          ]
+        },
+        {
+          label: "Почки / вода",
+          title: "Электролиты, магний, креатин",
+          text: "Для почек главное не \"специальный спортпит\", а вода, давление, натрий/калий, анализы и здоровый контекст. Креатин может менять креатинин как маркер, поэтому важно смотреть не одну цифру, а eGFR, симптомы, историю почек и лекарственный контекст.",
+          items: [
+            ["Уместно", "вода, электролиты при потоотделении, магний по переносимости, контроль давления."],
+            ["Осторожно", "хроническая болезнь почек, отеки, высокое давление, плохие креатинин/eGFR."],
+            ["Правило", "при болезнях почек добавки только с врачом."]
+          ]
+        },
+        {
+          label: "Стоп-сигналы",
+          title: "Когда не экспериментировать",
+          text: "Если есть красные флаги, добавки не \"поддерживают организм\", а могут затянуть нормальную диагностику.",
+          plainItems: [
+            "Кровь в стуле, черный стул, постоянная диарея или резкая боль в животе.",
+            "Желтуха, темная моча, светлый стул, зуд, боль справа под ребрами.",
+            "Отеки, высокое давление, резкое уменьшение мочи, плохие креатинин/eGFR.",
+            "Резкая потеря веса, температура, ночная потливость, сильная слабость."
+          ]
+        }
+      ],
+      sourcesTitle: "Источники для сверки",
+      sources: [
+        "NIH ODS: справка о пробиотиках",
+        "NCCIH: польза и безопасность пробиотиков",
+        "NIH ODS: справка о магнии",
+        "National Kidney Foundation: креатинин",
+        "Tabletki.ua: ферменты в аптеках Украины",
+        "Аптека 9-1-1: ферменты для пищеварения"
+      ]
+    }
+  };
+
+  const supplementCatalogTranslations = {
+    en: {
+      groupLabel: "Group 06",
+      groupTitle: "Dietary supplements and nutraceuticals",
+      intro: "Not sports nutrition and not \"jars for mass\": this section covers nutraceuticals, mushroom extracts, adaptogens, and substances with a separate evidence or toxicology logic. Protein, creatine, gainers, BCAA, and similar sports supplements do not belong in this catalog.",
+      warningTitle: "Important",
+      warningText: "This section is informational only. VitalRise does not recommend taking dietary supplements, mushroom extracts, adaptogens, or psychoactive substances on your own. Each item describes possible effects, evidence, and risks; it is not advice to use them. Dietary supplements do not go through the same pre-approval for safety and effectiveness as medicines, so any decision should be checked against a doctor, lab work, diagnoses, medications, and personal risks.",
+      sectionTitles: ["Effects", "Evidence", "Cautions", "Sources for verification"],
+      items: [
+        {
+          badge: "Supplement 01",
+          title: "Lion's Mane: Hericium erinaceus",
+          intro: "Lion's Mane is an edible mushroom and popular nootropic supplement promoted for memory, concentration, the nervous system, and mood. Its most interesting mechanisms involve hericenones, erinacines, neurotrophic pathways, and inflammation, but human evidence is still much thinner than the marketing.",
+          effects: [
+            "Possible effects include support for cognitive function, subjective clarity, attention, and mood, but human data are limited.",
+            "Preclinical work discusses neurotrophic mechanisms, nerve regeneration, anti-inflammatory, and antioxidant effects.",
+            "Possible adverse effects include allergic reactions, rash, itching, digestive discomfort, and individual worsening of well-being or anxiety."
+          ],
+          evidence: [
+            "There are small clinical studies and preclinical data on cognition, mood, and the nervous system, but large independent RCTs are still insufficient.",
+            "NCBI LiverTox notes that small clinical trials did not report clear liver injury, but prospective safety data are limited.",
+            "In practice this is a cautiously promising candidate, not a guaranteed brain supplement."
+          ],
+          cautions: [
+            "Do not use with mushroom allergy or unclear allergic reactions.",
+            "Use caution with autoimmune conditions, anticoagulants or antiplatelet drugs, psychiatric symptoms, or strong anxiety.",
+            "Extract quality matters: fruiting body, mycelium, standardization, contaminants, and certificates can differ substantially."
+          ]
+        },
+        {
+          badge: "Supplement 02",
+          title: "Ashwagandha: Withania somnifera",
+          intro: "Ashwagandha is an adaptogenic plant extract most often discussed for stress, anxiety, sleep, recovery, and male hormonal context. It is not \"natural testosterone\" and should not replace treatment for anxiety, insomnia, or endocrine problems.",
+          effects: [
+            "Possible effects include reduced subjective stress, anxiety, tension, and improved sleep markers in some studies.",
+            "In sport it is studied for recovery, strength, fatigue, and hormonal markers, but these effects are not guaranteed and depend on the extract and the person.",
+            "Possible adverse effects include sleepiness, nausea, diarrhea, headache, thyroid profile changes, and rare reports of liver injury."
+          ],
+          evidence: [
+            "NCCIH and NIH ODS describe many clinical studies, but data quality and duration vary.",
+            "The most practical areas are stress, anxiety, and sleep; evidence for sport performance and other claims is weaker or mixed.",
+            "Long-term safety for many months or years is not well established."
+          ],
+          cautions: [
+            "Not suitable during pregnancy, and should be medically supervised with thyroid disease, autoimmune conditions, liver disease, or sedative medication use.",
+            "Gastrointestinal side effects and rare liver injury reports exist.",
+            "Do not mix chaotically with other calming supplements, alcohol, or sleep medications."
+          ]
+        },
+        {
+          badge: "Supplement 03",
+          title: "Rhodiola rosea",
+          intro: "Rhodiola is an adaptogen promoted for fatigue, stress tolerance, concentration, and work capacity. It is not a caffeine-level stimulant and not a treatment for depression or anxiety disorders.",
+          effects: [
+            "Possible effects include reduced fatigue, support for concentration, stress tolerance, and work capacity in some people.",
+            "It can have a mildly stimulating profile, so response depends on the nervous system, sleep, caffeine, and anxiety level.",
+            "Possible adverse effects include insomnia, palpitations, irritability, anxiety, headache, or digestive discomfort."
+          ],
+          evidence: [
+            "Clinical work exists for fatigue and stress, but the evidence is heterogeneous: different extracts, different standardization, and small samples.",
+            "Informational position: effects are possible, but not proven as universal; it is not treatment for burnout, depression, anxiety, or sleep disorders.",
+            "Product quality is critical because different species or weakly standardized extracts may be sold under the Rhodiola name."
+          ],
+          cautions: [
+            "Use caution with anxiety, insomnia, bipolar disorder, stimulants, antidepressants, or CNS-active medications.",
+            "If sleep, palpitations, or anxiety worsen, that is not \"adaptation\"; it is a signal to stop and reassess.",
+            "Avoid stacking it blindly with caffeine or other stimulants."
+          ]
+        },
+        {
+          badge: "Supplement 04",
+          title: "Leuzea: Rhaponticum carthamoides / maral root",
+          intro: "Leuzea, or Rhaponticum carthamoides, is a plant adaptogen historically used in Siberia and Eastern Europe for fatigue, work capacity, and recovery. Sports marketing often links it with ecdysteroids, especially 20-hydroxyecdysone, but that does not make it a \"natural steroid\" or a guaranteed muscle-growth supplement.",
+          effects: [
+            "Possible effects include subjective support for work capacity, endurance, recovery, tone, and stress tolerance in some people.",
+            "The plant contains ecdysteroids, phenolic compounds, flavonoids, and other components, so effects may differ between root, extract, and standardized products.",
+            "Possible adverse effects include insomnia, agitation, palpitations, increased anxiety, digestive discomfort, and individual reactions to the extract or contaminants."
+          ],
+          evidence: [
+            "A Phytochemistry review describes the chemistry and broad pharmacological profile of Rhaponticum carthamoides, but much of the data is preclinical or older.",
+            "For sport performance, human evidence is limited and is not comparable to the evidence for creatine, caffeine, or adequate protein.",
+            "Informational position: leuzea may be interesting as an adaptogen or phytoecdysteroid source, but it is not medical treatment, an anabolic drug, or a required part of sports nutrition."
+          ],
+          cautions: [
+            "VitalRise does not recommend taking leuzea on your own; this is reference information about possible effects, evidence, and risks.",
+            "Use caution with high blood pressure, arrhythmias, anxiety, insomnia, bipolar disorder, pregnancy, breastfeeding, liver or kidney disease, stimulants, antidepressants, and cardiovascular medications.",
+            "For athletes, product quality matters: extract standardization, real ecdysteroid content, contaminants, and anti-doping risk can differ between brands."
+          ]
+        },
+        {
+          badge: "Supplement 05",
+          title: "Berberine: metabolic nutraceutical",
+          intro: "Berberine is a plant-derived alkaloid most often discussed for glucose, insulin resistance, lipids, and metabolic health. It is not \"natural Ozempic\" and not a replacement for medical care in diabetes.",
+          effects: [
+            "Possible effects include changes in glucose, HbA1c, insulin resistance, lipid markers, and metabolic profile in some studies.",
+            "It may affect the gut, biliary and liver context, drug transport, and enzyme systems, so it has more interactions than many \"mild\" supplements.",
+            "Possible adverse effects include nausea, constipation or diarrhea, abdominal pain, and hypoglycemia risk when combined with glucose-lowering drugs."
+          ],
+          evidence: [
+            "NCCIH describes some evidence for benefit in diabetes as an add-on therapy, but studies have limitations and do not give a universal conclusion.",
+            "Systematic reviews exist for glucose, lipids, and metabolic markers, but formulations, doses, and populations differ.",
+            "Practically, it is one of the more researched nutraceuticals, but with important medication interactions."
+          ],
+          cautions: [
+            "Use caution with glucose-lowering drugs, insulin, low glucose, liver or kidney disease, pregnancy, and breastfeeding.",
+            "It can cause digestive side effects and interact with medications through transport proteins and enzyme systems.",
+            "With diabetes or prediabetes, decisions should be checked with a doctor and labs, not only appetite or weight changes."
+          ]
+        },
+        {
+          badge: "Supplement 06",
+          title: "Curcumin / turmeric: anti-inflammatory marketing and real caution",
+          intro: "Curcumin is a polyphenol from turmeric often sold for joints, inflammation, liver, lipids, and antioxidant effects. The issue is not only evidence, but also bioavailability, extract form, piperine, and medication interactions.",
+          effects: [
+            "Possible effects include changes in osteoarthritis symptoms, inflammation markers, lipids, or liver/metabolic markers in some studies.",
+            "High-bioavailability forms may act more strongly, but that is also why they may create more drug interactions.",
+            "Possible adverse effects include heartburn, nausea, diarrhea, biliary symptoms, and higher interaction risk with anticoagulants or antiplatelet drugs."
+          ],
+          evidence: [
+            "NCCIH notes that turmeric and curcumin have been studied for NAFLD, osteoarthritis, and lipid disorders, but evidence is insufficient for many other claims.",
+            "Informational position: it is not treatment for inflammation, liver disease, joint disease, or toxicity from other drugs.",
+            "Piperine-containing forms can raise bioavailability, but may also raise interaction risk."
+          ],
+          cautions: [
+            "Use caution with gallstones, anticoagulants or antiplatelets, liver disease, pregnancy, or many concurrent medications.",
+            "Do not use high doses as \"liver protection\" with alcohol, AAS, or toxic medications.",
+            "Check the form and dose rather than assuming turmeric spice and concentrated extract are the same."
+          ]
+        },
+        {
+          badge: "Supplement 07",
+          title: "Magnesium: glycinate, citrate, malate, and other forms",
+          intro: "Magnesium is a mineral, not sports nutrition. It is often used for sleep, the nervous system, cramps, dietary deficiency, blood pressure, or digestive context. The key is counting elemental magnesium, not the compound weight on the label.",
+          effects: [
+            "Physiological effects include participation in neuromuscular transmission, energy metabolism, muscle contraction, glucose regulation, and blood pressure.",
+            "With deficiency or low intake, it may affect cramps, tension, sleep, constipation, or general load tolerance.",
+            "Possible adverse effects include diarrhea, abdominal cramps, nausea; with impaired kidney function, dangerous hypermagnesemia is possible."
+          ],
+          evidence: [
+            "NIH ODS describes magnesium as a cofactor in more than 300 enzyme systems, including neuromuscular function, glucose, and blood pressure.",
+            "The best logic is correction of deficiency or inadequate intake, not \"magic sleep\" for everyone.",
+            "Form matters for tolerability: citrate more often affects the gut, while glycinate is usually gentler for digestion."
+          ],
+          cautions: [
+            "Use caution with chronic kidney disease, low blood pressure, diarrhea, diuretics, or many concurrent medications.",
+            "Magnesium can reduce absorption of some medications, so intervals with medicines matter.",
+            "Do not judge the dose by the total compound weight; check elemental magnesium."
+          ]
+        },
+        {
+          badge: "Supplement 08",
+          title: "Melatonin: sleep, circadian rhythm, and safety limits",
+          intro: "Melatonin is a hormonal darkness signal often sold as a \"natural sleeping pill.\" It is better viewed as a tool for circadian rhythm, jet lag, or schedule shift, not a universal treatment for chronic insomnia.",
+          effects: [
+            "Possible effects include circadian rhythm shifting, shorter sleep-onset time in some contexts, and help with jet lag or shift work.",
+            "It may cause sleepiness, vivid dreams, headache, morning grogginess, mood changes, or rhythm worsening when timing is wrong.",
+            "The effect depends on evening light, routine, timing, dose, age, medications, and the cause of insomnia."
+          ],
+          evidence: [
+            "NCCIH notes that melatonin may be useful for sleep problems related to shift work or jet lag.",
+            "For chronic insomnia, leading guidelines do not give a strong recommendation because efficacy and long-term safety evidence is insufficient.",
+            "Timing, evening light, sleep schedule, and the cause of insomnia are key."
+          ],
+          cautions: [
+            "Use caution in children, adolescents, pregnancy, epilepsy, autoimmune conditions, depression, and with sedatives or anticoagulants.",
+            "Higher doses are not always better: excess may worsen daytime sleepiness and disrupt rhythm.",
+            "It should not be used to mask a broken schedule, sleep apnea, medication side effects, or severe anxiety."
+          ]
+        },
+        {
+          badge: "Supplement 09",
+          title: "Valerian: sleep and calming without exaggeration",
+          intro: "Valerian is a plant product traditionally used for sleep and nervous tension. In the catalog it should be presented calmly: not as a strong sedative drug, but as a supplement with inconsistent evidence.",
+          effects: [
+            "Possible effects include subjective calming and mild help with falling asleep or tension in some people.",
+            "The effect is not consistently proven and may depend heavily on extract, dose, expectations, sleep routine, and parallel substances.",
+            "Possible adverse effects include sleepiness, headache, dizziness, digestive discomfort, and slowed reaction when combined with sedative substances."
+          ],
+          evidence: [
+            "NCCIH describes evidence for valerian in sleep problems as inconsistent.",
+            "Long-term safety data are limited, so it should not become a daily \"insurance policy\" against a poor routine.",
+            "Informational position: valerian does not replace diagnosis of insomnia, anxiety, sleep apnea, or medication side effects."
+          ],
+          cautions: [
+            "Do not combine without a doctor with alcohol, sedatives, sleeping pills, or other calming supplements.",
+            "Use caution with pregnancy, breastfeeding, liver disease, driving, or work that requires fast reaction.",
+            "If daytime sleepiness appears, the dose or combination may be inappropriate."
+          ]
+        },
+        {
+          badge: "Risk 10",
+          title: "Amanita muscaria: not a recommended supplement",
+          intro: "Amanita muscaria should not be presented as a regular dietary supplement. It is a psychoactive and toxicologically problematic mushroom containing muscimol, ibotenic acid, and other components. In this catalog it belongs in an educational risk block, not a recommendation list.",
+          effects: [
+            "Psychoactive effects can include altered perception, confusion, sedation, euphoria or dysphoria, impaired coordination, sleepiness, nausea, and vomiting.",
+            "Toxic effects can include agitation, delirium, CNS depression, seizures, loss of consciousness, unstable behavior, and hospitalization.",
+            "Product composition and strength are unpredictable: batches, extracts, gummies, or tinctures may differ in muscimol, ibotenic acid, contaminants, or undeclared substances."
+          ],
+          evidence: [
+            "FDA states that Amanita muscaria, its extracts, and constituents such as muscimol, ibotenic acid, and muscarine are not approved dietary ingredients for conventional foods in the US.",
+            "Reported adverse events include CNS depression, sleepiness, seizures, hospitalization, nausea, vomiting, agitation, confusion, and unpredictable reactions.",
+            "Data on \"microdosing\" are not sufficient clinical evidence of safety or benefit."
+          ],
+          cautions: [
+            "VitalRise does not recommend Amanita muscaria as a supplement for sleep, anxiety, mood, testosterone, or performance.",
+            "It is especially dangerous with psychiatric disorders, epilepsy, cardiovascular issues, pregnancy, breastfeeding, in children or adolescents, and with alcohol, sedatives, psychotropic drugs, or cannabinoids.",
+            "Gummies, candies, \"microdosing,\" and marketed extracts may have unstable composition and contaminants."
+          ]
+        }
+      ]
+    },
+    ru: {
+      groupLabel: "Группа 06",
+      groupTitle: "БАДы и нутрицевтики",
+      intro: "Не спортпит и не \"баночки для массы\": здесь только нутрицевтики, грибные экстракты, адаптогены и вещества с отдельной доказательной или токсикологической логикой. Протеин, креатин, гейнер, BCAA и похожий спортпит в этот каталог не входят.",
+      warningTitle: "Важно",
+      warningText: "Этот раздел исключительно информационный. VitalRise не рекомендует самостоятельно принимать БАДы, грибные экстракты, адаптогены или психоактивные вещества. Каждый пункт ниже описывает возможные эффекты, доказательность и риски, а не является советом к использованию. БАДы не проходят такое же предварительное подтверждение безопасности и эффективности, как лекарства; решение нужно сверять с врачом, анализами, диагнозами, препаратами и рисками.",
+      sectionTitles: ["Эффекты", "Доказательность", "Предостережения", "Источники для сверки"],
+      items: [
+        {
+          badge: "БАД 01",
+          title: "Ежовик гребенчатый: Hericium erinaceus / Lion's Mane",
+          intro: "Ежовик гребенчатый - съедобный гриб и популярный ноотропный БАД, который продвигают для памяти, концентрации, нервной системы и настроения. Самые интересные механизмы связаны с гериценонами, эринацинами, нейротрофическими путями и воспалением, но человеческая доказательная база пока заметно скромнее маркетинга.",
+          effects: [
+            "Возможное влияние на когнитивную функцию, субъективную ясность, внимание и настроение, но данные у людей пока ограничены.",
+            "Доклинически обсуждают нейротрофические механизмы, нервную регенерацию, противовоспалительные и антиоксидантные эффекты.",
+            "Потенциальные нежелательные эффекты: аллергические реакции, сыпь, зуд, дискомфорт ЖКТ, индивидуальное ухудшение самочувствия или тревожности."
+          ],
+          evidence: [
+            "Есть небольшие клинические исследования и доклинические данные по когнитивной функции, настроению и нервной системе, но крупных независимых RCT пока недостаточно.",
+            "NCBI LiverTox описывает, что в небольших клинических испытаниях не было сообщений о явном поражении печени, но проспективных исследований безопасности мало.",
+            "Практически это кандидат на \"осторожно перспективный\", а не гарантированное средство для мозга."
+          ],
+          cautions: [
+            "Не использовать при аллергии на грибы или непонятных аллергических реакциях.",
+            "Осторожность при аутоиммунных состояниях, антикоагулянтах или антиагрегантах, психических симптомах или сильной тревожности.",
+            "Качество экстракта важно: плодовое тело, мицелий, стандартизация, примеси и сертификаты могут сильно отличаться."
+          ]
+        },
+        {
+          badge: "БАД 02",
+          title: "Ашваганда: Withania somnifera",
+          intro: "Ашваганда - адаптогенный растительный экстракт, который чаще всего упоминают для стресса, тревожности, сна, восстановления и мужского гормонального контекста. Она не является \"натуральным тестостероном\" и не должна заменять лечение тревоги, бессонницы или эндокринных проблем.",
+          effects: [
+            "Возможные эффекты: снижение субъективного стресса, тревожности, напряжения и улучшение отдельных показателей сна в части исследований.",
+            "В спортивном контексте изучают восстановление, силу, усталость и гормональные маркеры, но эти эффекты не гарантированы и зависят от экстракта и человека.",
+            "Потенциальные нежелательные эффекты: сонливость, тошнота, диарея, головная боль, изменения щитовидного профиля, редкие сообщения о поражении печени."
+          ],
+          evidence: [
+            "NCCIH и NIH ODS описывают много клинических исследований, но качество и длительность данных разные.",
+            "Наиболее практичные направления: стресс, тревожность и сон; для спортивной продуктивности и других заявлений доказательность слабее или неоднородна.",
+            "Долгосрочная безопасность на месяцы или годы установлена недостаточно хорошо."
+          ],
+          cautions: [
+            "Не подходит при беременности, без медицинского контроля при болезнях щитовидной железы, аутоиммунных состояниях, болезнях печени или приеме седативных препаратов.",
+            "Есть сообщения о желудочно-кишечных побочных эффектах и редких случаях поражения печени.",
+            "Не смешивать хаотично с другими успокаивающими БАДами, алкоголем или препаратами для сна."
+          ]
+        },
+        {
+          badge: "БАД 03",
+          title: "Родиола розовая: Rhodiola rosea",
+          intro: "Родиола - адаптоген, который продвигают для усталости, стрессоустойчивости, концентрации и работоспособности. Это не стимулятор уровня кофеина и не препарат для лечения депрессии или тревожных расстройств.",
+          effects: [
+            "Возможные эффекты: уменьшение ощущения усталости, поддержка концентрации, стрессоустойчивости и работоспособности у части людей.",
+            "Может иметь легкий стимулирующий профиль, поэтому реакция зависит от нервной системы, сна, кофеина и уровня тревожности.",
+            "Потенциальные нежелательные эффекты: бессонница, сердцебиение, раздражительность, тревожность, головная боль или дискомфорт ЖКТ."
+          ],
+          evidence: [
+            "Есть клинические работы по усталости и стрессу, но доказательная база неоднородна: разные экстракты, разная стандартизация, небольшие выборки.",
+            "Информационная позиция: эффекты возможны, но не доказаны как универсальные; это не лечение истощения, депрессии, тревоги или нарушений сна.",
+            "Качество продукта критично: под названием Rhodiola могут продаваться разные виды или слабо стандартизованные экстракты."
+          ],
+          cautions: [
+            "Осторожность при тревожности, бессоннице, биполярном расстройстве, стимуляторах, антидепрессантах или препаратах, влияющих на ЦНС.",
+            "Если на фоне приема ухудшается сон, сердцебиение или тревожность, это не \"адаптация\", а сигнал остановиться и оценить состояние.",
+            "Не стоит слепо комбинировать с кофеином или другими стимуляторами."
+          ]
+        },
+        {
+          badge: "БАД 04",
+          title: "Левзея: Rhaponticum carthamoides / маралий корень",
+          intro: "Левзея, или Rhaponticum carthamoides, - растительный адаптоген, который исторически использовали в Сибири и Восточной Европе для усталости, работоспособности и восстановления. В спортивном маркетинге ее часто связывают с экдистероидами, особенно 20-гидроксиэкдизоном, но это не делает левзею \"натуральным стероидом\" или гарантированной добавкой для роста мышц.",
+          effects: [
+            "Возможные эффекты: субъективная поддержка работоспособности, выносливости, восстановления, тонуса и стрессоустойчивости у части людей.",
+            "Фитохимически растение содержит экдистероиды, фенольные соединения, флавоноиды и другие компоненты, поэтому эффекты могут отличаться между корнем, экстрактом и стандартизованным продуктом.",
+            "Потенциальные нежелательные эффекты: бессонница, возбуждение, сердцебиение, повышение тревожности, дискомфорт ЖКТ, индивидуальная реакция на экстракт или примеси."
+          ],
+          evidence: [
+            "Обзор Phytochemistry описывает химический состав и широкий спектр фармакологических эффектов Rhaponticum carthamoides, но значительная часть данных доклиническая или старая.",
+            "Для спортивной продуктивности человеческая доказательная база ограничена и не равна доказательности креатина, кофеина или достаточного белка.",
+            "Информационная позиция: левзея может быть интересна как адаптоген или источник фитоэкдистероидов, но это не лечение, не анаболик и не обязательная часть спортпита."
+          ],
+          cautions: [
+            "VitalRise не рекомендует самостоятельно принимать левзею; это справочная информация о возможных эффектах, доказательности и рисках.",
+            "Осторожность при высоком давлении, аритмиях, тревожности, бессоннице, биполярном расстройстве, беременности, ГВ, болезнях печени или почек, приеме стимуляторов, антидепрессантов и сердечно-сосудистых препаратов.",
+            "Для спортсменов важно качество продукта: стандартизация экстракта, реальное содержание экдистероидов, примеси и антидопинговый риск могут отличаться между брендами."
+          ]
+        },
+        {
+          badge: "БАД 05",
+          title: "Берберин: метаболический нутрицевтик",
+          intro: "Берберин - алкалоид из растительных источников, который чаще всего обсуждают в контексте глюкозы, инсулинорезистентности, липидов и метаболического здоровья. Это не \"натуральный Ozempic\" и не замена врача при диабете.",
+          effects: [
+            "Возможные эффекты: влияние на глюкозу, HbA1c, инсулинорезистентность, липидные маркеры и метаболический профиль в части исследований.",
+            "Может влиять на кишечник, желчный и печеночный контекст, транспорт лекарств и ферментные системы, поэтому имеет больше взаимодействий, чем многие \"мягкие\" БАДы.",
+            "Потенциальные нежелательные эффекты: тошнота, запор или диарея, боль в животе, риск гипогликемии при сочетании с сахароснижающими препаратами."
+          ],
+          evidence: [
+            "NCCIH описывает, что есть некоторые данные о пользе при диабете как дополнительной терапии, но исследования имеют ограничения и не дают универсального вывода.",
+            "Есть систематические обзоры по глюкозе, липидам и метаболическим маркерам, но качество формул, доз и популяций различается.",
+            "Практически это один из более исследованных нутрицевтиков, но с важными взаимодействиями с лекарствами."
+          ],
+          cautions: [
+            "Осторожность при сахароснижающих препаратах, инсулине, низкой глюкозе, болезнях печени или почек, беременности и ГВ.",
+            "Может давать ЖКТ-побочные эффекты и взаимодействовать с лекарствами через транспортные белки и ферментные системы.",
+            "При диабете или предиабете решение должно сверяться с врачом и анализами, а не только с ощущением аппетита."
+          ]
+        },
+        {
+          badge: "БАД 06",
+          title: "Куркумин / куркума: противовоспалительный маркетинг и реальная осторожность",
+          intro: "Куркумин - полифенольный компонент куркумы, который часто продают для суставов, воспаления, печени, липидов и антиоксидантного эффекта. Проблема не только в доказательности, но и в биодоступности, форме экстракта, пиперине и взаимодействиях с лекарствами.",
+          effects: [
+            "Возможные эффекты: влияние на симптомы остеоартрита, маркеры воспаления, липиды или печеночные/metabolic маркеры в отдельных исследованиях.",
+            "Формы с повышенной биодоступностью могут действовать сильнее, но именно поэтому могут давать больше взаимодействий с лекарствами.",
+            "Потенциальные нежелательные эффекты: изжога, тошнота, диарея, желчные симптомы, повышенный риск взаимодействий с антикоагулянтами или антиагрегантами."
+          ],
+          evidence: [
+            "NCCIH отмечает, что куркума и куркумин активно изучались при NAFLD, остеоартрите и липидных нарушениях, но для многих других заявлений доказательств недостаточно.",
+            "Информационная позиция: это не лечение воспаления, печени, суставов или последствий токсичных препаратов.",
+            "Формы с пиперином могут повышать биодоступность, но также могут повышать риск взаимодействий."
+          ],
+          cautions: [
+            "Осторожность при желчнокаменной болезни, антикоагулянтах или антиагрегантах, болезнях печени, беременности, большом количестве лекарств.",
+            "Не использовать высокие дозы как \"защиту печени\" при алкоголе, AAS или токсичных препаратах.",
+            "Важно различать специю куркуму и концентрированный экстракт."
+          ]
+        },
+        {
+          badge: "БАД 07",
+          title: "Магний: глицинат, цитрат, малат и другие формы",
+          intro: "Магний - минерал, а не спортпит. Его часто добавляют для сна, нервной системы, судорог, дефицита в рационе, давления или ЖКТ-контекста. Главное - считать элементарный магний, а не вес соединения на этикетке.",
+          effects: [
+            "Физиологические эффекты: участие в нервно-мышечной передаче, энергетическом обмене, сокращении мышц, регуляции глюкозы и давления.",
+            "При дефиците или низком поступлении возможное влияние на судороги, напряжение, сон, запоры или общую переносимость нагрузки.",
+            "Потенциальные нежелательные эффекты: диарея, спазмы живота, тошнота; при нарушенной функции почек - риск накопления и опасной гипермагниемии."
+          ],
+          evidence: [
+            "NIH ODS описывает магний как кофактор более чем 300 ферментных систем, включая нервно-мышечную функцию, глюкозу и давление.",
+            "Лучшая логика - коррекция дефицита или недостаточного поступления, а не \"магический сон\" для всех.",
+            "Форма важна для переносимости: цитрат чаще влияет на кишечник, глицинат обычно мягче для ЖКТ."
+          ],
+          cautions: [
+            "Осторожность при хронической болезни почек, низком давлении, диарее, приеме диуретиков или большого количества лекарств.",
+            "Магний может мешать всасыванию некоторых препаратов, поэтому важны интервалы с лекарствами.",
+            "Не оценивай дозу по весу соединения; смотри элементарный магний."
+          ]
+        },
+        {
+          badge: "БАД 08",
+          title: "Мелатонин: сон, циркадный ритм и пределы безопасности",
+          intro: "Мелатонин - гормональный сигнал темноты, который часто продают как \"натуральное снотворное\". Правильнее рассматривать его как инструмент для циркадного ритма, джетлага или сдвига графика, а не как универсальное лечение хронической бессонницы.",
+          effects: [
+            "Возможные эффекты: сдвиг циркадного ритма, сокращение времени засыпания в отдельных контекстах, помощь при джетлаге или сменной работе.",
+            "Может вызывать сонливость, яркие сны, головную боль, утреннюю \"ватность\", изменение настроения или ухудшение ритма при неудачном времени приема.",
+            "Эффект зависит от света вечером, режима, времени приема, дозы, возраста, лекарств и причины бессонницы."
+          ],
+          evidence: [
+            "NCCIH отмечает, что мелатонин может быть полезен при нарушениях сна из-за сменной работы или джетлага.",
+            "Для хронической бессонницы ведущие рекомендации не дают сильной рекомендации из-за недостаточной доказательности эффективности и долгосрочной безопасности.",
+            "Ключевыми являются время приема, свет вечером, режим сна и причина бессонницы."
+          ],
+          cautions: [
+            "Осторожность у детей, подростков, беременных, при эпилепсии, аутоиммунных состояниях, депрессии, приеме седативных или антикоагулянтов.",
+            "Более высокие дозы не всегда лучше: избыток может усиливать сонливость днем и сбивать ритм.",
+            "Не стоит использовать его, чтобы маскировать сломанный режим, апноэ сна, побочные эффекты лекарств или тяжелую тревогу."
+          ]
+        },
+        {
+          badge: "БАД 09",
+          title: "Валериана: сон и успокоение без преувеличений",
+          intro: "Валериана - растительное средство, которое традиционно используют для сна и нервного напряжения. В каталоге ее стоит подавать спокойно: не как сильный седативный препарат, а как БАД с неоднородной доказательностью.",
+          effects: [
+            "Возможные эффекты: субъективное успокоение, легкое облегчение засыпания или напряжения у части людей.",
+            "Эффект не является стабильно доказанным и может сильно зависеть от экстракта, дозы, ожиданий, режима сна и параллельных веществ.",
+            "Потенциальные нежелательные эффекты: сонливость, головная боль, головокружение, дискомфорт ЖКТ, угнетение реакции при сочетании с седативными веществами."
+          ],
+          evidence: [
+            "NCCIH описывает доказательства пользы валерианы при проблемах со сном как непоследовательные.",
+            "Данные по долгосрочной безопасности ограничены, поэтому это не должно быть ежедневной \"страховкой\" от плохого режима.",
+            "Информационная позиция: валериана не заменяет диагностику бессонницы, тревоги, апноэ сна или побочных эффектов лекарств."
+          ],
+          cautions: [
+            "Не сочетать без врача с алкоголем, седативными препаратами, снотворными или другими успокаивающими БАДами.",
+            "Осторожность при беременности, ГВ, болезнях печени, управлении авто или работе, где нужна быстрая реакция.",
+            "Если появляется дневная сонливость, доза или сочетание могут быть неподходящими."
+          ]
+        },
+        {
+          badge: "Риск 10",
+          title: "Мухомор красный: Amanita muscaria / не рекомендованный БАД",
+          intro: "Мухомор красный не стоит подавать как обычный БАД. Это психоактивный и токсикологически проблемный гриб с мусцимолом, иботеновой кислотой и другими компонентами. В каталоге его место - в образовательном блоке рисков, а не в рекомендательном списке.",
+          effects: [
+            "Психоактивные эффекты могут включать изменение восприятия, спутанность, седативное состояние, эйфорию или дисфорию, нарушение координации, сонливость, тошноту и рвоту.",
+            "Токсические эффекты могут включать возбуждение, делирий, угнетение ЦНС, судороги, потерю сознания, нестабильное поведение и госпитализацию.",
+            "Состав и сила продуктов непредсказуемы: разные партии, экстракты, \"гумки\" или настойки могут иметь разный уровень мусцимола, иботеновой кислоты, примесей или незаявленных веществ."
+          ],
+          evidence: [
+            "FDA сообщает, что Amanita muscaria, ее экстракты и составляющие вроде muscimol, ibotenic acid и muscarine не являются одобренными пищевыми добавками для обычных продуктов в США.",
+            "Описаны побочные события: угнетение ЦНС, сонливость, судороги, госпитализации, тошнота, рвота, возбуждение, спутанность и риск непредсказуемой реакции.",
+            "Данные о \"микродозинге\" не являются достаточной клинической доказательностью безопасности или пользы."
+          ],
+          cautions: [
+            "VitalRise не рекомендует мухомор как БАД для сна, тревоги, настроения, тестостерона или продуктивности.",
+            "Особенно опасно при психических расстройствах, эпилепсии, сердечно-сосудистых проблемах, беременности, ГВ, у детей или подростков, с алкоголем, седативными, психотропными препаратами или каннабиноидами.",
+            "Гумки, конфеты, \"микродозинг\" и маркетинговые экстракты могут иметь нестабильный состав и примеси."
+          ]
+        }
+      ]
+    }
+  };
+
   const exactTranslations = {
     "Влог VitalRise": {
       en: "VitalRise Vlog",
@@ -412,6 +1050,14 @@
     "Препарати": {
       en: "Drugs",
       ru: "Препараты"
+    },
+    "Препарати і БАДи": {
+      en: "Drugs and supplements",
+      ru: "Препараты и БАДы"
+    },
+    "БАДи і нутрицевтики": {
+      en: "Dietary supplements and nutraceuticals",
+      ru: "БАДы и нутрицевтики"
     },
     "Складні дієти починаються не з меню": {
       en: "Complex diets do not start with a menu",
@@ -995,6 +1641,7 @@
     const parent = textNode.parentElement;
     if (!parent) return true;
     if (parent.closest("script, style, noscript, svg")) return true;
+    if (parent.closest("[data-vlog-static]")) return true;
     if (parent.closest("[data-lang-switch]")) return true;
     if (parent.closest(".brand-mark")) return true;
     return false;
@@ -1053,6 +1700,70 @@
     });
   }
 
+  function enhanceDietToggles() {
+    const sections = document.querySelectorAll(".vlog-diet-grid > section");
+
+    sections.forEach(function (section, index) {
+      if (section.dataset.dietToggleReady === "true") return;
+
+      const heading = section.querySelector(":scope > h3");
+      if (!heading) return;
+
+      const titleText = heading.textContent.trim();
+      const panel = document.createElement("div");
+      const button = document.createElement("button");
+      const title = document.createElement("span");
+      const icon = document.createElement("span");
+      const panelId = "vlog-diet-panel-" + (index + 1);
+
+      panel.className = "vlog-diet-body";
+      panel.id = panelId;
+      panel.hidden = true;
+
+      while (heading.nextSibling) {
+        panel.appendChild(heading.nextSibling);
+      }
+
+      title.className = "vlog-diet-title";
+      title.textContent = titleText;
+
+      icon.className = "vlog-diet-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = "+";
+
+      button.type = "button";
+      button.className = "vlog-diet-toggle";
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-controls", panelId);
+      button.appendChild(title);
+      button.appendChild(icon);
+
+      heading.classList.add("vlog-diet-heading");
+      heading.textContent = "";
+      heading.appendChild(button);
+      section.appendChild(panel);
+      section.dataset.dietToggleReady = "true";
+    });
+  }
+
+  function bindDietToggles() {
+    document.addEventListener("click", function (event) {
+      const button = event.target.closest(".vlog-diet-toggle");
+      if (!button) return;
+
+      const section = button.closest(".vlog-diet-grid > section");
+      const panelId = button.getAttribute("aria-controls");
+      const panel = panelId ? document.getElementById(panelId) : null;
+      const icon = button.querySelector(".vlog-diet-icon");
+      const isOpen = button.getAttribute("aria-expanded") === "true";
+
+      button.setAttribute("aria-expanded", String(!isOpen));
+      if (panel) panel.hidden = isOpen;
+      if (section) section.classList.toggle("is-open", !isOpen);
+      if (icon) icon.textContent = isOpen ? "+" : "-";
+    });
+  }
+
   function applyDietTranslations(language) {
     const currentLanguage = supportedLanguages.includes(language) ? language : "uk";
     const sections = document.querySelectorAll(".vlog-diet-grid > section");
@@ -1062,9 +1773,9 @@
       const content = source && (source[currentLanguage] || source.uk);
       if (!content) return;
 
-      const title = section.querySelector("h3");
-      const text = section.querySelector(":scope > p");
-      const list = section.querySelector(":scope > ul");
+      const title = section.querySelector(".vlog-diet-title") || section.querySelector("h3");
+      const text = section.querySelector(".vlog-diet-body > p") || section.querySelector(":scope > p");
+      const list = section.querySelector(".vlog-diet-body > ul") || section.querySelector(":scope > ul");
       const details = section.querySelectorAll(".vlog-diet-plan");
 
       if (title) title.textContent = content.title;
@@ -1115,9 +1826,9 @@
       {
         selector: ".vlog-catalog-panel",
         attr: "aria-label",
-        uk: "Каталог препаратів",
-        en: "Drug catalog",
-        ru: "Каталог препаратов"
+        uk: "Каталог препаратів і БАДів",
+        en: "Drug and supplement catalog",
+        ru: "Каталог препаратов и БАДов"
       },
       {
         selector: ".vlog-topic-list",
@@ -1147,6 +1858,190 @@
     if (descriptionNode) descriptionNode.setAttribute("content", meta.description);
   }
 
+  function setListText(list, values) {
+    if (!list || !values) return;
+    const items = Array.from(list.children).filter(function (item) {
+      return item.tagName === "LI";
+    });
+
+    values.forEach(function (value, index) {
+      if (items[index]) items[index].textContent = value;
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function rememberText(node) {
+    if (node && !node.dataset.vlogOriginalText) node.dataset.vlogOriginalText = node.textContent;
+  }
+
+  function rememberHtml(node) {
+    if (node && !node.dataset.vlogOriginalHtml) node.dataset.vlogOriginalHtml = node.innerHTML;
+  }
+
+  function setTranslatedAttribute(node, name, value) {
+    if (!node || !name) return;
+    if (name === "aria-label" && !node.dataset.vlogOriginalAriaLabel) {
+      node.dataset.vlogOriginalAriaLabel = node.getAttribute(name) || "";
+    }
+    node.setAttribute(name, value);
+  }
+
+  function setTranslatedText(node, value) {
+    if (!node) return;
+    rememberText(node);
+    node.textContent = value;
+  }
+
+  function setTranslatedListItem(node, item) {
+    if (!node || !item) return;
+    rememberHtml(node);
+    if (Array.isArray(item)) {
+      node.innerHTML = "<strong>" + escapeHtml(item[0]) + ":</strong> " + escapeHtml(item[1]);
+      return;
+    }
+    node.textContent = item;
+  }
+
+  function restoreTranslatedSupportGuide(root) {
+    if (!root) return;
+
+    root.querySelectorAll("[data-vlog-original-text]").forEach(function (node) {
+      node.textContent = node.dataset.vlogOriginalText;
+    });
+
+    root.querySelectorAll("[data-vlog-original-html]").forEach(function (node) {
+      node.innerHTML = node.dataset.vlogOriginalHtml;
+    });
+
+    root.querySelectorAll("[data-vlog-original-aria-label]").forEach(function (node) {
+      node.setAttribute("aria-label", node.dataset.vlogOriginalAriaLabel);
+    });
+  }
+
+  function applySupportGuideTranslations(language) {
+    const guide = document.querySelector(".vlog-support-guide");
+    if (!guide) return;
+
+    if (language === "uk") {
+      restoreTranslatedSupportGuide(guide);
+      return;
+    }
+
+    const content = supportGuideTranslations[language];
+    if (!content) return;
+
+    const head = guide.querySelector(".vlog-support-head");
+    const tabs = guide.querySelector(".vlog-support-tabs");
+    const cards = Array.from(guide.querySelectorAll(".vlog-support-card"));
+    const sources = guide.querySelector(".vlog-support-sources");
+
+    setTranslatedText(head && head.querySelector(".section-label"), content.label);
+    setTranslatedText(head && head.querySelector("h2"), content.title);
+    setTranslatedText(head && head.querySelector("p"), content.intro);
+
+    if (tabs) {
+      setTranslatedAttribute(tabs, "aria-label", content.tabsLabel);
+      Array.from(tabs.querySelectorAll("span")).forEach(function (tab, index) {
+        if (content.tabs[index]) setTranslatedText(tab, content.tabs[index]);
+      });
+    }
+
+    cards.forEach(function (card, index) {
+      const item = content.cards[index];
+      if (!item) return;
+
+      const summary = card.querySelector(":scope > summary");
+      const body = card.querySelector(":scope > div");
+      const listItems = body ? Array.from(body.querySelectorAll(":scope > ul > li")) : [];
+      const marketNote = body ? body.querySelector(".vlog-market-note") : null;
+
+      setTranslatedText(summary && summary.querySelector("span"), item.label);
+      setTranslatedText(summary && summary.querySelector("strong"), item.title);
+      setTranslatedText(body && body.querySelector(":scope > p"), item.text);
+
+      (item.plainItems || item.items || []).forEach(function (listItem, itemIndex) {
+        setTranslatedListItem(listItems[itemIndex], listItem);
+      });
+
+      if (marketNote && item.marketItems) {
+        setTranslatedText(marketNote.querySelector("h4"), item.marketTitle);
+        Array.from(marketNote.querySelectorAll("li")).forEach(function (marketItem, marketIndex) {
+          setTranslatedListItem(marketItem, item.marketItems[marketIndex]);
+        });
+      }
+    });
+
+    if (sources) {
+      setTranslatedText(sources.querySelector("h3"), content.sourcesTitle);
+      Array.from(sources.querySelectorAll("a")).forEach(function (link, index) {
+        if (content.sources[index]) setTranslatedText(link, content.sources[index]);
+      });
+    }
+  }
+
+  function applySupplementCatalogTranslations(language) {
+    if (language === "uk") return;
+
+    const content = supplementCatalogTranslations[language];
+    if (!content) return;
+
+    const group = Array.from(document.querySelectorAll(".vlog-topic-group")).find(function (item) {
+      const label = normalize(item.querySelector(":scope > summary span") ? item.querySelector(":scope > summary span").textContent : "");
+      return /06$/.test(label);
+    });
+    if (!group) return;
+
+    const summaryLabel = group.querySelector(":scope > summary span");
+    const summaryTitle = group.querySelector(":scope > summary h3");
+    const body = group.querySelector(":scope > .vlog-topic-group-body");
+    const intro = body ? body.querySelector(":scope > p") : null;
+    const warning = body ? body.querySelector(":scope > .vlog-topic-warning") : null;
+
+    if (summaryLabel) summaryLabel.textContent = content.groupLabel;
+    if (summaryTitle) summaryTitle.textContent = content.groupTitle;
+    if (intro) intro.textContent = content.intro;
+    if (warning) {
+      const warningTitle = warning.querySelector("strong");
+      const warningText = warning.querySelector("p");
+      if (warningTitle) warningTitle.textContent = content.warningTitle;
+      if (warningText) warningText.textContent = content.warningText;
+    }
+
+    const cards = body ? Array.from(body.querySelectorAll(":scope > .vlog-topic-item")) : [];
+    cards.forEach(function (card, index) {
+      const item = content.items[index];
+      if (!item) return;
+
+      const badge = card.querySelector(":scope > summary span");
+      const title = card.querySelector(":scope > summary strong");
+      const cardBody = card.querySelector(":scope > .vlog-topic-body");
+      const introText = cardBody ? cardBody.querySelector(":scope > p") : null;
+      const headings = cardBody ? Array.from(cardBody.querySelectorAll(":scope > h3")) : [];
+      const lists = cardBody ? Array.from(cardBody.querySelectorAll(":scope > ul:not(.vlog-source-list)")) : [];
+      const sourceHeading = headings[headings.length - 1];
+
+      if (badge) badge.textContent = item.badge;
+      if (title) title.textContent = item.title;
+      if (introText) introText.textContent = item.intro;
+
+      headings.slice(0, 3).forEach(function (heading, headingIndex) {
+        heading.textContent = content.sectionTitles[headingIndex];
+      });
+      if (sourceHeading) sourceHeading.textContent = content.sectionTitles[3];
+
+      setListText(lists[0], item.effects);
+      setListText(lists[1], item.evidence);
+      setListText(lists[2], item.cautions);
+    });
+  }
+
   function applyVlogTranslations() {
     if (!document.querySelector(PAGE_SELECTOR)) return;
 
@@ -1157,11 +2052,15 @@
       });
     });
     applyDietTranslations(language);
+    applySupportGuideTranslations(language);
+    applySupplementCatalogTranslations(language);
     translateAttributes(language);
   }
 
   function init() {
+    enhanceDietToggles();
     applyVlogTranslations();
+    bindDietToggles();
 
     document.addEventListener("click", function (event) {
       if (!event.target.closest("[data-lang-switch]")) return;

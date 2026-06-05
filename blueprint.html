@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Blueprint VitalRise</title>
+  <meta name="description" content="Athlete Blueprint VitalRise: фінальний паспорт тіла, пріоритети, стан системи і порядок дій на найближчі 4 тижні." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css?v=platform-modules-25" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+          <span>VR</span>
+          <strong>VitalRise</strong>
+        </a>
+
+        <button class="mobile-menu-toggle" type="button" aria-label="Меню" aria-expanded="false" data-mobile-menu-toggle>
+          <span class="mobile-menu-dots" aria-hidden="true">...</span>
+        </button>
+
+        <nav class="site-nav" aria-label="Головна навігація">
+          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
+          <a href="nutrition.html" data-i18n="nav.calculator">Калькулятор</a>
+          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
+          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
+          <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
+        </nav>
+
+        <div class="language-switcher" aria-label="Мова сайту">
+          <button type="button" data-lang-switch="uk" aria-pressed="true">UA</button>
+          <button type="button" data-lang-switch="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang-switch="ru" aria-pressed="false">RU</button>
+        </div>
+
+        <a href="labs.html" class="header-cta" data-i18n="cta.startLabs">Почати з аналізів</a>
+      </div>
+    </header>
+    <main class="module-page-main">
+      <section class="module-hero">
+        <div class="container">
+          <div class="module-hero-copy reveal">
+            <span class="section-label">Athlete Blueprint</span>
+            <h1>Фінальний паспорт тіла</h1>
+            <p>Blueprint збирає харчування, тренування, аналізи, прогрес, добавки і відновлення в один порядок дій.</p>
+          </div>
+          <aside class="module-hero-panel reveal">
+            <span>Фокус</span>
+            <strong>Один головний пріоритет замість хаосу</strong>
+            <p>Система показує, що робити першим, другим і третім на найближчі 4 тижні.</p>
+          </aside>
+        </div>
+      </section>
+      <section id="blueprint" class="blueprint-section" data-plan-required="start">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-label">Athlete Blueprint</span>
+            <h2>Паспорт тіла і головний пріоритет</h2>
+            <p>
+              Коли дані зібрані, найважливіше — не робити все одразу.
+              Blueprint зводить ціль, рівень, лабораторний статус, прогрес і
+              відновлення в один порядок дій.
+            </p>
+          </div>
+
+          <div class="blueprint-panel reveal">
+            <div class="protocol-head">
+              <span class="section-label">Command Center</span>
+              <h3>Зібрати фінальний протокол</h3>
+              <p>
+                Обери поточну ситуацію після калькуляторів. VitalRise покаже,
+                що має бути першим, другим і третім фокусом на найближчі 4 тижні.
+              </p>
+            </div>
+
+            <form id="blueprint-form" class="form-grid">
+              <div class="form-group">
+                <label for="blueprint-goal">Головна ціль</label>
+                <select id="blueprint-goal" name="blueprint-goal">
+                  <option value="recomp">Рекомпозиція</option>
+                  <option value="cut">Зниження жиру</option>
+                  <option value="gain">Набір м’язів</option>
+                  <option value="performance">Сила / продуктивність</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-level">Рівень</label>
+                <select id="blueprint-level" name="blueprint-level">
+                  <option value="beginner">Новачок</option>
+                  <option value="intermediate">Середній</option>
+                  <option value="advanced">Просунутий</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-nutrition">Харчування</label>
+                <select id="blueprint-nutrition" name="blueprint-nutrition">
+                  <option value="stable">Стабільне</option>
+                  <option value="chaotic">Нестабільне</option>
+                  <option value="unknown">Не рахую</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-training">Тренування</label>
+                <select id="blueprint-training" name="blueprint-training">
+                  <option value="progressing">Є прогресія</option>
+                  <option value="flat">Стоїть на місці</option>
+                  <option value="too_much">Забагато втоми</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-labs">Лабораторний статус</label>
+                <select id="blueprint-labs" name="blueprint-labs">
+                  <option value="green">Без явних стоп-сигналів</option>
+                  <option value="yellow">Є маркери уваги</option>
+                  <option value="red">Є червоні маркери</option>
+                  <option value="unknown">Ще не здавав/ла</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-progress">Прогрес</label>
+                <select id="blueprint-progress" name="blueprint-progress">
+                  <option value="moving">Рухається</option>
+                  <option value="plateau">Плато</option>
+                  <option value="regressing">Регрес</option>
+                  <option value="unknown">Немає трекінгу</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-recovery">Відновлення</label>
+                <select id="blueprint-recovery" name="blueprint-recovery">
+                  <option value="good">Добре</option>
+                  <option value="medium">Середнє</option>
+                  <option value="poor">Погане</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="blueprint-supplements">Спортпіт</label>
+                <select id="blueprint-supplements" name="blueprint-supplements">
+                  <option value="minimal">Тільки база</option>
+                  <option value="random">Хаотично</option>
+                  <option value="none">Не використовую</option>
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Створити Blueprint</button>
+                <button type="button" class="btn btn-secondary" id="blueprint-reset">
+                  Очистити
+                </button>
+              </div>
+            </form>
+
+            <div id="blueprint-result" class="blueprint-result" aria-live="polite">
+              <div class="result-placeholder">
+                Обери стан системи, щоб отримати паспорт пріоритетів.
+              </div>
+            </div>
+
+            <div class="blueprint-export-actions">
+              <button type="button" class="btn btn-secondary" id="blueprint-print" data-print-target="blueprint-result" disabled>
+                Відкрити звіт
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+            <span>VR</span>
+            <strong>VitalRise</strong>
+          </a>
+          <p>
+            Атлетична система для харчування, тренувань, спортпіту, лабораторного
+            контролю, прогресу і фінального Blueprint.
+          </p>
+        </div>
+
+        <div class="footer-links" aria-label="Швидкі посилання">
+          <a href="index.html#features">Система</a>
+          <a href="profile.html">Профіль</a>
+          <a href="labs.html">Аналізи</a>
+          <a href="nutrition.html">Харчування</a>
+          <a href="training.html">Тренування</a>
+          <a href="supplements.html">Спортпіт</a>
+          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
+          <a href="recovery.html">Відновлення</a>
+          <a href="progress.html">Coach</a>
+          <a href="progress.html">Прогрес</a>
+          <a href="progress.html#knowledge" data-i18n="nav.knowledge">База знань</a>
+          <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
+          <a href="blueprint.html">Blueprint</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms</a>
+          <a href="disclaimer.html">Medical / AAS Disclaimer</a>
+        </div>
+
+        <div class="footer-note">
+          <strong>Важливо</strong>
+          <p>
+            VitalRise не ставить діагнози й не призначає лікування. Лабораторні
+            показники, гормони, пролактин, щитоподібну залозу, печінкові й
+            ниркові маркери потрібно трактувати з лікарем.
+          </p>
+          <button type="button" class="footer-clear-data" id="clear-saved-data">
+            Очистити збережені дані
+          </button>
+          <div class="footer-data-actions" aria-label="Експорт та імпорт даних VitalRise">
+            <button type="button" class="footer-clear-data" id="export-saved-data">
+              Експорт JSON
+            </button>
+            <button type="button" class="footer-clear-data" id="import-saved-data">
+              Імпорт JSON
+            </button>
+            <label class="visually-hidden" for="import-saved-data-file">Файл резервної копії VitalRise</label>
+            <input type="file" id="import-saved-data-file" accept="application/json,.json" hidden />
+          </div>
+        </div>
+      </div>
+
+      <div class="container footer-bottom">
+        <span>© VitalRise</span>
+        <span>High-level control for athletic recomposition.</span>
+      </div>
+    </footer>
+  </div>
+  <div class="exercise-atlas-modal" id="exercise-atlas-modal" aria-hidden="true">
+    <div class="exercise-atlas-backdrop" data-atlas-close></div>
+    <section class="exercise-atlas-dialog" role="dialog" aria-modal="true" aria-labelledby="exercise-atlas-title">
+      <div class="exercise-atlas-head">
+        <div>
+          <span class="section-label">Exercise Atlas</span>
+          <h2 id="exercise-atlas-title">Атлас вправ</h2>
+        </div>
+        <button type="button" class="exercise-atlas-close" data-atlas-close aria-label="Закрити">×</button>
+      </div>
+
+      <div class="exercise-atlas-filters" id="exercise-atlas-filters"></div>
+      <div class="exercise-photo-backlog" id="exercise-photo-backlog" aria-live="polite"></div>
+      <div class="exercise-atlas-grid" id="exercise-atlas-grid"></div>
+
+      <div class="exercise-atlas-legend">
+        <span><i class="legend-main"></i> Основні</span>
+        <span><i class="legend-secondary"></i> Допоміжні</span>
+        <span><i class="legend-other"></i> Стабілізатори</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="payment-modal" id="payment-modal" aria-hidden="true">
+    <div class="payment-backdrop" data-payment-close></div>
+    <section class="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-title">
+      <button type="button" class="payment-close" data-payment-close aria-label="Close">×</button>
+      <span class="section-label" id="payment-kicker"></span>
+      <h2 id="payment-title"></h2>
+      <p id="payment-plan-note"></p>
+      <div class="payment-summary">
+        <div><span id="payment-plan-label"></span><strong id="payment-plan-value"></strong></div>
+        <div><span id="payment-price-label"></span><strong id="payment-price-value"></strong></div>
+      </div>
+      <p id="payment-text"></p>
+      <div class="payment-steps" aria-label="Checkout steps">
+        <span data-i18n="payment.stepEmail">Email</span>
+        <span data-i18n="payment.stepPay">Оплата</span>
+        <span data-i18n="payment.stepAccess">Доступ</span>
+      </div>
+      <label class="payment-code-field" for="payment-email">
+        <span id="payment-email-label"></span>
+        <input type="email" id="payment-email" autocomplete="email" placeholder="client@example.com" />
+      </label>
+      <label class="payment-code-field" for="payment-access-code">
+        <span id="payment-code-label"></span>
+        <input type="text" id="payment-access-code" autocomplete="one-time-code" placeholder="VR-START-XXXX" />
+      </label>
+      <p class="payment-demo-note" id="payment-code-hint"></p>
+      <div class="payment-actions">
+        <button type="button" class="btn btn-secondary" data-payment-close id="payment-close-button"></button>
+        <button type="button" class="btn btn-secondary" id="payment-redeem-button"></button>
+        <button type="button" class="btn btn-primary" id="payment-checkout-button"></button>
+      </div>
+      <div class="payment-status" id="payment-status" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <div class="mobile-report-modal" id="mobile-report-modal" aria-hidden="true">
+    <div class="mobile-report-backdrop" data-report-close></div>
+    <div class="mobile-report-panel" role="dialog" aria-modal="true" aria-label="VitalRise report">
+      <div class="mobile-report-toolbar">
+        <div>
+          <span class="mobile-report-kicker">VitalRise</span>
+          <strong id="mobile-report-toolbar-title">Report</strong>
+        </div>
+        <button type="button" class="mobile-report-icon-btn" data-report-close aria-label="Закрити">×</button>
+      </div>
+      <div class="mobile-report-controls" id="mobile-report-controls">
+        <label class="visually-hidden" for="mobile-report-scope">Формат звіту</label>
+        <select id="mobile-report-scope" hidden>
+          <option value="current">Поточний тиждень</option>
+        </select>
+        <label class="visually-hidden" for="mobile-report-week">Тиждень</label>
+        <select id="mobile-report-week" hidden>
+          <option value="1">Тиждень 1</option>
+        </select>
+      </div>
+      <div class="mobile-report-phone" id="mobile-report-phone"></div>
+      <div class="mobile-report-actions">
+        <button type="button" class="btn btn-secondary" data-report-close>Закрити</button>
+        <div class="mobile-report-save-actions">
+          <button type="button" class="btn btn-secondary" id="mobile-report-print-mobile">PDF для телефона</button>
+          <button type="button" class="btn btn-primary" id="mobile-report-print-a4">PDF A4</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/modules/system.js"></script>
+  <script src="assets/js/modules/i18n.js?v=newsletter-copy-1"></script>
+  <script src="assets/js/modules/mobile-menu.js"></script>
+  <script src="assets/js/modules/storage.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="assets/js/modules/print.js"></script>
+  <script src="assets/js/modules/data-portability.js"></script>
+  <script src="assets/js/modules/calculator-shell.js?v=single-module-1"></script>
+  <script src="assets/js/modules/reveal.js"></script>
+  <script src="assets/js/modules/dashboard.js"></script>
+  <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
+  <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
+  <script src="assets/js/modules/nutrition-custom.js"></script>
+  <script src="assets/js/modules/nutrition.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/nutrition-render.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/training.js"></script>
+  <script src="assets/js/modules/training-templates.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
+  <script src="assets/js/modules/training-progression.js"></script>
+  <script src="assets/js/modules/training-render.js?v=smart-program-1"></script>
+  <script src="assets/js/modules/training-builder.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/exercise-atlas-data.js?v=seated-db-press-photo-1"></script>
+  <script src="assets/js/modules/exercise-atlas.js"></script>
+  <script src="assets/js/modules/labs.js"></script>
+  <script src="assets/js/modules/lab-protocols.js"></script>
+  <script src="assets/js/modules/progress-decision.js?v=biweekly-correction-1"></script>
+  <script src="assets/js/modules/blueprint.js"></script>
+  <script src="assets/js/modules/supplements.js"></script>
+  <script src="assets/js/modules/coach.js?v=quick-profiles-2"></script>
+  <script src="assets/js/modules/access.js?v=analytics-1"></script>
+  <script src="assets/js/script.js?v=free-cottage-meals-1"></script>
+</body>
+</html>

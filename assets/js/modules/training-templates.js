@@ -5,6 +5,33 @@
     return JSON.parse(JSON.stringify(data));
   }
 
+  function normalizeTrainingDays(days, fallback) {
+    const parsed = Number(days);
+    if (!Number.isFinite(parsed)) return fallback || 3;
+    return Math.max(2, Math.min(6, Math.round(parsed)));
+  }
+
+  function relabelTrainingDay(day, index) {
+    const copy = deepClone(day);
+    const dayNumber = index + 1;
+    if (copy.title && /^День\s+\d+\s*[—-]\s*/.test(copy.title)) {
+      copy.title = copy.title.replace(/^День\s+\d+(\s*[—-]\s*)/, "День " + dayNumber + "$1");
+    } else {
+      copy.title = "День " + dayNumber + " — " + (copy.title || "тренування");
+    }
+    return copy;
+  }
+
+  function expandPlanToDays(plans, days) {
+    const source = plans || [];
+    const targetDays = normalizeTrainingDays(days, source.length || 3);
+    const expanded = [];
+    for (let index = 0; index < targetDays; index += 1) {
+      expanded.push(relabelTrainingDay(source[index % source.length], index));
+    }
+    return expanded;
+  }
+
   function getTrainingModule() {
     return window.VitalRiseSystem && window.VitalRiseSystem.training
       ? window.VitalRiseSystem.training
@@ -95,9 +122,7 @@
       }
     ];
 
-    if (days === 2) return templates.slice(0, 2);
-    if (days === 4) return [templates[0], templates[1], templates[2], deepClone(templates[0])];
-    return templates;
+    return expandPlanToDays(templates, days);
   }
 
   function applyGymBeginnerStrengthWeightCues(basePlan) {
@@ -180,7 +205,7 @@
             ],
             accessory: [
               buildAccessoryExercise("Жим гантелей під кутом", "3-4", "8-12", "щотижня +2.5 кг"),
-              buildAccessoryExercise("Розведення в тренажері / кросовері", "3-4", "10-15", "щотижня +2.5 кг"),
+              buildAccessoryExercise("Зведення рук у тренажері / кросовері", "3-4", "10-15", "щотижня +2.5 кг"),
               buildAccessoryExercise("Згинання рук з EZ-штангою", "3-4", "8-12", "щотижня +2.5 кг"),
               buildAccessoryExercise("Розгинання рук на блоці", "3-4", "10-12", "щотижня +2.5 кг")
             ]
@@ -215,7 +240,7 @@
         ];
       }
 
-      return [
+      return expandPlanToDays([
         {
           title: "День 1 — груди",
           badge: "середній рівень",
@@ -225,7 +250,7 @@
           accessory: [
             buildAccessoryExercise("Жим в хамері під кутом", "3-4", "8-12", "щотижня +2.5-5 кг"),
             buildAccessoryExercise("Пуловер з гантеллю", "3", "10-12", "щотижня +2.5 кг"),
-            buildAccessoryExercise("Зведення рук в кросовері", "3-4", "10-15", "щотижня +2.5 кг")
+            buildAccessoryExercise("Зведення рук у тренажері / кросовері", "3-4", "10-15", "щотижня +2.5 кг")
           ]
         },
         {
@@ -268,7 +293,7 @@
             buildAccessoryExercise("Тяга нижнього блоку", "3-4", "8-12", "щотижня +2.5 кг")
           ]
         }
-      ];
+      ], days);
     }
 
     if (days === 2) {
@@ -344,7 +369,7 @@
       ];
     }
 
-    return [
+    return expandPlanToDays([
       {
         title: "День 1 — жим важкий + присід легкий",
         badge: "просунутий силовий",
@@ -392,7 +417,115 @@
           buildAccessoryExercise("Підйом на біцепс молот", "3-4", "10-12", "щотижня +1-2 кг")
         ]
       }
-    ];
+    ], days);
+  }
+
+  function getGymPushPullLegsPlan(goal, level, oneRM, days) {
+    const isAdvanced = level === "advanced";
+    const isStrength = goal === "strength";
+    const isFatLoss = goal === "fatloss";
+    const baseSets = isAdvanced ? "4-5" : "4";
+    const machineSets = isAdvanced ? "3-4" : "3";
+    const baseReps = isStrength ? "4-6" : "6-10";
+    const machineReps = isFatLoss ? "12-15" : "10-14";
+    const baseCue = "RIR 1-2, техніка перша";
+    const machineCue = "легко-середньо: RIR 2-3";
+    const baseProgression = "Базовий день: працюй у нижчому діапазоні повторів, додавай вагу тільки після чистого верхнього діапазону.";
+    const machineProgression = "Тренажерний день: не форсуй вагу, добирай амплітуду, памп і контроль, залишай 2-3 повтори в запасі.";
+
+    function pplMainExercise(name, sets, reps, maxValue, percent) {
+      return maxValue
+        ? buildBasicExercise(name, sets, reps, maxValue, percent)
+        : { name: name, sets: sets, reps: reps, weightText: baseCue, percentText: baseProgression };
+    }
+
+    return expandPlanToDays([
+      {
+        title: "День 1 — штовхай верх: база",
+        badge: "PPL 3+1 / базовий",
+        basic: [
+          pplMainExercise("Жим лежачи", baseSets, baseReps, oneRM.bench, isStrength ? 0.78 : 0.72),
+          { name: "Жим штанги або гантелей сидячи", sets: "3-4", reps: "6-10", weightText: baseCue, percentText: baseProgression }
+        ],
+        accessory: [
+          buildAccessoryExercise("Жим гантелей під кутом", "3-4", "8-12", "додавай повтор або мінімальний крок ваги", baseCue),
+          buildAccessoryExercise("Віджимання на брусах або вузький жим", "3", "8-12", "без провалу плечей, не до відмови", baseCue),
+          buildAccessoryExercise("Махи через сторони", "3", "12-15", "плечі без ривка", "легко-середньо"),
+          buildAccessoryExercise("Розгинання рук на блоці", "3", "10-14", "чистий лікоть, без ривків", "легко-середньо")
+        ]
+      },
+      {
+        title: "День 2 — тягни верх: база",
+        badge: "PPL 3+1 / базовий",
+        basic: [
+          { name: "Підтягування або тяга верхнього блоку важко", sets: baseSets, reps: "6-10", weightText: baseCue, percentText: baseProgression },
+          { name: "Тяга штанги / Т-грифа до пояса", sets: "4", reps: "6-10", weightText: baseCue, percentText: baseProgression }
+        ],
+        accessory: [
+          buildAccessoryExercise("Тяга горизонтального блоку", "3-4", "8-12", "лопатки назад і вниз", baseCue),
+          buildAccessoryExercise("Задня дельта в нахилі або тренажері", "3", "12-15", "без інерції", "легко-середньо"),
+          buildAccessoryExercise("Пуловер у блоці", "3", "10-14", "відчуй найширші, не поперек", "легко-середньо"),
+          buildAccessoryExercise("Згинання рук з EZ-штангою", "3", "8-12", "лікоть стабільний", "легко-середньо")
+        ]
+      },
+      {
+        title: "День 3 — ноги: база",
+        badge: "PPL 3+1 / базовий",
+        basic: [
+          pplMainExercise("Присідання", baseSets, baseReps, oneRM.squat, isStrength ? 0.78 : 0.72),
+          pplMainExercise("Румунська тяга", "3-4", "6-10", oneRM.deadlift, isStrength ? 0.68 : 0.62)
+        ],
+        accessory: [
+          buildAccessoryExercise("Жим ногами", "3-4", "8-12", "контроль глибини, без відриву таза", baseCue),
+          buildAccessoryExercise("Випади або болгарські присідання", "3", "8-12 на ногу", "коліно стабільне", "легко-середньо"),
+          buildAccessoryExercise("Підйоми на литки", "4", "10-15", "пауза внизу і вгорі", "легко-середньо"),
+          buildAccessoryExercise("Прес / антиобертання", "3", "10-15", "корпус стабільний", "без ваги / легко")
+        ],
+        cardio: ["Після цього дня — 1 день відпочинку: ходьба, сон, вода, без важких ніг."]
+      },
+      {
+        title: "День 5 — штовхай верх: тренажери",
+        badge: "PPL 3+1 / легко-середньо",
+        basic: [
+          { name: "Жим у хамері або грудному тренажері", sets: machineSets, reps: machineReps, weightText: machineCue, percentText: machineProgression },
+          { name: "Жим плечей у тренажері", sets: machineSets, reps: machineReps, weightText: machineCue, percentText: machineProgression }
+        ],
+        accessory: [
+          buildAccessoryExercise("Зведення рук у тренажері / кросовері", "3", "12-15", "пік скорочення 1 сек", machineCue),
+          buildAccessoryExercise("Підйоми через сторони в тренажері або кросовері", "3", "12-18", "без трапеції", machineCue),
+          buildAccessoryExercise("Розгинання на трицепс з канатом", "3", "12-15", "без болю в лікті", machineCue)
+        ]
+      },
+      {
+        title: "День 6 — тягни верх: тренажери",
+        badge: "PPL 3+1 / легко-середньо",
+        basic: [
+          { name: "Тяга верхнього блоку", sets: machineSets, reps: machineReps, weightText: machineCue, percentText: machineProgression },
+          { name: "Тяга сидячи у блочному тренажері", sets: machineSets, reps: machineReps, weightText: machineCue, percentText: machineProgression }
+        ],
+        accessory: [
+          buildAccessoryExercise("Тяга однією рукою в тренажері", "3", "10-14", "симетрія ліво/право", machineCue),
+          buildAccessoryExercise("Задня дельта в peck-deck", "3", "12-18", "без ривка", machineCue),
+          buildAccessoryExercise("Пуловер у тренажері або блоці", "3", "12-15", "не перетягуй попереком", machineCue),
+          buildAccessoryExercise("Біцепс у тренажері або на блоці", "3", "12-15", "контроль негативної фази", machineCue)
+        ]
+      },
+      {
+        title: "День 7 — ноги: тренажери",
+        badge: "PPL 3+1 / легко-середньо",
+        basic: [
+          { name: "Жим ногами", sets: machineSets, reps: machineReps, weightText: machineCue, percentText: machineProgression },
+          { name: "Згинання ніг лежачи або сидячи", sets: machineSets, reps: "10-15", weightText: machineCue, percentText: machineProgression }
+        ],
+        accessory: [
+          buildAccessoryExercise("Розгинання ніг", "3", "12-15", "контроль коліна, без удару вгорі", machineCue),
+          buildAccessoryExercise("Хіп-траст у тренажері або сідничний міст", "3", "10-14", "пауза вгорі", machineCue),
+          buildAccessoryExercise("Відведення стегна в тренажері", "3", "12-18", "без розгойдування", machineCue),
+          buildAccessoryExercise("Литки в тренажері", "4", "12-18", "повна амплітуда", machineCue)
+        ],
+        cardio: ["Після цього дня — відпочинок або легка ходьба. Далі цикл повторюється з базового дня штовхання."]
+      }
+    ], days);
   }
 
   function getHomeBasePlan(goal, level, days) {
@@ -435,9 +568,7 @@
       }
     ];
 
-    if (days === 2) return plans.slice(0, 2);
-    if (days === 4) return [plans[0], plans[1], plans[2], deepClone(plans[0])];
-    return plans;
+    return expandPlanToDays(plans, days);
   }
 
   function getHomeBasePlan(goal, level, days, metrics) {
@@ -468,12 +599,12 @@
     const enduranceReps = isBeginner ? "12-20" : "15-20";
     const mainReps = isStrength ? strengthReps : (isEndurance || isFatLoss ? enduranceReps : massReps);
     const progression = isStrength
-      ? "якщо верх діапазону чистий - +2.5-5 кг у рюкзак або складніша варіація"
+      ? "якщо верх діапазону чистий - наступний крок у плані: +2.5-5 кг у рюкзак"
       : isEndurance
         ? "додавай підхід до 8-10, потім скорочуй відпочинок"
         : isFatLoss
           ? "вагу не форсуй, тримай темп і чисту амплітуду"
-          : "спочатку добери верх повторів, потім додай вагу або складність";
+          : "спочатку добери верх повторів, потім скорочуй відпочинок за планом";
 
     const pushMain = isBeginner
       ? "Віджимання з паузою"
@@ -502,7 +633,7 @@
         ],
         accessory: [
           buildAccessoryExercise(shoulderMain, isAdvanced ? "4-6" : "4-5", isStrength ? "5-10" : "8-15", progression, loadText),
-          buildAccessoryExercise("Віджимання вузьким хватом / на трицепс від опори", isAdvanced ? "4-6" : "3-5", "10-20", "після 20 повторів ускладнюй варіацію", "власна вага"),
+          buildAccessoryExercise("Віджимання вузьким хватом / на трицепс від опори", isAdvanced ? "4-6" : "3-5", "10-20", "після 20 повторів тримай діапазон і скорочуй відпочинок на 10-15 сек", "власна вага"),
           buildAccessoryExercise("Підйом на біцепс рюкзаком / резиною", "4-5", "10-20", "додавай натяг або вагу", loadText)
         ]
       },
@@ -529,7 +660,7 @@
         accessory: [
           buildAccessoryExercise("Розведення на задню дельту резиною / нахил", "4-6", "15-20", "контроль лопаток", pullText),
           buildAccessoryExercise("Французьке розгинання резиною / рюкзаком", "4-6", "10-20", "додавай натяг або вагу", loadText),
-          buildAccessoryExercise("Прес: підйом ніг лежачи / hollow body", isAdvanced ? "5-6" : "4-5", "12-20", "додавай підхід або складність", "-")
+          buildAccessoryExercise("Прес: підйом ніг лежачи / hollow body", isAdvanced ? "5-6" : "4-5", "12-20", "додавай підхід або час під напругою", "-")
         ]
       },
       {
@@ -547,9 +678,7 @@
       }
     ];
 
-    if (days === 2) return [plans[0], plans[1]];
-    if (days === 3) return [plans[0], plans[1], plans[2]];
-    return plans;
+    return expandPlanToDays(plans, days);
   }
 
   function parseTrainingNumber(value) {
@@ -670,7 +799,7 @@
           buildOutdoorExercise("Віджимання від підлоги", pushupSets, pushupReps, "власна вага / рюкзак", [
             "Почни з чистої лінії корпусу, 2 повтори в запасі.",
             "Додай 3-5 повторів сумарно за тренування.",
-            "Додай 1 підхід або підніми ноги. Верхня межа сету — 20 повторів, далі ускладнюй вправу.",
+            "Додай 1 підхід або підніми ноги. Верхня межа сету — 20 повторів, далі тримай діапазон і скорочуй відпочинок на 10-15 сек.",
             "Контрольний тиждень: повна амплітуда, без провалу таза."
           ]),
           buildOutdoorExercise("Тяга резини до поясу", "3-4", "12-15", "резина", [
@@ -798,8 +927,7 @@
       }
     ];
 
-    if (days === 2) return [plans[0], plans[1]];
-    const selectedPlans = days === 4 ? plans : plans.slice(0, 3);
+    const selectedPlans = expandPlanToDays(plans, days);
 
     selectedPlans.forEach(function (day) {
       day.basic = (day.basic || []).filter(Boolean);
@@ -905,9 +1033,7 @@
       }
     ];
 
-    if (days === 2) return [prisonPlan[0], prisonPlan[1]];
-    if (days === 3) return [prisonPlan[0], prisonPlan[1], prisonPlan[2]];
-    return prisonPlan;
+    return expandPlanToDays(prisonPlan, days);
   }
 
   function getTabataCircuitPlan(goal, level, days, duration) {
@@ -981,9 +1107,7 @@
       });
     }
 
-    if (days === 2) return [plan[0], plan[1]];
-    if (days === 3) return [plan[0], plan[1], plan[2]];
-    return plan;
+    return expandPlanToDays(plan, days);
   }
 
   function getFemaleProgramLabel(mode) {
@@ -1254,9 +1378,7 @@
 
     const selected = planMap[mode] || balanced;
 
-    if (days <= 2) return [selected[0], selected[1]];
-    if (days === 3) return [selected[0], selected[1], selected[2]];
-    return [selected[0], selected[1], selected[2], selected[3]];
+    return expandPlanToDays(selected, days);
   }
 
   function getFemaleVolumeNote(mode, cyclePhase) {
@@ -1364,6 +1486,7 @@
     getGymBeginnerBasePlan: getGymBeginnerBasePlan,
     applyGymBeginnerStrengthWeightCues: applyGymBeginnerStrengthWeightCues,
     getGymIntermediateAdvancedBasePlan: getGymIntermediateAdvancedBasePlan,
+    getGymPushPullLegsPlan: getGymPushPullLegsPlan,
     getHomeBasePlan: getHomeBasePlan,
     getOutdoorEffectiveLevel: getOutdoorEffectiveLevel,
     getOutdoorBasePlan: getOutdoorBasePlan,

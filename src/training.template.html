@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Тренування VitalRise</title>
+  <meta name="description" content="Модуль тренувань VitalRise: програми для залу й дому, Push/Pull/Legs, прогресія, періодизація і контроль відновлення." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css?v=platform-modules-25" />
+</head>
+<body>
+  <div class="site-shell">
+    <!-- @include partials/index/site-header.html -->
+    <main class="module-page-main module-page-training">
+      <!-- @include partials/index/calculator.html -->
+      <script>
+        document.querySelector(".calculator-section").dataset.defaultTab = "training";
+        document.querySelector(".calculator-section").dataset.singleModule = "training";
+        document.querySelector(".blueprint-rail")?.remove();
+      </script>
+    </main>
+    <!-- @include partials/index/site-footer.html -->
+  <!-- @include partials/index/modals.html -->
+  <!-- @include partials/index/scripts.html -->
+</body>
+</html>

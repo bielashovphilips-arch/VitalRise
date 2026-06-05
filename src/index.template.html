@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>VitalRise — система атлетичного тіла</title>
+  <meta
+    name="description"
+    content="VitalRise — преміальна система для спортсменів: харчування, тренування, спортпіт, прогрес і лабораторні маркери в одному атлетичному кабінеті."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="assets/css/style.css?v=platform-modules-25" />
+  
+  <!-- Google Analytics 4 -->
+  <script>
+    window.VITALRISE_GA_ID = "";
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    function vitalRiseGaPlanValue(tier) {
+      return ({ start: 499, pro: 1499, premium: 3500 })[tier] || 0;
+    }
+    window.VitalRiseAnalytics = {
+      trackTierView: function (tier) {
+        gtag("event", "view_tier", {
+          tier: tier,
+          value: vitalRiseGaPlanValue(tier),
+          currency: "UAH"
+        });
+      },
+      trackCheckoutStart: function (tier) {
+        gtag("event", "begin_checkout", {
+          tier: tier,
+          value: vitalRiseGaPlanValue(tier),
+          currency: "UAH",
+          items: [{ item_id: tier, item_name: "VitalRise " + tier, price: vitalRiseGaPlanValue(tier), quantity: 1 }]
+        });
+      },
+      trackPurchase: function (tier, orderId) {
+        gtag("event", "purchase", {
+          transaction_id: orderId || ("manual-" + Date.now()),
+          tier: tier,
+          value: vitalRiseGaPlanValue(tier),
+          currency: "UAH",
+          items: [{ item_id: tier, item_name: "VitalRise " + tier, price: vitalRiseGaPlanValue(tier), quantity: 1 }]
+        });
+      },
+      trackCodeRedeemed: function (tier) { gtag("event", "redeem_code", { tier: tier }); },
+      trackNewsletterSignup: function () {
+        gtag("event", "newsletter_signup", {
+          source: "pricing",
+          language: document.documentElement.lang || "uk"
+        });
+      }
+    };
+    (function () {
+      var gaId = String(window.VITALRISE_GA_ID || "").trim();
+      if (!/^G-[A-Z0-9]+$/i.test(gaId)) return;
+      var script = document.createElement("script");
+      script.async = true;
+      script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(gaId);
+      document.head.appendChild(script);
+      gtag("js", new Date());
+      gtag("config", gaId, {
+        anonymize_ip: true,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false
+      });
+    })();
+  </script>
+</head>
+<body>
+  <div class="site-shell">
+    <!-- @include partials/index/site-header.html -->
+
+    <!-- @include partials/index/hero.html -->
+
+    <!-- @include partials/index/brand-rail.html -->
+
+    <main>
+      <!-- @include partials/index/features.html -->
+
+      <!-- @include partials/index/pricing.html -->
+    </main>
+
+    <!-- @include partials/index/site-footer.html -->
+
+  <!-- @include partials/index/modals.html -->
+
+  <!-- @include partials/index/scripts.html -->
+</body>
+</html>

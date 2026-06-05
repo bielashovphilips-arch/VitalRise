@@ -1,0 +1,88 @@
+  <div class="exercise-atlas-modal" id="exercise-atlas-modal" aria-hidden="true">
+    <div class="exercise-atlas-backdrop" data-atlas-close></div>
+    <section class="exercise-atlas-dialog" role="dialog" aria-modal="true" aria-labelledby="exercise-atlas-title">
+      <div class="exercise-atlas-head">
+        <div>
+          <span class="section-label">Exercise Atlas</span>
+          <h2 id="exercise-atlas-title">Атлас вправ</h2>
+        </div>
+        <button type="button" class="exercise-atlas-close" data-atlas-close aria-label="Закрити">×</button>
+      </div>
+
+      <div class="exercise-atlas-filters" id="exercise-atlas-filters"></div>
+      <div class="exercise-photo-backlog" id="exercise-photo-backlog" aria-live="polite"></div>
+      <div class="exercise-atlas-grid" id="exercise-atlas-grid"></div>
+
+      <div class="exercise-atlas-legend">
+        <span><i class="legend-main"></i> Основні</span>
+        <span><i class="legend-secondary"></i> Допоміжні</span>
+        <span><i class="legend-other"></i> Стабілізатори</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="payment-modal" id="payment-modal" aria-hidden="true">
+    <div class="payment-backdrop" data-payment-close></div>
+    <section class="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-title">
+      <button type="button" class="payment-close" data-payment-close aria-label="Close">×</button>
+      <span class="section-label" id="payment-kicker"></span>
+      <h2 id="payment-title"></h2>
+      <p id="payment-plan-note"></p>
+      <div class="payment-summary">
+        <div><span id="payment-plan-label"></span><strong id="payment-plan-value"></strong></div>
+        <div><span id="payment-price-label"></span><strong id="payment-price-value"></strong></div>
+      </div>
+      <p id="payment-text"></p>
+      <div class="payment-steps" aria-label="Checkout steps">
+        <span data-i18n="payment.stepEmail">Email</span>
+        <span data-i18n="payment.stepPay">Оплата</span>
+        <span data-i18n="payment.stepAccess">Доступ</span>
+      </div>
+      <label class="payment-code-field" for="payment-email">
+        <span id="payment-email-label"></span>
+        <input type="email" id="payment-email" autocomplete="email" placeholder="client@example.com" />
+      </label>
+      <label class="payment-code-field" for="payment-access-code">
+        <span id="payment-code-label"></span>
+        <input type="text" id="payment-access-code" autocomplete="one-time-code" placeholder="VR-START-XXXX" />
+      </label>
+      <p class="payment-demo-note" id="payment-code-hint"></p>
+      <div class="payment-actions">
+        <button type="button" class="btn btn-secondary" data-payment-close id="payment-close-button"></button>
+        <button type="button" class="btn btn-secondary" id="payment-redeem-button"></button>
+        <button type="button" class="btn btn-primary" id="payment-checkout-button"></button>
+      </div>
+      <div class="payment-status" id="payment-status" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <div class="mobile-report-modal" id="mobile-report-modal" aria-hidden="true">
+    <div class="mobile-report-backdrop" data-report-close></div>
+    <div class="mobile-report-panel" role="dialog" aria-modal="true" aria-label="VitalRise report">
+      <div class="mobile-report-toolbar">
+        <div>
+          <span class="mobile-report-kicker">VitalRise</span>
+          <strong id="mobile-report-toolbar-title">Report</strong>
+        </div>
+        <button type="button" class="mobile-report-icon-btn" data-report-close aria-label="Закрити">×</button>
+      </div>
+      <div class="mobile-report-controls" id="mobile-report-controls">
+        <label class="visually-hidden" for="mobile-report-scope">Формат звіту</label>
+        <select id="mobile-report-scope" hidden>
+          <option value="current">Поточний тиждень</option>
+        </select>
+        <label class="visually-hidden" for="mobile-report-week">Тиждень</label>
+        <select id="mobile-report-week" hidden>
+          <option value="1">Тиждень 1</option>
+        </select>
+      </div>
+      <div class="mobile-report-phone" id="mobile-report-phone"></div>
+      <div class="mobile-report-actions">
+        <button type="button" class="btn btn-secondary" data-report-close>Закрити</button>
+        <div class="mobile-report-save-actions">
+          <button type="button" class="btn btn-secondary" id="mobile-report-print-mobile">PDF для телефона</button>
+          <button type="button" class="btn btn-primary" id="mobile-report-print-a4">PDF A4</button>
+        </div>
+      </div>
+    </div>
+  </div>

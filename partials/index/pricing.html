@@ -1,0 +1,211 @@
+      <section id="pricing" class="pricing-section">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="section-label" data-i18n="pricing.label">Тарифи</span>
+          </div>
+
+          <div class="newsletter-capture reveal">
+            <h3 data-i18n="newsletter.title">Отримати оновлення про запуск</h3>
+            <p data-i18n="newsletter.text">Email для повідомлень про запуск, нові модулі та відкриття оплати.</p>
+            <form id="newsletter-form">
+              <input type="email" data-i18n-placeholder="newsletter.placeholder" placeholder="Твій email" required />
+              <button type="submit" data-i18n="newsletter.cta">Підписатися</button>
+            </form>
+            <div class="newsletter-status" id="newsletter-status" aria-live="polite"></div>
+          </div>
+
+          <div class="pricing-grid reveal">
+            <article class="pricing-card pricing-card-flip" tabindex="0">
+              <div class="pricing-card-inner">
+                <div class="pricing-card-face pricing-card-front">
+                  <div class="pricing-card-head">
+                    <span>Free</span>
+                    <strong data-i18n="pricing.freePrice">0 грн</strong>
+                  </div>
+                  <h3 data-i18n="pricing.freeTitle">Швидкий старт</h3>
+                  <p class="pricing-card-copy" data-i18n="pricing.freeCopy">Для людини, яка хоче побачити логіку системи без ризику і одразу розрахувати базові орієнтири.</p>
+                  <ul>
+                    <li data-i18n="pricing.freeItem1">Калькулятор калорій і БЖВ</li>
+                    <li data-i18n="pricing.freeItem2">1 приклад денного раціону</li>
+                    <li data-i18n="pricing.freeItem3">Базова структура тренувань</li>
+                    <li data-i18n="pricing.freeItem4">Частковий атлас вправ</li>
+                    <li data-i18n="pricing.freeItem5">Базовий модуль спортпіту</li>
+                  </ul>
+                  <a href="nutrition.html" class="btn btn-secondary" data-i18n="pricing.freeCta">Спробувати безкоштовно</a>
+                </div>
+                <div class="pricing-card-face pricing-card-back">
+                  <span class="pricing-back-kicker" data-i18n="pricing.freeBackLabel">Для старту</span>
+                  <h3 data-i18n="pricing.freeBackTitle">Що відкриває</h3>
+                  <p data-i18n="pricing.freeBackText">Дає швидку перевірку логіки: калорії, БЖВ, перший приклад раціону, базові тренування і спортпіт без оплати.</p>
+                  <div class="pricing-back-points">
+                    <span data-i18n="pricing.backPointCalculator">Калькулятор</span>
+                    <span data-i18n="pricing.backPointSample">Приклад раціону</span>
+                    <span data-i18n="pricing.backPointBase">База системи</span>
+                  </div>
+                  <a href="nutrition.html" class="btn btn-secondary" data-i18n="pricing.freeCta">Спробувати безкоштовно</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="pricing-card pricing-card-accent pricing-card-flip" tabindex="0">
+              <div class="pricing-card-inner">
+                <div class="pricing-card-face pricing-card-front">
+                  <div class="pricing-badge" data-i18n="pricing.badge">Оптимально</div>
+                  <div class="pricing-card-head">
+                    <span>Start</span>
+                    <strong data-i18n="pricing.startPrice">499 грн</strong>
+                  </div>
+                  <h3 data-i18n="pricing.startTitle">План на 7 днів</h3>
+                  <p class="pricing-card-copy" data-i18n="pricing.startCopy">Перший платний крок: готовий тиждень харчування, тренувань і звіту без ручного складання з нуля.</p>
+                  <ul>
+                    <li data-i18n="pricing.startItem1">7-денний раціон під ціль</li>
+                    <li data-i18n="pricing.startItem2">Стабільний раціон + протокол гідратації</li>
+                    <li data-i18n="pricing.startItem3">Базова програма тренувань</li>
+                    <li data-i18n="pricing.startItem4">PDF-звіт з планом</li>
+                  </ul>
+                  <a href="#pricing" class="btn btn-primary" data-i18n="pricing.startCta" data-select-plan="start">Обрати Start</a>
+                </div>
+                <div class="pricing-card-face pricing-card-back">
+                  <span class="pricing-back-kicker" data-i18n="pricing.startBackLabel">Перша покупка</span>
+                  <h3 data-i18n="pricing.startBackTitle">Коли обрати Start</h3>
+                  <p data-i18n="pricing.startBackText">Коли потрібен не просто розрахунок, а готовий тиждень дій: що їсти, як тренуватись і що отримати у PDF.</p>
+                  <div class="pricing-back-points">
+                    <span data-i18n="pricing.backPointSevenDays">7 днів</span>
+                    <span data-i18n="pricing.backPointHydration">Гідратація</span>
+                    <span data-i18n="pricing.backPointPdf">PDF-звіт</span>
+                  </div>
+                  <a href="#pricing" class="btn btn-primary" data-i18n="pricing.startCta" data-select-plan="start">Обрати Start</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="pricing-card pricing-card-flip" tabindex="0">
+              <div class="pricing-card-inner">
+                <div class="pricing-card-face pricing-card-front">
+                  <div class="pricing-card-head">
+                    <span>Pro</span>
+                    <strong data-i18n="pricing.proPrice">1 499 грн</strong>
+                  </div>
+                  <h3 data-i18n="pricing.proTitle">Система на 4 тижні</h3>
+                  <p class="pricing-card-copy" data-i18n="pricing.proCopy">Основний формат для результату: план, контроль, check-in і корекція курсу після накопичення даних.</p>
+                  <ul>
+                    <li data-i18n="pricing.proItem1">30-денний раціон і заміни продуктів</li>
+                    <li data-i18n="pricing.proItem2">4-тижнева програма тренувань</li>
+                    <li data-i18n="pricing.proItem3">Coach, weekly check-in, графіки</li>
+                    <li data-i18n="pricing.proItem4">Розширений Blueprint і аналізи</li>
+                  </ul>
+                  <a href="#pricing" class="btn btn-primary" data-i18n="pricing.proCta" data-select-plan="pro">Обрати Pro</a>
+                </div>
+                <div class="pricing-card-face pricing-card-back">
+                  <span class="pricing-back-kicker" data-i18n="pricing.proBackLabel">Основний продукт</span>
+                  <h3 data-i18n="pricing.proBackTitle">Чому Pro</h3>
+                  <p data-i18n="pricing.proBackText">Pro тримає клієнта в системі 4 тижні: раціон, тренування, check-in, корекція після 14 днів, графіки і Blueprint.</p>
+                  <div class="pricing-back-points">
+                    <span data-i18n="pricing.backPointThirtyDays">30 днів</span>
+                    <span data-i18n="pricing.backPointCheckin">Check-in</span>
+                    <span data-i18n="pricing.backPointBlueprint">Blueprint</span>
+                  </div>
+                  <a href="#pricing" class="btn btn-primary" data-i18n="pricing.proCta" data-select-plan="pro">Обрати Pro</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="pricing-card pricing-card-flip" tabindex="0">
+              <div class="pricing-card-inner">
+                <div class="pricing-card-face pricing-card-front">
+                  <div class="pricing-card-head">
+                    <span>Premium</span>
+                    <strong data-i18n="pricing.premiumPrice">3 500 грн</strong>
+                  </div>
+                  <h3 data-i18n="pricing.premiumTitle">Персональний супровід</h3>
+                  <p class="pricing-card-copy" data-i18n="pricing.premiumCopy">Для тих, кому потрібна ручна увага, розбір складних ситуацій і підтримка під час виконання плану.</p>
+                  <ul>
+                    <li data-i18n="pricing.premiumItem1">Все з Pro</li>
+                    <li data-i18n="pricing.premiumItem2">Ручна корекція плану</li>
+                    <li data-i18n="pricing.premiumItem3">Розбір аналізів з рекомендаціями до лікаря</li>
+                    <li data-i18n="pricing.premiumItem4">Підтримка в Telegram або узгодженому месенджері протягом місяця</li>
+                  </ul>
+                  <a href="#pricing" class="btn btn-primary" data-i18n="pricing.premiumCta" data-select-plan="premium">Подати заявку</a>
+                </div>
+                <div class="pricing-card-face pricing-card-back">
+                  <span class="pricing-back-kicker" data-i18n="pricing.premiumBackLabel">Ручна участь</span>
+                  <h3 data-i18n="pricing.premiumBackTitle">Для складних задач</h3>
+                  <p data-i18n="pricing.premiumBackText">Premium потрібен, коли важлива не тільки система, а й ручний розбір: аналізи, корекція плану і супровід у процесі.</p>
+                  <div class="pricing-back-points">
+                    <span data-i18n="pricing.backPointSupport">Супровід</span>
+                    <span data-i18n="pricing.backPointLabs">Аналізи</span>
+                    <span data-i18n="pricing.backPointManual">Ручна корекція</span>
+                  </div>
+                  <a href="#pricing" class="btn btn-primary" data-i18n="pricing.premiumCta" data-select-plan="premium">Подати заявку</a>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="conversion-grid reveal">
+            <section class="conversion-block">
+              <span class="section-label" data-i18n="proof.label">Кейси</span>
+              <h3 data-i18n="proof.title">Що має відчути клієнт</h3>
+              <div class="proof-list">
+                <article>
+                  <strong data-i18n="proof.case1Title">Зниження ваги</strong>
+                  <p data-i18n="proof.case1Text">Помірний дефіцит, кроки, контроль талії і раціон без різких провалів по енергії.</p>
+                </article>
+                <article>
+                  <strong data-i18n="proof.case2Title">Набір маси</strong>
+                  <p data-i18n="proof.case2Text">Профіцит, стабільні прийоми їжі, прогресія в залі і контроль, щоб вага не йшла тільки в талію.</p>
+                </article>
+                <article>
+                  <strong data-i18n="proof.case3Title">Рекомпозиція</strong>
+                  <p data-i18n="proof.case3Text">Спокійна динаміка: сила, заміри, фото і харчування коригуються після 14-денного контролю.</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="conversion-block">
+              <span class="section-label" data-i18n="faq.label">FAQ</span>
+              <h3 data-i18n="faq.title">Питання перед стартом</h3>
+              <details open>
+                <summary data-i18n="faq.q1">Як працює ранній доступ?</summary>
+                <p data-i18n="faq.a1">Залиш email у формі вище. Ми збережемо його в базі раннього доступу і повідомимо про запуск, нові модулі та відкриття оплати.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q2">Що можна подивитися безкоштовно?</summary>
+                <p data-i18n="faq.a2">Так. Калькулятор, базовий раціон, спортпіт і частина тренувань доступні без оплати.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q3">Коли буде доступна оплата?</summary>
+                <p data-i18n="faq.a3">Після підключення платіжного сервісу кнопки тарифів відкриватимуть оплату. Після підтвердження покупки доступ буде прив'язаний до email.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q4">Що робити, якщо план не підходить?</summary>
+                <p data-i18n="faq.a4">План не повинен бути статичним. Корекція робиться через check-in, 14-денний контроль прогресу, талію, вагу, самопочуття і тренувальну продуктивність.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q5">Чи потрібні аналізи всім?</summary>
+                <p data-i18n="faq.a5">Ні, але якщо є симптоми, фармакологічний контекст, гормональні питання, проблеми з тиском або різкі зміни самопочуття, аналізи допомагають не діяти наосліп.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q6">VitalRise замінює лікаря?</summary>
+                <p data-i18n="faq.a6">Ні. Сайт не ставить діагнози і не призначає лікування. Лабораторні маркери, препарати, гормони й АС/ААС потрібно обговорювати з лікарем.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q7">Що буде з моїм email?</summary>
+                <p data-i18n="faq.a7">Email використовується для раннього доступу, повідомлень про запуск і майбутнього доступу до покупки. Деталі описані в Privacy Policy.</p>
+              </details>
+              <details>
+                <summary data-i18n="faq.q8">Чи можна буде повернути оплату?</summary>
+                <p data-i18n="faq.a8">Після підключення оплати умови повернення будуть прописані окремо. Базовий принцип: якщо доступ не активований або технічну помилку не вирішено, покупка перевіряється вручну.</p>
+              </details>
+            </section>
+
+            <section class="conversion-block conversion-block-accent">
+              <span class="section-label" data-i18n="policy.label">Гарантія</span>
+              <h3 data-i18n="policy.title">Прозорі умови</h3>
+              <p data-i18n="policy.text">Якщо доступ не відкрився після успішної оплати, покупка перевіряється вручну і доступ видається повторно на той самий email.</p>
+              <p data-i18n="policy.refund">Повернення коштів можливе до активації персонального доступу або якщо технічна помилка не була вирішена.</p>
+            </section>
+          </div>
+
+        </div>
+      </section>
