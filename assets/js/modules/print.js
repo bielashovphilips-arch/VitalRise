@@ -221,25 +221,42 @@
       windowWidth: 430
     }).then(function (canvas) {
       canvas.toBlob(function (blob) {
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-
-        if (exportBtn) {
-          exportBtn.textContent = originalText;
-          exportBtn.disabled = false;
-          window.setTimeout(function () {
+        if (!blob) {
+          console.error("Blob is null or undefined");
+          alert(t("Помилка експорту: не вдалось створити файл", "Export error: could not create file", "Ошибка экспорта: не удалось создать файл"));
+          if (exportBtn) {
             exportBtn.textContent = originalText;
-          }, 2000);
+            exportBtn.disabled = false;
+          }
+          return;
+        }
+
+        try {
+          const link = document.createElement("a");
+          const url = URL.createObjectURL(blob);
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          if (exportBtn) {
+            exportBtn.textContent = originalText;
+            exportBtn.disabled = false;
+          }
+        } catch (error) {
+          console.error("Error creating download link:", error);
+          alert(t("Помилка при скачуванні файлу", "Error downloading file", "Ошибка при загрузке файла"));
+          if (exportBtn) {
+            exportBtn.textContent = originalText;
+            exportBtn.disabled = false;
+          }
         }
       }, "image/png");
     }).catch(function (error) {
       console.error("PNG export error:", error);
+      alert(t("Помилка експорту PNG", "PNG export error", "Ошибка экспорта PNG") + ": " + error.message);
       if (exportBtn) {
         exportBtn.textContent = originalText;
         exportBtn.disabled = false;
