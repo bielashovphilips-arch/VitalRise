@@ -220,40 +220,69 @@
       windowHeight: sourceEl.scrollHeight,
       windowWidth: 430
     }).then(function (canvas) {
-      canvas.toBlob(function (blob) {
-        if (!blob) {
-          console.error("Blob is null or undefined");
-          alert(t("Помилка експорту: не вдалось створити файл", "Export error: could not create file", "Ошибка экспорта: не удалось создать файл"));
-          if (exportBtn) {
-            exportBtn.textContent = originalText;
-            exportBtn.disabled = false;
+      try {
+        // Спробуємо toBlob спочатку
+        canvas.toBlob(function (blob) {
+          if (blob) {
+            downloadBlob(blob, fileName);
+            finishExport();
+            return;
           }
-          return;
-        }
 
+          // Fallback: конвертуємо data URL в blob
+          const dataUrl = canvas.toDataURL("image/png");
+          dataUrlToBlob(dataUrl, function (blob) {
+            if (blob) {
+              downloadBlob(blob, fileName);
+              finishExport();
+            } else {
+              throw new Error("Could not convert canvas to blob");
+            }
+          });
+        }, "image/png");
+      } catch (error) {
+        console.error("PNG canvas error:", error);
+        alert(t("Помилка експорту PNG", "PNG export error", "Ошибка экспорта PNG") + ": " + error.message);
+        if (exportBtn) {
+          exportBtn.textContent = originalText;
+          exportBtn.disabled = false;
+        }
+      }
+
+      function downloadBlob(blob, fileName) {
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      function dataUrlToBlob(dataUrl, callback) {
         try {
-          const link = document.createElement("a");
-          const url = URL.createObjectURL(blob);
-          link.href = url;
-          link.download = fileName;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-
-          if (exportBtn) {
-            exportBtn.textContent = originalText;
-            exportBtn.disabled = false;
+          const arr = dataUrl.split(",");
+          const mime = arr[0].match(/:(.*?);/)[1];
+          const bstr = atob(arr[1]);
+          const n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          for (let i = 0; i < n; i++) {
+            u8arr[i] = bstr.charCodeAt(i);
           }
+          callback(new Blob([u8arr], { type: mime }));
         } catch (error) {
-          console.error("Error creating download link:", error);
-          alert(t("Помилка при скачуванні файлу", "Error downloading file", "Ошибка при загрузке файла"));
-          if (exportBtn) {
-            exportBtn.textContent = originalText;
-            exportBtn.disabled = false;
-          }
+          console.error("dataUrlToBlob error:", error);
+          callback(null);
         }
-      }, "image/png");
+      }
+
+      function finishExport() {
+        if (exportBtn) {
+          exportBtn.textContent = originalText;
+          exportBtn.disabled = false;
+        }
+      }
     }).catch(function (error) {
       console.error("PNG export error:", error);
       alert(t("Помилка експорту PNG", "PNG export error", "Ошибка экспорта PNG") + ": " + error.message);
