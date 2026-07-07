@@ -46,9 +46,9 @@ const CHECKOUT_URL_TEMPLATE = process.env.CHECKOUT_URL_TEMPLATE || "";
 const NEWSLETTER_WEBHOOK_URL = process.env.NEWSLETTER_WEBHOOK_URL || "";
 
 const PLANS = {
-  start: { tier: "start", price: 499, days: 30 },
-  pro: { tier: "pro", price: 1499, days: 30 },
-  premium: { tier: "premium", price: 3500, days: 30 }
+  start: { tier: "start", price: 499, startWindowDays: 45, activeDays: 30 },
+  pro: { tier: "pro", price: 1499, startWindowDays: 45, activeDays: 30 },
+  premium: { tier: "premium", price: 3500, startWindowDays: 45, activeDays: 30 }
 };
 
 const WEBHOOK_SECRETS = {
@@ -81,7 +81,7 @@ const SECURITY_HEADERS = {
 function ensureDb() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify({ orders: [], codes: [], tokens: [], newsletter: [] }, null, 2));
+    fs.writeFileSync(DB_FILE, JSON.stringify({ orders: [], codes: [], tokens: [], subscriptions: [], newsletter: [] }, null, 2));
   }
 }
 
@@ -94,6 +94,7 @@ function readDb() {
   if (!Array.isArray(db.orders)) db.orders = [];
   if (!Array.isArray(db.codes)) db.codes = [];
   if (!Array.isArray(db.tokens)) db.tokens = [];
+  if (!Array.isArray(db.subscriptions)) db.subscriptions = [];
   if (!Array.isArray(db.newsletter)) db.newsletter = [];
   return db;
 }
@@ -119,8 +120,8 @@ function nowIso() {
   return new Date().toISOString();
 }
 
-function addDays(days) {
-  const date = new Date();
+function addDays(days, fromDate) {
+  const date = fromDate ? new Date(fromDate) : new Date();
   date.setDate(date.getDate() + days);
   return date.toISOString();
 }
@@ -196,6 +197,7 @@ function issueAccess(db, order) {
   const plan = PLANS[order.plan];
   const code = createCode(order.plan);
   const rawToken = randomId("vat");
+  const startDeadlineAt = addDays(plan.startWindowDays);
   const access = {
     id: randomId("code"),
     codeHash: hash(code),
@@ -203,7 +205,10 @@ function issueAccess(db, order) {
     plan: order.plan,
     orderId: order.id,
     createdAt: nowIso(),
-    expiresAt: addDays(plan.days),
+    startDeadlineAt,
+    activatedAt: null,
+    activeExpiresAt: null,
+    expiresAt: startDeadlineAt,
     redeemedAt: null
   };
   const token = {
@@ -213,6 +218,9 @@ function issueAccess(db, order) {
     plan: order.plan,
     orderId: order.id,
     createdAt: nowIso(),
+    startDeadlineAt,
+    activatedAt: null,
+    activeExpiresAt: null,
     expiresAt: access.expiresAt,
     revokedAt: null
   };
@@ -222,6 +230,25 @@ function issueAccess(db, order) {
   db.codes.push(access);
   db.tokens.push(token);
 
+  if (order.autoRenew) {
+    db.subscriptions.push({
+      id: randomId("sub"),
+      email: order.email,
+      plan: order.plan,
+      orderId: order.id,
+      provider: order.provider || "pending",
+      status: "active",
+      intervalDays: plan.activeDays,
+      amount: plan.price,
+      currency: order.currency || "UAH",
+      createdAt: nowIso(),
+      startDeadlineAt: access.startDeadlineAt,
+      nextPaymentAt: access.expiresAt,
+      cancelledAt: null,
+      providerReference: order.providerReference || ""
+    });
+  }
+
   return { code, token: rawToken, expiresAt: access.expiresAt };
 }
 
@@ -230,8 +257,53 @@ function publicTokenPayload(token) {
     ok: true,
     tier: token.plan,
     email: token.email,
+    startDeadlineAt: token.startDeadlineAt || token.expiresAt,
+    activatedAt: token.activatedAt || null,
+    activeExpiresAt: token.activeExpiresAt || null,
     expiresAt: token.expiresAt
   };
+}
+
+function getEffectiveExpiresAt(record) {
+  if (!record) return "";
+  return record.activatedAt
+    ? (record.activeExpiresAt || record.expiresAt || "")
+    : (record.startDeadlineAt || record.expiresAt || "");
+}
+
+function isAccessExpired(record) {
+  const expiresAt = getEffectiveExpiresAt(record);
+  return !expiresAt || new Date(expiresAt).getTime() < Date.now();
+}
+
+function activateToken(db, token, source) {
+  const plan = PLANS[token.plan];
+  if (!plan) return token;
+
+  if (!token.activatedAt) {
+    const activatedAt = nowIso();
+    const activeExpiresAt = addDays(plan.activeDays, activatedAt);
+    token.activatedAt = activatedAt;
+    token.activeExpiresAt = activeExpiresAt;
+    token.expiresAt = activeExpiresAt;
+    token.activationSource = String(source || "program").slice(0, 80);
+
+    const accessCode = db.codes.find((item) => item.orderId === token.orderId && item.email === token.email);
+    if (accessCode) {
+      accessCode.activatedAt = activatedAt;
+      accessCode.activeExpiresAt = activeExpiresAt;
+      accessCode.expiresAt = activeExpiresAt;
+    }
+
+    const subscription = db.subscriptions.find((item) => item.orderId === token.orderId && item.email === token.email && item.status === "active");
+    if (subscription) {
+      subscription.activatedAt = activatedAt;
+      subscription.activeExpiresAt = activeExpiresAt;
+      subscription.nextPaymentAt = activeExpiresAt;
+    }
+  }
+
+  return token;
 }
 
 function buildCheckoutUrl(order) {
@@ -358,12 +430,17 @@ async function handleApi(request, response, pathname) {
     if (!isValidEmail(email)) return sendJson(response, 400, { ok: false, error: "Invalid email" });
 
     const db = readDb();
+    const autoRenew = body.autoRenew === true;
     const order = {
       id: randomId("order"),
       email,
       plan,
       amount: PLANS[plan].price,
       currency: "UAH",
+      startWindowDays: PLANS[plan].startWindowDays,
+      activeDays: PLANS[plan].activeDays,
+      autoRenew,
+      renewalIntervalDays: autoRenew ? PLANS[plan].activeDays : 0,
       status: "pending",
       createdAt: nowIso(),
       paidAt: null,
@@ -413,7 +490,7 @@ async function handleApi(request, response, pathname) {
       return sendJson(response, 403, { ok: false, error: "Access code is invalid or already used" });
     }
 
-    if (new Date(accessCode.expiresAt).getTime() < Date.now()) {
+    if (isAccessExpired(accessCode)) {
       return sendJson(response, 403, { ok: false, error: "Access code expired" });
     }
 
@@ -425,6 +502,9 @@ async function handleApi(request, response, pathname) {
       plan: accessCode.plan,
       orderId: accessCode.orderId,
       createdAt: nowIso(),
+      startDeadlineAt: accessCode.startDeadlineAt || accessCode.expiresAt,
+      activatedAt: accessCode.activatedAt || null,
+      activeExpiresAt: accessCode.activeExpiresAt || null,
       expiresAt: accessCode.expiresAt,
       revokedAt: null
     };
@@ -442,11 +522,28 @@ async function handleApi(request, response, pathname) {
 
     const db = readDb();
     const token = db.tokens.find((item) => item.tokenHash === hash(tokenValue));
-    if (!token || token.revokedAt || new Date(token.expiresAt).getTime() < Date.now()) {
+    if (!token || token.revokedAt || isAccessExpired(token)) {
       return sendJson(response, 401, { ok: false, error: "Token is invalid or expired" });
     }
 
     return sendJson(response, 200, publicTokenPayload(token));
+  }
+
+  if (request.method === "POST" && pathname === "/api/access/activate") {
+    const body = await readJsonBody(request);
+    const tokenValue = String(body.token || "").trim();
+    const source = String(body.source || "program").trim();
+    if (!tokenValue) return sendJson(response, 401, { ok: false, error: "Missing token" });
+
+    const db = readDb();
+    const token = db.tokens.find((item) => item.tokenHash === hash(tokenValue));
+    if (!token || token.revokedAt || isAccessExpired(token)) {
+      return sendJson(response, 401, { ok: false, error: "Token is invalid or expired" });
+    }
+
+    const activated = activateToken(db, token, source);
+    writeDb(db);
+    return sendJson(response, 200, publicTokenPayload(activated));
   }
 
   if (request.method === "POST" && pathname === "/api/access/admin/mark-paid") {

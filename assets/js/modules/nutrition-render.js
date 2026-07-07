@@ -19,10 +19,259 @@
         };
   }
 
+  const nutritionUiText = {
+    uk: {
+      autoMealPlan: "Автоматично сформований раціон",
+      calories: "Калорії",
+      protein: "Білки",
+      fats: "Жири",
+      carbs: "Вуглеводи",
+      water: "Вода",
+      salt: "Сіль",
+      meals: "Прийомів їжі",
+      context: "Контекст",
+      back: "Назад",
+      noneSelected: "Нічого не вибрано.",
+      nothingMeal: "Ще нічого не вибрано.",
+      stableDay: "Стабільний день",
+      proteinShort: "Б:",
+      fatsShort: "Ж:",
+      carbsShort: "В:",
+      logicLine: "Логіка VitalRise: білок — база, жири — стабільність, вуглеводи — головний важіль цілі.",
+      foodWeightNote: "Вага продуктів: рис, гречка, картопля, макарони, м’ясо та риба рахуються у готовому вигляді; вівсянка та інші сухі сипучі продукти — у сухому вигляді.",
+      mealVolumeTitle: "Обсяг прийомів їжі",
+      mealVolumeTitleHigh: "Високий калораж і обсяг їжі",
+      mealVolumeText: "Не роби прийоми їжі надто великими без потреби. Менша порція частіше легше проходить по ШКТ: менше важкості, рефлюксу, здуття і більше шансів стабільно добрати білок, овочі та вуглеводи без дискомфорту.",
+      mealVolumeTextHigh: "Якщо добовий калораж великий, не намагайся втиснути його весь у 2-3 дуже великі прийоми. Краще розподілити енергію на 4-5 прийомів або додати легкий перекус: менший за обсягом прийом зазвичай легше перетравлюється і краще переноситься, ніж дуже великий.",
+      mealVolumeHint: "Орієнтир: якщо один прийом регулярно виходить дуже важким по обсягу або калоріях, збільш кількість прийомів їжі замість того, щоб “запихати” денний план силою.",
+      electrolyteDefaultTitle: "Стабільна вода й електроліти",
+      electrolyteDefaultText: "Для силової роботи, суглобів, витривалості, пампу, тиску й самопочуття електроліти мають бути стабільними. На схудненні головний важіль - калорії та вуглеводи, а не різке зменшення солі.",
+      electrolyteMedicalNote: "Якщо є гіпертонія, хвороби нирок, набряки або рекомендації лікаря — орієнтуйся на медичні призначення, а не на спортивний розрахунок.",
+      selectedProtein: "Обрані білкові продукти",
+      selectedCarbs: "Обрані гарніри та вуглеводи",
+      selectedExtraCarbs: "Додаткові вуглеводи",
+      selectedFats: "Обрані додаткові жири",
+      selectedVegetables: "Обрані овочі",
+      normControl: "Контроль норми",
+      updatesAfterChoice: "Оновлюється після кожного вибору",
+      closeToTarget: "Норма близько",
+      over: "Перебір +",
+      under: "Недобір ",
+      mealConstructor: "Конструктор раціону",
+      daySuffix: " / день",
+      mealsWithChoices: "Прийомів з вибором",
+      mealSummaryTitle: "Підсумок по прийомах їжі"
+    },
+    en: {
+      autoMealPlan: "Automatically built meal plan",
+      calories: "Calories",
+      protein: "Protein",
+      fats: "Fats",
+      carbs: "Carbs",
+      water: "Water",
+      salt: "Salt",
+      meals: "Meals",
+      context: "Context",
+      back: "Back",
+      noneSelected: "Nothing selected.",
+      nothingMeal: "Nothing selected yet.",
+      stableDay: "Stable day",
+      proteinShort: "P:",
+      fatsShort: "F:",
+      carbsShort: "C:",
+      logicLine: "VitalRise logic: protein is the base, fats provide stability, carbs are the main goal lever.",
+      foodWeightNote: "Food weight: rice, buckwheat, potatoes, pasta, meat, and fish are counted cooked; oats and other dry grains are counted dry.",
+      mealVolumeTitle: "Meal volume",
+      mealVolumeTitleHigh: "High calories and food volume",
+      mealVolumeText: "Do not make meals unnecessarily large. A smaller portion is often easier on digestion: less heaviness, reflux, bloating, and a better chance to hit protein, vegetables, and carbs without discomfort.",
+      mealVolumeTextHigh: "If daily calories are high, do not force them into 2-3 very large meals. Spread energy across 4-5 meals or add a light snack: a smaller meal is usually easier to digest and tolerate than a very large one.",
+      mealVolumeHint: "Guide: if one meal regularly feels too heavy by volume or calories, increase the number of meals instead of forcing the daily plan.",
+      electrolyteDefaultTitle: "Stable water and electrolytes",
+      electrolyteDefaultText: "For strength work, joints, endurance, pump, blood pressure, and well-being, electrolytes should stay stable. When cutting, the main lever is calories and carbs, not sharply reducing salt.",
+      electrolyteMedicalNote: "If you have hypertension, kidney disease, edema, or medical instructions, follow your doctor’s guidance rather than a sports calculation.",
+      selectedProtein: "Selected protein foods",
+      selectedCarbs: "Selected sides and carbs",
+      selectedExtraCarbs: "Extra carbs",
+      selectedFats: "Selected extra fats",
+      selectedVegetables: "Selected vegetables",
+      normControl: "Target control",
+      updatesAfterChoice: "Updates after each choice",
+      closeToTarget: "Close to target",
+      over: "Over +",
+      under: "Under ",
+      mealConstructor: "Meal constructor",
+      daySuffix: " / day",
+      mealsWithChoices: "Meals with choices",
+      mealSummaryTitle: "Meal summary"
+    },
+    ru: {
+      autoMealPlan: "Автоматически сформированный рацион",
+      calories: "Калории",
+      protein: "Белки",
+      fats: "Жиры",
+      carbs: "Углеводы",
+      water: "Вода",
+      salt: "Соль",
+      meals: "Приемов пищи",
+      context: "Контекст",
+      back: "Назад",
+      noneSelected: "Ничего не выбрано.",
+      nothingMeal: "Пока ничего не выбрано.",
+      stableDay: "Стабильный день",
+      proteinShort: "Б:",
+      fatsShort: "Ж:",
+      carbsShort: "У:",
+      logicLine: "Логика VitalRise: белок — база, жиры — стабильность, углеводы — главный рычаг цели.",
+      foodWeightNote: "Вес продуктов: рис, гречка, картофель, макароны, мясо и рыба считаются в готовом виде; овсянка и другие сухие крупы — в сухом виде.",
+      mealVolumeTitle: "Объем приемов пищи",
+      mealVolumeTitleHigh: "Высокий калораж и объем еды",
+      mealVolumeText: "Не делай приемы пищи слишком большими без необходимости. Меньшая порция чаще легче проходит по ЖКТ: меньше тяжести, рефлюкса, вздутия и больше шансов стабильно добрать белок, овощи и углеводы без дискомфорта.",
+      mealVolumeTextHigh: "Если дневной калораж большой, не пытайся вместить его весь в 2-3 очень больших приема. Лучше распределить энергию на 4-5 приемов или добавить легкий перекус: меньший по объему прием обычно легче переваривается и переносится.",
+      mealVolumeHint: "Ориентир: если один прием регулярно получается слишком тяжелым по объему или калориям, увеличь количество приемов пищи вместо того, чтобы силой закрывать дневной план.",
+      electrolyteDefaultTitle: "Стабильная вода и электролиты",
+      electrolyteDefaultText: "Для силовой работы, суставов, выносливости, пампа, давления и самочувствия электролиты должны быть стабильными. На снижении веса главный рычаг - калории и углеводы, а не резкое уменьшение соли.",
+      electrolyteMedicalNote: "Если есть гипертония, болезни почек, отеки или рекомендации врача — ориентируйся на медицинские назначения, а не на спортивный расчет.",
+      selectedProtein: "Выбранные белковые продукты",
+      selectedCarbs: "Выбранные гарниры и углеводы",
+      selectedExtraCarbs: "Дополнительные углеводы",
+      selectedFats: "Выбранные дополнительные жиры",
+      selectedVegetables: "Выбранные овощи",
+      normControl: "Контроль нормы",
+      updatesAfterChoice: "Обновляется после каждого выбора",
+      closeToTarget: "Близко к норме",
+      over: "Перебор +",
+      under: "Недобор ",
+      mealConstructor: "Конструктор рациона",
+      daySuffix: " / день",
+      mealsWithChoices: "Приемов с выбором",
+      mealSummaryTitle: "Итог по приемам пищи"
+    }
+  };
+
+  const sourceTextKeys = {
+    "Автоматично сформований раціон": "autoMealPlan",
+    "Стабільний день": "stableDay",
+    "Обрані білкові продукти": "selectedProtein",
+    "Обрані гарніри та вуглеводи": "selectedCarbs",
+    "Додаткові вуглеводи": "selectedExtraCarbs",
+    "Обрані додаткові жири": "selectedFats",
+    "Обрані овочі": "selectedVegetables"
+  };
+
+  const fallbackText = {
+    "Сніданок": { en: "Breakfast", ru: "Завтрак" },
+    "Другий сніданок": { en: "Second breakfast", ru: "Второй завтрак" },
+    "Обід": { en: "Lunch", ru: "Обед" },
+    "Перекус": { en: "Snack", ru: "Перекус" },
+    "Вечеря": { en: "Dinner", ru: "Ужин" },
+    "Вечірній перекус": { en: "Evening snack", ru: "Вечерний перекус" },
+    "Підвищене потовиділення": { en: "Increased sweating", ru: "Повышенное потоотделение" },
+    "Перед важкою сесією": { en: "Before a hard session", ru: "Перед тяжелой сессией" },
+    "Калорії та вуглеводи залишаються стабільними. Додається контроль рідини й електролітів, бо сильне потовиділення може просаджувати самопочуття, тиск і якість роботи.": {
+      en: "Calories and carbs stay stable. Fluid and electrolyte control is added because heavy sweating can reduce well-being, blood pressure stability, and work quality.",
+      ru: "Калории и углеводы остаются стабильными. Добавляется контроль жидкости и электролитов, потому что сильное потоотделение может просаживать самочувствие, давление и качество работы."
+    },
+    "Пий частіше невеликими порціями, особливо до і після навантаження або сауни.": {
+      en: "Drink more often in small portions, especially before and after training or sauna.",
+      ru: "Пей чаще небольшими порциями, особенно до и после нагрузки или сауны."
+    },
+    "Сіль і вода коригуються по потовиділенню, але без різких крайнощів. Якщо є тиск, набряки чи ниркові обмеження - орієнтир тільки через лікаря.": {
+      en: "Salt and water are adjusted for sweating, but without sharp extremes. If there is blood pressure, edema, or kidney limitations, use medical guidance only.",
+      ru: "Соль и вода корректируются по потоотделению, но без резких крайностей. Если есть давление, отеки или ограничения по почкам, ориентир только через врача."
+    },
+    "Раціон не зменшується. За 2-4 години до важкого навантаження тримай нормальну воду, сіль і вуглеводи; додатковий акцент робиться на електролітах, щоб тренування проходило комфортніше.": {
+      en: "The diet is not reduced. Two to four hours before hard training, keep normal water, salt, and carbs; electrolytes get extra attention so the session feels better.",
+      ru: "Рацион не уменьшается. За 2-4 часа до тяжелой нагрузки держи нормальную воду, соль и углеводы; дополнительный акцент делается на электролитах, чтобы тренировка проходила комфортнее."
+    },
+    "За 2-4 години: 500-700 мл води з їжею. За 30-60 хвилин: 250-400 мл води невеликими ковтками.": {
+      en: "2-4 hours before: 500-700 ml water with food. 30-60 minutes before: 250-400 ml water in small sips.",
+      ru: "За 2-4 часа: 500-700 мл воды с едой. За 30-60 минут: 250-400 мл воды небольшими глотками."
+    },
+    "Орієнтир: натрій із солі в межах добової норми, калій із продуктів, магній без перевищення індивідуальної переносимості.": {
+      en: "Guide: sodium from salt within the daily target, potassium from foods, magnesium without exceeding individual tolerance.",
+      ru: "Ориентир: натрий из соли в пределах суточной нормы, калий из продуктов, магний без превышения индивидуальной переносимости."
+    },
+    "Калорії, білки, жири й вуглеводи не стрибають від дня до дня. Для набору це допомагає адаптувати травлення до більшого об'єму їжі, для схуднення - тримати прогнозований дефіцит.": {
+      en: "Calories, protein, fats, and carbs do not jump from day to day. For gaining, this helps digestion adapt to more food volume; for cutting, it keeps the deficit predictable.",
+      ru: "Калории, белки, жиры и углеводы не скачут изо дня в день. Для набора это помогает пищеварению адаптироваться к большему объему еды, для снижения веса - держать прогнозируемый дефицит."
+    },
+    "Воду розподіляй рівно протягом дня, без різкого заливання перед навантаженням.": {
+      en: "Spread water evenly through the day, without suddenly overloading before training.",
+      ru: "Воду распределяй ровно в течение дня, без резкого заливания перед нагрузкой."
+    },
+    "Сіль не урізається під ціль. Головні зміни в раціоні робляться поступово через калорії та вуглеводи.": {
+      en: "Salt is not cut for the goal. The main diet changes are made gradually through calories and carbs.",
+      ru: "Соль не урезается под цель. Главные изменения в рационе делаются постепенно через калории и углеводы."
+    },
+    "Яйця": { en: "Eggs", ru: "Яйца" },
+    "Вівсянка": { en: "Oatmeal", ru: "Овсянка" },
+    "Авокадо": { en: "Avocado", ru: "Авокадо" },
+    "Куряче філе": { en: "Chicken breast", ru: "Куриное филе" },
+    "Рис": { en: "Rice", ru: "Рис" },
+    "Шпинат": { en: "Spinach", ru: "Шпинат" },
+    "Томат": { en: "Tomato", ru: "Томат" },
+    "Оливкова олія": { en: "Olive oil", ru: "Оливковое масло" },
+    "Картопля": { en: "Potato", ru: "Картофель" },
+    "Біла риба (хек / мінтай / тріска / морський окунь)": { en: "White fish (hake / pollock / cod / sea bass)", ru: "Белая рыба (хек / минтай / треска / морской окунь)" },
+    "Броколі": { en: "Broccoli", ru: "Брокколи" },
+    "Огірок": { en: "Cucumber", ru: "Огурец" }
+  };
+
+  function getLanguage() {
+    if (window.VitalRiseI18n && typeof window.VitalRiseI18n.getLanguage === "function") {
+      return window.VitalRiseI18n.getLanguage();
+    }
+    return (document.documentElement.lang || "uk").toLowerCase();
+  }
+
+  function uiText(key) {
+    const language = getLanguage();
+    const dictionary = nutritionUiText[language] || nutritionUiText.uk;
+    return dictionary[key] || nutritionUiText.uk[key] || key;
+  }
+
+  function translateText(value) {
+    const text = String(value || "");
+    const language = getLanguage();
+    const key = sourceTextKeys[text];
+    if (key) return uiText(key);
+    if (language !== "uk" && fallbackText[text] && fallbackText[text][language]) {
+      return fallbackText[text][language];
+    }
+    if (window.VitalRiseI18n && typeof window.VitalRiseI18n.translateText === "function") {
+      return window.VitalRiseI18n.translateText(text) || text;
+    }
+    return text;
+  }
+
+  function unitLabel(label) {
+    const language = getLanguage();
+    if (language === "en") {
+      if (label === "г") return "g";
+      if (label === "л") return "L";
+      if (label === "ккал") return "kcal";
+      if (label === "шт") return "pcs";
+    }
+    return label;
+  }
+
+  function foodLineMarkup(item) {
+    return escapeHtml(translateText(item.name)) + " - " + item.amount + " " + unitLabel(item.unitLabel);
+  }
+
+  function mealSummaryMarkup(totals, formatKcal, formatGrams) {
+    return (
+      uiText("proteinShort") + " " + formatGrams(totals.p) + " | " +
+      uiText("fatsShort") + " " + formatGrams(totals.f) + " | " +
+      uiText("carbsShort") + " " + formatGrams(totals.c) + " | " +
+      formatKcal(totals.kcal)
+    );
+  }
+
   function buildNutritionLogicLineMarkup() {
     return (
       '<div class="nutrition-logic-line">' +
-        'Логіка VitalRise: білок — база, жири — стабільність, вуглеводи — головний важіль цілі.' +
+        uiText("logicLine") +
       '</div>'
     );
   }
@@ -30,7 +279,26 @@
   function buildFoodWeightNoteMarkup() {
     return (
       '<div class="builder-note">' +
-        'Вага продуктів: рис, гречка, картопля, макарони, м’ясо та риба рахуються у готовому вигляді; вівсянка та інші сухі сипучі продукти — у сухому вигляді.' +
+        uiText("foodWeightNote") +
+      '</div>'
+    );
+  }
+
+  function buildMealVolumeNoteMarkup(targets) {
+    if (!targets) return "";
+
+    const calories = Number(targets.calories) || 0;
+    const mealsCount = Number(targets.mealsCount) || 4;
+    const kcalPerMeal = mealsCount > 0 ? Math.round(calories / mealsCount) : 0;
+    const isHighLoad = calories >= 2800 || kcalPerMeal >= 750;
+    const title = isHighLoad ? uiText("mealVolumeTitleHigh") : uiText("mealVolumeTitle");
+    const text = isHighLoad ? uiText("mealVolumeTextHigh") : uiText("mealVolumeText");
+
+    return (
+      '<div class="phase-recommendation-card meal-volume-note">' +
+        '<h4>' + title + '</h4>' +
+        '<p>' + text + '</p>' +
+        '<div class="builder-note">' + uiText("mealVolumeHint") + '</div>' +
       '</div>'
     );
   }
@@ -58,23 +326,18 @@
 
     return (
       '<div class="auto-meal-card">' +
-        '<h4 class="auto-meal-title">' + meal.mealName + '</h4>' +
+        '<h4 class="auto-meal-title">' + escapeHtml(translateText(meal.mealName)) + '</h4>' +
         '<div class="auto-meal-foods">' +
           meal.items.map(function (item) {
             return (
               '<div class="auto-food-item">' +
-                '<strong>' + escapeHtml(item.name) + '</strong> - ' +
-                item.amount + ' ' + item.unitLabel +
+                '<strong>' + escapeHtml(translateText(item.name)) + '</strong> - ' +
+                item.amount + ' ' + unitLabel(item.unitLabel) +
               '</div>'
             );
           }).join("") +
         '</div>' +
-        '<div class="meal-summary">' +
-          'Б: ' + formatGrams(meal.totals.p) + ' | ' +
-          'Ж: ' + formatGrams(meal.totals.f) + ' | ' +
-          'В: ' + formatGrams(meal.totals.c) + ' | ' +
-          formatKcal(meal.totals.kcal) +
-        '</div>' +
+        '<div class="meal-summary">' + mealSummaryMarkup(meal.totals, formatKcal, formatGrams) + '</div>' +
       '</div>'
     );
   }
@@ -86,14 +349,14 @@
           const ids = selected[group.key] || [];
           return (
             '<div class="selected-group">' +
-              '<h4 class="selected-title">' + group.title + '</h4>' +
+              '<h4 class="selected-title">' + escapeHtml(translateText(group.title)) + '</h4>' +
               (
                 ids.length
                   ? '<div class="selected-list">' + ids.map(function (id) {
                       const item = getFoodById(id);
-                      return '<div class="selected-item"><span class="selected-name">' + escapeHtml(item ? item.name : id) + '</span></div>';
+                      return '<div class="selected-item"><span class="selected-name">' + escapeHtml(item ? translateText(item.name) : id) + '</span></div>';
                     }).join("") + '</div>'
-                  : '<div class="builder-note">Нічого не вибрано.</div>'
+                  : '<div class="builder-note">' + uiText("noneSelected") + '</div>'
               ) +
             '</div>'
           );
@@ -115,8 +378,8 @@
               '<span class="product-item-left">' +
                 '<input type="checkbox" class="nutrition-product-checkbox" data-group="' + category + '" data-id="' + product.id + '"' + (checked ? " checked" : "") + '>' +
                 '<span class="product-item-copy">' +
-                  '<span class="product-item-name">' + escapeHtml(product.name) + '</span>' +
-                  (product.note ? '<small>' + escapeHtml(product.note) + '</small>' : '') +
+                  '<span class="product-item-name">' + escapeHtml(translateText(product.name)) + '</span>' +
+                  (product.note ? '<small>' + escapeHtml(translateText(product.note)) + '</small>' : '') +
                 '</span>' +
               '</span>' +
             '</label>'
@@ -374,7 +637,7 @@
           '<strong>' + formatter(current) + ' / ' + formatter(target) + '</strong>' +
         '</div>' +
         '<div class="macro-meter-bar"><i style="width: ' + percent.toFixed(0) + '%"></i></div>' +
-        '<small>' + (tone === "ok" ? "Норма близько" : (diff > 0 ? "Перебір +" : "Недобір ") + diffText) + '</small>' +
+        '<small>' + (tone === "ok" ? uiText("closeToTarget") : (diff > 0 ? uiText("over") : uiText("under")) + diffText) + '</small>' +
       '</div>'
     );
   }
@@ -387,14 +650,14 @@
     return (
       '<div class="macro-live-panel">' +
         '<div class="macro-live-head">' +
-          '<span>Контроль норми</span>' +
-          '<strong>Оновлюється після кожного вибору</strong>' +
+          '<span>' + uiText("normControl") + '</span>' +
+          '<strong>' + uiText("updatesAfterChoice") + '</strong>' +
         '</div>' +
         '<div class="macro-live-grid">' +
-          buildMacroMeter("Калорії", current.kcal || 0, targets.calories || 0, formatKcal) +
-          buildMacroMeter("Білки", current.p || 0, targets.protein || 0, formatGrams) +
-          buildMacroMeter("Жири", current.f || 0, targets.fat || 0, formatGrams) +
-          buildMacroMeter("Вуглеводи", current.c || 0, targets.carbs || 0, formatGrams) +
+          buildMacroMeter(uiText("calories"), current.kcal || 0, targets.calories || 0, formatKcal) +
+          buildMacroMeter(uiText("protein"), current.p || 0, targets.protein || 0, formatGrams) +
+          buildMacroMeter(uiText("fats"), current.f || 0, targets.fat || 0, formatGrams) +
+          buildMacroMeter(uiText("carbs"), current.c || 0, targets.carbs || 0, formatGrams) +
         '</div>' +
       '</div>'
     );
@@ -409,19 +672,19 @@
     return (
       '<div class="meal-choice-card">' +
         '<div class="meal-choice-head">' +
-          '<h4>' + view.mealName + '</h4>' +
+          '<h4>' + escapeHtml(translateText(view.mealName)) + '</h4>' +
           '<div class="meal-choice-targets">' +
             '<span>' + formatKcal(targets.kcal) + '</span>' +
-            '<span>Б ' + formatGrams(targets.p) + '</span>' +
-            '<span>Ж ' + formatGrams(targets.f) + '</span>' +
-            '<span>В ' + formatGrams(targets.c) + '</span>' +
+            '<span>' + uiText("proteinShort") + ' ' + formatGrams(targets.p) + '</span>' +
+            '<span>' + uiText("fatsShort") + ' ' + formatGrams(targets.f) + '</span>' +
+            '<span>' + uiText("carbsShort") + ' ' + formatGrams(targets.c) + '</span>' +
           '</div>' +
         '</div>' +
         '<div class="meal-mini-tracker">' +
           '<span>' + formatKcal(totals.kcal) + ' / ' + formatKcal(targets.kcal) + '</span>' +
-          '<span>Б ' + formatGrams(totals.p) + ' / ' + formatGrams(targets.p) + '</span>' +
-          '<span>Ж ' + formatGrams(totals.f) + ' / ' + formatGrams(targets.f) + '</span>' +
-          '<span>В ' + formatGrams(totals.c) + ' / ' + formatGrams(targets.c) + '</span>' +
+          '<span>' + uiText("proteinShort") + ' ' + formatGrams(totals.p) + ' / ' + formatGrams(targets.p) + '</span>' +
+          '<span>' + uiText("fatsShort") + ' ' + formatGrams(totals.f) + ' / ' + formatGrams(targets.f) + '</span>' +
+          '<span>' + uiText("carbsShort") + ' ' + formatGrams(totals.c) + ' / ' + formatGrams(targets.c) + '</span>' +
         '</div>' +
         (view.proteinSectionMarkup || "") +
         (view.carbSectionMarkup || "") +
@@ -440,21 +703,22 @@
 
     return (
       '<div class="final-nutrition-result">' +
-        '<h3 class="result-title">Конструктор раціону</h3>' +
+        '<h3 class="result-title">' + uiText("mealConstructor") + '</h3>' +
         (view.menuTemplateToolsMarkup || "") +
         (view.macroTrackerMarkup || "") +
         '<div class="result-grid compact-top-grid">' +
-          '<div class="result-item"><span class="result-item-label">Калорії / день</span><span class="result-item-value">' + formatKcal(activeTargets.calories) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Білки / день</span><span class="result-item-value">' + formatGrams(activeTargets.protein) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Жири / день</span><span class="result-item-value">' + formatGrams(activeTargets.fat) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Вуглеводи / день</span><span class="result-item-value">' + formatGrams(activeTargets.carbs) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Вода</span><span class="result-item-value">' + formatLiters(activeTargets.waterLiters) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Сіль</span><span class="result-item-value">' + formatGrams(activeTargets.saltGrams) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Прийомів з вибором</span><span class="result-item-value">' + view.filledMealsCount + ' / ' + view.mealsCount + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Контекст</span><span class="result-item-value">' + (activeTargets.loadContextLabel || "Стабільний день") + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("calories") + uiText("daySuffix") + '</span><span class="result-item-value">' + formatKcal(activeTargets.calories) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("protein") + uiText("daySuffix") + '</span><span class="result-item-value">' + formatGrams(activeTargets.protein) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("fats") + uiText("daySuffix") + '</span><span class="result-item-value">' + formatGrams(activeTargets.fat) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("carbs") + uiText("daySuffix") + '</span><span class="result-item-value">' + formatGrams(activeTargets.carbs) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("water") + '</span><span class="result-item-value">' + formatLiters(activeTargets.waterLiters) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("salt") + '</span><span class="result-item-value">' + formatGrams(activeTargets.saltGrams) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("mealsWithChoices") + '</span><span class="result-item-value">' + view.filledMealsCount + ' / ' + view.mealsCount + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("context") + '</span><span class="result-item-value">' + escapeHtml(translateText(activeTargets.loadContextLabel || "Стабільний день")) + '</span></div>' +
         '</div>' +
         buildNutritionLogicLineMarkup() +
         buildFoodWeightNoteMarkup() +
+        buildMealVolumeNoteMarkup(activeTargets) +
         buildActiveCorrectionMarkup(activeTargets) +
         (view.accuracyMarkup || "") +
         (view.electrolyteMarkup || "") +
@@ -462,12 +726,12 @@
         '<div class="meal-constructor-grid compact-meal-grid">' +
           (view.mealCardsMarkup || "") +
         '</div>' +
-        '<div class="result-title compact-subtitle">Підсумок по прийомах їжі</div>' +
+        '<div class="result-title compact-subtitle">' + uiText("mealSummaryTitle") + '</div>' +
         '<div class="auto-meal-grid compact-summary-grid">' +
           (view.selectedMealsMarkup || "") +
         '</div>' +
         '<div class="builder-actions">' +
-          '<button type="button" class="builder-main-btn secondary" data-action="back-constructor">Назад</button>' +
+          '<button type="button" class="builder-main-btn secondary" data-action="back-constructor">' + uiText("back") + '</button>' +
         '</div>' +
       '</div>'
     );
@@ -558,21 +822,22 @@
 
     return (
       '<div class="final-nutrition-result">' +
-        '<h3 class="result-title">' + title + '</h3>' +
+        '<h3 class="result-title">' + escapeHtml(translateText(title)) + '</h3>' +
         '<div class="result-grid">' +
-          '<div class="result-item"><span class="result-item-label">Калорії</span><span class="result-item-value">' + formatKcal(plan.totals.kcal) + ' / ' + formatKcal(targets.calories) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Білки</span><span class="result-item-value">' + formatGrams(plan.totals.p) + ' / ' + formatGrams(targets.protein) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Жири</span><span class="result-item-value">' + formatGrams(plan.totals.f) + ' / ' + formatGrams(targets.fat) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Вуглеводи</span><span class="result-item-value">' + formatGrams(plan.totals.c) + ' / ' + formatGrams(targets.carbs) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("calories") + '</span><span class="result-item-value">' + formatKcal(plan.totals.kcal) + ' / ' + formatKcal(targets.calories) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("protein") + '</span><span class="result-item-value">' + formatGrams(plan.totals.p) + ' / ' + formatGrams(targets.protein) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("fats") + '</span><span class="result-item-value">' + formatGrams(plan.totals.f) + ' / ' + formatGrams(targets.fat) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("carbs") + '</span><span class="result-item-value">' + formatGrams(plan.totals.c) + ' / ' + formatGrams(targets.carbs) + '</span></div>' +
         '</div>' +
         buildNutritionLogicLineMarkup() +
         buildFoodWeightNoteMarkup() +
+        buildMealVolumeNoteMarkup(targets) +
         buildActiveCorrectionMarkup(targets) +
         '<div class="result-grid">' +
-          '<div class="result-item"><span class="result-item-label">Вода</span><span class="result-item-value">' + formatLiters(targets.waterLiters) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Сіль</span><span class="result-item-value">' + formatGrams(targets.saltGrams) + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Прийомів їжі</span><span class="result-item-value">' + targets.mealsCount + '</span></div>' +
-          '<div class="result-item"><span class="result-item-label">Контекст</span><span class="result-item-value">' + (targets.loadContextLabel || "Стабільний день") + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("water") + '</span><span class="result-item-value">' + formatLiters(targets.waterLiters) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("salt") + '</span><span class="result-item-value">' + formatGrams(targets.saltGrams) + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("meals") + '</span><span class="result-item-value">' + targets.mealsCount + '</span></div>' +
+          '<div class="result-item"><span class="result-item-label">' + uiText("context") + '</span><span class="result-item-value">' + escapeHtml(translateText(targets.loadContextLabel || "Стабільний день")) + '</span></div>' +
         '</div>' +
         buildElectrolyteNoteMarkup(targets) +
         buildPhaseRecommendationMarkup(targets, formatters) +
@@ -582,7 +847,7 @@
           }).join("") +
         '</div>' +
         '<div class="builder-actions">' +
-          '<button type="button" class="builder-main-btn secondary" data-action="back-constructor">Назад</button>' +
+          '<button type="button" class="builder-main-btn secondary" data-action="back-constructor">' + uiText("back") + '</button>' +
         '</div>' +
       '</div>'
     );
@@ -630,17 +895,17 @@
 
   function buildElectrolyteNoteMarkup(targets) {
     const protocol = targets && targets.hydrationProtocol ? targets.hydrationProtocol : null;
-    const protocolWater = protocol ? protocol.waterLiters + " л" : "";
-    const protocolSalt = protocol ? protocol.saltGrams + " г" : "";
+    const protocolWater = protocol ? protocol.waterLiters + " " + unitLabel("л") : "";
+    const protocolSalt = protocol ? protocol.saltGrams + " " + unitLabel("г") : "";
 
     return (
       '<div class="electrolyte-note">' +
-        '<h4>' + (protocol ? protocol.title : "Стабільна вода й електроліти") + '</h4>' +
-        '<p>' + (protocol ? protocol.text : "Для силової роботи, суглобів, витривалості, пампу, тиску й самопочуття електроліти мають бути стабільними. На схудненні головний важіль - калорії та вуглеводи, а не різке зменшення солі.") + '</p>' +
-        (protocol ? '<div class="phase-recommendation-grid"><div class="result-item"><span class="result-item-label">Вода</span><span class="result-item-value">' + protocolWater + '</span></div><div class="result-item"><span class="result-item-label">Сіль</span><span class="result-item-value">' + protocolSalt + '</span></div></div>' : "") +
-        (protocol ? '<div class="builder-note">' + protocol.timing + '</div>' : "") +
-        (protocol ? '<div class="builder-note">' + protocol.minerals + '</div>' : "") +
-        '<div class="builder-note">Якщо є гіпертонія, хвороби нирок, набряки або рекомендації лікаря — орієнтуйся на медичні призначення, а не на спортивний розрахунок.</div>' +
+        '<h4>' + escapeHtml(protocol ? translateText(protocol.title) : uiText("electrolyteDefaultTitle")) + '</h4>' +
+        '<p>' + escapeHtml(protocol ? translateText(protocol.text) : uiText("electrolyteDefaultText")) + '</p>' +
+        (protocol ? '<div class="phase-recommendation-grid"><div class="result-item"><span class="result-item-label">' + uiText("water") + '</span><span class="result-item-value">' + protocolWater + '</span></div><div class="result-item"><span class="result-item-label">' + uiText("salt") + '</span><span class="result-item-value">' + protocolSalt + '</span></div></div>' : "") +
+        (protocol ? '<div class="builder-note">' + escapeHtml(translateText(protocol.timing)) + '</div>' : "") +
+        (protocol ? '<div class="builder-note">' + escapeHtml(translateText(protocol.minerals)) + '</div>' : "") +
+        '<div class="builder-note">' + uiText("electrolyteMedicalNote") + '</div>' +
       '</div>'
     );
   }
@@ -652,31 +917,26 @@
     if (!meal.items.length) {
       return (
         '<div class="selected-day-card">' +
-          '<h5>' + meal.mealName + '</h5>' +
-          '<div class="builder-note">Ще нічого не вибрано.</div>' +
+          '<h5>' + escapeHtml(translateText(meal.mealName)) + '</h5>' +
+          '<div class="builder-note">' + uiText("nothingMeal") + '</div>' +
         '</div>'
       );
     }
 
     return (
       '<div class="selected-day-card">' +
-        '<h5>' + meal.mealName + '</h5>' +
+        '<h5>' + escapeHtml(translateText(meal.mealName)) + '</h5>' +
         '<div class="selected-day-items">' +
           meal.items.map(function (item) {
             return (
               '<div class="selected-day-item">' +
-                '<strong>' + escapeHtml(item.name) + '</strong> - ' +
-                item.amount + ' ' + item.unitLabel +
+                '<strong>' + escapeHtml(translateText(item.name)) + '</strong> - ' +
+                item.amount + ' ' + unitLabel(item.unitLabel) +
               '</div>'
             );
           }).join("") +
         '</div>' +
-        '<div class="meal-summary">' +
-          'Б: ' + formatGrams(meal.totals.p) + ' | ' +
-          'Ж: ' + formatGrams(meal.totals.f) + ' | ' +
-          'В: ' + formatGrams(meal.totals.c) + ' | ' +
-          formatKcal(meal.totals.kcal) +
-        '</div>' +
+        '<div class="meal-summary">' + mealSummaryMarkup(meal.totals, formatKcal, formatGrams) + '</div>' +
       '</div>'
     );
   }

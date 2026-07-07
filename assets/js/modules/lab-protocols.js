@@ -14,7 +14,7 @@
   const labReviewSummaryNote = $("lab-review-summary-note");
   let activeLabProtocol = null;
 
-  const baseReviewFieldIds = ["review-sex", "review-cycle", "review-date", "review-fasting"];
+  const baseReviewFieldIds = ["review-sex", "review-age", "review-cycle", "review-date", "review-fasting"];
   const markerFieldMap = {
     "Загальний аналіз крові": ["review-hemoglobin", "review-leukocytes", "review-platelets"],
     "Феритин": ["review-ferritin"],
@@ -50,6 +50,7 @@
     "Естрадіол": ["review-estradiol"],
     "Прогестерон": ["review-progesterone"],
     "Пролактин": ["review-prolactin"],
+    "ПСА загальний": ["review-psa"],
     "DHEA-S": ["review-dhea-s"],
     "Креатинкіназа за показами": ["review-ck"],
     "Кортизол за показами": ["review-cortisol"],
@@ -113,6 +114,8 @@
     if (hasProtocol) {
       const reviewSexField = $("review-sex");
       if (reviewSexField) reviewSexField.value = protocol.sex || "male";
+      const reviewAgeField = $("review-age");
+      if (reviewAgeField) reviewAgeField.value = protocol.age || 30;
     }
 
     syncReviewFemaleFieldsFromModule();
@@ -133,8 +136,24 @@
     };
   }
 
+  function translateLabText(value) {
+    if (window.VitalRiseI18n && typeof window.VitalRiseI18n.translateText === "function") {
+      return window.VitalRiseI18n.translateText(value);
+    }
+    return value;
+  }
+
+  function translateLabKey(key, fallback) {
+    if (window.VitalRiseI18n && typeof window.VitalRiseI18n.t === "function") {
+      return window.VitalRiseI18n.t(key) || fallback;
+    }
+    return fallback;
+  }
+
   function buildLabProtocol(data) {
     const sex = data["lab-sex"] || "male";
+    const age = Math.min(100, Math.max(18, Number(data["lab-age"]) || 30));
+    const prostateRisk = data["lab-prostate-risk"] || "average";
     const goal = data["lab-goal"] || "recomp";
     const load = data["lab-training-load"] || "moderate";
     const cycle = data["lab-cycle"] || "not_applicable";
@@ -186,6 +205,39 @@
       if (symptoms === "libido" || goal === "hormones") {
         notes.push("Для чоловіків пролактин особливо важливий при зниженому лібідо, еректильній дисфункції, гінекомастії або підозрі на вплив ліків.");
       }
+
+      if (age >= 30 && age < 40) {
+        groups.push(
+          createLabGroup(
+            "Здоров’я простати 30+",
+            "screening",
+            ["Оцінка симптомів сечовипускання", "Сімейний анамнез раку простати"],
+            "У 30-39 років рутинний ПСА без симптомів або високого ризику зазвичай не потрібен. Важливі сімейний анамнез, симптоми та своєчасна консультація уролога."
+          )
+        );
+      } else if ((age >= 40 && prostateRisk === "elevated") || (age >= 50 && age <= 69)) {
+        groups.push(
+          createLabGroup(
+            "Скринінг простати",
+            "screening",
+            ["ПСА загальний", "Оцінка симптомів сечовипускання", "Сімейний анамнез раку простати"],
+            age < 50
+              ? "У 40-49 років ПСА обговорюють раніше при підвищеному ризику. Рішення приймають разом з урологом після розмови про користь, хибнопозитивні результати й надмірну діагностику."
+              : "У 50-69 років ПСА можна обговорити з лікарем як індивідуальний скринінг. Одне значення не встановлює діагноз: важливі вік, динаміка, симптоми, запалення та стан простати."
+          )
+        );
+      } else if (age >= 70) {
+        groups.push(
+          createLabGroup(
+            "Здоров’я простати",
+            "screening",
+            ["Індивідуальне рішення щодо ПСА", "Оцінка симптомів сечовипускання"],
+            "Після 70 років користь рутинного ПСА залежить від загального здоров’я та очікуваної тривалості життя. Скринінг не повинен призначатися автоматично."
+          )
+        );
+      } else if (age >= 40) {
+        notes.push("Для чоловіків 40-49 років без підвищеного ризику рутинний ПСА не додається автоматично; ранній скринінг варто обговорити з лікарем за симптомів або зміни ризику.");
+      }
     } else {
       groups.push(
         createLabGroup(
@@ -211,6 +263,37 @@
       if (cycle === "postpartum") {
         notes.push("Після пологів або під час лактації пролактин може бути фізіологічно високим, тому контекст обов’язковий.");
       }
+
+      if (age >= 21 && age <= 29) {
+        groups.push(
+          createLabGroup(
+            "Скринінг шийки матки",
+            "screening",
+            ["ПАП-тест / цитологія шийки матки"],
+            "У 21-29 років для середнього ризику орієнтиром є ПАП-тест раз на 3 роки. Попередні аномальні результати, імунодефіцит або ВІЛ потребують окремого графіка з гінекологом."
+          )
+        );
+      } else if (age >= 30 && age <= 65) {
+        groups.push(
+          createLabGroup(
+            "Скринінг шийки матки",
+            "screening",
+            ["hrHPV-тест", "ПАП-тест / цитологія шийки матки"],
+            "У 30-65 років перевагу надають первинному hrHPV-тесту кожні 5 років; ко-тест ПАП + hrHPV кожні 5 років є прийнятною альтернативою, а ПАП окремо кожні 3 роки — варіантом, коли HPV-тест недоступний або обраний після консультації."
+          )
+        );
+      } else if (age > 65) {
+        groups.push(
+          createLabGroup(
+            "Скринінг шийки матки",
+            "screening",
+            ["Перевірка історії ПАП / hrHPV-тестів"],
+            "Після 65 років скринінг можна завершити лише за достатньої серії попередніх негативних тестів і без високого ризику. Якщо історія неповна або були передракові зміни, графік визначає гінеколог."
+          )
+        );
+      }
+
+      notes.push("ПАП-тест і hrHPV-тест — це профілактичний скринінг, а не аналіз статевих гормонів. Вакцинація проти HPV не скасовує плановий скринінг.");
     }
 
     if (load === "high") {
@@ -238,6 +321,7 @@
 
     return {
       sex: sex,
+      age: age,
       groups: groups,
       notes: notes
     };
@@ -249,15 +333,15 @@
         return (
           '<article class="lab-result-card lab-result-card-' + group.tag + '">' +
             '<div class="protocol-card-top">' +
-              '<h4>' + group.title + '</h4>' +
-              '<span>' + group.tag + '</span>' +
+              '<h4>' + translateLabText(group.title) + '</h4>' +
+              '<span>' + translateLabText(group.tag) + '</span>' +
             '</div>' +
             '<div class="marker-list">' +
               group.markers.map(function (marker) {
-                return '<span>' + marker + '</span>';
+                return '<span>' + translateLabText(marker) + '</span>';
               }).join("") +
             '</div>' +
-            '<p>' + group.note + '</p>' +
+            '<p>' + translateLabText(group.note) + '</p>' +
           '</article>'
         );
       })
@@ -265,7 +349,7 @@
 
     const notesMarkup = protocol.notes
       .map(function (note) {
-        return '<div class="tip-item">' + note + '</div>';
+        return '<div class="tip-item">' + translateLabText(note) + '</div>';
       })
       .join("");
 
@@ -329,11 +413,13 @@
   function getLabSeverityScore(severity) {
     if (severity === "critical") return 3;
     if (severity === "attention") return 2;
-    return 1;
+    if (severity === "info") return 1;
+    return 0;
   }
 
   function evaluateLabResults(data) {
     const sex = data["review-sex"] || "male";
+    const age = Math.min(100, Math.max(18, Number(data["review-age"]) || 30));
     const cycle = data["review-cycle"] || "not_applicable";
     const reviewDate = data["review-date"] || "";
     const fasting = data["review-fasting"] || "unknown";
@@ -370,6 +456,7 @@
     const potassium = parseLabNumber(data["review-potassium"]);
     const magnesium = parseLabNumber(data["review-magnesium"]);
     const prolactin = parseLabNumber(data["review-prolactin"]);
+    const psa = parseLabNumber(data["review-psa"]);
     const testosterone = parseLabNumber(data["review-testosterone"]);
     const freeTestosterone = parseLabNumber(data["review-free-testosterone"]);
     const shbg = parseLabNumber(data["review-shbg"]);
@@ -382,53 +469,55 @@
     const cortisol = parseLabNumber(data["review-cortisol"]);
     const totalProtein = parseLabNumber(data["review-total-protein"]);
     const albumin = parseLabNumber(data["review-albumin"]);
-    const enteredValues = [
-      ferritin,
-      hemoglobin,
-      leukocytes,
-      platelets,
-      vitaminD,
-      b12,
-      iron,
-      folate,
-      crp,
-      glucose,
-      hba1c,
-      insulin,
-      totalCholesterol,
-      ldl,
-      hdl,
-      triglycerides,
-      tsh,
-      freeT4,
-      freeT3,
-      antiTpo,
-      alt,
-      ast,
-      ggt,
-      bilirubin,
-      creatinine,
-      egfr,
-      urea,
-      sodium,
-      potassium,
-      magnesium,
-      prolactin,
-      testosterone,
-      freeTestosterone,
-      shbg,
-      lh,
-      fsh,
-      estradiol,
-      progesterone,
-      dheaS,
-      ck,
-      cortisol,
-      totalProtein,
-      albumin
-    ].filter(function (value) {
-      return value !== null;
+    const enteredMarkers = [
+      { marker: "Феритин", value: ferritin, display: ferritin !== null ? ferritin + " нг/мл" : "", system: "blood" },
+      { marker: "Гемоглобін", value: hemoglobin, display: hemoglobin !== null ? hemoglobin + " г/л" : "", system: "blood" },
+      { marker: "Лейкоцити", value: leukocytes, display: leukocytes !== null ? leukocytes + " 10^9/л" : "", system: "blood" },
+      { marker: "Тромбоцити", value: platelets, display: platelets !== null ? platelets + " 10^9/л" : "", system: "blood" },
+      { marker: "25(OH)D", value: vitaminD, display: vitaminD !== null ? vitaminD + " нг/мл" : "", system: "blood" },
+      { marker: "B12", value: b12, display: b12 !== null ? b12 + " пг/мл" : "", system: "blood" },
+      { marker: "Сироваткове залізо", value: iron, display: iron !== null ? iron + " мкмоль/л" : "", system: "blood" },
+      { marker: "Фолат", value: folate, display: folate !== null ? folate + " нг/мл" : "", system: "blood" },
+      { marker: "CRP", value: crp, display: crp !== null ? crp + " мг/л" : "", system: "blood" },
+      { marker: "Глюкоза", value: glucose, display: glucose !== null ? glucose + " ммоль/л" : "", system: "metabolic" },
+      { marker: "HbA1c", value: hba1c, display: hba1c !== null ? hba1c + "%" : "", system: "metabolic" },
+      { marker: "Інсулін", value: insulin, display: insulin !== null ? insulin + " мкОд/мл" : "", system: "metabolic" },
+      { marker: "Загальний холестерин", value: totalCholesterol, display: totalCholesterol !== null ? totalCholesterol + " ммоль/л" : "", system: "metabolic" },
+      { marker: "LDL", value: ldl, display: ldl !== null ? ldl + " ммоль/л" : "", system: "metabolic" },
+      { marker: "HDL", value: hdl, display: hdl !== null ? hdl + " ммоль/л" : "", system: "metabolic" },
+      { marker: "Тригліцериди", value: triglycerides, display: triglycerides !== null ? triglycerides + " ммоль/л" : "", system: "metabolic" },
+      { marker: "TSH", value: tsh, display: tsh !== null ? tsh + " мМО/л" : "", system: "thyroid" },
+      { marker: "Вільний T4", value: freeT4, display: freeT4 !== null ? freeT4 + " пмоль/л" : "", system: "thyroid" },
+      { marker: "Вільний T3", value: freeT3, display: freeT3 !== null ? freeT3 + " пмоль/л" : "", system: "thyroid" },
+      { marker: "Anti-TPO", value: antiTpo, display: antiTpo !== null ? antiTpo + " Од/мл" : "", system: "thyroid" },
+      { marker: "ALT", value: alt, display: alt !== null ? alt + " Од/л" : "", system: "liver" },
+      { marker: "AST", value: ast, display: ast !== null ? ast + " Од/л" : "", system: "liver" },
+      { marker: "GGT", value: ggt, display: ggt !== null ? ggt + " Од/л" : "", system: "liver" },
+      { marker: "Білірубін", value: bilirubin, display: bilirubin !== null ? bilirubin + " мкмоль/л" : "", system: "liver" },
+      { marker: "Креатинін", value: creatinine, display: creatinine !== null ? creatinine + " мкмоль/л" : "", system: "kidney" },
+      { marker: "eGFR", value: egfr, display: egfr !== null ? String(egfr) : "", system: "kidney" },
+      { marker: "Сечовина", value: urea, display: urea !== null ? urea + " ммоль/л" : "", system: "kidney" },
+      { marker: "Натрій", value: sodium, display: sodium !== null ? sodium + " ммоль/л" : "", system: "kidney" },
+      { marker: "Калій", value: potassium, display: potassium !== null ? potassium + " ммоль/л" : "", system: "kidney" },
+      { marker: "Магній", value: magnesium, display: magnesium !== null ? magnesium + " ммоль/л" : "", system: "kidney" },
+      { marker: "Пролактин", value: prolactin, display: prolactin !== null ? prolactin + " нг/мл" : "", system: "hormonal" },
+      { marker: "ПСА загальний", value: psa, display: psa !== null ? psa + " нг/мл" : "", system: "hormonal" },
+      { marker: "Тестостерон", value: testosterone, display: testosterone !== null ? testosterone + " нмоль/л" : "", system: "hormonal" },
+      { marker: "Вільний тестостерон", value: freeTestosterone, display: freeTestosterone !== null ? String(freeTestosterone) : "", system: "hormonal" },
+      { marker: "SHBG", value: shbg, display: shbg !== null ? shbg + " нмоль/л" : "", system: "hormonal" },
+      { marker: "LH", value: lh, display: lh !== null ? String(lh) : "", system: "hormonal" },
+      { marker: "FSH", value: fsh, display: fsh !== null ? String(fsh) : "", system: "hormonal" },
+      { marker: "Естрадіол", value: estradiol, display: estradiol !== null ? estradiol + " пг/мл" : "", system: "hormonal" },
+      { marker: "Прогестерон", value: progesterone, display: progesterone !== null ? progesterone + " нг/мл" : "", system: "hormonal" },
+      { marker: "DHEA-S", value: dheaS, display: dheaS !== null ? String(dheaS) : "", system: "hormonal" },
+      { marker: "Креатинкіназа", value: ck, display: ck !== null ? ck + " Од/л" : "", system: "recovery" },
+      { marker: "Кортизол", value: cortisol, display: cortisol !== null ? String(cortisol) : "", system: "recovery" },
+      { marker: "Загальний білок", value: totalProtein, display: totalProtein !== null ? totalProtein + " г/л" : "", system: "recovery" },
+      { marker: "Альбумін", value: albumin, display: albumin !== null ? albumin + " г/л" : "", system: "recovery" }
+    ].filter(function (item) {
+      return item.value !== null;
     });
+    const enteredValues = enteredMarkers.map(function (item) { return item.value; });
 
     if (ferritin !== null) {
       if (ferritin < 30) {
@@ -604,6 +693,19 @@
       }
     }
 
+    if (psa !== null && sex === "male") {
+      addLabFinding(
+        findings,
+        "info",
+        "ПСА загальний",
+        psa + " нг/мл",
+        translateLabKey("psaFindingTitle", "ПСА потребує вікового та клінічного контексту"),
+        translateLabKey("psaFindingText", "ПСА не є специфічним лише для раку: показник може змінюватися при доброякісному збільшенні простати, запаленні, інфекції або після маніпуляцій.") + " " +
+          translateLabKey("psaFindingContext", "Вік: {age}. Важливі референс лабораторії та динаміка.").replace("{age}", age),
+        translateLabKey("psaFindingAction", "Не робити висновок за одним значенням. Якщо ПСА вище референсу, зростає в динаміці або є симптоми сечовипускання, обговорити повторний тест і консультацію уролога.")
+      );
+    }
+
     if (freeTestosterone !== null) {
       addLabFinding(findings, "info", "Вільний тестостерон", freeTestosterone, "Вільний тестостерон внесено", "Для цього маркера одиниці й метод розрахунку сильно залежать від лабораторії.", "Трактувати тільки з референсами лабораторії, SHBG, загальним тестостероном і симптомами.");
     }
@@ -666,9 +768,56 @@
       addLabFinding(findings, "info", "Умови здачі", "після тренування", "Важке тренування може спотворювати частину маркерів", "AST, ALT, креатинін/eGFR та запальні маркери краще звіряти з датою тренування і рекомендацією лікаря.");
     }
 
+    const coveredMarkers = new Set(findings.map(function (item) { return item.marker; }));
+    if (coveredMarkers.has("LH / FSH")) {
+      coveredMarkers.add("LH");
+      coveredMarkers.add("FSH");
+    }
+
+    enteredMarkers.forEach(function (item) {
+      if (coveredMarkers.has(item.marker)) return;
+      addLabFinding(
+        findings,
+        "normal",
+        item.marker,
+        item.display,
+        translateLabKey("labNormalTitle", "Без явного відхилення за базовим орієнтиром"),
+        translateLabKey("labNormalText", "Показник не створив окремого сигналу ризику в поточній скринінговій логіці. Це не означає, що його слід оцінювати ізольовано."),
+        translateLabKey("labNormalAction", "Звірити з референсним діапазоном саме вашої лабораторії, симптомами та попередніми результатами.")
+      );
+    });
+
     findings.sort(function (a, b) {
       return getLabSeverityScore(b.severity) - getLabSeverityScore(a.severity);
     });
+
+    const markerSystems = {};
+    enteredMarkers.forEach(function (item) {
+      markerSystems[item.marker] = item.system;
+    });
+    markerSystems["LH / FSH"] = "hormonal";
+
+    const systemOrder = ["blood", "metabolic", "thyroid", "liver", "kidney", "hormonal", "recovery"];
+    const systems = systemOrder.map(function (system) {
+      const systemMarkers = enteredMarkers.filter(function (item) { return item.system === system; });
+      if (!systemMarkers.length) return null;
+
+      const systemFindings = findings.filter(function (item) {
+        return markerSystems[item.marker] === system;
+      });
+      const severity = systemFindings.reduce(function (current, item) {
+        return getLabSeverityScore(item.severity) > getLabSeverityScore(current) ? item.severity : current;
+      }, "normal");
+
+      return {
+        key: system,
+        severity: severity,
+        enteredCount: systemMarkers.length,
+        signalCount: systemFindings.filter(function (item) {
+          return item.severity === "critical" || item.severity === "attention";
+        }).length
+      };
+    }).filter(Boolean);
 
     const criticalCount = findings.filter(function (item) { return item.severity === "critical"; }).length;
     const attentionCount = findings.filter(function (item) { return item.severity === "attention"; }).length;
@@ -697,6 +846,9 @@
       summary: summary,
       reviewDate: reviewDate,
       fasting: fasting,
+      enteredCount: enteredMarkers.length,
+      normalCount: findings.filter(function (item) { return item.severity === "normal"; }).length,
+      systems: systems,
       findings: findings
     };
   }
@@ -724,7 +876,46 @@
     return "Умови здачі впливають на інтерпретацію частини маркерів.";
   }
 
+  function getLabSystemTitle(key) {
+    const titles = {
+      blood: ["labSystemBlood", "Кровотворення та дефіцити"],
+      metabolic: ["labSystemMetabolic", "Метаболізм і ліпіди"],
+      thyroid: ["labSystemThyroid", "Щитоподібна залоза"],
+      liver: ["labSystemLiver", "Печінковий контекст"],
+      kidney: ["labSystemKidney", "Нирки та електроліти"],
+      hormonal: ["labSystemHormonal", "Гормональний контекст"],
+      recovery: ["labSystemRecovery", "Відновлення та білковий статус"]
+    };
+    const item = titles[key] || ["", key];
+    return translateLabKey(item[0], item[1]);
+  }
+
+  function getLabSystemSummary(system) {
+    if (system.severity === "critical") {
+      return translateLabKey("labSystemCritical", "Є маркер, який потребує пріоритетної медичної оцінки.");
+    }
+    if (system.severity === "attention") {
+      return translateLabKey("labSystemAttention", "Є відхилення, яке варто оцінити разом з іншими показниками та симптомами.");
+    }
+    if (system.severity === "info") {
+      return translateLabKey("labSystemContext", "Показники потребують контексту референсів, підготовки або пов’язаних маркерів.");
+    }
+    return translateLabKey("labSystemStable", "За базовими правилами явних сигналів не виявлено; важливими залишаються референси лабораторії та динаміка.");
+  }
+
   function renderLabReview(review) {
+    const systemsMarkup = (review.systems || []).map(function (system) {
+      return (
+        '<article class="lab-system-card lab-system-' + system.severity + '">' +
+          '<div class="protocol-card-top">' +
+            '<h4>' + getLabSystemTitle(system.key) + '</h4>' +
+            '<span>' + system.enteredCount + '</span>' +
+          '</div>' +
+          '<p>' + getLabSystemSummary(system) + '</p>' +
+        '</article>'
+      );
+    }).join("");
+
     const findingsMarkup = review.findings.length
       ? review.findings.map(function (item) {
           return (
@@ -741,6 +932,23 @@
         }).join("")
       : '<div class="tip-item">За введеними значеннями немає явних лабораторних стоп-сигналів. Це не скасовує референси лабораторії, симптоми і консультацію лікаря.</div>';
 
+    const lifestyleMarkup = review.enteredCount
+      ? (
+        '<section class="lab-lifestyle-panel">' +
+          '<span class="section-label">' + translateLabKey("labLifestyleLabel", "Динаміка показників") + '</span>' +
+          '<h3>' + translateLabKey("labLifestyleTitle", "Харчування й активність можуть суттєво покращити частину аналізів") + '</h3>' +
+          '<p class="lab-lifestyle-lead">' + translateLabKey("labLifestyleLead", "Стабільні зміни раціону, щоденної рухливості, тренувань, сну та маси тіла можуть через певний час помітно змінити частину показників у кращу сторону. Результат оцінюють у динаміці, а не за одним днем.") + '</p>' +
+          '<div class="lab-lifestyle-grid">' +
+            '<article><strong>' + translateLabKey("labLifestyleNutritionTitle", "Харчування") + '</strong><p>' + translateLabKey("labLifestyleNutritionText", "Контроль калорій, достатній білок і клітковина, менше надлишку цукру, алкоголю, трансжирів і насичених жирів можуть покращувати глюкозу, тригліцериди, частину ліпідного та печінкового профілю.") + '</p></article>' +
+            '<article><strong>' + translateLabKey("labLifestyleActivityTitle", "Активність") + '</strong><p>' + translateLabKey("labLifestyleActivityText", "Регулярна ходьба, аеробне навантаження та силові тренування можуть покращувати чутливість до інсуліну, контроль глюкози, ліпіди, тиск і загальну метаболічну картину.") + '</p></article>' +
+            '<article><strong>' + translateLabKey("labLifestyleTimeTitle", "Потрібен час") + '</strong><p>' + translateLabKey("labLifestyleTimeText", "Частина маркерів реагує протягом кількох тижнів, іншим потрібні місяці. HbA1c відображає середню глюкозу приблизно за попередні 2-3 місяці, тому швидка перездача може не показати повний ефект.") + '</p></article>' +
+            '<article><strong>' + translateLabKey("labLifestyleLimitsTitle", "Не все вирішується способом життя") + '</strong><p>' + translateLabKey("labLifestyleLimitsText", "Виражені дефіцити, значні гормональні, ниркові, запальні або інші небезпечні відхилення не можна просто чекати або виправляти дієтою. Для них потрібні лікар, уточнення причини й контрольний план.") + '</p></article>' +
+          '</div>' +
+          '<div class="tip-item">' + translateLabKey("labLifestyleFollowup", "Практичний крок: зафіксувати вихідні результати, узгодити зміни харчування й активності, дотримуватися плану та повторити вибрані аналізи у термін, який визначить лікар. Порівнювати потрібно однакові одиниці, схожі умови здачі й бажано ту саму лабораторію.") + '</div>' +
+        '</section>'
+      )
+      : "";
+
     labReviewResult.innerHTML =
       '<div class="lab-status lab-status-' + review.status + '">' +
         '<span>' + (review.status === "red" ? "червоний" : review.status === "yellow" ? "жовтий" : review.status === "neutral" ? "нейтральний" : "зелений") + ' статус</span>' +
@@ -749,9 +957,16 @@
         '<div class="lab-review-meta">' +
           '<strong>Дата: ' + (review.reviewDate || "не вказано") + '</strong>' +
           '<strong>Умови: ' + getLabFastingLabel(review.fasting) + '</strong>' +
+          '<strong>' + translateLabKey("labEnteredCount", "Введено показників") + ': ' + (review.enteredCount || 0) + '</strong>' +
         '</div>' +
       '</div>' +
+      (systemsMarkup
+        ? '<section class="lab-report-section"><h3>' + translateLabKey("labSystemsTitle", "Підсумок за системами") + '</h3><div class="lab-system-grid">' + systemsMarkup + '</div></section>'
+        : '') +
+      '<section class="lab-report-section"><h3>' + translateLabKey("labMarkersTitle", "Детальна оцінка кожного введеного показника") + '</h3>' +
       '<div class="lab-findings-grid">' + findingsMarkup + '</div>' +
+      '</section>' +
+      lifestyleMarkup +
       '<div class="tip-item">' + getLabPreparationNote(review.fasting) + '</div>' +
       '<p class="result-note">Орієнтири в цьому блоці не замінюють референсні межі лабораторії. На результати впливають підготовка, час забору, важкі тренування напередодні, ліки, цикл, вагітність, лактація, сон і гострий стрес.</p>';
 

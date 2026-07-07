@@ -44,6 +44,21 @@
     return uk;
   }
 
+  function showExportNotice(message) {
+    const existing = document.querySelector(".export-status-notice");
+    if (existing) existing.remove();
+
+    const notice = document.createElement("div");
+    notice.className = "export-status-notice";
+    notice.textContent = message;
+    notice.style.cssText = "position:fixed;left:50%;bottom:24px;z-index:9999;max-width:min(420px,calc(100vw - 32px));transform:translateX(-50%);padding:12px 16px;border:1px solid rgba(240,214,117,.32);border-radius:12px;background:rgba(10,11,15,.94);color:#fff;font:600 13px/1.4 Inter,system-ui,sans-serif;box-shadow:0 18px 48px rgba(0,0,0,.35);";
+    document.body.appendChild(notice);
+
+    window.setTimeout(function () {
+      if (notice.parentNode) notice.parentNode.removeChild(notice);
+    }, 3600);
+  }
+
   function getReportDate() {
     return new Date().toLocaleDateString(getLanguage() === "en" ? "en-US" : getLanguage() === "ru" ? "ru-RU" : "uk-UA");
   }
@@ -148,9 +163,7 @@
         };
         window.html2pdf().set(opt).from(element).save();
         return;
-      } catch (error) {
-        console.error("html2pdf export failed:", error);
-      }
+      } catch (error) {}
     }
 
     // Fallback: використовуємо print dialog
@@ -190,12 +203,12 @@
 
   function exportReportAsPNG(target) {
     if (!target || !hasResultContent(target)) {
-      alert(t("Нема результату для експорту", "No result to export", "Нет результата для экспорта"));
+      showExportNotice(t("Нема результату для експорту", "No result to export", "Нет результата для экспорта"));
       return;
     }
 
     if (!window.html2canvas) {
-      alert(t("Бібліотека експорту не завантажилась", "Export library not loaded", "Библиотека экспорта не загружена"));
+      showExportNotice(t("Бібліотека експорту не завантажилась", "Export library not loaded", "Библиотека экспорта не загружена"));
       return;
     }
 
@@ -241,8 +254,7 @@
           });
         }, "image/png");
       } catch (error) {
-        console.error("PNG canvas error:", error);
-        alert(t("Помилка експорту PNG", "PNG export error", "Ошибка экспорта PNG") + ": " + error.message);
+        showExportNotice(t("Помилка експорту PNG", "PNG export error", "Ошибка экспорта PNG") + ": " + error.message);
         if (exportBtn) {
           exportBtn.textContent = originalText;
           exportBtn.disabled = false;
@@ -264,7 +276,6 @@
         try {
           const arr = dataUrl.split(",");
           if (arr.length < 2) {
-            console.error("Invalid dataURL format");
             callback(null);
             return;
           }
@@ -283,7 +294,6 @@
           }
           callback(new Blob([u8arr], { type: mime }));
         } catch (error) {
-          console.error("dataUrlToBlob error:", error);
           callback(null);
         }
       }
@@ -295,8 +305,7 @@
         }
       }
     }).catch(function (error) {
-      console.error("PNG export error:", error);
-      alert(t("Помилка експорту PNG", "PNG export error", "Ошибка экспорта PNG") + ": " + error.message);
+      showExportNotice(t("Помилка експорту PNG", "PNG export error", "Ошибка экспорта PNG") + ": " + error.message);
       if (exportBtn) {
         exportBtn.textContent = originalText;
         exportBtn.disabled = false;
@@ -605,9 +614,5 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     bindPrintButtons();
-    console.log("Print module loaded. Libraries available:", {
-      html2canvas: typeof window.html2canvas !== "undefined",
-      html2pdf: typeof window.html2pdf !== "undefined"
-    });
   });
 })();

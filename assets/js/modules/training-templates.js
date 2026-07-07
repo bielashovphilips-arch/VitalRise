@@ -1193,59 +1193,71 @@
     const baseSets = isBeginner ? "3" : isAdvanced ? "4-5" : "4";
     const supportSets = isBeginner ? "2-3" : isAdvanced ? "4" : "3";
     const strengthSets = isBeginner ? "3" : isAdvanced ? "5" : "4";
+    const balancedRowName = place === "outdoor"
+      ? "Тяга до поясу — резина або низька перекладина"
+      : "Тяга до поясу";
     const steadyCue = "залишай 2-3 повтори в запасі";
     const strongCue = "додавай вагу малими кроками, без зриву техніки";
     const denseCue = "скорочуй відпочинок поступово, техніка важливіша за темп";
+    const squatName = place === "outdoor" ? "Присідання з власною вагою або рюкзаком" : "Присідання";
+    const rdlName = place === "outdoor" ? "Румунська тяга з рюкзаком" : "Румунська тяга";
+    const lungeName = place === "outdoor" ? "Випади назад з рюкзаком" : "Випади назад";
+    const stepUpName = "Кроки на підвищення";
+    const abductionName = place === "gym" ? "Відведення стегна" : "Відведення стегна назад з резиною";
+    const hipControlName = place === "gym" ? "Відведення стегна" : "Відведення / зведення стегна з резиною";
+    const bandSideName = "Кроки вбік з резиною";
+    const bandOpenName = "Розкриття стегон з резиною";
+    const standingCoreName = "Вправа для корпуса з протидією обертанню";
 
     const balanced = [
       addFemaleDayCue({
         title: "День 1 - сідниці та задня поверхня",
         badge: "нижня частина",
         basic: [
-          femaleExercise("Підйом таза", baseSets, "8-12", strongCue, loadText),
-          femaleExercise("Румунська тяга", baseSets, "8-12", steadyCue, loadText)
+          femaleExercise(rdlName, baseSets, "8-12", strongCue, loadText),
+          femaleExercise(lungeName, baseSets, "8-12 на ногу", "додавай повтори перед вагою", loadText)
         ],
         accessory: [
-          femaleExercise("Відведення стегна", supportSets, "12-20", "пауза у верхній точці", loadText),
-          femaleExercise("Згинання ніг або ковзання п'ятами", supportSets, "10-15", "додавай повтори", loadText),
-          femaleExercise("Бічна планка", supportSets, "25-45 сек", "додавай час", "власна вага")
+          femaleExercise(abductionName, supportSets, "12-20", "пауза у верхній точці", place === "gym" ? loadText : "резина"),
+          femaleExercise(bandOpenName, supportSets, "15-25", "постійний натяг", "резина"),
+          femaleExercise(standingCoreName, supportSets, "10-14 на бік", "повільний контроль", "резина або блок")
         ]
       }, cyclePhase),
       addFemaleDayCue({
         title: "День 2 - верх тіла та постава",
         badge: "спина і плечі",
         basic: [
-          femaleExercise("Тяга до пояса", baseSets, "8-12", steadyCue, pullText),
+          femaleExercise(balancedRowName, baseSets, "8-12", steadyCue, pullText),
           femaleExercise("Жим гантелей або віджимання від опори", baseSets, "8-12", steadyCue, loadText)
         ],
         accessory: [
           femaleExercise("Тяга верхнього блоку або підтягування з допомогою", supportSets, "8-12", "додавай повтори без ривків", pullText),
           femaleExercise("Підйоми через сторони", supportSets, "12-18", "легка вага, контроль плечей", loadText),
-          femaleExercise("Вправа для корпуса з протидією обертанню", supportSets, "10-14 на бік", "повільний контроль", "резина або блок")
+          femaleExercise(standingCoreName, supportSets, "10-14 на бік", "повільний контроль", "резина або блок")
         ]
       }, cyclePhase),
       addFemaleDayCue({
         title: "День 3 - ноги та корпус",
         badge: "контроль руху",
         basic: [
-          femaleExercise("Присідання або жим ногами", baseSets, "8-12", steadyCue, loadText),
-          femaleExercise("Випади назад", baseSets, "8-12 на ногу", "додавай повтори перед вагою", loadText)
+          femaleExercise(squatName, baseSets, "8-12", steadyCue, loadText),
+          femaleExercise(stepUpName, baseSets, "8-12 на ногу", "стабільна стопа і контроль коліна", loadText)
         ],
         accessory: [
-          femaleExercise("Розгинання ніг", supportSets, "12-15", "контроль коліна", loadText),
+          femaleExercise("Болгарські присідання", supportSets, "8-12 на ногу", "повна амплітуда без провалу коліна", loadText),
           femaleExercise("Підйом на носки", supportSets, "12-20", "пауза вгорі", loadText),
-          femaleExercise("Мертва комаха", supportSets, "8-12 на бік", "поперек стабільний", "власна вага")
+          femaleExercise(standingCoreName, supportSets, "10-14 на бік", "поперек стабільний", "резина або блок")
         ]
       }, cyclePhase),
       addFemaleDayCue({
         title: "День 4 - помірна щільність",
         badge: "витривалість",
         basic: [
-          femaleExercise("Кроки на підвищення", baseSets, "10-14 на ногу", denseCue, loadText),
+          femaleExercise(stepUpName, baseSets, "10-14 на ногу", denseCue, loadText),
           femaleExercise("Тяга резини або блоку до грудей", baseSets, "12-15", denseCue, pullText)
         ],
         accessory: [
-          femaleExercise("Сідничний міст з паузою", supportSets, "15-20", "пауза 2 сек", loadText),
+          femaleExercise(bandSideName, supportSets, "12-20 на бік", "коліна стабільні", "резина"),
           femaleExercise("Фермерська хода або перенесення ваги", supportSets, "30-45 сек", "рівний корпус", loadText),
           femaleExercise("Ходьба після тренування", "1", "20-35 хв", "спокійний темп", "без ваги")
         ]
@@ -1259,25 +1271,25 @@
         title: "День 3 - сідничний акцент",
         badge: "форма і сила",
         basic: [
-          femaleExercise("Підйом таза з паузою", isAdvanced ? "5" : "4", "6-10", strongCue, loadText),
-          femaleExercise("Болгарські присідання", baseSets, "8-12 на ногу", "додавай вагу після стабільної амплітуди", loadText)
+          femaleExercise("Болгарські присідання", isAdvanced ? "5" : "4", "6-10 на ногу", "додавай вагу після стабільної амплітуди", loadText),
+          femaleExercise(rdlName, baseSets, "8-12", strongCue, loadText)
         ],
         accessory: [
-          femaleExercise("Відведення стегна назад", supportSets, "12-20", "без розгойдування", loadText),
+          femaleExercise(abductionName, supportSets, "12-20", "без розгойдування", place === "gym" ? loadText : "резина"),
           femaleExercise("Румунська тяга на одній нозі", supportSets, "8-12 на ногу", "контроль таза", loadText),
-          femaleExercise("Розкриття стегон з резиною", supportSets, "15-25", "постійний натяг", "резина")
+          femaleExercise(hipControlName, supportSets, "12-20 на ногу", "постійний натяг", place === "gym" ? loadText : "резина")
         ]
       }, cyclePhase),
       addFemaleDayCue({
         title: "День 4 - ноги без перевантаження",
         badge: "об'єм",
         basic: [
-          femaleExercise("Жим ногами або присідання до опори", baseSets, "10-14", steadyCue, loadText),
-          femaleExercise("Згинання ніг", baseSets, "10-15", "додавай повтори", loadText)
+          femaleExercise(squatName, baseSets, "10-14", steadyCue, loadText),
+          femaleExercise(stepUpName, baseSets, "10-14 на ногу", "додавай висоту або вагу тільки після контролю", loadText)
         ],
         accessory: [
-          femaleExercise("Кроки вбік з резиною", supportSets, "12-20 на бік", "коліна стабільні", "резина"),
-          femaleExercise("Підйом таза однією ногою", supportSets, "10-15 на ногу", "пауза вгорі", "власна вага або вага"),
+          femaleExercise(bandSideName, supportSets, "12-20 на бік", "коліна стабільні", "резина"),
+          femaleExercise(hipControlName, supportSets, "12-20 на ногу", "корпус нерухомий", place === "gym" ? loadText : "резина"),
           femaleExercise("Ходьба під нахилом", "1", "20-30 хв", "без бігу", "без ваги")
         ]
       }, cyclePhase)
@@ -1288,13 +1300,13 @@
         title: "День 1 - присідання та тяга",
         badge: "сила ніг",
         basic: [
-          femaleExercise("Присідання", strengthSets, "4-6", "вага з запасом 2 повтори", loadText),
-          femaleExercise("Румунська тяга", strengthSets, "5-8", strongCue, loadText)
+          femaleExercise(squatName, strengthSets, "4-6", "вага з запасом 2 повтори", loadText),
+          femaleExercise(rdlName, strengthSets, "5-8", strongCue, loadText)
         ],
         accessory: [
-          femaleExercise("Підйом таза", supportSets, "8-10", strongCue, loadText),
-          femaleExercise("Випади назад", supportSets, "8-10 на ногу", steadyCue, loadText),
-          femaleExercise("Планка", supportSets, "30-50 сек", "додавай час", "власна вага")
+          femaleExercise(stepUpName, supportSets, "8-10 на ногу", steadyCue, loadText),
+          femaleExercise(lungeName, supportSets, "8-10 на ногу", steadyCue, loadText),
+          femaleExercise(standingCoreName, supportSets, "10-14 на бік", "додавай контроль, не ривки", "резина або блок")
         ]
       }, cyclePhase),
       addFemaleDayCue({
@@ -1314,13 +1326,13 @@
         title: "День 3 - задня поверхня та корпус",
         badge: "міцна база",
         basic: [
-          femaleExercise("Тяга з підлоги або тяга з підставок", strengthSets, "3-5", "без максимальних спроб", loadText),
+          femaleExercise(rdlName, strengthSets, "5-8", "без максимальних спроб", loadText),
           femaleExercise("Болгарські присідання", baseSets, "6-10 на ногу", strongCue, loadText)
         ],
         accessory: [
-          femaleExercise("Згинання ніг", supportSets, "8-12", "контроль темпу", loadText),
-          femaleExercise("Відведення стегна", supportSets, "12-18", "пауза вгорі", loadText),
-          femaleExercise("Вправа для корпуса з протидією обертанню", supportSets, "10-12 на бік", "повільно", "резина або блок")
+          femaleExercise(stepUpName, supportSets, "8-12 на ногу", "контроль темпу", loadText),
+          femaleExercise(abductionName, supportSets, "12-18", "пауза вгорі", place === "gym" ? loadText : "резина"),
+          femaleExercise(standingCoreName, supportSets, "10-12 на бік", "повільно", "резина або блок")
         ]
       }, cyclePhase),
       balanced[3]
@@ -1331,11 +1343,11 @@
         title: "День 1 - нижня частина і щільність",
         badge: "витрата енергії",
         basic: [
-          femaleExercise("Присідання до опори або жим ногами", baseSets, "10-15", denseCue, loadText),
-          femaleExercise("Підйом таза", baseSets, "10-15", denseCue, loadText)
+          femaleExercise(squatName, baseSets, "10-15", denseCue, loadText),
+          femaleExercise(lungeName, baseSets, "10-14 на ногу", denseCue, loadText)
         ],
         accessory: [
-          femaleExercise("Випади назад", supportSets, "10-14 на ногу", "коротший відпочинок поступово", loadText),
+          femaleExercise(stepUpName, supportSets, "10-14 на ногу", "коротший відпочинок поступово", loadText),
           femaleExercise("Тяга резини до пояса", supportSets, "12-18", "рівний темп", pullText),
           femaleExercise("Ходьба після тренування", "1", "25-40 хв", "спокійний темп", "без ваги")
         ]
@@ -1357,11 +1369,11 @@
         title: "День 3 - все тіло",
         badge: "пульс і техніка",
         basic: [
-          femaleExercise("Кроки на підвищення", baseSets, "10-14 на ногу", denseCue, loadText),
+          femaleExercise(stepUpName, baseSets, "10-14 на ногу", denseCue, loadText),
           femaleExercise("Тяга рюкзака, блоку або гантелі", baseSets, "10-14", denseCue, pullText)
         ],
         accessory: [
-          femaleExercise("Сідничний міст", supportSets, "15-20", "пауза вгорі", loadText),
+          femaleExercise(bandSideName, supportSets, "12-20 на бік", "коліна стабільні", "резина"),
           femaleExercise("Фермерська хода", supportSets, "30-45 сек", "рівний корпус", loadText),
           femaleExercise("Розтягнення стегон і грудного відділу", "1", "6-8 хв", "без болю", "без ваги")
         ]
@@ -1403,8 +1415,8 @@
 
   function getFemaleTips(mode, cyclePhase) {
     const tips = [
-      "Не тренуй ноги тільки присіданнями: для форми потрібні тягові рухи, підйом таза, випади і відведення стегна.",
-      "Для сідниць важлива пауза у верхній точці, повна амплітуда і контроль таза, а не просто більша вага.",
+      "Не тренуй ноги тільки присіданнями: для форми потрібні тягові рухи, випади, підйоми на платформу і відведення стегна.",
+      "Для сідниць важлива повна амплітуда, стабільний таз і контроль коліна, а не просто більша вага.",
       "Верх тіла лишається в плані, бо спина, плечі й постава сильно впливають на загальний вигляд."
     ];
 
@@ -1430,7 +1442,7 @@
   function getFemaleProgressionRules(mode, cyclePhase) {
     const rules = [
       "Спочатку добери верхню межу повторів у всіх підходах, потім додавай найменший крок ваги.",
-      "У вправах на сідниці прогрес зараховується тільки з паузою, стабільним тазом і без переносу навантаження у поперек.",
+      "У вправах на сідниці прогрес зараховується тільки зі стабільним тазом, контрольованим коліном і без переносу навантаження у поперек.",
       "Якщо сон або самопочуття просіли, залиш вагу і зроби на 1 підхід менше."
     ];
 

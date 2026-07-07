@@ -4,6 +4,150 @@
   const supportedLanguages = ["uk", "en", "ru"];
   const originalTextNodes = new WeakMap();
 
+  const editorialTranslations = {
+    uk: {
+      heroLabel: "Влог VitalRise",
+      heroTitle: "Влог VitalRise",
+      heroLead: "Харчування. Аналізи. Фармакологія. Досвід.",
+      articleLabel: "Харчування",
+      articleTitle: "Складні дієти починаються не з меню",
+      articleLead: "Я не люблю, коли дієту продають як чарівну назву. Кето, карнівор, веганство, періодичне голодування або OMAD можуть працювати, але не тому, що назва звучить сильно. Працює система: енергія, білок, клітковина, мікронутрієнти, сон, тренування, травлення, аналізи і чесність перед собою.",
+      sectionTitle: "Початківець часто шукає заборону, а не причину",
+      paragraphs: [
+        "Початківець часто хоче знайти одного винного: вуглеводи, жир, м'ясо, сніданок, молочку або фрукти. Це зрозуміло: коли є ворог, здається, що з'явився контроль. Але тіло не читає назви дієт. Воно реагує на калорії, білок, рух, сон, стрес, щитоподібну залозу, печінку, нирки, глюкозу і дефіцити.",
+        "Моя позиція проста: складна дієта може бути інструментом, але не повинна ставати релігією. Якщо людина перестає дивитися на талію, тиск, ліпіди, глюкозу, сон, травлення, відновлення і силові, вона вже не керує процесом. Вона просто вірить."
+      ],
+      labsTitle: "Аналізи перед складною дієтою",
+      labsParagraphs: [
+        "Я не вважаю нормальним заходити в жорстку дієту всліпу. Мінімальна база: загальний аналіз крові, феритин, B12, фолат, 25(OH)D, ТТГ, вільний T4, глюкоза, HbA1c, інсулін за контекстом, ліпідограма, ALT, AST, GGT, білірубін, креатинін/eGFR, сечова кислота, електроліти, артеріальний тиск і окружність талії. Для жінок окремо дивимося цикл, крововтрати, феритин і симптоми щитоподібної залози; для спортсменів - відновлення, силові, сон і травлення.",
+        "Мій критерій простий: дієта має доводити користь цифрами і самопочуттям. Якщо вага падає, але разом із нею падають сила, сон, лібідо, настрій, травлення і аналізи, це не перемога. Це красивий мінус на вагах, за який тіло може виставити рахунок пізніше.",
+        "Особлива уважність потрібна при діабеті, хворобах нирок, печінки, жовчного міхура, панкреатиті, подагрі, серцево-судинних хворобах, гіпертонії, гіпотиреозі, анемії, вагітності, грудному вигодовуванні, підлітковому віці та розладах харчової поведінки. У цих ситуаціях жорстка дієта без лікаря - не дисципліна, а ризик."
+      ],
+      recovery: {
+        label: "Відновлення / Харчування",
+        headings: [
+          "Що тіло потребує після тренування: одразу і протягом першої години",
+          "Відразу після тренування",
+          "Протягом 1 години",
+          "Практичне правило VitalRise"
+        ],
+        paragraphs: [
+          "Після важкого тренування головний ресурс, який тіло часто просить повернути першим, - це вуглеводи. Вони допомагають відновлювати глікоген, повертають відчуття \"наповненості\", підтримують нервову систему і зменшують відчуття порожнього тіла після об'ємної роботи. Але це не означає, що білок можна відсунути вбік: при наборі, рекомпозиції або схудненні білок лишається ключовим матеріалом для відновлення тканин і збереження м'язів.",
+          "Правильна логіка така: після тренування ми не вигадуємо хаотичний ритуал, а повертаємося до розробленого раціону, де вже пораховано БЖВ під ціль. Вуглеводи закривають енергетичний борг, білок дає амінокислоти, жири не потрібно насильно прибирати, але одразу після важкої сесії їх краще не робити основою прийому, якщо вони заважають швидко добрати вуглеводи і білок.",
+          "Якщо тренування було легким, достатньо води і звичайного прийому їжі за планом. Якщо тренування було важким, пріоритет зміщується до вуглеводів, рідини і натрію, але білок залишається обов'язковою частиною добового БЖВ. Найкраще відновлення - це не одна \"магічна\" страва після залу, а раціон, у якому тренування вже враховане."
+        ],
+        immediate: [
+          ["Вода", "перший крок, особливо якщо була спека, довга сесія або сильне потовиділення."],
+          ["Натрій / електроліти", "якщо є головний біль, \"ватність\", судоми, різке падіння пампу або багато поту, часто проблема не тільки у воді, а й у солі."],
+          ["Легкі вуглеводи", "після важких ніг, спини, великого об'єму або кардіо тіло може краще прийняти банан, рисові хлібці, фрукти, сік, мед, ізотонік або інше просте джерело вуглеводів."],
+          ["Заспокоїти ЦНС", "дихання, пульс, душ, спокійна ходьба. Після важкої роботи не завжди потрібна ще одна стимуляція."],
+          ["Оцінити стан", "запаморочення, нудота, тремор, холодний піт, сильний головний біль або біль у грудях - це не \"нормальна втома\"."]
+        ],
+        hour: [
+          ["Вуглеводи", "головний ресурс після важкої сесії для відновлення глікогену і працездатності. Чим більший об'єм, чим більше ніг/спини/кардіо і чим ближче наступне тренування, тим важливіші вуглеводи."],
+          ["Білок", "важливий для набору, рекомпозиції і схуднення. Він не обов'язково має бути випитий у перші 20 хвилин, але в межах нормального прийому їжі або шейка після тренування він має бути присутній."],
+          ["БЖВ під ціль", "на наборі вуглеводи допомагають тренуватися важче і набирати об'єм; на рекомпозиції білок і контроль калорій тримають якість; на схудненні білок захищає м'язи, а вуглеводи треба вписувати в дефіцит, не прибирати автоматично."],
+          ["ШКТ", "якщо після навантаження \"не лізе\" тверда їжа, працює м'якший варіант: ізолят/йогурт/кефір плюс банан, рис, пластівці, ягоди або інше легке джерело вуглеводів."],
+          ["Не ламати раціон", "після тренування не треба їсти все підряд тільки тому, що \"заслужив\". Післятренувальний прийом має вписуватися в денні калорії, білки, жири і вуглеводи."]
+        ]
+      }
+    },
+    en: {
+      heroLabel: "VitalRise Vlog",
+      heroTitle: "VitalRise Vlog",
+      heroLead: "Nutrition. Labs. Pharmacology. Experience.",
+      articleLabel: "Nutrition",
+      articleTitle: "Complex diets do not start with a menu",
+      articleLead: "I do not like it when a diet is sold as a magic name. Keto, carnivore, veganism, intermittent fasting, or OMAD can work, but not because the name sounds powerful. What works is the system: energy, protein, fiber, micronutrients, sleep, training, digestion, lab work, and honesty with yourself.",
+      sectionTitle: "Beginners often look for a ban, not the cause",
+      paragraphs: [
+        "A beginner often wants to find one guilty thing: carbs, fat, meat, breakfast, dairy, or fruit. That is understandable: when there is an enemy, it feels like control has appeared. But the body does not read diet names. It responds to calories, protein, movement, sleep, stress, thyroid status, liver, kidneys, glucose, and deficiencies.",
+        "My position is simple: a complex diet can be a tool, but it should not become a religion. If a person stops looking at waist, blood pressure, lipids, glucose, sleep, digestion, recovery, and strength performance, they are no longer managing the process. They are just believing."
+      ],
+      labsTitle: "Labs before a complex diet",
+      labsParagraphs: [
+        "I do not consider it normal to enter a strict diet blindly. The minimum baseline: complete blood count, ferritin, B12, folate, 25(OH)D, TSH, free T4, glucose, HbA1c, insulin when context requires it, lipid panel, ALT, AST, GGT, bilirubin, creatinine/eGFR, uric acid, electrolytes, blood pressure, and waist circumference. For women, cycle, blood loss, ferritin, and thyroid symptoms deserve separate attention; for athletes, recovery, strength performance, sleep, and digestion matter.",
+        "My criterion is simple: a diet should prove its value through numbers and well-being. If weight drops while strength, sleep, libido, mood, digestion, and labs also drop, that is not a victory. It is a nice-looking minus on the scale that the body may bill you for later.",
+        "Extra caution is needed with diabetes, kidney disease, liver disease, gallbladder disease, pancreatitis, gout, cardiovascular disease, hypertension, hypothyroidism, anemia, pregnancy, breastfeeding, adolescence, and eating disorders. In these situations, a strict diet without a doctor is not discipline. It is risk."
+      ],
+      recovery: {
+        label: "Recovery / Nutrition",
+        headings: [
+          "What the body needs after training: immediately and within the first hour",
+          "Immediately after training",
+          "Within 1 hour",
+          "VitalRise practical rule"
+        ],
+        paragraphs: [
+          "After hard training, the first resource the body often asks to restore is carbohydrates. They help replenish glycogen, bring back the feeling of muscle fullness, support the nervous system, and reduce the empty-body feeling after high-volume work. But that does not mean protein can be pushed aside: during mass gain, recomposition, or fat loss, protein remains key material for tissue repair and muscle retention.",
+          "The right logic is this: after training we do not invent a chaotic ritual; we return to the planned diet where macros are already calculated for the goal. Carbohydrates cover the energy debt, protein provides amino acids, and fats do not need to be forcibly removed, but right after a hard session they should not become the base of the meal if they prevent you from getting enough carbs and protein.",
+          "If the session was light, water and a normal planned meal are enough. If the session was hard, priority shifts toward carbohydrates, fluid, and sodium, but protein remains a required part of daily macros. The best recovery is not one \"magic\" post-gym meal; it is a diet where training has already been accounted for."
+        ],
+        immediate: [
+          ["Water", "the first step, especially after heat, a long session, or heavy sweating."],
+          ["Sodium / electrolytes", "if there is headache, heavy fatigue, cramps, a sharp drop in pump, or a lot of sweat, the problem is often not only water but also salt."],
+          ["Easy carbohydrates", "after heavy legs, back, high volume, or cardio, the body may tolerate a banana, rice cakes, fruit, juice, honey, isotonic drink, or another simple carb source better."],
+          ["Calm the CNS", "breathing, pulse, shower, and quiet walking. After hard work, another stimulant is not always what the body needs."],
+          ["Check your state", "dizziness, nausea, tremor, cold sweat, severe headache, or chest pain is not \"normal fatigue\"."]
+        ],
+        hour: [
+          ["Carbohydrates", "the main resource after a hard session for glycogen and performance recovery. The more volume, legs/back/cardio, and the closer the next session is, the more important carbs become."],
+          ["Protein", "important for mass gain, recomposition, and fat loss. It does not need to be consumed in the first 20 minutes, but it should appear in a normal meal or shake after training."],
+          ["Macros for the goal", "during mass gain, carbs help train harder and build volume; during recomposition, protein and calorie control hold quality; during fat loss, protein protects muscle, while carbs should be fitted into the deficit, not automatically removed."],
+          ["Digestion", "if solid food does not work after training, use a softer option: isolate/yogurt/kefir plus banana, rice, oats, berries, or another easy carb source."],
+          ["Do not break the plan", "after training you do not need to eat everything just because you \"earned it\". The post-workout meal should fit daily calories, protein, fats, and carbs."]
+        ]
+      }
+    },
+    ru: {
+      heroLabel: "Влог VitalRise",
+      heroTitle: "Влог VitalRise",
+      heroLead: "Питание. Анализы. Фармакология. Опыт.",
+      articleLabel: "Питание",
+      articleTitle: "Сложные диеты начинаются не с меню",
+      articleLead: "Я не люблю, когда диету продают как магическое название. Кето, карнивор, веганство, интервальное голодание или OMAD могут работать, но не потому, что название звучит сильно. Работает система: энергия, белок, клетчатка, микронутриенты, сон, тренировки, пищеварение, анализы и честность перед собой.",
+      sectionTitle: "Новичок часто ищет запрет, а не причину",
+      paragraphs: [
+        "Новичок часто хочет найти одного виноватого: углеводы, жир, мясо, завтрак, молочку или фрукты. Это понятно: когда есть враг, кажется, что появился контроль. Но тело не читает названия диет. Оно реагирует на калории, белок, движение, сон, стресс, щитовидную железу, печень, почки, глюкозу и дефициты.",
+        "Моя позиция простая: сложная диета может быть инструментом, но не должна становиться религией. Если человек перестает смотреть на талию, давление, липиды, глюкозу, сон, пищеварение, восстановление и силовые показатели, он уже не управляет процессом. Он просто верит."
+      ],
+      labsTitle: "Анализы перед сложной диетой",
+      labsParagraphs: [
+        "Я не считаю нормальным входить в жесткую диету вслепую. Минимальная база: общий анализ крови, ферритин, B12, фолат, 25(OH)D, ТТГ, свободный T4, глюкоза, HbA1c, инсулин по контексту, липидограмма, ALT, AST, GGT, билирубин, креатинин/eGFR, мочевая кислота, электролиты, артериальное давление и окружность талии. Для женщин отдельно смотрим цикл, кровопотери, ферритин и симптомы щитовидной железы; для спортсменов - восстановление, силовые, сон и пищеварение.",
+        "Мой критерий простой: диета должна доказывать пользу цифрами и самочувствием. Если вес падает, но вместе с ним падают сила, сон, либидо, настроение, пищеварение и анализы, это не победа. Это красивый минус на весах, за который тело может выставить счет позже.",
+        "Особая осторожность нужна при диабете, заболеваниях почек, печени, желчного пузыря, панкреатите, подагре, сердечно-сосудистых заболеваниях, гипертонии, гипотиреозе, анемии, беременности, грудном вскармливании, подростковом возрасте и расстройствах пищевого поведения. В этих ситуациях жесткая диета без врача - не дисциплина, а риск."
+      ],
+      recovery: {
+        label: "Восстановление / Питание",
+        headings: [
+          "Что тело требует после тренировки: сразу и в течение первого часа",
+          "Сразу после тренировки",
+          "В течение 1 часа",
+          "Практическое правило VitalRise"
+        ],
+        paragraphs: [
+          "После тяжелой тренировки главный ресурс, который тело часто просит вернуть первым, - это углеводы. Они помогают восстанавливать гликоген, возвращают ощущение \"наполненности\", поддерживают нервную систему и уменьшают ощущение пустого тела после объемной работы. Но это не значит, что белок можно отодвинуть в сторону: при наборе, рекомпозиции или похудении белок остается ключевым материалом для восстановления тканей и сохранения мышц.",
+          "Правильная логика такая: после тренировки мы не придумываем хаотичный ритуал, а возвращаемся к разработанному рациону, где уже посчитаны БЖУ под цель. Углеводы закрывают энергетический долг, белок дает аминокислоты, жиры не нужно насильно убирать, но сразу после тяжелой сессии их лучше не делать основой приема, если они мешают быстро добрать углеводы и белок.",
+          "Если тренировка была легкой, достаточно воды и обычного приема пищи по плану. Если тренировка была тяжелой, приоритет смещается к углеводам, жидкости и натрию, но белок остается обязательной частью суточного БЖУ. Лучшее восстановление - это не одно \"магическое\" блюдо после зала, а рацион, в котором тренировка уже учтена."
+        ],
+        immediate: [
+          ["Вода", "первый шаг, особенно если была жара, длинная сессия или сильное потоотделение."],
+          ["Натрий / электролиты", "если есть головная боль, \"ватность\", судороги, резкое падение пампа или много пота, часто проблема не только в воде, но и в соли."],
+          ["Легкие углеводы", "после тяжелых ног, спины, большого объема или кардио тело может лучше принять банан, рисовые хлебцы, фрукты, сок, мед, изотоник или другой простой источник углеводов."],
+          ["Успокоить ЦНС", "дыхание, пульс, душ, спокойная ходьба. После тяжелой работы не всегда нужна еще одна стимуляция."],
+          ["Оценить состояние", "головокружение, тошнота, тремор, холодный пот, сильная головная боль или боль в груди - это не \"нормальная усталость\"."]
+        ],
+        hour: [
+          ["Углеводы", "главный ресурс после тяжелой сессии для восстановления гликогена и работоспособности. Чем больше объем, чем больше ног/спины/кардио и чем ближе следующая тренировка, тем важнее углеводы."],
+          ["Белок", "важен для набора, рекомпозиции и похудения. Его не обязательно выпить в первые 20 минут, но в пределах нормального приема пищи или шейка после тренировки он должен быть."],
+          ["БЖУ под цель", "на наборе углеводы помогают тренироваться тяжелее и набирать объем; на рекомпозиции белок и контроль калорий держат качество; на похудении белок защищает мышцы, а углеводы нужно вписывать в дефицит, не убирать автоматически."],
+          ["ЖКТ", "если после нагрузки \"не лезет\" твердая еда, работает мягкий вариант: изолят/йогурт/кефир плюс банан, рис, хлопья, ягоды или другой легкий источник углеводов."],
+          ["Не ломать рацион", "после тренировки не нужно есть все подряд только потому, что \"заслужил\". Послетренировочный прием должен вписываться в дневные калории, белки, жиры и углеводы."]
+        ]
+      }
+    }
+  };
+
   const dietSections = [
     {
       uk: {
@@ -797,7 +941,49 @@
           ]
         },
         {
-          badge: "Risk 10",
+          badge: "Supplement 10",
+          title: "Caffeine: strength work, the CNS, and the boundary of stimulation",
+          intro: "In strength training, caffeine is not just \"energy before the gym.\" For many athletes it works like a nervous-system switch: it raises readiness for heavy sets, reduces perceived fatigue, and helps enter a focused, aggressive training state. That is exactly why it should be treated as a tool, not as a required condition for every normal workout.",
+          effects: [
+            "Possible effects include higher subjective readiness for heavy sets, better focus, lower perceived fatigue, and support for strength, power, movement velocity, and muscular endurance.",
+            "The key mechanism is adenosine receptor blockade: the fatigue \"brake\" feels weaker and the CNS can enter a mobilized state more easily.",
+            "Possible adverse effects include anxiety, tremor, palpitations, higher blood pressure, reflux, nausea, irritability, worse sleep, and a performance drop when high-dose use becomes habitual."
+          ],
+          evidence: [
+            "The ISSN position stand describes caffeine as ergogenic for muscular endurance, strength, movement velocity, sprinting, jumping, and other performance outcomes; the common effective research range is about 3-6 mg/kg.",
+            "Meta-analyses in resistance exercise show small but real improvements in strength and power; the effect is individual and depends on sleep, tolerance, timing, genetics, anxiety, and total stress.",
+            "If training suddenly does not \"switch on\" without caffeine, that may reflect not only caffeine's benefit, but also poor sleep, accumulated fatigue, low energy intake, or dependence on a stimulant ritual."
+          ],
+          cautions: [
+            "Do not keep raising the dose just to chase the same hit: tolerance can grow faster than training quality.",
+            "Use caution with hypertension, arrhythmias, panic attacks, anxiety, reflux, insomnia, high-stimulant pre-workouts, or medications that affect the heart and CNS.",
+            "VitalRise rule: caffeine can be a lever for heavy sessions, but baseline performance should come from sleep, food, programming, recovery, and nervous-system freshness."
+          ],
+          drinksTitle: "How much caffeine is in common drinks",
+          drinksNote: "These are reference ranges, not lab precision: bean or tea type, grind, grams used, extraction, cup size, and number of espresso shots can change the number substantially.",
+          drinksHeaders: ["Drink", "Typical serving", "Approximate caffeine", "Practical counting"],
+          drinksRows: [
+            ["Espresso", "1 shot, about 30 ml", "~60-65 mg", "A double espresso is usually counted as ~120-130 mg."],
+            ["Americano", "1-2 shots + water", "~60-130 mg", "Water does not add caffeine: the number depends on how many shots are used."],
+            ["Latte / cappuccino / flat white", "1-2 shots + milk", "~60-130 mg", "Milk changes taste and volume, but does not reduce the caffeine already in the shots."],
+            ["Filter coffee / brewed coffee", "~240 ml", "~90-100 mg", "A large cup or strong brew can easily go above 150 mg."],
+            ["Green tea", "~240 ml", "~25-45 mg", "More leaf, hotter water, and longer steeping raise caffeine."],
+            ["Pu-erh", "~200-250 ml", "~30-70 mg", "Sheng/shu style, number of infusions, and grams used strongly change the content."]
+          ],
+          formsTitle: "Tablets, capsules, and sports nutrition",
+          formsNote: "Tablet form is convenient because it is easier to count: labels often state 100 or 200 mg of caffeine per serving. But that precision also makes it riskier for impulsive use: it is easy to add a tablet on top of coffee, pre-workout, and an energy drink without noticing the total dose.",
+          formsItems: [
+            ["Pharmacy forms", "caffeine sodium benzoate may be found as tablets, and there are also injectable solutions. Injectable caffeine is not for sport and not for self-directed CNS \"activation\"; it is a medical drug with indications, risks, and supervision."],
+            ["Combination pharmacy medicines", "caffeine may appear in some pain-relief or cold/flu products. If coffee or pre-workout is added on top, the total stimulant dose can become higher than it feels."],
+            ["Capsules / tablets as supplements or sports nutrition", "most often 100-200 mg per serving. This is not \"lighter\" than coffee; 200 mg is roughly like 3 espresso shots or 2 regular cups of filter coffee."],
+            ["Pre-workout", "often contains 150-350 mg of caffeine plus other stimulants: yohimbine, synephrine, guarana, green tea extract, theacrine, or high-dose tyrosine. Count the whole stimulant load, not caffeine alone."],
+            ["Energy drinks, gels, shots", "can duplicate caffeine from coffee. Americano plus pre-workout plus an energy drink is no longer preparation; it is a stimulant stack."],
+            ["Fat burners", "often hide stimulants behind \"thermogenic\" marketing. Check caffeine anhydrous, guarana, yerba mate, green tea extract, kola nut, and proprietary blend."],
+            ["Powdered or concentrated caffeine", "is the riskiest household form because a measuring error can produce a toxic dose. In VitalRise this is a red flag, not a sports hack."]
+          ]
+        },
+        {
+          badge: "Risk 11",
           title: "Amanita muscaria: not a recommended supplement",
           intro: "Amanita muscaria should not be presented as a regular dietary supplement. It is a psychoactive and toxicologically problematic mushroom containing muscimol, ibotenic acid, and other components. In this catalog it belongs in an educational risk block, not a recommendation list.",
           effects: [
@@ -1007,7 +1193,49 @@
           ]
         },
         {
-          badge: "Риск 10",
+          badge: "БАД 10",
+          title: "Кофеин: силовая работа, ЦНС и граница стимуляции",
+          intro: "В силовой работе кофеин - это не просто \"энергия перед залом\". Для многих спортсменов он работает как переключатель нервной системы: повышает готовность к тяжелому подходу, снижает ощущение усталости и помогает быстрее войти в состояние боевой концентрации. Именно поэтому его стоит воспринимать как инструмент, а не как обязательное условие каждой нормальной тренировки.",
+          effects: [
+            "Возможные эффекты: более высокая субъективная готовность к тяжелым подходам, лучший фокус, меньшее ощущение усталости, поддержка силы, мощности, скорости движения и мышечной выносливости.",
+            "Ключевой механизм - блокировка аденозиновых рецепторов: \"тормоз\" усталости ощущается слабее, а ЦНС легче входит в режим мобилизации.",
+            "Потенциальные нежелательные эффекты: тревожность, тремор, сердцебиение, повышение давления, рефлюкс, тошнота, раздражительность, ухудшение сна и откат работоспособности при привычке к высоким дозам."
+          ],
+          evidence: [
+            "Позиция ISSN описывает кофеин как эргогенное средство для мышечной выносливости, силы, скорости движения, спринта, прыжков и других видов продуктивности; типичное эффективное окно в исследованиях - примерно 3-6 мг/кг.",
+            "Метаанализы по силовым упражнениям показывают небольшое, но реальное улучшение силы и мощности; эффект индивидуален и зависит от сна, толерантности, времени приема, генетики, тревожности и общего стресса.",
+            "Если без кофеина тренировка резко \"не запускается\", это может быть не только польза кофеина, но и маркер недосыпа, накопленной усталости, дефицита калорий или зависимости от стимулятора как ритуала входа в работу."
+          ],
+          cautions: [
+            "Не стоит постоянно поднимать дозу ради того же ощущения \"удара\": толерантность растет быстрее, чем качество тренировочного процесса.",
+            "Осторожность нужна при гипертонии, аритмиях, панических атаках, тревожности, рефлюксе, бессоннице, большом количестве стимуляторов в предтрене или лекарствах, влияющих на сердце и ЦНС.",
+            "Правило VitalRise: кофеин может быть рычагом для тяжелых сессий, но базовая работоспособность должна держаться на сне, еде, программе, восстановлении и свежести нервной системы."
+          ],
+          drinksTitle: "Сколько кофеина в напитках",
+          drinksNote: "Это ориентиры, а не лабораторная точность: сорт зерна или чая, помол, граммовка, экстракция, размер чашки и количество шотов могут сильно менять цифру.",
+          drinksHeaders: ["Напиток", "Типичная порция", "Ориентировочно кофеина", "Как считать практически"],
+          drinksRows: [
+            ["Эспрессо", "1 шот, примерно 30 мл", "~60-65 мг", "Двойной эспрессо обычно считаем как ~120-130 мг."],
+            ["Американо", "1-2 шота + вода", "~60-130 мг", "Вода не добавляет кофеин: цифра зависит от количества шотов."],
+            ["Латте / капучино / флет-уайт", "1-2 шота + молоко", "~60-130 мг", "Молоко меняет вкус и объем, но не уменьшает кофеин, который уже есть в шотах."],
+            ["Фильтр-кофе / заварной кофе", "~240 мл", "~90-100 мг", "Большая чашка или крепкая заварка легко выходит за 150 мг."],
+            ["Зеленый чай", "~240 мл", "~25-45 мг", "Больше листа, горячее вода и дольше настаивание поднимают кофеин."],
+            ["Пуэр", "~200-250 мл", "~30-70 мг", "Шен/шу, количество проливов и граммовка сильно меняют содержание."]
+          ],
+          formsTitle: "Таблетки, капсулы и спортпит",
+          formsNote: "Таблетированная форма удобна тем, что ее легче посчитать: на этикетке часто прямо написано 100 или 200 мг кофеина на порцию. Но именно эта точность делает ее опаснее для импульсивного использования: таблетку легко добавить поверх кофе, предтрена и энергетика, не заметив суммарную дозу.",
+          formsItems: [
+            ["Аптечные формы", "в аптеке можно встретить кофеин-бензоат натрия в таблетках, а также раствор для инъекций. Инъекционная форма - не для спорта и не для самостоятельного \"разгона\" ЦНС; это медицинский препарат под показания, риски и контроль."],
+            ["Комбинированные аптечные препараты", "кофеин может быть в составе некоторых обезболивающих или противопростудных средств. Если добавить кофе или предтрен сверху, суммарная стимуляторная доза легко становится выше, чем кажется."],
+            ["Капсулы / таблетки как БАД или спортпит", "чаще всего 100-200 мг на порцию. Это не \"легче\", чем кофе; 200 мг - примерно как 3 шота эспрессо или 2 обычные чашки фильтр-кофе."],
+            ["Предтрен", "часто содержит 150-350 мг кофеина плюс другие стимуляторы: йохимбин, синефрин, гуарану, экстракт зеленого чая, теакрин или большие дозы тирозина. Здесь нужно считать не только кофеин, а всю стимуляторную сумму."],
+            ["Энергетики, гели, шоты", "могут дублировать кофеин из кофе. Если перед залом есть американо + предтрен + энергетик, это уже не подготовка, а стимуляторный коктейль."],
+            ["Жиросжигатели", "часто маскируют стимуляторы под маркетинг \"термогеник\". Проверяй caffeine anhydrous, guarana, yerba mate, green tea extract, kola nut и proprietary blend."],
+            ["Порошковый или концентрированный кофеин", "самая рискованная форма для бытового использования, потому что ошибка в мерной ложке может дать токсичную дозу. В VitalRise это красный флаг, а не спортивный лайфхак."]
+          ]
+        },
+        {
+          badge: "Риск 11",
           title: "Мухомор красный: Amanita muscaria / не рекомендованный БАД",
           intro: "Мухомор красный не стоит подавать как обычный БАД. Это психоактивный и токсикологически проблемный гриб с мусцимолом, иботеновой кислотой и другими компонентами. В каталоге его место - в образовательном блоке рисков, а не в рекомендательном списке.",
           effects: [
@@ -1031,6 +1259,34 @@
   };
 
   const exactTranslations = {
+    "Ефекти": {
+      en: "Effects",
+      ru: "Эффекты"
+    },
+    "Доказовість": {
+      en: "Evidence",
+      ru: "Доказательность"
+    },
+    "Застереження": {
+      en: "Cautions",
+      ru: "Предостережения"
+    },
+    "Час дії": {
+      en: "Duration of action",
+      ru: "Время действия"
+    },
+    "Період напіввиведення": {
+      en: "Half-life",
+      ru: "Период полувыведения"
+    },
+    "Практичний висновок": {
+      en: "Practical takeaway",
+      ru: "Практический вывод"
+    },
+    "Важливо": {
+      en: "Important",
+      ru: "Важно"
+    },
     "Влог VitalRise": {
       en: "VitalRise Vlog",
       ru: "Влог VitalRise"
@@ -1642,6 +1898,7 @@
     if (!parent) return true;
     if (parent.closest("script, style, noscript, svg")) return true;
     if (parent.closest("[data-vlog-static]")) return true;
+    if (parent.closest("[data-i18n]")) return true;
     if (parent.closest("[data-lang-switch]")) return true;
     if (parent.closest(".brand-mark")) return true;
     return false;
@@ -1869,6 +2126,73 @@
     });
   }
 
+  function setRichListText(list, values) {
+    if (!list || !values) return;
+    const items = Array.from(list.children).filter(function (item) {
+      return item.tagName === "LI";
+    });
+
+    values.forEach(function (value, index) {
+      const item = items[index];
+      if (!item) return;
+
+      item.innerHTML = "<strong>" + escapeHtml(value[0]) + ":</strong> " + escapeHtml(value[1]);
+    });
+  }
+
+  function setCaffeineDrinkGuide(cardBody, item) {
+    const guide = cardBody ? cardBody.querySelector("[data-caffeine-drinks]") : null;
+    if (!guide || !item || !item.drinksRows) return;
+
+    const title = guide.querySelector("h3");
+    const note = guide.querySelector("p");
+    const headers = Array.from(guide.querySelectorAll("thead th"));
+    const rows = Array.from(guide.querySelectorAll("tbody tr"));
+
+    if (title) title.textContent = item.drinksTitle || title.textContent;
+    if (note) note.textContent = item.drinksNote || note.textContent;
+    if (item.drinksHeaders) {
+      item.drinksHeaders.forEach(function (value, index) {
+        if (headers[index]) headers[index].textContent = value;
+      });
+    }
+
+    item.drinksRows.forEach(function (row, rowIndex) {
+      const cells = rows[rowIndex] ? Array.from(rows[rowIndex].children) : [];
+      row.forEach(function (value, cellIndex) {
+        if (cells[cellIndex]) cells[cellIndex].textContent = value;
+      });
+    });
+  }
+
+  function setCaffeineFormsGuide(cardBody, item) {
+    const guide = cardBody ? cardBody.querySelector("[data-caffeine-forms]") : null;
+    if (!guide || !item || !item.formsItems) return;
+
+    const title = guide.querySelector("h3");
+    const note = guide.querySelector("p");
+    const items = Array.from(guide.querySelectorAll("li"));
+
+    if (title) title.textContent = item.formsTitle || title.textContent;
+    if (note) note.textContent = item.formsNote || note.textContent;
+
+    item.formsItems.forEach(function (row, index) {
+      const listItem = items[index];
+      if (!listItem) return;
+
+      const label = listItem.querySelector("strong");
+      if (label) {
+        label.textContent = row[0] + ":";
+        const textNode = Array.from(listItem.childNodes).find(function (node) {
+          return node.nodeType === Node.TEXT_NODE;
+        });
+        if (textNode) textNode.nodeValue = " " + row[1];
+      } else {
+        listItem.textContent = row[0] + ": " + row[1];
+      }
+    });
+  }
+
   function escapeHtml(value) {
     return String(value || "")
       .replace(/&/g, "&amp;")
@@ -1923,6 +2247,52 @@
     root.querySelectorAll("[data-vlog-original-aria-label]").forEach(function (node) {
       node.setAttribute("aria-label", node.dataset.vlogOriginalAriaLabel);
     });
+  }
+
+  function applyEditorialTranslations(language) {
+    const content = editorialTranslations[language] || editorialTranslations.uk;
+    const hero = document.querySelector(".vlog-library-hero");
+    const editorial = document.querySelector(".vlog-editorial");
+    const sections = editorial ? Array.from(editorial.querySelectorAll(".vlog-editorial-section")) : [];
+    const section = sections[0] || null;
+    const labsSection = sections[1] || null;
+    const recoverySection = editorial ? editorial.querySelector(".vlog-post-recovery") : null;
+    const paragraphs = section ? Array.from(section.querySelectorAll(":scope > p")) : [];
+    const labsParagraphs = labsSection ? Array.from(labsSection.querySelectorAll(":scope > p")) : [];
+
+    setTranslatedText(hero && hero.querySelector(".section-label"), content.heroLabel);
+    setTranslatedText(hero && hero.querySelector(".vlog-library-title"), content.heroTitle);
+    setTranslatedText(hero && hero.querySelector(".vlog-library-lead"), content.heroLead);
+    setTranslatedText(editorial && editorial.querySelector(":scope > .section-label"), content.articleLabel);
+    setTranslatedText(editorial && editorial.querySelector("#nutrition-diets-title"), content.articleTitle);
+    setTranslatedText(editorial && editorial.querySelector(":scope > .vlog-editorial-lead"), content.articleLead);
+    setTranslatedText(section && section.querySelector(":scope > h3"), content.sectionTitle);
+
+    content.paragraphs.forEach(function (text, index) {
+      setTranslatedText(paragraphs[index], text);
+    });
+
+    setTranslatedText(labsSection && labsSection.querySelector(":scope > h3"), content.labsTitle);
+    content.labsParagraphs.forEach(function (text, index) {
+      setTranslatedText(labsParagraphs[index], text);
+    });
+
+    if (recoverySection && content.recovery) {
+      const recoveryLabel = recoverySection.querySelector(":scope > .vlog-post-label");
+      const recoveryHeadings = Array.from(recoverySection.querySelectorAll("h3"));
+      const recoveryParagraphs = Array.from(recoverySection.querySelectorAll("p"));
+      const recoveryLists = Array.from(recoverySection.querySelectorAll(".vlog-recovery-timing-grid ul"));
+
+      setTranslatedText(recoveryLabel, content.recovery.label);
+      content.recovery.headings.forEach(function (text, index) {
+        setTranslatedText(recoveryHeadings[index], text);
+      });
+      content.recovery.paragraphs.forEach(function (text, index) {
+        setTranslatedText(recoveryParagraphs[index], text);
+      });
+      setRichListText(recoveryLists[0], content.recovery.immediate);
+      setRichListText(recoveryLists[1], content.recovery.hour);
+    }
   }
 
   function applySupportGuideTranslations(language) {
@@ -2039,6 +2409,8 @@
       setListText(lists[0], item.effects);
       setListText(lists[1], item.evidence);
       setListText(lists[2], item.cautions);
+      setCaffeineDrinkGuide(cardBody, item);
+      setCaffeineFormsGuide(cardBody, item);
     });
   }
 
@@ -2051,6 +2423,7 @@
         translateRoot(root, language);
       });
     });
+    applyEditorialTranslations(language);
     applyDietTranslations(language);
     applySupportGuideTranslations(language);
     applySupplementCatalogTranslations(language);

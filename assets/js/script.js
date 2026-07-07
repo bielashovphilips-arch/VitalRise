@@ -33,12 +33,15 @@
   const labSexField = document.getElementById("lab-sex");
   const labCycleField = document.getElementById("lab-cycle");
   const labCycleGroup = document.getElementById("lab-cycle-group");
+  const labProstateRiskField = document.getElementById("lab-prostate-risk");
+  const labProstateRiskGroup = document.getElementById("lab-prostate-risk-group");
   const labReviewForm = document.getElementById("lab-review-form");
   const labReviewResult = document.getElementById("lab-review-result");
   const labReviewReset = document.getElementById("lab-review-reset");
   const reviewSexField = document.getElementById("review-sex");
   const reviewCycleField = document.getElementById("review-cycle");
   const reviewFemaleFields = document.querySelectorAll(".review-female-field");
+  const reviewMaleFields = document.querySelectorAll(".review-male-field");
 
   const progressForm = document.getElementById("progress-form");
   const progressResult = document.getElementById("progress-result");
@@ -74,13 +77,17 @@
   syncProgressWeekVisibility();
 
   function syncLabCycleVisibility() {
-    if (!labSexField || !labCycleGroup) return;
+    if (!labSexField) return;
 
     const isFemale = labSexField.value === "female";
-    labCycleGroup.style.display = isFemale ? "flex" : "none";
+    if (labCycleGroup) labCycleGroup.style.display = isFemale ? "flex" : "none";
+    if (labProstateRiskGroup) labProstateRiskGroup.style.display = isFemale ? "none" : "flex";
 
     if (!isFemale && labCycleField) {
       labCycleField.value = "not_applicable";
+    }
+    if (isFemale && labProstateRiskField) {
+      labProstateRiskField.value = "average";
     }
   }
 
@@ -247,6 +254,15 @@
       }
     });
 
+    reviewMaleFields.forEach(function (field) {
+      const isAllowed = field.dataset.labReviewVisible !== "false";
+      field.style.display = !isFemale && isAllowed ? "flex" : "none";
+      if (isFemale) {
+        const input = field.querySelector("input, select");
+        if (input) input.value = "";
+      }
+    });
+
     resetNutritionState();
 
     if (nutritionResult) {
@@ -343,21 +359,40 @@
     return Math.round(value / 2.5) * 2.5;
   }
 
+  function getCurrentLanguage() {
+    if (window.VitalRiseI18n && typeof window.VitalRiseI18n.getLanguage === "function") {
+      return window.VitalRiseI18n.getLanguage();
+    }
+    return (document.documentElement.lang || "uk").toLowerCase();
+  }
+
+  function translateInlineText(value) {
+    if (window.VitalRiseI18n && typeof window.VitalRiseI18n.translateText === "function") {
+      return window.VitalRiseI18n.translateText(value) || value;
+    }
+    return value;
+  }
+
   function formatKcal(value) {
-    return roundValue(value) + " ккал";
+    return roundValue(value) + (getCurrentLanguage() === "en" ? " kcal" : " ккал");
   }
 
   function formatGrams(value) {
-    return roundValue(value) + " г";
+    return roundValue(value) + (getCurrentLanguage() === "en" ? " g" : " г");
   }
 
   function formatLiters(value) {
-    return Number(value).toFixed(1) + " л";
+    return Number(value).toFixed(1) + (getCurrentLanguage() === "en" ? " L" : " л");
   }
 
   function formatWeight(value) {
-    if (!value || value <= 0) return "без ваги";
-    return roundTo2_5(value) + " кг";
+    const language = getCurrentLanguage();
+    if (!value || value <= 0) {
+      if (language === "en") return "bodyweight";
+      if (language === "ru") return "без веса";
+      return "без ваги";
+    }
+    return roundTo2_5(value) + (language === "en" ? " kg" : " кг");
   }
 
   function deepClone(data) {
@@ -388,7 +423,7 @@
     }
 
     return {
-      protein: ["eggs", "cottage_cheese", "hard_cheese", "chicken", "turkey", "white_fish", "salmon", "tuna", "greek_yogurt", "whey_protein", "skyr", "shrimp", "tofu"],
+      protein: ["eggs", "cottage_cheese", "hard_cheese", "chicken", "turkey", "white_fish", "mackerel", "salmon", "tuna", "greek_yogurt", "whey_protein", "skyr", "shrimp", "tofu"],
       carb: ["oatmeal", "banana", "rice", "buckwheat", "potato", "sweet_potato", "bulgur", "quinoa", "berries", "apple", "lentils", "beans"],
       extra_carb: ["whole_bread", "rice_cakes"],
       fat: ["olive_oil", "avocado", "nuts", "peanut_butter", "pumpkin_seeds", "dark_chocolate"],

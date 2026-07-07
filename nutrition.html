@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=platform-modules-25" />
+  <link rel="stylesheet" href="assets/css/style.css?v=hero-parallax-2" />
 </head>
 <body>
   <div class="site-shell">
@@ -27,7 +27,8 @@
 
         <nav class="site-nav" aria-label="Головна навігація">
           <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
-          <a href="nutrition.html" data-i18n="nav.calculator">Калькулятор</a>
+          <a href="nutrition.html" data-i18n="nav.nutrition">Харчування</a>
+          <a href="training.html" data-i18n="nav.training">Тренування</a>
           <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
           <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
           <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
@@ -234,6 +235,7 @@
       <option value="3">3 прийоми</option>
       <option value="4" selected>4 прийоми</option>
       <option value="5">5 прийомів</option>
+      <option value="6">6 прийомів</option>
     </select>
   </div>
 
@@ -259,7 +261,7 @@
     Заповни поля та натисни «Розрахувати», щоб перейти до формування раціону.
   </div>
   </div>
-  <div class="result-export-actions" data-plan-required="start">
+  <div class="result-export-actions">
     <button type="button" class="btn btn-secondary" data-print-target="nutrition-result">
       Відкрити звіт
     </button>
@@ -441,53 +443,53 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+          <a href="index.html" class="brand-mark" aria-label="VitalRise головна" data-i18n-aria-label="footerBrandAria">
             <span>VR</span>
             <strong>VitalRise</strong>
           </a>
-          <p>
+          <p data-i18n="footerText">
             Атлетична система для харчування, тренувань, спортпіту, лабораторного
             контролю, прогресу і фінального Blueprint.
           </p>
         </div>
 
-        <div class="footer-links" aria-label="Швидкі посилання">
-          <a href="index.html#features">Система</a>
-          <a href="profile.html">Профіль</a>
-          <a href="labs.html">Аналізи</a>
-          <a href="nutrition.html">Харчування</a>
-          <a href="training.html">Тренування</a>
-          <a href="supplements.html">Спортпіт</a>
+        <div class="footer-links" aria-label="Швидкі посилання" data-i18n-aria-label="footerLinksAria">
+          <a href="index.html#features" data-i18n="system">Система</a>
+          <a href="profile.html" data-i18n="nav.profile">Профіль</a>
+          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
+          <a href="nutrition.html" data-i18n="nav.nutrition">Харчування</a>
+          <a href="training.html" data-i18n="nav.training">Тренування</a>
+          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
           <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
-          <a href="recovery.html">Відновлення</a>
+          <a href="recovery.html" data-i18n="nav.recovery">Відновлення</a>
           <a href="progress.html">Coach</a>
-          <a href="progress.html">Прогрес</a>
+          <a href="progress.html" data-i18n="nav.progress">Прогрес</a>
           <a href="progress.html#knowledge" data-i18n="nav.knowledge">База знань</a>
           <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
           <a href="blueprint.html">Blueprint</a>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="terms.html">Terms</a>
-          <a href="disclaimer.html">Medical / AAS Disclaimer</a>
+          <a href="privacy.html" data-i18n="footerPrivacy">Політика конфіденційності</a>
+          <a href="terms.html" data-i18n="footerTerms">Умови використання</a>
+          <a href="disclaimer.html" data-i18n="footerDisclaimer">Медичний / АС/ААС дисклеймер</a>
         </div>
 
         <div class="footer-note">
-          <strong>Важливо</strong>
-          <p>
+          <strong data-i18n="important">Важливо</strong>
+          <p data-i18n="footerNote">
             VitalRise не ставить діагнози й не призначає лікування. Лабораторні
             показники, гормони, пролактин, щитоподібну залозу, печінкові й
             ниркові маркери потрібно трактувати з лікарем.
           </p>
-          <button type="button" class="footer-clear-data" id="clear-saved-data">
+          <button type="button" class="footer-clear-data" id="clear-saved-data" data-i18n="clearSaved">
             Очистити збережені дані
           </button>
-          <div class="footer-data-actions" aria-label="Експорт та імпорт даних VitalRise">
-            <button type="button" class="footer-clear-data" id="export-saved-data">
+          <div class="footer-data-actions" aria-label="Експорт та імпорт даних VitalRise" data-i18n-aria-label="footerDataActionsAria">
+            <button type="button" class="footer-clear-data" id="export-saved-data" data-i18n="exportJson">
               Експорт JSON
             </button>
-            <button type="button" class="footer-clear-data" id="import-saved-data">
+            <button type="button" class="footer-clear-data" id="import-saved-data" data-i18n="importJson">
               Імпорт JSON
             </button>
-            <label class="visually-hidden" for="import-saved-data-file">Файл резервної копії VitalRise</label>
+            <label class="visually-hidden" for="import-saved-data-file" data-i18n="footerBackupFile">Файл резервної копії VitalRise</label>
             <input type="file" id="import-saved-data-file" accept="application/json,.json" hidden />
           </div>
         </div>
@@ -495,7 +497,7 @@
 
       <div class="container footer-bottom">
         <span>© VitalRise</span>
-        <span>High-level control for athletic recomposition.</span>
+        <span data-i18n="footerBottom">High-level control for athletic recomposition.</span>
       </div>
     </footer>
   </div>
@@ -588,12 +590,12 @@
     </div>
   </div>
   <script src="assets/js/modules/system.js"></script>
-  <script src="assets/js/modules/i18n.js?v=newsletter-copy-1"></script>
+  <script src="assets/js/modules/i18n.js?v=modules-i18n-8"></script>
   <script src="assets/js/modules/mobile-menu.js"></script>
   <script src="assets/js/modules/storage.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
-  <script src="assets/js/modules/print.js"></script>
+  <script src="assets/js/modules/print.js?v=print-clean-1"></script>
   <script src="assets/js/modules/data-portability.js"></script>
   <script src="assets/js/modules/calculator-shell.js?v=single-module-1"></script>
   <script src="assets/js/modules/reveal.js"></script>
@@ -601,23 +603,23 @@
   <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
   <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
   <script src="assets/js/modules/nutrition-custom.js"></script>
-  <script src="assets/js/modules/nutrition.js?v=free-cottage-meals-1"></script>
-  <script src="assets/js/modules/nutrition-render.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/nutrition.js?v=exact-bju-3"></script>
+  <script src="assets/js/modules/nutrition-render.js?v=nutrition-i18n-1"></script>
   <script src="assets/js/modules/training.js"></script>
-  <script src="assets/js/modules/training-templates.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/training-templates.js?v=female-outdoor-glutes-1"></script>
   <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
   <script src="assets/js/modules/training-progression.js"></script>
   <script src="assets/js/modules/training-render.js?v=smart-program-1"></script>
-  <script src="assets/js/modules/training-builder.js?v=training-days-6-1"></script>
-  <script src="assets/js/modules/exercise-atlas-data.js?v=seated-db-press-photo-1"></script>
+  <script src="assets/js/modules/training-builder.js?v=female-outdoor-glutes-1"></script>
+  <script src="assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1"></script>
   <script src="assets/js/modules/exercise-atlas.js"></script>
   <script src="assets/js/modules/labs.js"></script>
-  <script src="assets/js/modules/lab-protocols.js"></script>
+  <script src="assets/js/modules/lab-protocols.js?v=expanded-report-1"></script>
   <script src="assets/js/modules/progress-decision.js?v=biweekly-correction-1"></script>
   <script src="assets/js/modules/blueprint.js"></script>
   <script src="assets/js/modules/supplements.js"></script>
   <script src="assets/js/modules/coach.js?v=quick-profiles-2"></script>
-  <script src="assets/js/modules/access.js?v=analytics-1"></script>
-  <script src="assets/js/script.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/access.js?v=activation-window-1"></script>
+  <script src="assets/js/script.js?v=age-screening-1"></script>
 </body>
 </html>

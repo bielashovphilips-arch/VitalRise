@@ -1,5 +1,11 @@
-    <header class="hero">
+    <header class="hero" data-parallax-hero>
+      <picture class="hero-media" aria-hidden="true">
+        <source media="(max-width: 768px)" srcset="assets/images/athlete-mobile.jpg">
+        <img src="assets/images/athlete-optimized.jpg" alt="" width="1536" height="1024" fetchpriority="high">
+      </picture>
       <div class="hero-overlay"></div>
+      <div class="hero-cinematic-grid" aria-hidden="true"></div>
+      <div class="hero-light-sweep" aria-hidden="true"></div>
       <div class="container hero-content">
         <div class="hero-main">
           <div class="hero-badge reveal">VitalRise Athlete Blueprint</div>
@@ -14,22 +20,22 @@
           </p>
 
           <div class="hero-metrics reveal" aria-label="Ключові напрямки VitalRise">
-            <div class="hero-metric">
+            <a class="hero-metric" href="labs.html">
               <span>01</span>
               <strong data-i18n="hero.metricLabs">Аналізи</strong>
-            </div>
-            <div class="hero-metric">
+            </a>
+            <a class="hero-metric" href="nutrition.html">
               <span>02</span>
               <strong data-i18n="hero.metricMacros">Макроси</strong>
-            </div>
-            <div class="hero-metric">
+            </a>
+            <a class="hero-metric" href="training.html">
               <span>03</span>
               <strong data-i18n="hero.metricStrength">Сила</strong>
-            </div>
-            <div class="hero-metric">
+            </a>
+            <a class="hero-metric" href="recovery.html">
               <span>04</span>
               <strong data-i18n="hero.metricRecovery">Відновлення</strong>
-            </div>
+            </a>
           </div>
 
           <div class="hero-actions reveal">
@@ -39,4 +45,5 @@
         </div>
 
       </div>
+
     </header>

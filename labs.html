@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=platform-modules-25" />
+  <link rel="stylesheet" href="assets/css/style.css?v=expanded-lab-report-1" />
 </head>
 <body>
   <div class="site-shell">
@@ -27,7 +27,8 @@
 
         <nav class="site-nav" aria-label="Головна навігація">
           <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
-          <a href="nutrition.html" data-i18n="nav.calculator">Калькулятор</a>
+          <a href="nutrition.html" data-i18n="nav.nutrition">Харчування</a>
+          <a href="training.html" data-i18n="nav.training">Тренування</a>
           <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
           <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
           <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
@@ -46,22 +47,22 @@
       <section class="module-hero">
         <div class="container">
           <div class="module-hero-copy reveal">
-            <h1>Аналізи перед різкими рішеннями</h1>
-            <p>Аналізи показують, чи є в організму ресурс для навантажень, дефіциту або набору, і допомагають вчасно помітити фактори, які можуть гальмувати результат.</p>
+            <h1 data-i18n="labs.heroTitle">Аналізи перед різкими рішеннями</h1>
+            <p data-i18n="labs.heroText">Аналізи показують, чи є в організму ресурс для навантажень, дефіциту або набору, і допомагають вчасно помітити фактори, які можуть гальмувати результат.</p>
           </div>
           <aside class="module-hero-panel reveal">
-            <span>Фокус</span>
-            <strong>Не діагноз, а карта для розмови з лікарем</strong>
-            <p>VitalRise показує, що варто перевірити й коли не потрібно експериментувати самостійно.</p>
+            <span data-i18n="focus">Фокус</span>
+            <strong data-i18n="labs.heroPanelTitle">Не діагноз, а карта для розмови з лікарем</strong>
+            <p data-i18n="labs.heroPanelText">VitalRise показує, що варто перевірити й коли не потрібно експериментувати самостійно.</p>
           </aside>
         </div>
       </section>
       <section id="labs" class="labs-section" data-plan-required="pro">
         <div class="container">
           <div class="section-head reveal">
-            <span class="section-label">Лабораторія</span>
-            <h2>Перший крок: зрозуміти стан організму</h2>
-            <p>
+            <span class="section-label" data-i18n="labLabel">Лабораторія</span>
+            <h2 data-i18n="labsTitle">Перший крок: зрозуміти стан організму</h2>
+            <p data-i18n="labsText">
               Рекомпозиція тіла залежить не тільки від калорій і тренувань.
               Якщо вага, сила, сон, цикл, лібідо або відновлення “стоять”,
               лабораторні маркери допомагають побачити, що варто обговорити
@@ -114,6 +115,19 @@
                 <select id="lab-sex" name="lab-sex">
                   <option value="male">Чоловік</option>
                   <option value="female">Жінка</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="lab-age" data-i18n="age">Вік</label>
+                <input type="number" id="lab-age" name="lab-age" min="18" max="100" step="1" value="30" required />
+              </div>
+
+              <div class="form-group" id="lab-prostate-risk-group">
+                <label for="lab-prostate-risk" data-i18n="prostateRiskLabel">Ризик захворювань простати</label>
+                <select id="lab-prostate-risk" name="lab-prostate-risk">
+                  <option value="average" data-i18n="prostateRiskAverage">Без відомих факторів високого ризику</option>
+                  <option value="elevated" data-i18n="prostateRiskElevated">Сімейний анамнез / BRCA2 / підвищений ризик</option>
                 </select>
               </div>
 
@@ -187,49 +201,54 @@
 
             <details class="lab-evaluator lab-review-panel" id="lab-review-panel">
               <summary class="lab-review-summary">
-                <span class="section-label">Lab Result Review</span>
-                <strong>Оцінити отримані результати</strong>
-                <small id="lab-review-summary-note">Спочатку сформуй Bloodwork Protocol, потім відкрий цей блок.</small>
+                <span class="section-label" data-i18n="labReview">Lab Result Review</span>
+                <strong data-i18n="reviewTitle">Оцінити отримані результати</strong>
+                <small id="lab-review-summary-note" data-i18n="labReviewSummaryNote">Спочатку сформуй Bloodwork Protocol, потім відкрий цей блок.</small>
               </summary>
 
               <div class="lab-review-body">
-                <div class="lab-review-gate" id="lab-review-gate">
+                <div class="lab-review-gate" id="lab-review-gate" data-i18n="labReviewGate">
                   Сформуй панель у Bloodwork Protocol вище. Після цього тут з'являться тільки ті поля, які входять у рекомендований список аналізів.
                 </div>
 
               <form id="lab-review-form" class="form-grid lab-review-grid" hidden>
                 <div class="form-group">
-                  <label for="review-sex">Стать</label>
+                  <label for="review-sex" data-i18n="gender">Стать</label>
                   <select id="review-sex" name="review-sex">
-                    <option value="male">Чоловік</option>
-                    <option value="female">Жінка</option>
+                    <option value="male" data-i18n="male">Чоловік</option>
+                    <option value="female" data-i18n="female">Жінка</option>
                   </select>
                 </div>
 
                 <div class="form-group">
-                  <label for="review-cycle">Жіночий контекст</label>
+                  <label for="review-age" data-i18n="age">Вік</label>
+                  <input type="number" id="review-age" name="review-age" min="18" max="100" step="1" value="30" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="review-cycle" data-i18n="femaleContext">Жіночий контекст</label>
                   <select id="review-cycle" name="review-cycle">
-                    <option value="not_applicable">Не актуально</option>
-                    <option value="follicular">Фолікулярна фаза</option>
-                    <option value="luteal">Лютеїнова фаза</option>
-                    <option value="irregular">Нерегулярний цикл</option>
-                    <option value="contraception">Гормональна контрацепція</option>
-                    <option value="postpartum">Після пологів / лактація</option>
+                    <option value="not_applicable" data-i18n="notApplicable">Не актуально</option>
+                    <option value="follicular" data-i18n="follicularPhase">Фолікулярна фаза</option>
+                    <option value="luteal" data-i18n="lutealPhase">Лютеїнова фаза</option>
+                    <option value="irregular" data-i18n="irregularCycle">Нерегулярний цикл</option>
+                    <option value="contraception" data-i18n="hormonalContraception">Гормональна контрацепція</option>
+                    <option value="postpartum" data-i18n="postpartumLactation">Після пологів / лактація</option>
                   </select>
                 </div>
 
                 <div class="form-group">
-                  <label for="review-date">Дата аналізів</label>
+                  <label for="review-date" data-i18n="reviewDate">Дата аналізів</label>
                   <input type="date" id="review-date" name="review-date" />
                 </div>
 
                 <div class="form-group">
-                  <label for="review-fasting">Умови здачі</label>
+                  <label for="review-fasting" data-i18n="fastingCondition">Умови здачі</label>
                   <select id="review-fasting" name="review-fasting">
-                    <option value="unknown">Не вказано</option>
-                    <option value="fasting">Натще</option>
-                    <option value="not_fasting">Не натще</option>
-                    <option value="after_training">Після важкого тренування</option>
+                    <option value="unknown" data-i18n="unknown">Не вказано</option>
+                    <option value="fasting" data-i18n="fasting">Натще</option>
+                    <option value="not_fasting" data-i18n="notFasting">Не натще</option>
+                    <option value="after_training" data-i18n="afterHeavyTraining">Після важкого тренування</option>
                   </select>
                 </div>
 
@@ -388,6 +407,11 @@
                   <input type="number" step="0.1" min="0" max="300" inputmode="decimal" id="review-prolactin" name="review-prolactin" placeholder="Наприклад: 14" />
                 </div>
 
+                <div class="form-group review-male-field">
+                  <label for="review-psa" data-i18n="psaTotalLabel">ПСА загальний (нг/мл)</label>
+                  <input type="number" step="0.01" min="0" max="1000" inputmode="decimal" id="review-psa" name="review-psa" placeholder="За бланком лабораторії" />
+                </div>
+
                 <div class="form-group">
                   <label for="review-testosterone">Тестостерон загальний (нмоль/л)</label>
                   <input type="number" step="0.1" min="0" max="80" inputmode="decimal" id="review-testosterone" name="review-testosterone" placeholder="Наприклад: 18" />
@@ -475,53 +499,53 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+          <a href="index.html" class="brand-mark" aria-label="VitalRise головна" data-i18n-aria-label="footerBrandAria">
             <span>VR</span>
             <strong>VitalRise</strong>
           </a>
-          <p>
+          <p data-i18n="footerText">
             Атлетична система для харчування, тренувань, спортпіту, лабораторного
             контролю, прогресу і фінального Blueprint.
           </p>
         </div>
 
-        <div class="footer-links" aria-label="Швидкі посилання">
-          <a href="index.html#features">Система</a>
-          <a href="profile.html">Профіль</a>
-          <a href="labs.html">Аналізи</a>
-          <a href="nutrition.html">Харчування</a>
-          <a href="training.html">Тренування</a>
-          <a href="supplements.html">Спортпіт</a>
+        <div class="footer-links" aria-label="Швидкі посилання" data-i18n-aria-label="footerLinksAria">
+          <a href="index.html#features" data-i18n="system">Система</a>
+          <a href="profile.html" data-i18n="nav.profile">Профіль</a>
+          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
+          <a href="nutrition.html" data-i18n="nav.nutrition">Харчування</a>
+          <a href="training.html" data-i18n="nav.training">Тренування</a>
+          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
           <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
-          <a href="recovery.html">Відновлення</a>
+          <a href="recovery.html" data-i18n="nav.recovery">Відновлення</a>
           <a href="progress.html">Coach</a>
-          <a href="progress.html">Прогрес</a>
+          <a href="progress.html" data-i18n="nav.progress">Прогрес</a>
           <a href="progress.html#knowledge" data-i18n="nav.knowledge">База знань</a>
           <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
           <a href="blueprint.html">Blueprint</a>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="terms.html">Terms</a>
-          <a href="disclaimer.html">Medical / AAS Disclaimer</a>
+          <a href="privacy.html" data-i18n="footerPrivacy">Політика конфіденційності</a>
+          <a href="terms.html" data-i18n="footerTerms">Умови використання</a>
+          <a href="disclaimer.html" data-i18n="footerDisclaimer">Медичний / АС/ААС дисклеймер</a>
         </div>
 
         <div class="footer-note">
-          <strong>Важливо</strong>
-          <p>
+          <strong data-i18n="important">Важливо</strong>
+          <p data-i18n="footerNote">
             VitalRise не ставить діагнози й не призначає лікування. Лабораторні
             показники, гормони, пролактин, щитоподібну залозу, печінкові й
             ниркові маркери потрібно трактувати з лікарем.
           </p>
-          <button type="button" class="footer-clear-data" id="clear-saved-data">
+          <button type="button" class="footer-clear-data" id="clear-saved-data" data-i18n="clearSaved">
             Очистити збережені дані
           </button>
-          <div class="footer-data-actions" aria-label="Експорт та імпорт даних VitalRise">
-            <button type="button" class="footer-clear-data" id="export-saved-data">
+          <div class="footer-data-actions" aria-label="Експорт та імпорт даних VitalRise" data-i18n-aria-label="footerDataActionsAria">
+            <button type="button" class="footer-clear-data" id="export-saved-data" data-i18n="exportJson">
               Експорт JSON
             </button>
-            <button type="button" class="footer-clear-data" id="import-saved-data">
+            <button type="button" class="footer-clear-data" id="import-saved-data" data-i18n="importJson">
               Імпорт JSON
             </button>
-            <label class="visually-hidden" for="import-saved-data-file">Файл резервної копії VitalRise</label>
+            <label class="visually-hidden" for="import-saved-data-file" data-i18n="footerBackupFile">Файл резервної копії VitalRise</label>
             <input type="file" id="import-saved-data-file" accept="application/json,.json" hidden />
           </div>
         </div>
@@ -529,7 +553,7 @@
 
       <div class="container footer-bottom">
         <span>© VitalRise</span>
-        <span>High-level control for athletic recomposition.</span>
+        <span data-i18n="footerBottom">High-level control for athletic recomposition.</span>
       </div>
     </footer>
   </div>
@@ -622,12 +646,12 @@
     </div>
   </div>
   <script src="assets/js/modules/system.js"></script>
-  <script src="assets/js/modules/i18n.js?v=newsletter-copy-1"></script>
+  <script src="assets/js/modules/i18n.js?v=modules-i18n-8"></script>
   <script src="assets/js/modules/mobile-menu.js"></script>
   <script src="assets/js/modules/storage.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
-  <script src="assets/js/modules/print.js"></script>
+  <script src="assets/js/modules/print.js?v=print-clean-1"></script>
   <script src="assets/js/modules/data-portability.js"></script>
   <script src="assets/js/modules/calculator-shell.js?v=single-module-1"></script>
   <script src="assets/js/modules/reveal.js"></script>
@@ -635,23 +659,23 @@
   <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
   <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
   <script src="assets/js/modules/nutrition-custom.js"></script>
-  <script src="assets/js/modules/nutrition.js?v=free-cottage-meals-1"></script>
-  <script src="assets/js/modules/nutrition-render.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/nutrition.js?v=exact-bju-3"></script>
+  <script src="assets/js/modules/nutrition-render.js?v=nutrition-i18n-1"></script>
   <script src="assets/js/modules/training.js"></script>
-  <script src="assets/js/modules/training-templates.js?v=training-days-6-1"></script>
+  <script src="assets/js/modules/training-templates.js?v=female-outdoor-glutes-1"></script>
   <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
   <script src="assets/js/modules/training-progression.js"></script>
   <script src="assets/js/modules/training-render.js?v=smart-program-1"></script>
-  <script src="assets/js/modules/training-builder.js?v=training-days-6-1"></script>
-  <script src="assets/js/modules/exercise-atlas-data.js?v=seated-db-press-photo-1"></script>
+  <script src="assets/js/modules/training-builder.js?v=female-outdoor-glutes-1"></script>
+  <script src="assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1"></script>
   <script src="assets/js/modules/exercise-atlas.js"></script>
   <script src="assets/js/modules/labs.js"></script>
-  <script src="assets/js/modules/lab-protocols.js"></script>
+  <script src="assets/js/modules/lab-protocols.js?v=expanded-report-1"></script>
   <script src="assets/js/modules/progress-decision.js?v=biweekly-correction-1"></script>
   <script src="assets/js/modules/blueprint.js"></script>
   <script src="assets/js/modules/supplements.js"></script>
   <script src="assets/js/modules/coach.js?v=quick-profiles-2"></script>
-  <script src="assets/js/modules/access.js?v=analytics-1"></script>
-  <script src="assets/js/script.js?v=free-cottage-meals-1"></script>
+  <script src="assets/js/modules/access.js?v=activation-window-1"></script>
+  <script src="assets/js/script.js?v=age-screening-1"></script>
 </body>
 </html>

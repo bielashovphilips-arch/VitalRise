@@ -15,9 +15,9 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="assets/css/style.css?v=legal-1" />
+  <link rel="stylesheet" href="assets/css/style.css?v=hero-parallax-2" />
 </head>
-<body class="vlog-page legal-page">
+<body class="vlog-page legal-page" data-legal-page="privacy">
   <div class="site-shell">
     <header class="site-header">
       <div class="container header-inner">
@@ -31,14 +31,21 @@
         </button>
 
         <nav class="site-nav" aria-label="Головна навігація">
-          <a href="labs.html">Аналізи</a>
-          <a href="nutrition.html">Калькулятор</a>
-          <a href="supplements.html">Спортпіт</a>
-          <a href="vlog.html">Влог</a>
-          <a href="index.html#pricing">Тарифи</a>
+          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
+          <a href="nutrition.html" data-i18n="nav.nutrition">Харчування</a>
+          <a href="training.html" data-i18n="nav.training">Тренування</a>
+          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
+          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
+          <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
         </nav>
 
-        <a href="index.html#pricing" class="header-cta">Доступ</a>
+        <div class="language-switcher" aria-label="Мова сайту">
+          <button type="button" data-lang-switch="uk" aria-pressed="true">UA</button>
+          <button type="button" data-lang-switch="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang-switch="ru" aria-pressed="false">RU</button>
+        </div>
+
+        <a href="index.html#pricing" class="header-cta" data-i18n="cta.access">Доступ</a>
       </div>
     </header>
 
@@ -48,7 +55,7 @@
           <span class="section-label">Legal</span>
           <h1 class="vlog-library-title">Privacy Policy</h1>
           <p class="vlog-library-lead">
-            Політика конфіденційності VitalRise. Останнє оновлення: 26 травня 2026.
+            Політика конфіденційності VitalRise. Останнє оновлення: 7 липня 2026.
           </p>
         </div>
       </section>
@@ -78,10 +85,20 @@
 
             <h2>3. Платежі, email і аналітика</h2>
             <p>
-              Якщо користувач оплачує доступ, платіжні дані обробляє платіжний провайдер.
-              VitalRise не повинен зберігати повні дані банківської картки. Email може
-              використовуватися для підтвердження доступу, службових повідомлень, відновлення
-              доступу і комунікації щодо продукту.
+              Якщо користувач оплачує доступ, комерційним надавачем платного доступу є ФОП
+              Бєлашова Маріанна Ігорівна, РНОКПП 3283103940, адреса: м. Київ, вул. Харківське
+              шосе, 168Д, кв. 51. У платіжних документах отримувач може відображатися як
+              ФОП Бєлашова М.І.
+            </p>
+            <p>
+              Платіжні дані обробляє платіжний провайдер WayForPay. VitalRise і ФОП Бєлашова М.І.
+              не зберігають повні дані банківської картки. Для створення замовлення,
+              підтвердження доступу, службових повідомлень, відновлення доступу і комунікації
+              щодо продукту можуть використовуватися email, сума замовлення, тариф, технічний
+              ідентифікатор платежу, статус оплати, статус підписки, дата наступного списання
+              та дані, необхідні для скасування або перевірки автоматичного продовження. Для
+              обліку доступу також можуть зберігатися дата покупки, 45-денний строк для старту,
+              дата активації програми і дата завершення 30-денного активного періоду.
             </p>
             <p>
               На сайті може використовуватися аналітика відвідувань. Вона потрібна для розуміння,
@@ -121,14 +138,16 @@
 
     <footer class="site-footer">
       <div class="container footer-bottom legal-footer">
-        <span>© 2026 VitalRise. Усі права захищені.</span>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms</a>
-        <a href="disclaimer.html">Medical / AAS Disclaimer</a>
+        <span data-i18n="footerCopyright">© 2026 VitalRise. Усі права захищені.</span>
+        <a href="privacy.html" data-i18n="footerPrivacy">Політика конфіденційності</a>
+        <a href="terms.html" data-i18n="footerTerms">Умови використання</a>
+        <a href="disclaimer.html" data-i18n="footerDisclaimer">Медичний / АС/ААС дисклеймер</a>
       </div>
     </footer>
   </div>
 
+  <script src="assets/js/modules/i18n.js?v=modules-i18n-8"></script>
+  <script src="assets/js/modules/legal-i18n.js?v=legal-i18n-5"></script>
   <script src="assets/js/modules/mobile-menu.js"></script>
 </body>
 </html>

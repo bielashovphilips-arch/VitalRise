@@ -4,35 +4,40 @@
   const TOKEN_KEY = "vitalrise:access:token";
   const EMAIL_KEY = "vitalrise:access:email";
   const EXPIRES_KEY = "vitalrise:access:expires";
+  const START_DEADLINE_KEY = "vitalrise:access:start-deadline";
+  const ACTIVE_EXPIRES_KEY = "vitalrise:access:active-expires";
+  const ACTIVATED_KEY = "vitalrise:access:activated";
   const NEWSLETTER_PENDING_KEY = "vitalrise:newsletter:pending";
   const tierRank = { free: 0, start: 1, pro: 2, premium: 3, admin: 4 };
+  const activationFormIds = new Set(["nutrition-form", "training-form", "blueprint-form", "progress-form"]);
+  let activationRequestPending = false;
 
   const plans = {
     start: { 
       label: "Start", 
       price: "499 грн", 
       unlocks: {
-        uk: "7-денний раціон, базова програма тренувань, PDF-звіт і Blueprint",
-        en: "7-day nutrition plan, basic training program, PDF report, and Blueprint",
-        ru: "7-дневный рацион, базовая программа тренировок, PDF-отчет и Blueprint"
+        uk: "45 днів на старт + 30 днів активної програми: 7-денний раціон, базова програма тренувань, PDF-звіт і Blueprint",
+        en: "45 days to start + 30 days of active program: 7-day nutrition plan, basic training program, PDF report, and Blueprint",
+        ru: "45 дней на старт + 30 дней активной программы: 7-дневный рацион, базовая программа тренировок, PDF-отчет и Blueprint"
       }
     },
     pro: { 
       label: "Pro", 
       price: "1 499 грн", 
       unlocks: {
-        uk: "Усе з Start + Coach Command Center, тижневий check-in, прогрес-трекер, розширений Blueprint",
-        en: "Everything in Start + Coach Command Center, weekly check-in, progress tracker, extended Blueprint",
-        ru: "Все из Start + Coach Command Center, weekly check-in, трекер прогресса, расширенный Blueprint"
+        uk: "45 днів на старт + 30 днів активної програми: усе з Start + Coach Command Center, тижневий check-in, прогрес-трекер, розширений Blueprint",
+        en: "45 days to start + 30 days of active program: everything in Start + Coach Command Center, weekly check-in, progress tracker, extended Blueprint",
+        ru: "45 дней на старт + 30 дней активной программы: все из Start + Coach Command Center, weekly check-in, трекер прогресса, расширенный Blueprint"
       }
     },
     premium: { 
       label: "Premium", 
       price: "3 500 грн", 
       unlocks: {
-        uk: "Усе з Pro + персональний супровід, ручна корекція плану, пріоритетна підтримка",
-        en: "Everything in Pro + personal support, manual plan correction, priority support",
-        ru: "Все из Pro + персональное сопровождение, ручная коррекция плана, приоритетная поддержка"
+        uk: "45 днів на старт + 30 днів активної програми: усе з Pro + персональний супровід, ручна корекція плану, пріоритетна підтримка",
+        en: "45 days to start + 30 days of active program: everything in Pro + personal support, manual plan correction, priority support",
+        ru: "45 дней на старт + 30 дней активной программы: все из Pro + персональное сопровождение, ручная коррекция плана, приоритетная поддержка"
       }
     }
   };
@@ -51,7 +56,8 @@
         need: "Потрібен тариф",
         unlock: "Розблокувати",
         paymentTitle: "Оформлення доступу",
-        paymentText: "Введи email для створення замовлення. Після реальної оплати платіжний сервіс підтвердить покупку на сервері, і цей email отримає персональний доступ.",
+        paymentText: "Введи email для створення замовлення. Після оплати є 45 днів, щоб почати програму. Коли ти вводиш дані й запускаєш перший розрахунок, активується 30 днів програми.",
+        renewalConsent: "Увімкнути автопродовження: після завершення активної програми списати вартість обраного тарифу через WayForPay за наступний період. Галочку можна зняти перед оплатою.",
         email: "Email для доступу",
         checkout: "Перейти до оплати",
         redeem: "Активувати код",
@@ -76,7 +82,8 @@
         need: "Required plan",
         unlock: "Unlock",
         paymentTitle: "Access checkout",
-        paymentText: "Enter your email to create an order. After real payment, the payment provider confirms the purchase on the server and this email receives personal access.",
+        paymentText: "Enter your email to create an order. After payment, you have 45 days to start the program. When you enter data and run the first calculation, 30 days of active program begin.",
+        renewalConsent: "Enable auto-renewal: after the active program ends, charge the selected plan through WayForPay for the next period. You can uncheck this before payment.",
         email: "Access email",
         checkout: "Go to payment",
         redeem: "Activate code",
@@ -101,7 +108,8 @@
         need: "Нужен тариф",
         unlock: "Разблокировать",
         paymentTitle: "Оформление доступа",
-        paymentText: "Введи email для создания заказа. После реальной оплаты платежный сервис подтвердит покупку на сервере, и этот email получит персональный доступ.",
+        paymentText: "Введи email для создания заказа. После оплаты есть 45 дней, чтобы начать программу. Когда ты вводишь данные и запускаешь первый расчет, активируются 30 дней программы.",
+        renewalConsent: "Включить автопродление: после завершения активной программы списать стоимость выбранного тарифа через WayForPay за следующий период. Галочку можно снять перед оплатой.",
         email: "Email для доступа",
         checkout: "Перейти к оплате",
         redeem: "Активировать код",
@@ -156,6 +164,9 @@
       window.localStorage.removeItem(TOKEN_KEY);
       window.localStorage.removeItem(EMAIL_KEY);
       window.localStorage.removeItem(EXPIRES_KEY);
+      window.localStorage.removeItem(START_DEADLINE_KEY);
+      window.localStorage.removeItem(ACTIVE_EXPIRES_KEY);
+      window.localStorage.removeItem(ACTIVATED_KEY);
       window.localStorage.setItem(TIER_KEY, "free");
     } catch (error) {
       // Ignore storage failures.
@@ -180,6 +191,9 @@
     setStored(TIER_KEY, tier);
     if (payload.email) setStored(EMAIL_KEY, payload.email);
     if (payload.expiresAt) setStored(EXPIRES_KEY, payload.expiresAt);
+    if (payload.startDeadlineAt) setStored(START_DEADLINE_KEY, payload.startDeadlineAt);
+    if (payload.activeExpiresAt) setStored(ACTIVE_EXPIRES_KEY, payload.activeExpiresAt);
+    if (payload.activatedAt) setStored(ACTIVATED_KEY, payload.activatedAt);
     document.body.dataset.accessTier = tier;
     applyAccessState();
   }
@@ -285,6 +299,9 @@
       setStored(TIER_KEY, normalizeTier(data.tier));
       if (data.email) setStored(EMAIL_KEY, data.email);
       if (data.expiresAt) setStored(EXPIRES_KEY, data.expiresAt);
+      if (data.startDeadlineAt) setStored(START_DEADLINE_KEY, data.startDeadlineAt);
+      if (data.activeExpiresAt) setStored(ACTIVE_EXPIRES_KEY, data.activeExpiresAt);
+      if (data.activatedAt) setStored(ACTIVATED_KEY, data.activatedAt);
       document.body.dataset.accessTier = normalizeTier(data.tier);
     } catch (error) {
       clearPaidAccess();
@@ -327,6 +344,10 @@
     modal.querySelector("#payment-price-label").textContent = "UAH";
     modal.querySelector("#payment-price-value").textContent = plan.price;
     modal.querySelector("#payment-text").textContent = phrase("paymentText");
+    const renewalLabel = modal.querySelector("#payment-renewal-label");
+    const renewalInput = modal.querySelector("#payment-renewal-consent");
+    if (renewalLabel) renewalLabel.textContent = phrase("renewalConsent");
+    if (renewalInput) renewalInput.checked = true;
     modal.querySelector("#payment-email-label").textContent = phrase("email");
     modal.querySelector("#payment-code-label").textContent = phrase("code");
     modal.querySelector("#payment-code-hint").textContent = phrase("codeHint");
@@ -374,6 +395,7 @@
     const tier = normalizeTier(modal.dataset.selectedTier || "start");
     const emailInput = modal.querySelector("#payment-email");
     const email = emailInput ? String(emailInput.value || "").trim().toLowerCase() : "";
+    const renewalInput = modal.querySelector("#payment-renewal-consent");
 
     if (!isValidEmail(email)) {
       setPaymentStatus(phrase("invalidEmail"));
@@ -389,7 +411,11 @@
     }
 
     try {
-      const data = await postJson("/api/access/checkout", { plan: tier, email: email });
+      const data = await postJson("/api/access/checkout", {
+        plan: tier,
+        email: email,
+        autoRenew: Boolean(renewalInput && renewalInput.checked)
+      });
 
       if (data.accessToken) {
         setPaidAccess(data);
@@ -568,12 +594,46 @@
     });
   }
 
+  async function activateProgram(source) {
+    const token = getStored(TOKEN_KEY);
+    if (!token || getTier() === "admin" || activationRequestPending || getStored(ACTIVATED_KEY)) return;
+
+    activationRequestPending = true;
+    try {
+      const data = await postJson("/api/access/activate", {
+        token: token,
+        source: source || "program"
+      });
+      setStored(TIER_KEY, normalizeTier(data.tier));
+      if (data.email) setStored(EMAIL_KEY, data.email);
+      if (data.expiresAt) setStored(EXPIRES_KEY, data.expiresAt);
+      if (data.startDeadlineAt) setStored(START_DEADLINE_KEY, data.startDeadlineAt);
+      if (data.activeExpiresAt) setStored(ACTIVE_EXPIRES_KEY, data.activeExpiresAt);
+      if (data.activatedAt) setStored(ACTIVATED_KEY, data.activatedAt);
+      document.body.dataset.accessTier = normalizeTier(data.tier);
+      applyAccessState();
+    } catch (error) {
+      // If activation fails, token verification will clean up expired access on the next pass.
+    } finally {
+      activationRequestPending = false;
+    }
+  }
+
+  function bindProgramActivation() {
+    document.addEventListener("submit", function (event) {
+      const form = event.target;
+      if (!form || !activationFormIds.has(form.id)) return;
+      activateProgram(form.id).catch(function () {});
+    }, true);
+  }
+
   function initAccess() {
     activateAdminFromUrl();
     document.body.dataset.accessTier = getTier();
     ensurePaymentModal();
     bindPricingButtons();
     bindNewsletterForm();
+    bindProgramActivation();
     flushPendingNewsletter().catch(function () {});
     applyAccessState();
     verifyStoredToken();
@@ -586,6 +646,7 @@
     getTier: getTier,
     setTier: setTier,
     hasAccess: hasAccess,
+    activateProgram: activateProgram,
     openPaymentModal: openPaymentModal,
     apply: applyAccessState
   };
