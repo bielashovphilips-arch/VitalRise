@@ -8,6 +8,7 @@
   const ACTIVE_EXPIRES_KEY = "vitalrise:access:active-expires";
   const ACTIVATED_KEY = "vitalrise:access:activated";
   const NEWSLETTER_PENDING_KEY = "vitalrise:newsletter:pending";
+  const PENDING_ORDER_KEY = "vitalrise:access:pending-order";
   const tierRank = { free: 0, start: 1, pro: 2, premium: 3, admin: 4 };
   const activationFormIds = new Set(["nutrition-form", "training-form", "blueprint-form", "progress-form"]);
   let activationRequestPending = false;
@@ -159,6 +160,14 @@
     }
   }
 
+  function clearStored(key) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch (error) {
+      // Ignore storage failures.
+    }
+  }
+
   function clearPaidAccess() {
     try {
       window.localStorage.removeItem(TOKEN_KEY);
@@ -196,6 +205,32 @@
     if (payload.activatedAt) setStored(ACTIVATED_KEY, payload.activatedAt);
     document.body.dataset.accessTier = tier;
     applyAccessState();
+  }
+
+  function rememberPendingOrder(payload) {
+    if (!payload || !payload.orderId || !payload.email) return;
+    try {
+      window.localStorage.setItem(PENDING_ORDER_KEY, JSON.stringify({
+        orderId: payload.orderId,
+        email: payload.email,
+        tier: payload.tier || "",
+        createdAt: new Date().toISOString()
+      }));
+    } catch (error) {
+      // Ignore storage failures.
+    }
+  }
+
+  function getPendingOrder() {
+    try {
+      return JSON.parse(window.localStorage.getItem(PENDING_ORDER_KEY) || "null");
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function clearPendingOrder() {
+    clearStored(PENDING_ORDER_KEY);
   }
 
   function hasAccess(requiredTier) {
@@ -240,6 +275,22 @@
       throw new Error(data.error || "Request failed");
     }
     return data;
+  }
+
+  async function postJsonWithStatus(url, payload) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload || {})
+    });
+    const text = await response.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch (error) {
+      data = { ok: false, error: text || "Invalid server response" };
+    }
+    return { status: response.status, ok: response.ok && data.ok, data: data };
   }
 
   function getPendingNewsletter() {
@@ -417,8 +468,13 @@
         autoRenew: Boolean(renewalInput && renewalInput.checked)
       });
 
+      if (data.orderId) {
+        rememberPendingOrder({ orderId: data.orderId, email: email, tier: tier });
+      }
+
       if (data.accessToken) {
         setPaidAccess(data);
+        clearPendingOrder();
         setPaymentStatus(phrase("mockUnlocked"));
         
         // Track successful purchase
@@ -433,7 +489,7 @@
       setPaymentStatus(data.message || phrase("orderCreated"));
       if (data.checkoutUrl) window.location.href = data.checkoutUrl;
     } catch (error) {
-      setPaymentStatus(phrase("serverUnavailable"));
+      setPaymentStatus(error.message || phrase("serverUnavailable"));
     }
   }
 
@@ -619,6 +675,41 @@
     }
   }
 
+  async function claimPendingPayment() {
+    const params = new URLSearchParams(window.location.search);
+    const orderIdFromUrl = params.get("orderId") || "";
+    const pending = getPendingOrder();
+    const orderId = orderIdFromUrl || (pending && pending.orderId) || "";
+    const email = (pending && pending.email) || getStored(EMAIL_KEY);
+
+    if (!orderId || !email) return;
+
+    try {
+      const result = await postJsonWithStatus("/api/access/order", {
+        orderId: orderId,
+        email: email
+      });
+
+      if (result.ok && result.data.accessToken) {
+        setPaidAccess(result.data);
+        clearPendingOrder();
+
+        if (window.VitalRiseAnalytics && typeof window.VitalRiseAnalytics.trackPurchase === "function") {
+          window.VitalRiseAnalytics.trackPurchase(result.data.tier || "unknown", result.data.orderId || orderId);
+        }
+      }
+    } catch (error) {
+      // Keep pending order for the next page load; WayForPay may call webhook a little later.
+    }
+
+    if (orderIdFromUrl && window.history && window.history.replaceState) {
+      params.delete("payment");
+      params.delete("orderId");
+      const cleanUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+  }
+
   function bindProgramActivation() {
     document.addEventListener("submit", function (event) {
       const form = event.target;
@@ -635,6 +726,7 @@
     bindNewsletterForm();
     bindProgramActivation();
     flushPendingNewsletter().catch(function () {});
+    claimPendingPayment().catch(function () {});
     applyAccessState();
     verifyStoredToken();
 

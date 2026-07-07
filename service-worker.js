@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v278";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v225";
+const CACHE_NAME = "vitalrise-v279";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-v226";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -53,7 +53,7 @@ const APP_SHELL = [
   "./assets/js/modules/blueprint.js",
   "./assets/js/modules/supplements.js?v=testosterone-ergogenic-2",
   "./assets/js/modules/coach.js?v=quick-profiles-2",
-  "./assets/js/modules/access.js?v=activation-window-1",
+  "./assets/js/modules/access.js?v=wayforpay-pages-1",
   "./assets/js/script.js?v=age-screening-1",
   "./manifest.webmanifest"
 ];
