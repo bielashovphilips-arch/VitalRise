@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v281";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v228";
+const CACHE_NAME = "vitalrise-v282";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-v229";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,7 +15,7 @@ const APP_SHELL = [
   "./privacy.html",
   "./terms.html",
   "./disclaimer.html",
-  "./assets/css/style.css?v=payment-renewal-layout-1",
+  "./assets/css/style.css?v=atlas-clean-1",
   "./assets/images/labs-bloodwork-bg.webp",
   "./assets/images/nutrition-food-bg.webp",
   "./assets/images/vlog-dna-bg-photo.png",
@@ -46,7 +46,7 @@ const APP_SHELL = [
   "./assets/js/modules/training-render.js?v=training-copy-fix-1",
   "./assets/js/modules/training-builder.js?v=female-outdoor-glutes-1",
   "./assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1",
-  "./assets/js/modules/exercise-atlas.js",
+  "./assets/js/modules/exercise-atlas.js?v=atlas-clean-1",
   "./assets/js/modules/labs.js",
   "./assets/js/modules/lab-protocols.js?v=expanded-report-1",
   "./assets/js/modules/progress-decision.js?v=cycle-water-progress-1",

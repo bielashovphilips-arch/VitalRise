@@ -9966,61 +9966,6 @@ main {
   color: #f8df7a;
 }
 
-.exercise-photo-backlog {
-  margin: 0 0 16px;
-}
-
-.photo-backlog-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 16px;
-  border: 1px solid rgba(240, 214, 117, 0.18);
-  background: rgba(240, 214, 117, 0.08);
-}
-
-.photo-backlog-head strong {
-  display: block;
-  color: #fff9df;
-  font-size: 15px;
-}
-
-.photo-backlog-head p {
-  margin: 5px 0 0;
-  color: #c8ced9;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.photo-backlog-head small {
-  min-width: max-content;
-  color: #f8df7a;
-  font-weight: 800;
-}
-
-.photo-backlog-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  max-height: 116px;
-  overflow: auto;
-  padding: 12px 0 2px;
-}
-
-.photo-backlog-list span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 6px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-  color: #d7dce6;
-  font-size: 12px;
-  font-weight: 700;
-}
-
 .exercise-atlas-grid {
   display: grid;
   grid-template-columns: 1fr;

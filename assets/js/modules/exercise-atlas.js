@@ -6,7 +6,6 @@
     const exerciseAtlasModal = document.getElementById("exercise-atlas-modal");
     const exerciseAtlasGrid = document.getElementById("exercise-atlas-grid");
     const exerciseAtlasFilters = document.getElementById("exercise-atlas-filters");
-    const exercisePhotoBacklog = document.getElementById("exercise-photo-backlog");
     const exerciseAtlasClose = document.querySelector(".exercise-atlas-close");
     const trainingResult = document.getElementById("training-result");
   const exerciseAtlasData = window.VitalRiseSystem && window.VitalRiseSystem.exerciseAtlasData
@@ -14,7 +13,6 @@
     : {};
   const exerciseAtlas = exerciseAtlasData.exerciseAtlas || [];
   const exerciseAtlasImages = exerciseAtlasData.exerciseAtlasImages || {};
-  const missingExercisePhotoBacklog = exerciseAtlasData.missingExercisePhotoBacklog || [];
 
   let activeAtlasFilter = "all";
   let lastAtlasTrigger = null;
@@ -208,52 +206,6 @@
     };
   }
 
-  function exerciseNeedsPhoto(name) {
-    const source = String(name || "").toLowerCase();
-
-    if (findExerciseImageName(name)) return false;
-
-    return missingExercisePhotoBacklog.some(function (item) {
-      return source.indexOf(item.toLowerCase().split(" / ")[0]) !== -1 ||
-        item.toLowerCase().indexOf(source.split("(")[0].trim()) !== -1;
-    });
-  }
-
-  function renderExercisePhotoBacklog(focusName, hasFocusedCard) {
-    if (!exercisePhotoBacklog) return;
-
-    const requestedName = String(focusName || "").trim();
-    const isMissingRequest = requestedName && !hasFocusedCard && exerciseNeedsPhoto(requestedName);
-
-    if (!missingExercisePhotoBacklog.length) {
-      exercisePhotoBacklog.innerHTML =
-        '<div class="photo-backlog-head">' +
-          '<div>' +
-            '<strong>Фото підключені</strong>' +
-            '<p>Усі пріоритетні фото з README вже доступні для вправ через атлас або кнопку "Техніка".</p>' +
-          '</div>' +
-          '<small>0 позицій</small>' +
-        '</div>';
-      return;
-    }
-
-    const list = missingExercisePhotoBacklog.slice(0, 24).map(function (name) {
-      return '<span>' + name + '</span>';
-    }).join("");
-
-    exercisePhotoBacklog.innerHTML =
-      '<div class="photo-backlog-head">' +
-        '<div>' +
-          '<strong>Фото для додавання</strong>' +
-          '<p>' + (isMissingRequest
-            ? 'Для "' + requestedName + '" ще немає окремої картки з фото. Нижче список пріоритетних вправ для поповнення атласу.'
-            : 'Список вправ, для яких ще бажано додати власне фото або короткий приклад техніки.') + '</p>' +
-        '</div>' +
-        '<small>' + missingExercisePhotoBacklog.length + ' позицій</small>' +
-      '</div>' +
-      '<div class="photo-backlog-list">' + list + '</div>';
-  }
-
   function renderExerciseAtlas(filter, focusName) {
     if (!exerciseAtlasGrid || !exerciseAtlasFilters) return;
 
@@ -273,8 +225,6 @@
       const focusMatch = !focusName || atlasMatchesExercise(exercise, focusName);
       return focusName ? focusMatch : filterMatch;
     });
-
-    renderExercisePhotoBacklog(focusName, list.length > 0 || !!photoOnlyExercise);
 
     const visibleList = list.length ? list : photoOnlyExercise ? [photoOnlyExercise] : exerciseAtlas;
 
