@@ -1,7 +1,7 @@
 const DAY_MS = 24 * 60 * 60 * 1000;
 const CURRENCY = "UAH";
 const DOMAIN_FALLBACK = "vitalrise.com.ua";
-const WAYFORPAY_PAY_URL = "https://secure.wayforpay.com/pay?behavior=offline";
+const WAYFORPAY_PAY_URL = "https://secure.wayforpay.com/pay";
 
 const PLANS = {
   start: {
@@ -271,15 +271,7 @@ function wayForPayAcceptSignature(orderReference, status, time, secret) {
   return hmacMd5(secret, [orderReference, status, time].join(";"));
 }
 
-function appendFormField(form, key, value) {
-  if (Array.isArray(value)) {
-    value.forEach((item) => form.append(`${key}[]`, String(item)));
-  } else if (value !== undefined && value !== null && value !== "") {
-    form.append(key, String(value));
-  }
-}
-
-async function createWayForPayUrl(order, plan, request, env) {
+function createWayForPayForm(order, plan, request, env) {
   const origin = getOrigin(request, env);
   const merchantDomainName = getMerchantDomain(request, env);
   const productName = [`${plan.label} — доступ 45/30 днів`];
@@ -309,32 +301,11 @@ async function createWayForPayUrl(order, plan, request, env) {
   };
   fields.merchantSignature = wayForPayPurchaseSignature(fields, String(env.WAYFORPAY_MERCHANT_SECRET));
 
-  const form = new URLSearchParams();
-  Object.keys(fields).forEach((key) => appendFormField(form, key, fields[key]));
-
-  const response = await fetch(WAYFORPAY_PAY_URL, {
+  return {
+    action: WAYFORPAY_PAY_URL,
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-    body: form
-  });
-
-  const text = await response.text();
-  let payload = null;
-  try {
-    payload = JSON.parse(text);
-  } catch {
-    payload = null;
-  }
-
-  if (!response.ok || !payload || !payload.url) {
-    return {
-      ok: false,
-      status: response.status,
-      error: payload?.reason || payload?.message || text.slice(0, 240) || "WayForPay did not return a payment URL"
-    };
-  }
-
-  return { ok: true, url: payload.url };
+    fields
+  };
 }
 
 function publicTokenPayload(token) {
@@ -536,32 +507,15 @@ async function handleCheckout(request, env) {
     }, 503);
   }
 
-  const payment = await createWayForPayUrl(order, plan, request, env);
-  if (!payment.ok) {
-    order.status = "payment_url_failed";
-    order.providerError = payment.error;
-    await kvPut(kv, `order:${order.id}`, order);
-    console.log("WayForPay checkout URL failed", {
-      orderId: order.id,
-      status: payment.status,
-      error: payment.error
-    });
-    return json({
-      ok: false,
-      error: "WayForPay checkout URL was not created",
-      details: payment.error,
-      orderId: order.id
-    }, 503);
-  }
-
-  order.checkoutUrl = payment.url;
+  const checkoutForm = createWayForPayForm(order, plan, request, env);
+  order.checkoutFormCreatedAt = nowIso();
   await kvPut(kv, `order:${order.id}`, order);
 
   return json({
     ok: true,
     mode: "wayforpay",
     orderId: order.id,
-    checkoutUrl: payment.url
+    checkoutForm
   });
 }
 

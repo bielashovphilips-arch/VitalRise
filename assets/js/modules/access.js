@@ -293,6 +293,33 @@
     return { status: response.status, ok: response.ok && data.ok, data: data };
   }
 
+  function submitExternalPaymentForm(checkoutForm) {
+    if (!checkoutForm || !checkoutForm.action || !checkoutForm.fields) return false;
+
+    const form = document.createElement("form");
+    form.method = checkoutForm.method || "POST";
+    form.action = checkoutForm.action;
+    form.acceptCharset = "utf-8";
+    form.style.display = "none";
+
+    Object.keys(checkoutForm.fields).forEach(function (key) {
+      const value = checkoutForm.fields[key];
+      const values = Array.isArray(value) ? value : [value];
+      values.forEach(function (item) {
+        if (item === undefined || item === null || item === "") return;
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = Array.isArray(value) ? key + "[]" : key;
+        input.value = String(item);
+        form.appendChild(input);
+      });
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    return true;
+  }
+
   function getPendingNewsletter() {
     try {
       return JSON.parse(window.localStorage.getItem(NEWSLETTER_PENDING_KEY) || "[]");
@@ -487,6 +514,7 @@
       }
 
       setPaymentStatus(data.message || phrase("orderCreated"));
+      if (data.checkoutForm && submitExternalPaymentForm(data.checkoutForm)) return;
       if (data.checkoutUrl) window.location.href = data.checkoutUrl;
     } catch (error) {
       setPaymentStatus(error.message || phrase("serverUnavailable"));
