@@ -16,7 +16,7 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="assets/css/style.css?v=language-color-1" />
+  <link rel="stylesheet" href="assets/css/style.css?v=payment-renewal-layout-1" />
   
   <!-- Google Analytics 4 -->
   <script>
@@ -569,15 +569,15 @@
         <span id="payment-email-label"></span>
         <input type="email" id="payment-email" autocomplete="email" placeholder="client@example.com" />
       </label>
-      <label class="payment-demo-note" for="payment-renewal-consent">
-        <input type="checkbox" id="payment-renewal-consent" />
-        <span id="payment-renewal-label"></span>
-      </label>
       <label class="payment-code-field" for="payment-access-code">
         <span id="payment-code-label"></span>
         <input type="text" id="payment-access-code" autocomplete="one-time-code" placeholder="VR-START-XXXX" />
       </label>
       <p class="payment-demo-note" id="payment-code-hint"></p>
+      <label class="payment-demo-note payment-renewal-note" for="payment-renewal-consent">
+        <input type="checkbox" id="payment-renewal-consent" />
+        <span id="payment-renewal-label"></span>
+      </label>
       <div class="payment-actions">
         <button type="button" class="btn btn-secondary" data-payment-close id="payment-close-button"></button>
         <button type="button" class="btn btn-secondary" id="payment-redeem-button"></button>
