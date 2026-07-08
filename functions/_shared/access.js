@@ -541,12 +541,17 @@ async function handleCheckout(request, env) {
     order.status = "payment_url_failed";
     order.providerError = payment.error;
     await kvPut(kv, `order:${order.id}`, order);
+    console.log("WayForPay checkout URL failed", {
+      orderId: order.id,
+      status: payment.status,
+      error: payment.error
+    });
     return json({
       ok: false,
       error: "WayForPay checkout URL was not created",
       details: payment.error,
       orderId: order.id
-    }, 502);
+    }, 503);
   }
 
   order.checkoutUrl = payment.url;
