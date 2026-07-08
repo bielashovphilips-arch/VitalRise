@@ -286,7 +286,7 @@ function createWayForPayForm(order, plan, request, env) {
     apiVersion: "1",
     language: "UA",
     serviceUrl: `${origin}/api/access/webhook/wayforpay`,
-    returnUrl: `${origin}/?payment=return&orderId=${encodeURIComponent(order.id)}`,
+    returnUrl: `${origin}/api/access/return?orderId=${encodeURIComponent(order.id)}`,
     orderReference: order.id,
     orderDate: order.orderDate,
     amount: String(plan.price),
@@ -625,6 +625,34 @@ async function handleOrder(request, env) {
   });
 }
 
+async function handlePaymentReturn(request) {
+  const url = new URL(request.url);
+  let orderId = String(url.searchParams.get("orderId") || "").trim();
+
+  if (!orderId && request.method === "POST") {
+    const contentType = String(request.headers.get("content-type") || "").toLowerCase();
+    try {
+      if (contentType.includes("application/json")) {
+        const body = await request.json();
+        orderId = String(body.orderReference || body.orderId || "").trim();
+      } else {
+        const text = await request.text();
+        const params = new URLSearchParams(text);
+        orderId = String(params.get("orderReference") || params.get("orderId") || "").trim();
+      }
+    } catch {
+      orderId = "";
+    }
+  }
+
+  const origin = getOrigin(request, {});
+  const redirectUrl = new URL("/", origin);
+  redirectUrl.searchParams.set("payment", "return");
+  if (orderId) redirectUrl.searchParams.set("orderId", orderId);
+
+  return Response.redirect(redirectUrl.toString(), 303);
+}
+
 async function handleWayForPayWebhook(request, env) {
   if (request.method !== "POST") return methodNotAllowed();
   const kv = getKv(env);
@@ -688,6 +716,7 @@ export async function handleAccessRequest(context) {
     if (pathname === "/api/access/verify") return handleVerify(request, env);
     if (pathname === "/api/access/activate") return handleActivate(request, env);
     if (pathname === "/api/access/order") return handleOrder(request, env);
+    if (pathname === "/api/access/return") return handlePaymentReturn(request);
     if (pathname === "/api/access/webhook/wayforpay") return handleWayForPayWebhook(request, env);
     return json({ ok: false, error: "API route not found" }, 404);
   } catch (error) {
