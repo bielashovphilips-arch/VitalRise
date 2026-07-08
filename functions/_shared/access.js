@@ -286,7 +286,7 @@ function createWayForPayForm(order, plan, request, env) {
     apiVersion: "1",
     language: "UA",
     serviceUrl: `${origin}/api/access/webhook/wayforpay`,
-    returnUrl: `${origin}/api/access/return?orderId=${encodeURIComponent(order.id)}`,
+    returnUrl: `${origin}/api/access/payment-return?orderId=${encodeURIComponent(order.id)}`,
     orderReference: order.id,
     orderDate: order.orderDate,
     amount: String(plan.price),
@@ -716,7 +716,7 @@ export async function handleAccessRequest(context) {
     if (pathname === "/api/access/verify") return handleVerify(request, env);
     if (pathname === "/api/access/activate") return handleActivate(request, env);
     if (pathname === "/api/access/order") return handleOrder(request, env);
-    if (pathname === "/api/access/return") return handlePaymentReturn(request);
+    if (pathname === "/api/access/return" || pathname === "/api/access/payment-return") return handlePaymentReturn(request);
     if (pathname === "/api/access/webhook/wayforpay") return handleWayForPayWebhook(request, env);
     return json({ ok: false, error: "API route not found" }, 404);
   } catch (error) {
