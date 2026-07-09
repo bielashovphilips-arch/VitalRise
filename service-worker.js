@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v282";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v229";
+const CACHE_NAME = "vitalrise-v283";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-v230";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,7 +15,7 @@ const APP_SHELL = [
   "./privacy.html",
   "./terms.html",
   "./disclaimer.html",
-  "./assets/css/style.css?v=atlas-clean-1",
+  "./assets/css/style.css?v=payment-scroll-1",
   "./assets/images/labs-bloodwork-bg.webp",
   "./assets/images/nutrition-food-bg.webp",
   "./assets/images/vlog-dna-bg-photo.png",
