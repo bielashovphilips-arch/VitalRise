@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v283";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v230";
+const CACHE_NAME = "vitalrise-v284";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-v231";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,7 +15,7 @@ const APP_SHELL = [
   "./privacy.html",
   "./terms.html",
   "./disclaimer.html",
-  "./assets/css/style.css?v=payment-scroll-1",
+  "./assets/css/style.css?v=legal-contact-1",
   "./assets/images/labs-bloodwork-bg.webp",
   "./assets/images/nutrition-food-bg.webp",
   "./assets/images/vlog-dna-bg-photo.png",
@@ -23,9 +23,9 @@ const APP_SHELL = [
   "./assets/images/exercises/vitalrise-bent-over-row.png",
   "./assets/images/exercises/vitalrise-cable-pullover.png",
   "./assets/js/modules/system.js",
-  "./assets/js/modules/i18n.js?v=modules-i18n-8",
+  "./assets/js/modules/i18n.js?v=modules-i18n-9",
   "./assets/js/modules/vlog-i18n.js?v=vlog-translation-10",
-  "./assets/js/modules/legal-i18n.js?v=legal-i18n-5",
+  "./assets/js/modules/legal-i18n.js?v=legal-i18n-6",
   "./assets/js/modules/mobile-menu.js",
   "./assets/js/modules/storage.js",
   "./assets/js/modules/print.js?v=print-clean-1",

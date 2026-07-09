@@ -8,13 +8,13 @@
         title: "VitalRise — Політика конфіденційності",
         description: "Політика конфіденційності VitalRise: які дані може обробляти сайт, як вони використовуються і як користувач контролює збережену інформацію.",
         heroTitle: "Політика конфіденційності",
-        heroLead: "Політика конфіденційності VitalRise. Останнє оновлення: 7 липня 2026."
+        heroLead: "Політика конфіденційності VitalRise. Останнє оновлення: 9 липня 2026."
       },
       en: {
         title: "VitalRise — Privacy Policy",
         description: "VitalRise Privacy Policy: what data the site may process, how it is used, and how users control stored information.",
         heroTitle: "Privacy Policy",
-        heroLead: "VitalRise Privacy Policy. Last updated: July 7, 2026.",
+        heroLead: "VitalRise Privacy Policy. Last updated: July 9, 2026.",
         headings: [
           "1. Data VitalRise may process",
           "2. How the data is used",
@@ -29,6 +29,7 @@
           "Some information may be stored locally in the user's browser so the site can remember calculations, nutrition plans, progress, and access. Users can clear this data with the button in the main-page footer or through their browser settings.",
           "The data is used to calculate calories and macros, build nutrition plans and training recommendations, create laboratory checklists, track progress, generate PDF/Blueprint materials, manage access to paid modules, and improve the site.",
           "When a user pays for access, the commercial provider of paid access is sole proprietor Bielashova Marianna Ihorivna, taxpayer registration number 3283103940, address: Kyiv, Kharkivske Shose Street, 168D, apartment 51. In payment documents, the recipient may appear as FOP Bielashova M.I.",
+          "Seller contacts and the contact for access, payment, refund, and personal-data requests: phone +38 (093) 581-06-28, email info@vitalrise.com.ua.",
           "Payment details are processed by the WayForPay payment provider. VitalRise and FOP Bielashova M.I. do not store full bank-card details. To create an order, confirm access, send service messages, restore access, and communicate about the product, the site may use the user's email, order amount, plan, technical payment identifier, payment status, subscription status, next charge date, and data required to cancel or verify automatic renewal. To manage access, the site may also store the purchase date, the 45-day start window, the program activation date, and the end date of the 30-day active period.",
           "The site may use visitor analytics. It helps us understand which sections work, where users stop, and what should be improved.",
           "Laboratory markers, hormones, information about medicines, AS/AAS, symptoms, diagnoses, or treatment are sensitive information. Users decide whether to enter such data. VitalRise is not a medical record and does not replace a doctor's consultation.",
@@ -41,7 +42,7 @@
         title: "VitalRise — Политика конфиденциальности",
         description: "Политика конфиденциальности VitalRise: какие данные может обрабатывать сайт, как они используются и как пользователь контролирует сохраненную информацию.",
         heroTitle: "Политика конфиденциальности",
-        heroLead: "Политика конфиденциальности VitalRise. Последнее обновление: 7 июля 2026.",
+        heroLead: "Политика конфиденциальности VitalRise. Последнее обновление: 9 июля 2026.",
         headings: [
           "1. Какие данные может обрабатывать VitalRise",
           "2. Для чего используются данные",
@@ -56,6 +57,7 @@
           "Часть информации может храниться локально в браузере пользователя, чтобы сайт помнил расчеты, рацион, прогресс и доступ. Пользователь может очистить эти данные кнопкой в футере главной страницы или через настройки браузера.",
           "Данные используются для расчета калорий, БЖУ, рациона, тренировочных рекомендаций, лабораторного чек-листа, прогресса, формирования PDF/Blueprint, управления доступом к платным модулям и улучшения работы сайта.",
           "Если пользователь оплачивает доступ, коммерческим поставщиком платного доступа является ФЛП Белашова Марианна Игоревна, РНУКПН 3283103940, адрес: г. Киев, ул. Харьковское шоссе, 168Д, кв. 51. В платежных документах получатель может отображаться как ФЛП Белашова М.И.",
+          "Контакты продавца и контакт для запросов по доступу, платежам, возврату средств и персональным данным: телефон +38 (093) 581-06-28, email info@vitalrise.com.ua.",
           "Платежные данные обрабатывает платежный провайдер WayForPay. VitalRise и ФЛП Белашова М.И. не хранят полные данные банковской карты. Для создания заказа, подтверждения доступа, служебных сообщений, восстановления доступа и коммуникации о продукте могут использоваться email, сумма заказа, тариф, технический идентификатор платежа, статус оплаты, статус подписки, дата следующего списания и данные, необходимые для отмены или проверки автоматического продления. Для учета доступа также могут храниться дата покупки, 45-дневный срок для старта, дата активации программы и дата завершения 30-дневного активного периода.",
           "На сайте может использоваться аналитика посещений. Она нужна, чтобы понимать, какие блоки работают, где пользователи останавливаются и что следует улучшить.",
           "Лабораторные показатели, гормоны, информация о препаратах, АС/ААС, симптомы, диагнозы или лечение являются чувствительной информацией. Пользователь сам решает, вводить ли такие данные. VitalRise не является медицинской картой и не заменяет консультацию врача.",
@@ -70,13 +72,13 @@
         title: "VitalRise — Умови використання",
         description: "Умови використання VitalRise: правила доступу, оплати, відповідальності користувача, контенту та обмежень сервісу.",
         heroTitle: "Умови використання",
-        heroLead: "Умови використання VitalRise. Останнє оновлення: 7 липня 2026."
+        heroLead: "Умови використання VitalRise. Останнє оновлення: 9 липня 2026."
       },
       en: {
         title: "VitalRise — Terms of Use",
         description: "VitalRise Terms of Use: rules for access, payments, user responsibility, content, and service limitations.",
         heroTitle: "Terms of Use",
-        heroLead: "VitalRise Terms of Use. Last updated: July 7, 2026.",
+        heroLead: "VitalRise Terms of Use. Last updated: July 9, 2026.",
         headings: [
           "1. Service provider and payment details",
           "2. Purpose of the service",
@@ -90,6 +92,7 @@
         ],
         paragraphs: [
           "Paid access and commercial VitalRise services are provided by sole proprietor Bielashova Marianna Ihorivna, who may also be referred to as FOP Bielashova M.I. Taxpayer registration number: 3283103940. Registered and actual address: Kyiv, Kharkivske Shose Street, 168D, apartment 51.",
+          "Seller contact information for payment, access, refund, and transaction-cancellation requests: sole proprietor Bielashova Marianna Ihorivna, taxpayer registration number 3283103940; registered and actual address: Kyiv, Kharkivske Shose Street, 168D, apartment 51; phone: +38 (093) 581-06-28; email: info@vitalrise.com.ua.",
           "FOP Bielashova M.I. operates under the simplified taxation system, group 2. Payment is accepted through the WayForPay payment service. In payment documents, receipts, or bank statements, the recipient may appear as FOP Bielashova M.I.",
           "The name VitalRise is used as the name of the service, interface, and materials. Unless another provider is expressly indicated before payment, the paid-access contract is concluded between the user and FOP Bielashova M.I.",
           "VitalRise is an educational and analytical service for nutrition, training, supplements, laboratory monitoring, progress, and vlog content about medical and pharmacological topics. The service is not a medical institution, does not diagnose conditions, and does not prescribe treatment.",
@@ -98,6 +101,7 @@
           "Payment terms, access duration, plan contents, price, access-delivery procedure, and refund eligibility must be shown to the user before purchase. Payment is made through WayForPay; VitalRise and FOP Bielashova M.I. do not store full bank-card details. If a separate refund policy is published on the site, it forms part of these terms.",
           "Paid plans may be sold as a subscription with automatic renewal. Auto-renewal may be enabled by default in the payment form, but the user can uncheck it before payment and buy the plan without a subscription. If auto-renewal remains enabled, after the active 30-day program ends, the cost of the selected plan is charged automatically for the next period unless the user cancels the subscription before the next charge date.",
           "A refund is possible before the 30-day program is activated, for an accidental duplicate payment, or if access does not open after successful payment and the technical issue cannot be resolved. After the program and access to digital materials are activated, refunds do not apply except where directly required by law or separately agreed with FOP Bielashova M.I. Cancelling a subscription stops future charges but does not cancel the already provided current access period.",
+          "To initiate a refund or cancellation of an accidental transaction, the user should contact info@vitalrise.com.ua or +38 (093) 581-06-28 and provide the access email, plan, payment date and amount, and the reason for the request. If applicable, the refund is processed after checking the access and transaction status, usually through the same payment method via WayForPay.",
           "The texts, page structure, calculators, selection algorithms, educational materials, exercise database, supplement and medicine catalogs, tables, PDF/Blueprint materials, design, interface, code, VitalRise name, logo, and visual elements belong to VitalRise or are used lawfully.",
           "Users receive the right to use service materials only for personal informational, educational, and training purposes. Personal reports, plans, protocols, PDFs, or Blueprints may be saved for personal use, but may not be sold, published as the user's own product, distributed publicly at scale, or used to create a competing service.",
           "It is prohibited to copy, scrape, automatically collect, reproduce, translate for commercial use, adapt, resell, or publicly distribute substantial portions of VitalRise content without written permission. Creating a clone of the service or copying calculator logic, protocol structure, the knowledge base, catalogs, design, or paid materials is prohibited.",
@@ -111,7 +115,7 @@
         title: "VitalRise — Условия использования",
         description: "Условия использования VitalRise: правила доступа, оплаты, ответственности пользователя, контента и ограничений сервиса.",
         heroTitle: "Условия использования",
-        heroLead: "Условия использования VitalRise. Последнее обновление: 7 июля 2026.",
+        heroLead: "Условия использования VitalRise. Последнее обновление: 9 июля 2026.",
         headings: [
           "1. Поставщик услуг и платежные реквизиты",
           "2. Назначение сервиса",
@@ -125,6 +129,7 @@
         ],
         paragraphs: [
           "Платный доступ и коммерческие услуги VitalRise предоставляет ФЛП Белашова Марианна Игоревна, которая также может указываться как ФЛП Белашова М.И. Регистрационный номер учетной карточки налогоплательщика: 3283103940. Регистрационный и фактический адрес: г. Киев, ул. Харьковское шоссе, 168Д, кв. 51.",
+          "Контактная информация продавца для вопросов оплаты, доступа, возврата средств и отмены транзакции: ФЛП Белашова Марианна Игоревна, РНУКПН 3283103940; регистрационный и фактический адрес: г. Киев, ул. Харьковское шоссе, 168Д, кв. 51; телефон: +38 (093) 581-06-28; email: info@vitalrise.com.ua.",
           "ФЛП Белашова М.И. работает на упрощенной системе налогообложения, 2 группа. Оплата принимается через платежный сервис WayForPay. В платежных документах, квитанциях или банковской выписке получатель может отображаться как ФЛП Белашова М.И.",
           "Название VitalRise используется как название сервиса, интерфейса и материалов. Если перед оплатой прямо не указан другой поставщик, договор о платном доступе заключается между пользователем и ФЛП Белашова М.И.",
           "VitalRise является образовательно-аналитическим сервисом для питания, тренировок, спортпита, лабораторного контроля, прогресса и влога о медицинских и фармакологических темах. Сервис не является медицинским учреждением, не ставит диагнозы и не назначает лечение.",
@@ -133,6 +138,7 @@
           "Условия оплаты, продолжительность доступа, состав тарифа, цена, порядок предоставления доступа и возможность возврата средств должны быть показаны пользователю до покупки. Оплата осуществляется через WayForPay; VitalRise и ФЛП Белашова М.И. не хранят полные данные банковской карты пользователя. Если на сайте будет опубликована отдельная политика возврата, она является частью этих условий.",
           "Платные тарифы могут оформляться как подписка с автоматическим продлением. Автопродление может быть включено по умолчанию в форме оплаты, но пользователь может снять соответствующую отметку перед оплатой и купить тариф без подписки. Если автопродление оставлено включенным, после завершения активной 30-дневной программы с карты пользователя автоматически списывается стоимость выбранного тарифа за следующий период, если пользователь не отменил подписку до даты следующего списания.",
           "Возврат средств возможен до активации 30-дневной программы, при ошибочной дубль-оплате или если после успешной оплаты доступ не открылся и техническую проблему не удалось решить. После активации программы и доступа к цифровым материалам возврат средств не применяется, кроме случаев, прямо предусмотренных законодательством или отдельно согласованных с ФЛП Белашова М.И. Отмена подписки прекращает будущие списания, но не отменяет уже предоставленный текущий период доступа.",
+          "Чтобы инициировать возврат средств или отмену ошибочной транзакции, пользователь должен обратиться на info@vitalrise.com.ua или по телефону +38 (093) 581-06-28 и указать email доступа, тариф, дату и сумму оплаты, а также причину обращения. Если возврат применим, он проводится после проверки статуса доступа и транзакции, обычно тем же платежным способом через WayForPay.",
           "Тексты, структура страниц, калькуляторы, алгоритмы подбора, учебные материалы, база упражнений, каталоги добавок и препаратов, таблицы, PDF/Blueprint, дизайн, интерфейс, код, название VitalRise, логотип и визуальные элементы сервиса принадлежат VitalRise или используются на законных основаниях.",
           "Пользователь получает право использовать материалы сервиса только в личных информационных, образовательных и тренировочных целях. Персональные отчеты, планы, протоколы, PDF или Blueprint можно сохранять для собственного использования, но нельзя продавать, публиковать как собственный продукт, передавать в массовый доступ или использовать для создания конкурирующего сервиса.",
           "Запрещено без письменного разрешения копировать, парсить, автоматически собирать, воспроизводить, переводить для коммерческого использования, адаптировать, перепродавать или публично распространять значительные части контента VitalRise. Запрещено создавать клон сервиса, копировать логику калькуляторов, структуру протоколов, базу знаний, каталоги, дизайн или платные материалы.",
