@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v289";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v236";
+const CACHE_NAME = "vitalrise-v290";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-v237";
 const APP_SHELL = [
   "./",
   "./index.html",
