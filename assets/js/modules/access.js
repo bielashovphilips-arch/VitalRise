@@ -66,6 +66,11 @@
         codeHint: "Код видається сервером після підтвердження оплати і прив’язується до email.",
         close: "Закрити",
         orderCreated: "Замовлення створено. Після підключення платіжного сервісу тут відкриватиметься сторінка оплати.",
+        paymentChecking: "Повернулися з WayForPay. Перевіряємо статус оплати...",
+        paymentConfirmed: "Оплату підтверджено. Доступ відкрито.",
+        paymentPending: "Оплату ще не підтверджено. Якщо ти вже оплатив, зачекай хвилину й онови сторінку — WayForPay може надіслати підтвердження із затримкою.",
+        paymentNotCompleted: "Оплату не завершено або її відхилено WayForPay. Кошти не підтверджені. Спробуй оплатити ще раз або напиши на info@vitalrise.com.ua.",
+        paymentEmailMissing: "Повернулися з WayForPay, але браузер не зберіг email замовлення. Введи той самий email і спробуй ще раз.",
         mockUnlocked: "Тестову оплату підтверджено. Доступ відкрито.",
         codeSuccess: "Доступ відкрито.",
         codeFail: "Код не підійшов або вже використаний.",
@@ -92,6 +97,11 @@
         codeHint: "The server issues the code after payment confirmation and binds it to the email.",
         close: "Close",
         orderCreated: "Order created. Once a payment provider is connected, the payment page will open here.",
+        paymentChecking: "Returned from WayForPay. Checking payment status...",
+        paymentConfirmed: "Payment confirmed. Access unlocked.",
+        paymentPending: "Payment is not confirmed yet. If you have already paid, wait a minute and refresh the page — WayForPay may send confirmation with a delay.",
+        paymentNotCompleted: "Payment was not completed or was declined by WayForPay. Funds are not confirmed. Try again or contact info@vitalrise.com.ua.",
+        paymentEmailMissing: "Returned from WayForPay, but the browser did not keep the order email. Enter the same email and try again.",
         mockUnlocked: "Test payment confirmed. Access unlocked.",
         codeSuccess: "Access unlocked.",
         codeFail: "Code did not match or was already used.",
@@ -118,6 +128,11 @@
         codeHint: "Код выдается сервером после подтверждения оплаты и привязывается к email.",
         close: "Закрыть",
         orderCreated: "Заказ создан. После подключения платежного сервиса здесь будет открываться страница оплаты.",
+        paymentChecking: "Вернулись из WayForPay. Проверяем статус оплаты...",
+        paymentConfirmed: "Оплата подтверждена. Доступ открыт.",
+        paymentPending: "Оплата пока не подтверждена. Если ты уже оплатил, подожди минуту и обнови страницу — WayForPay может отправить подтверждение с задержкой.",
+        paymentNotCompleted: "Оплата не завершена или отклонена WayForPay. Средства не подтверждены. Попробуй оплатить еще раз или напиши на info@vitalrise.com.ua.",
+        paymentEmailMissing: "Вернулись из WayForPay, но браузер не сохранил email заказа. Введи тот же email и попробуй еще раз.",
         mockUnlocked: "Тестовая оплата подтверждена. Доступ открыт.",
         codeSuccess: "Доступ открыт.",
         codeFail: "Код не подошел или уже использован.",
@@ -467,6 +482,23 @@
     if (status) status.textContent = message;
   }
 
+  function wait(ms) {
+    return new Promise(function (resolve) {
+      window.setTimeout(resolve, ms);
+    });
+  }
+
+  function isFailedPaymentReturn(status, reasonCode) {
+    const normalizedStatus = String(status || "").trim().toLowerCase();
+    const normalizedReason = String(reasonCode || "").trim();
+    if (normalizedReason && normalizedReason !== "1100") return true;
+    if (!normalizedStatus) return false;
+    if (["approved", "completed", "success", "accepted"].includes(normalizedStatus)) return false;
+    return ["declined", "refused", "expired", "reversed", "refund", "voided", "failed", "error"].some(function (marker) {
+      return normalizedStatus.includes(marker);
+    });
+  }
+
   async function submitCheckout() {
     const modal = ensurePaymentModal();
     if (!modal) return;
@@ -705,34 +737,71 @@
 
   async function claimPendingPayment() {
     const params = new URLSearchParams(window.location.search);
+    const isPaymentReturn = params.get("payment") === "return";
     const orderIdFromUrl = params.get("orderId") || "";
+    const paymentStatus = params.get("paymentStatus") || "";
+    const reasonCode = params.get("reasonCode") || "";
     const pending = getPendingOrder();
     const orderId = orderIdFromUrl || (pending && pending.orderId) || "";
     const email = (pending && pending.email) || getStored(EMAIL_KEY);
+    const tier = (pending && pending.tier && pending.tier !== "free") ? pending.tier : "start";
 
-    if (!orderId || !email) return;
+    if (isPaymentReturn) {
+      openPaymentModal(tier);
+      setPaymentStatus(phrase(email ? "paymentChecking" : "paymentEmailMissing"));
+    }
 
-    try {
-      const result = await postJsonWithStatus("/api/access/order", {
-        orderId: orderId,
-        email: email
-      });
-
-      if (result.ok && result.data.accessToken) {
-        setPaidAccess(result.data);
-        clearPendingOrder();
-
-        if (window.VitalRiseAnalytics && typeof window.VitalRiseAnalytics.trackPurchase === "function") {
-          window.VitalRiseAnalytics.trackPurchase(result.data.tier || "unknown", result.data.orderId || orderId);
-        }
+    if (!orderId || !email) {
+      if (orderIdFromUrl && window.history && window.history.replaceState) {
+        params.delete("payment");
+        params.delete("orderId");
+        params.delete("paymentStatus");
+        params.delete("reasonCode");
+        params.delete("reason");
+        const cleanUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
+        window.history.replaceState({}, document.title, cleanUrl);
       }
-    } catch (error) {
-      // Keep pending order for the next page load; WayForPay may call webhook a little later.
+      return;
+    }
+
+    const retryDelays = isPaymentReturn ? [0, 1500, 3500] : [0];
+    let lastResult = null;
+
+    for (let index = 0; index < retryDelays.length; index += 1) {
+      if (retryDelays[index]) await wait(retryDelays[index]);
+
+      try {
+        const result = await postJsonWithStatus("/api/access/order", {
+          orderId: orderId,
+          email: email
+        });
+        lastResult = result;
+
+        if (result.ok && result.data.accessToken) {
+          setPaidAccess(result.data);
+          clearPendingOrder();
+          if (isPaymentReturn) setPaymentStatus(phrase("paymentConfirmed"));
+
+          if (window.VitalRiseAnalytics && typeof window.VitalRiseAnalytics.trackPurchase === "function") {
+            window.VitalRiseAnalytics.trackPurchase(result.data.tier || "unknown", result.data.orderId || orderId);
+          }
+          break;
+        }
+      } catch (error) {
+        lastResult = null;
+      }
+    }
+
+    if (isPaymentReturn && (!lastResult || !lastResult.ok || !lastResult.data.accessToken)) {
+      setPaymentStatus(phrase(isFailedPaymentReturn(paymentStatus, reasonCode) ? "paymentNotCompleted" : "paymentPending"));
     }
 
     if (orderIdFromUrl && window.history && window.history.replaceState) {
       params.delete("payment");
       params.delete("orderId");
+      params.delete("paymentStatus");
+      params.delete("reasonCode");
+      params.delete("reason");
       const cleanUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
       window.history.replaceState({}, document.title, cleanUrl);
     }

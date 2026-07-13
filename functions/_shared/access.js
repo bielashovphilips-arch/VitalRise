@@ -296,8 +296,7 @@ function createWayForPayForm(order, plan, request, env) {
     productCount,
     clientEmail: order.email,
     clientAccountId: order.email,
-    defaultPaymentSystem: "card",
-    regularMode: "none"
+    defaultPaymentSystem: "card"
   };
   fields.merchantSignature = wayForPayPurchaseSignature(fields, String(env.WAYFORPAY_MERCHANT_SECRET));
 
@@ -628,6 +627,11 @@ async function handleOrder(request, env) {
 async function handlePaymentReturn(request) {
   const url = new URL(request.url);
   let orderId = String(url.searchParams.get("orderId") || "").trim();
+  const returnData = {
+    transactionStatus: String(url.searchParams.get("transactionStatus") || "").trim(),
+    reasonCode: String(url.searchParams.get("reasonCode") || "").trim(),
+    reason: String(url.searchParams.get("reason") || "").trim()
+  };
 
   if (!orderId && request.method === "POST") {
     const contentType = String(request.headers.get("content-type") || "").toLowerCase();
@@ -635,10 +639,16 @@ async function handlePaymentReturn(request) {
       if (contentType.includes("application/json")) {
         const body = await request.json();
         orderId = String(body.orderReference || body.orderId || "").trim();
+        returnData.transactionStatus = String(body.transactionStatus || returnData.transactionStatus || "").trim();
+        returnData.reasonCode = String(body.reasonCode || returnData.reasonCode || "").trim();
+        returnData.reason = String(body.reason || returnData.reason || "").trim();
       } else {
         const text = await request.text();
         const params = new URLSearchParams(text);
         orderId = String(params.get("orderReference") || params.get("orderId") || "").trim();
+        returnData.transactionStatus = String(params.get("transactionStatus") || returnData.transactionStatus || "").trim();
+        returnData.reasonCode = String(params.get("reasonCode") || returnData.reasonCode || "").trim();
+        returnData.reason = String(params.get("reason") || returnData.reason || "").trim();
       }
     } catch {
       orderId = "";
@@ -649,6 +659,9 @@ async function handlePaymentReturn(request) {
   const redirectUrl = new URL("/", origin);
   redirectUrl.searchParams.set("payment", "return");
   if (orderId) redirectUrl.searchParams.set("orderId", orderId);
+  if (returnData.transactionStatus) redirectUrl.searchParams.set("paymentStatus", returnData.transactionStatus.slice(0, 80));
+  if (returnData.reasonCode) redirectUrl.searchParams.set("reasonCode", returnData.reasonCode.slice(0, 40));
+  if (returnData.reason) redirectUrl.searchParams.set("reason", returnData.reason.slice(0, 160));
 
   return Response.redirect(redirectUrl.toString(), 303);
 }
