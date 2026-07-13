@@ -8,10 +8,17 @@
   const START_DEADLINE_KEY = "vitalrise:access:start-deadline:" + ACCESS_STORAGE_VERSION;
   const ACTIVE_EXPIRES_KEY = "vitalrise:access:active-expires:" + ACCESS_STORAGE_VERSION;
   const ACTIVATED_KEY = "vitalrise:access:activated:" + ACCESS_STORAGE_VERSION;
+  const FREE_TRIAL_KEY_PREFIX = "vitalrise:free-trial:" + ACCESS_STORAGE_VERSION + ":";
   const NEWSLETTER_PENDING_KEY = "vitalrise:newsletter:pending";
   const PENDING_ORDER_KEY = "vitalrise:access:pending-order";
   const tierRank = { free: 0, start: 1, pro: 2, premium: 3, admin: 4 };
   const activationFormIds = new Set(["nutrition-form", "training-form", "blueprint-form", "progress-form"]);
+  const freeTrialModules = {
+    "nutrition-panel": "nutrition",
+    "training-panel": "training",
+    "nutrition-form": "nutrition",
+    "training-form": "training"
+  };
   let activationRequestPending = false;
 
   const plans = {
@@ -57,6 +64,9 @@
         locked: "Платний модуль",
         need: "Потрібен тариф",
         unlock: "Розблокувати",
+        freeTrialDone: "Free-демо використано",
+        freeTrialUsedTitle: "Free-розрахунок уже використано",
+        freeTrialUsedText: "У Free доступний один розрахунок харчування і один розрахунок тренування. Для повторних розрахунків, 7-денного плану, PDF-звіту і Blueprint обери Start.",
         paymentTitle: "Оформлення доступу",
         paymentText: "Введи email для створення замовлення. Після оплати є 45 днів, щоб почати програму. Коли ти вводиш дані й запускаєш перший розрахунок, активується 30 днів програми.",
         renewalConsent: "Увімкнути автопродовження: після завершення активної програми списати вартість обраного тарифу через WayForPay за наступний період. Галочку можна зняти перед оплатою.",
@@ -90,6 +100,9 @@
         locked: "Paid module",
         need: "Required plan",
         unlock: "Unlock",
+        freeTrialDone: "Free demo used",
+        freeTrialUsedTitle: "Free calculation already used",
+        freeTrialUsedText: "Free includes one nutrition calculation and one training calculation. Choose Start for repeat calculations, the 7-day plan, PDF report, and Blueprint.",
         paymentTitle: "Access checkout",
         paymentText: "Enter your email to create an order. After payment, you have 45 days to start the program. When you enter data and run the first calculation, 30 days of active program begin.",
         renewalConsent: "Enable auto-renewal: after the active program ends, charge the selected plan through WayForPay for the next period. You can uncheck this before payment.",
@@ -123,6 +136,9 @@
         locked: "Платный модуль",
         need: "Нужен тариф",
         unlock: "Разблокировать",
+        freeTrialDone: "Free-демо использовано",
+        freeTrialUsedTitle: "Free-расчет уже использован",
+        freeTrialUsedText: "В Free доступен один расчет питания и один расчет тренировки. Для повторных расчетов, 7-дневного плана, PDF-отчета и Blueprint выбери Start.",
         paymentTitle: "Оформление доступа",
         paymentText: "Введи email для создания заказа. После оплаты есть 45 дней, чтобы начать программу. Когда ты вводишь данные и запускаешь первый расчет, активируются 30 дней программы.",
         renewalConsent: "Включить автопродление: после завершения активной программы списать стоимость выбранного тарифа через WayForPay за следующий период. Галочку можно снять перед оплатой.",
@@ -260,6 +276,34 @@
   function hasAccess(requiredTier) {
     const required = normalizeTier(requiredTier);
     return tierRank[getTier()] >= tierRank[required];
+  }
+
+  function getFreeTrialModule(source) {
+    if (!source) return "";
+    if (source === "nutrition" || source === "training") return source;
+    if (typeof source === "string") return freeTrialModules[source] || "";
+    return freeTrialModules[source.id] || "";
+  }
+
+  function getFreeTrialKey(module) {
+    return FREE_TRIAL_KEY_PREFIX + module;
+  }
+
+  function isFreeTrialUsed(module) {
+    return Boolean(module && getStored(getFreeTrialKey(module)));
+  }
+
+  function canUseFreeTrial(source) {
+    const module = getFreeTrialModule(source);
+    return getTier() === "free" && Boolean(module) && !isFreeTrialUsed(module);
+  }
+
+  function consumeFreeTrial(source) {
+    const module = getFreeTrialModule(source);
+    if (!canUseFreeTrial(module)) return false;
+    setStored(getFreeTrialKey(module), new Date().toISOString());
+    applyAccessState();
+    return true;
   }
 
   function getPlanLabel(tier) {
@@ -592,15 +636,16 @@
     }
   }
 
-  function createPaywall(requiredTier) {
+  function createPaywall(requiredTier, trialModule) {
     const plan = plans[requiredTier] || plans.start;
+    const trialUsed = getTier() === "free" && Boolean(trialModule) && isFreeTrialUsed(trialModule);
     const overlay = document.createElement("div");
     overlay.className = "module-paywall";
     overlay.innerHTML =
       '<div class="module-paywall-card">' +
-        '<span>' + phrase("locked") + '</span>' +
-        '<h3>' + phrase("need") + ' ' + plan.label + '</h3>' +
-        '<p>' + getPlanUnlocks(requiredTier) + '</p>' +
+        '<span>' + (trialUsed ? phrase("freeTrialDone") : phrase("locked")) + '</span>' +
+        '<h3>' + (trialUsed ? phrase("freeTrialUsedTitle") : phrase("need") + ' ' + plan.label) + '</h3>' +
+        '<p>' + (trialUsed ? phrase("freeTrialUsedText") : getPlanUnlocks(requiredTier)) + '</p>' +
         '<button type="button" class="btn btn-primary" data-open-payment="' + requiredTier + '">' + phrase("unlock") + ' ' + plan.label + '</button>' +
       '</div>';
     return overlay;
@@ -627,18 +672,20 @@
 
     document.querySelectorAll("[data-plan-required]").forEach(function (node) {
       const requiredTier = normalizeTier(node.dataset.planRequired);
-      const allowed = hasAccess(requiredTier);
+      const trialModule = getFreeTrialModule(node);
+      const allowed = hasAccess(requiredTier) || canUseFreeTrial(trialModule);
       const existing = node.querySelector(":scope > .module-paywall");
 
       node.classList.toggle("is-locked-module", !allowed);
+      node.classList.toggle("is-free-trial-module", allowed && getTier() === "free" && Boolean(trialModule));
       disableInteractive(node, !allowed);
 
       if (!allowed && !existing) {
-        node.insertBefore(createPaywall(requiredTier), node.firstChild);
+        node.insertBefore(createPaywall(requiredTier, trialModule), node.firstChild);
       } else if (allowed && existing) {
         existing.remove();
       } else if (!allowed && existing) {
-        existing.replaceWith(createPaywall(requiredTier));
+        existing.replaceWith(createPaywall(requiredTier, trialModule));
       }
     });
 
@@ -850,6 +897,8 @@
     getTier: getTier,
     setTier: setTier,
     hasAccess: hasAccess,
+    canUseFreeTrial: canUseFreeTrial,
+    consumeFreeTrial: consumeFreeTrial,
     activateProgram: activateProgram,
     openPaymentModal: openPaymentModal,
     apply: applyAccessState

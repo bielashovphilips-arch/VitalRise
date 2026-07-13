@@ -478,6 +478,13 @@
     return null;
   }
 
+  function consumeFreeTrialCalculation(formId) {
+    const access = window.VitalRiseSystem && window.VitalRiseSystem.access;
+    if (access && typeof access.consumeFreeTrial === "function") {
+      access.consumeFreeTrial(formId);
+    }
+  }
+
   function saveNutritionSnapshot(targets, formData) {
     try {
       window.localStorage.setItem("vitalrise:nutrition:last-targets", JSON.stringify({
@@ -1084,6 +1091,7 @@ function buildMealConstructorMarkup(targets) {
 
      saveNutritionSnapshot(result, data);
      renderNutritionConstructor(result, data);
+     consumeFreeTrialCalculation("nutrition-form");
     });
   }
 

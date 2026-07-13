@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v295";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v242";
+const CACHE_NAME = "vitalrise-v296";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-v243";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -23,7 +23,7 @@ const APP_SHELL = [
   "./assets/images/exercises/vitalrise-bent-over-row.png",
   "./assets/images/exercises/vitalrise-cable-pullover.png",
   "./assets/js/modules/system.js",
-  "./assets/js/modules/i18n.js?v=modules-i18n-11",
+  "./assets/js/modules/i18n.js?v=modules-i18n-12",
   "./assets/js/modules/vlog-i18n.js?v=vlog-translation-11",
   "./assets/js/modules/legal-i18n.js?v=legal-i18n-7",
   "./assets/js/modules/mobile-menu.js",
@@ -45,7 +45,7 @@ const APP_SHELL = [
   "./assets/js/modules/training-guidance.js?v=training-control-1",
   "./assets/js/modules/training-progression.js",
   "./assets/js/modules/training-render.js?v=training-copy-fix-1",
-  "./assets/js/modules/training-builder.js?v=gym-dips-1",
+  "./assets/js/modules/training-builder.js?v=free-trial-1",
   "./assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1",
   "./assets/js/modules/exercise-atlas.js?v=atlas-clean-1",
   "./assets/js/modules/labs.js",
@@ -54,8 +54,8 @@ const APP_SHELL = [
   "./assets/js/modules/blueprint.js",
   "./assets/js/modules/supplements.js?v=testosterone-ergogenic-2",
   "./assets/js/modules/coach.js?v=quick-profiles-2",
-  "./assets/js/modules/access.js?v=paid-token-lock-2",
-  "./assets/js/script.js?v=age-screening-1",
+  "./assets/js/modules/access.js?v=free-trial-1",
+  "./assets/js/script.js?v=free-trial-1",
   "./manifest.webmanifest"
 ];
 

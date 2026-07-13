@@ -591,6 +591,13 @@
         : '<div class="result-placeholder">Не вдалося сформувати план. Перевір параметри та спробуй ще раз.</div>';
   }
 
+  function consumeFreeTrialCalculation(formId) {
+    const access = window.VitalRiseSystem && window.VitalRiseSystem.access;
+    if (access && typeof access.consumeFreeTrial === "function") {
+      access.consumeFreeTrial(formId);
+    }
+  }
+
   if (trainingForm) {
     trainingForm.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -600,6 +607,7 @@
       const result = buildTrainingPlan(data);
 
       renderTrainingResult(result);
+      consumeFreeTrialCalculation("training-form");
     });
   }
 
