@@ -10903,6 +10903,14 @@ main {
   font-weight: 800;
 }
 
+.payment-status:not(:empty) {
+  padding: 12px 14px;
+  border: 1px solid rgba(244, 193, 74, 0.3);
+  border-radius: 14px;
+  background: rgba(244, 193, 74, 0.08);
+  line-height: 1.35;
+}
+
 .has-payment-open {
   overflow: hidden;
 }
