@@ -8,6 +8,7 @@ compatibility_date = "2026-07-07"
 [env.production.vars]
 SITE_ORIGIN = "https://vitalrise.com.ua"
 WAYFORPAY_MERCHANT_DOMAIN = "vitalrise.com.ua"
+WAYFORPAY_MERCHANT_ACCOUNT_PUBLIC = "vitalrise_com_ua"
 
 [[env.production.kv_namespaces]]
 binding = "VITALRISE_ACCESS"

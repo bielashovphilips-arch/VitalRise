@@ -70,6 +70,7 @@
         paymentConfirmed: "Оплату підтверджено. Доступ відкрито.",
         paymentPending: "Оплату ще не підтверджено. Якщо ти вже оплатив, зачекай хвилину й онови сторінку — WayForPay може надіслати підтвердження із затримкою.",
         paymentNotCompleted: "Оплату не завершено або її відхилено WayForPay. Кошти не підтверджені. Спробуй оплатити ще раз або напиши на info@vitalrise.com.ua.",
+        paymentMerchantRestricted: "WayForPay не відкрив сторінку оплати: для магазину зараз заборонені транзакції або магазин ще має обмеження. Код WayForPay: 1118 Merchant Restriction.",
         paymentEmailMissing: "Повернулися з WayForPay, але браузер не зберіг email замовлення. Введи той самий email і спробуй ще раз.",
         mockUnlocked: "Тестову оплату підтверджено. Доступ відкрито.",
         codeSuccess: "Доступ відкрито.",
@@ -101,6 +102,7 @@
         paymentConfirmed: "Payment confirmed. Access unlocked.",
         paymentPending: "Payment is not confirmed yet. If you have already paid, wait a minute and refresh the page — WayForPay may send confirmation with a delay.",
         paymentNotCompleted: "Payment was not completed or was declined by WayForPay. Funds are not confirmed. Try again or contact info@vitalrise.com.ua.",
+        paymentMerchantRestricted: "WayForPay did not open the payment page: transactions are currently restricted for this shop, or the shop still has limitations. WayForPay code: 1118 Merchant Restriction.",
         paymentEmailMissing: "Returned from WayForPay, but the browser did not keep the order email. Enter the same email and try again.",
         mockUnlocked: "Test payment confirmed. Access unlocked.",
         codeSuccess: "Access unlocked.",
@@ -132,6 +134,7 @@
         paymentConfirmed: "Оплата подтверждена. Доступ открыт.",
         paymentPending: "Оплата пока не подтверждена. Если ты уже оплатил, подожди минуту и обнови страницу — WayForPay может отправить подтверждение с задержкой.",
         paymentNotCompleted: "Оплата не завершена или отклонена WayForPay. Средства не подтверждены. Попробуй оплатить еще раз или напиши на info@vitalrise.com.ua.",
+        paymentMerchantRestricted: "WayForPay не открыл страницу оплаты: для магазина сейчас запрещены транзакции или у магазина еще есть ограничения. Код WayForPay: 1118 Merchant Restriction.",
         paymentEmailMissing: "Вернулись из WayForPay, но браузер не сохранил email заказа. Введи тот же email и попробуй еще раз.",
         mockUnlocked: "Тестовая оплата подтверждена. Доступ открыт.",
         codeSuccess: "Доступ открыт.",
@@ -793,7 +796,12 @@
     }
 
     if (isPaymentReturn && (!lastResult || !lastResult.ok || !lastResult.data.accessToken)) {
-      setPaymentStatus(phrase(isFailedPaymentReturn(paymentStatus, reasonCode) ? "paymentNotCompleted" : "paymentPending"));
+      const statusKey = reasonCode === "1118"
+        ? "paymentMerchantRestricted"
+        : isFailedPaymentReturn(paymentStatus, reasonCode)
+          ? "paymentNotCompleted"
+          : "paymentPending";
+      setPaymentStatus(phrase(statusKey));
     }
 
     if (orderIdFromUrl && window.history && window.history.replaceState) {

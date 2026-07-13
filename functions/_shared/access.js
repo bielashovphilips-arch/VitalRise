@@ -230,12 +230,16 @@ function getMerchantDomain(request, env) {
   }
 }
 
+function getWayForPayMerchantAccount(env) {
+  return String(env.WAYFORPAY_MERCHANT_ACCOUNT_PUBLIC || env.WAYFORPAY_MERCHANT_ACCOUNT || "").trim();
+}
+
 function isMock(env) {
   return String(env.ACCESS_MOCK_PAYMENTS || "") === "1";
 }
 
 function hasWayForPay(env) {
-  return Boolean(env.WAYFORPAY_MERCHANT_ACCOUNT && env.WAYFORPAY_MERCHANT_SECRET);
+  return Boolean(getWayForPayMerchantAccount(env) && env.WAYFORPAY_MERCHANT_SECRET);
 }
 
 function wayForPayPurchaseSignature(fields, secret) {
@@ -278,7 +282,7 @@ function createWayForPayForm(order, plan, request, env) {
   const productPrice = [String(plan.price)];
   const productCount = ["1"];
   const fields = {
-    merchantAccount: String(env.WAYFORPAY_MERCHANT_ACCOUNT),
+    merchantAccount: getWayForPayMerchantAccount(env),
     merchantAuthType: "SimpleSignature",
     merchantDomainName,
     merchantTransactionType: "AUTO",
