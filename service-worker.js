@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v290";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v237";
+const CACHE_NAME = "vitalrise-v292";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-v239";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -40,11 +40,11 @@ const APP_SHELL = [
   "./assets/js/modules/nutrition.js?v=exact-bju-3",
   "./assets/js/modules/nutrition-render.js?v=nutrition-i18n-1",
   "./assets/js/modules/training.js",
-  "./assets/js/modules/training-templates.js?v=female-outdoor-glutes-1",
+  "./assets/js/modules/training-templates.js?v=gym-dips-1",
   "./assets/js/modules/training-guidance.js?v=training-control-1",
   "./assets/js/modules/training-progression.js",
   "./assets/js/modules/training-render.js?v=training-copy-fix-1",
-  "./assets/js/modules/training-builder.js?v=female-outdoor-glutes-1",
+  "./assets/js/modules/training-builder.js?v=gym-dips-1",
   "./assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1",
   "./assets/js/modules/exercise-atlas.js?v=atlas-clean-1",
   "./assets/js/modules/labs.js",
@@ -53,7 +53,7 @@ const APP_SHELL = [
   "./assets/js/modules/blueprint.js",
   "./assets/js/modules/supplements.js?v=testosterone-ergogenic-2",
   "./assets/js/modules/coach.js?v=quick-profiles-2",
-  "./assets/js/modules/access.js?v=payment-auto-access-1",
+  "./assets/js/modules/access.js?v=paid-token-lock-2",
   "./assets/js/script.js?v=age-screening-1",
   "./manifest.webmanifest"
 ];

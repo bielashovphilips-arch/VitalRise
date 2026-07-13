@@ -1,12 +1,13 @@
 (function () {
   const system = window.VitalRiseSystem || {};
-  const TIER_KEY = "vitalrise:access:tier";
-  const TOKEN_KEY = "vitalrise:access:token";
-  const EMAIL_KEY = "vitalrise:access:email";
-  const EXPIRES_KEY = "vitalrise:access:expires";
-  const START_DEADLINE_KEY = "vitalrise:access:start-deadline";
-  const ACTIVE_EXPIRES_KEY = "vitalrise:access:active-expires";
-  const ACTIVATED_KEY = "vitalrise:access:activated";
+  const ACCESS_STORAGE_VERSION = "v2";
+  const TIER_KEY = "vitalrise:access:tier:" + ACCESS_STORAGE_VERSION;
+  const TOKEN_KEY = "vitalrise:access:token:" + ACCESS_STORAGE_VERSION;
+  const EMAIL_KEY = "vitalrise:access:email:" + ACCESS_STORAGE_VERSION;
+  const EXPIRES_KEY = "vitalrise:access:expires:" + ACCESS_STORAGE_VERSION;
+  const START_DEADLINE_KEY = "vitalrise:access:start-deadline:" + ACCESS_STORAGE_VERSION;
+  const ACTIVE_EXPIRES_KEY = "vitalrise:access:active-expires:" + ACCESS_STORAGE_VERSION;
+  const ACTIVATED_KEY = "vitalrise:access:activated:" + ACCESS_STORAGE_VERSION;
   const NEWSLETTER_PENDING_KEY = "vitalrise:newsletter:pending";
   const PENDING_ORDER_KEY = "vitalrise:access:pending-order";
   const tierRank = { free: 0, start: 1, pro: 2, premium: 3, admin: 4 };
@@ -204,7 +205,9 @@
   }
 
   function getTier() {
-    return normalizeTier(document.body.dataset.accessTier || getStored(TIER_KEY));
+    const tier = normalizeTier(document.body.dataset.accessTier || getStored(TIER_KEY));
+    if (tier !== "free" && tier !== "admin" && !getStored(TOKEN_KEY)) return "free";
+    return tier;
   }
 
   function setTier(tier) {
