@@ -335,6 +335,11 @@ function isExpired(record) {
   return !expiresAt || new Date(expiresAt).getTime() < Date.now();
 }
 
+function isRefundStatus(status) {
+  const normalized = String(status || "").trim().toLowerCase();
+  return ["refund", "refunded", "reversed", "reverse", "voided", "chargeback"].some((marker) => normalized.includes(marker));
+}
+
 async function issueAccess(kv, order) {
   const plan = PLANS[order.plan];
   const accessCode = createCode(order.plan);
@@ -432,6 +437,44 @@ async function activateToken(kv, token, source) {
   }
 
   return token;
+}
+
+async function revokeOrderAccess(kv, order, providerPayload) {
+  const revokedAt = nowIso();
+  order.status = "refunded";
+  order.refundedAt = order.refundedAt || revokedAt;
+  order.providerRefundPayload = providerPayload || {};
+
+  if (order.accessToken) {
+    const tokenHash = await sha256(order.accessToken);
+    const token = await kvGet(kv, `token:${tokenHash}`);
+    if (token) {
+      token.revokedAt = token.revokedAt || revokedAt;
+      token.revocationReason = "payment_refunded";
+      await kvPut(kv, `token:${tokenHash}`, token);
+    }
+  }
+
+  if (order.accessCode) {
+    const codeHash = await sha256(order.accessCode);
+    const code = await kvGet(kv, `code:${codeHash}`);
+    if (code) {
+      code.revokedAt = code.revokedAt || revokedAt;
+      code.revocationReason = "payment_refunded";
+      await kvPut(kv, `code:${codeHash}`, code);
+    }
+  }
+
+  const subscription = await kvGet(kv, `subscription:${order.id}`);
+  if (subscription) {
+    subscription.status = "canceled";
+    subscription.canceledAt = subscription.canceledAt || revokedAt;
+    subscription.cancelReason = "payment_refunded";
+    await kvPut(kv, `subscription:${order.id}`, subscription);
+  }
+
+  await kvPut(kv, `order:${order.id}`, order);
+  return order;
 }
 
 async function readJson(request) {
@@ -535,7 +578,7 @@ async function handleRedeem(request, env) {
 
   const codeHash = await sha256(codeValue);
   const code = await kvGet(kv, `code:${codeHash}`);
-  if (!code || code.email !== email || code.redeemedAt) {
+  if (!code || code.email !== email || code.redeemedAt || code.revokedAt) {
     return json({ ok: false, error: "Access code is invalid or already used" }, 403);
   }
   if (isExpired(code)) return json({ ok: false, error: "Access code expired" }, 403);
@@ -610,7 +653,12 @@ async function handleOrder(request, env) {
   const order = await kvGet(kv, `order:${orderId}`);
   if (!order || order.email !== email) return json({ ok: false, error: "Order not found" }, 404);
   if (order.status !== "paid") {
-    return json({ ok: false, status: order.status || "pending", orderId }, 202);
+    return json({
+      ok: false,
+      status: order.status || "pending",
+      orderId,
+      refundedAt: order.refundedAt || null
+    }, 202);
   }
 
   order.claimedAt = order.claimedAt || nowIso();
@@ -618,6 +666,7 @@ async function handleOrder(request, env) {
 
   return json({
     ok: true,
+    status: order.status,
     orderId: order.id,
     tier: order.plan,
     email: order.email,
@@ -691,21 +740,25 @@ async function handleWayForPayWebhook(request, env) {
   const status = String(body.transactionStatus || "").toLowerCase();
   const reasonCode = String(body.reasonCode || "");
   const approved = status === "approved" || status === "completed" || status === "success";
+  const providerPayload = {
+    transactionStatus: body.transactionStatus,
+    reasonCode: body.reasonCode,
+    paymentSystem: body.paymentSystem,
+    createdDate: body.createdDate,
+    processingDate: body.processingDate,
+    authCode: body.authCode || "",
+    cardPan: body.cardPan || ""
+  };
 
   if (approved && (!reasonCode || reasonCode === "1100")) {
     if (order.status !== "paid") {
       order.provider = "wayforpay";
       order.providerReference = String(body.authCode || body.cardPan || "");
-      order.providerPayload = {
-        transactionStatus: body.transactionStatus,
-        reasonCode: body.reasonCode,
-        paymentSystem: body.paymentSystem,
-        createdDate: body.createdDate,
-        processingDate: body.processingDate,
-        recToken: body.recToken || ""
-      };
+      order.providerPayload = { ...providerPayload, recToken: body.recToken || "" };
       await issueAccess(kv, order);
     }
+  } else if (isRefundStatus(status)) {
+    await revokeOrderAccess(kv, order, providerPayload);
   }
 
   const responseStatus = "accept";

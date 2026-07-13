@@ -576,18 +576,21 @@
         <span id="payment-email-label"></span>
         <input type="email" id="payment-email" autocomplete="email" placeholder="client@example.com" />
       </label>
-      <label class="payment-code-field" for="payment-access-code">
-        <span id="payment-code-label"></span>
-        <input type="text" id="payment-access-code" autocomplete="one-time-code" placeholder="VR-START-XXXX" />
-      </label>
-      <p class="payment-demo-note" id="payment-code-hint"></p>
       <label class="payment-demo-note payment-renewal-note" for="payment-renewal-consent">
         <input type="checkbox" id="payment-renewal-consent" />
         <span id="payment-renewal-label"></span>
       </label>
+      <details class="payment-redeem-panel">
+        <summary id="payment-redeem-summary"></summary>
+        <label class="payment-code-field" for="payment-access-code">
+          <span id="payment-code-label"></span>
+          <input type="text" id="payment-access-code" autocomplete="one-time-code" placeholder="VR-START-XXXX" />
+        </label>
+        <p class="payment-demo-note" id="payment-code-hint"></p>
+        <button type="button" class="btn btn-secondary" id="payment-redeem-button"></button>
+      </details>
       <div class="payment-actions">
         <button type="button" class="btn btn-secondary" data-payment-close id="payment-close-button"></button>
-        <button type="button" class="btn btn-secondary" id="payment-redeem-button"></button>
         <button type="button" class="btn btn-primary" id="payment-checkout-button"></button>
       </div>
       <div class="payment-status" id="payment-status" aria-live="polite"></div>
@@ -654,7 +657,7 @@
   <script src="assets/js/modules/blueprint.js"></script>
   <script src="assets/js/modules/supplements.js?v=testosterone-ergogenic-2"></script>
   <script src="assets/js/modules/coach.js?v=quick-profiles-2"></script>
-  <script src="assets/js/modules/access.js?v=payment-return-fix-3"></script>
+  <script src="assets/js/modules/access.js?v=payment-auto-access-1"></script>
   <script src="assets/js/script.js?v=age-screening-1"></script>
 </body>
 </html>

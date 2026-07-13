@@ -10872,6 +10872,30 @@ main {
   transform: scale(0.88);
 }
 
+.payment-redeem-panel {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.payment-redeem-panel summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.payment-redeem-panel .payment-code-field {
+  margin-top: 12px;
+}
+
+.payment-redeem-panel .btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
 .payment-code-field {
   display: grid;
   gap: 8px;

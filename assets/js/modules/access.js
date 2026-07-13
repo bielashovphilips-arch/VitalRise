@@ -62,6 +62,7 @@
         email: "Email для доступу",
         checkout: "Перейти до оплати",
         redeem: "Активувати код",
+        redeemSummary: "Вже маєш резервний код?",
         code: "Код доступу VitalRise",
         codeHint: "Код VitalRise має формат VR-START-XXXX і видається сайтом після підтвердження оплати. Це не код авторизації WayForPay з квитанції.",
         close: "Закрити",
@@ -94,6 +95,7 @@
         email: "Access email",
         checkout: "Go to payment",
         redeem: "Activate code",
+        redeemSummary: "Already have a backup code?",
         code: "VitalRise access code",
         codeHint: "A VitalRise code looks like VR-START-XXXX and is issued by the site after payment confirmation. It is not the WayForPay authorization code from the receipt.",
         close: "Close",
@@ -126,6 +128,7 @@
         email: "Email для доступа",
         checkout: "Перейти к оплате",
         redeem: "Активировать код",
+        redeemSummary: "Уже есть резервный код?",
         code: "Код доступа VitalRise",
         codeHint: "Код VitalRise имеет формат VR-START-XXXX и выдается сайтом после подтверждения оплаты. Это не код авторизации WayForPay из квитанции.",
         close: "Закрыть",
@@ -445,6 +448,8 @@
     if (renewalLabel) renewalLabel.textContent = phrase("renewalConsent");
     if (renewalInput) renewalInput.checked = true;
     modal.querySelector("#payment-email-label").textContent = phrase("email");
+    const redeemSummary = modal.querySelector("#payment-redeem-summary");
+    if (redeemSummary) redeemSummary.textContent = phrase("redeemSummary");
     modal.querySelector("#payment-code-label").textContent = phrase("code");
     modal.querySelector("#payment-code-hint").textContent = phrase("codeHint");
     modal.querySelector("#payment-close-button").textContent = phrase("close");
