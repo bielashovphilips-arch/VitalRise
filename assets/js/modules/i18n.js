@@ -5,8 +5,8 @@
 
   const translations = {
     uk: {
-      metaTitle: "VitalRise — система атлетичного тіла",
-      metaDescription: "VitalRise — преміальна система для спортсменів: харчування, тренування, спортпіт, прогрес і лабораторні маркери в одному атлетичному кабінеті.",
+      metaTitle: "VitalRise — план харчування, тренувань і аналізів для спортсменів",
+      metaDescription: "VitalRise допомагає зібрати план харчування, програму тренувань, спортпіт, прогрес і лабораторні маркери в одному кабінеті спортсмена.",
       "nav.profile": "Профіль",
       "nav.labs": "Аналізи",
       "nav.calculator": "Харчування",
@@ -66,8 +66,8 @@
       "recovery.readinessMeta": "Правило: метод відновлення має покращувати наступний тиждень тренувань, а не приховувати перевтому."
     },
     en: {
-      metaTitle: "VitalRise — athletic body system",
-      metaDescription: "VitalRise is a premium athlete system for nutrition, training, supplements, progress, recovery, and lab markers in one performance dashboard.",
+      metaTitle: "VitalRise — nutrition, training, and lab tracking for athletes",
+      metaDescription: "VitalRise brings nutrition planning, training programs, supplements, progress, recovery, and lab markers into one athlete dashboard.",
       "nav.profile": "Profile",
       "nav.labs": "Labs",
       "nav.calculator": "Nutrition",
@@ -127,8 +127,8 @@
       "recovery.readinessMeta": "Rule: a recovery method should improve the next training week, not hide fatigue."
     },
     ru: {
-      metaTitle: "VitalRise — система атлетичного тела",
-      metaDescription: "VitalRise — премиальная система для спортсменов: питание, тренировки, спортпит, прогресс, восстановление и лабораторные маркеры в одном кабинете.",
+      metaTitle: "VitalRise — питание, тренировки и анализы для спортсменов",
+      metaDescription: "VitalRise собирает план питания, программу тренировок, спортпит, прогресс, восстановление и лабораторные маркеры в одном кабинете спортсмена.",
       "nav.profile": "Профиль",
       "nav.labs": "Анализы",
       "nav.calculator": "Питание",
@@ -2472,12 +2472,13 @@
     const title = translate("metaTitle", currentLanguage);
     const description = translate("metaDescription", currentLanguage);
     const descriptionNode = document.querySelector('meta[name="description"]');
+    const shouldUpdateGlobalMeta = !document.querySelector(".module-page-main, .vlog-main, [data-legal-page]");
 
     isApplyingTranslations = true;
     document.documentElement.lang = currentLanguage;
     document.body.dataset.language = currentLanguage;
-    if (title) document.title = title;
-    if (descriptionNode && description) descriptionNode.setAttribute("content", description);
+    if (shouldUpdateGlobalMeta && title) document.title = title;
+    if (shouldUpdateGlobalMeta && descriptionNode && description) descriptionNode.setAttribute("content", description);
 
     document.querySelectorAll("[data-i18n]").forEach(function (node) {
       const value = translate(node.dataset.i18n, currentLanguage);

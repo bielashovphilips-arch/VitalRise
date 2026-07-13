@@ -2046,8 +2046,8 @@
   function translateAttributes(language) {
     const pageMeta = {
       uk: {
-        title: "VitalRise - фармакологічна база знань",
-        description: "Фармакологічна база знань VitalRise: освітня інформація про препарати, медичний контекст, ризики, аналізи та симптоми для звернення до лікаря."
+        title: "Фармакологія і здоров’я спортсмена — база знань | VitalRise",
+        description: "Освітня база VitalRise про фармакологію, здоров’я спортсмена, ризики, аналізи і симптоми, з якими варто звернутися до лікаря."
       },
       en: {
         title: "VitalRise - pharmacology knowledge base",
