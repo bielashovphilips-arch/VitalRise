@@ -31,7 +31,7 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="assets/css/style.css?v=legal-contact-1" />
+  <link rel="stylesheet" href="assets/css/style.css?v=footer-signature-1" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -93,62 +93,6 @@
     }
   </script>
   
-  <!-- Google Analytics 4 -->
-  <script>
-    window.VITALRISE_GA_ID = "G-ZWZ69L25NR";
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){window.dataLayer.push(arguments);}
-    function vitalRiseGaPlanValue(tier) {
-      return ({ start: 499, pro: 1499, premium: 3500 })[tier] || 0;
-    }
-    window.VitalRiseAnalytics = {
-      trackTierView: function (tier) {
-        gtag("event", "view_tier", {
-          tier: tier,
-          value: vitalRiseGaPlanValue(tier),
-          currency: "UAH"
-        });
-      },
-      trackCheckoutStart: function (tier) {
-        gtag("event", "begin_checkout", {
-          tier: tier,
-          value: vitalRiseGaPlanValue(tier),
-          currency: "UAH",
-          items: [{ item_id: tier, item_name: "VitalRise " + tier, price: vitalRiseGaPlanValue(tier), quantity: 1 }]
-        });
-      },
-      trackPurchase: function (tier, orderId) {
-        gtag("event", "purchase", {
-          transaction_id: orderId || ("manual-" + Date.now()),
-          tier: tier,
-          value: vitalRiseGaPlanValue(tier),
-          currency: "UAH",
-          items: [{ item_id: tier, item_name: "VitalRise " + tier, price: vitalRiseGaPlanValue(tier), quantity: 1 }]
-        });
-      },
-      trackCodeRedeemed: function (tier) { gtag("event", "redeem_code", { tier: tier }); },
-      trackNewsletterSignup: function () {
-        gtag("event", "newsletter_signup", {
-          source: "pricing",
-          language: document.documentElement.lang || "uk"
-        });
-      }
-    };
-    (function () {
-      var gaId = String(window.VITALRISE_GA_ID || "").trim();
-      if (!/^G-[A-Z0-9]+$/i.test(gaId)) return;
-      var script = document.createElement("script");
-      script.async = true;
-      script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(gaId);
-      document.head.appendChild(script);
-      gtag("js", new Date());
-      gtag("config", gaId, {
-        anonymize_ip: true,
-        allow_google_signals: false,
-        allow_ad_personalization_signals: false
-      });
-    })();
-  </script>
 </head>
 <body>
   <div class="site-shell">
@@ -170,6 +114,7 @@
           <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
           <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
           <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
+          <a href="https://t.me/bielashov" class="nav-accent" target="_blank" rel="noopener noreferrer" data-i18n="nav.writeCoach">Написати тренеру</a>
         </nav>
 
         <div class="language-switcher" aria-label="Мова сайту">
@@ -349,27 +294,27 @@
                     <span>Free</span>
                     <strong data-i18n="pricing.freePrice">0 грн</strong>
                   </div>
-                  <h3 data-i18n="pricing.freeTitle">Швидкий старт</h3>
-                  <p class="pricing-card-copy" data-i18n="pricing.freeCopy">Для людини, яка хоче без оплати зробити перший розрахунок: 1 день харчування і 1 тренування. Повний тижневий план відкривається у Start.</p>
+                  <h3 data-i18n="pricing.freeTitle">Персональний старт</h3>
+                  <p class="pricing-card-copy" data-i18n="pricing.freeCopy">Введи базові дані та безкоштовно отримай персональний орієнтир калорійності. Повний план залишається у Start.</p>
                   <ul>
-                    <li data-i18n="pricing.freeItem1">Калькулятор калорій і БЖВ</li>
-                    <li data-i18n="pricing.freeItem2">1 розрахунок денного раціону</li>
-                    <li data-i18n="pricing.freeItem3">1 розрахунок тренування</li>
-                    <li data-i18n="pricing.freeItem4">Частковий атлас вправ</li>
-                    <li data-i18n="pricing.freeItem5">Базовий модуль спортпіту</li>
+                    <li data-i18n="pricing.freeItem1">Персональний орієнтир калорій</li>
+                    <li data-i18n="pricing.freeItem2">Розрахунок за твоїми даними</li>
+                    <li data-i18n="pricing.freeItem3">Без раціону та програми тренувань</li>
+                    <li data-i18n="pricing.freeItem4">Відкриті матеріали Влогу</li>
+                    <li data-i18n="pricing.freeItem5">Базові знання про відновлення</li>
                   </ul>
-                  <a href="nutrition.html" class="btn btn-secondary" data-i18n="pricing.freeCta">Зробити free-розрахунок</a>
+                  <a href="#free-calculator" class="btn btn-secondary" data-i18n="pricing.freeCta">Розрахувати калорії</a>
                 </div>
                 <div class="pricing-card-face pricing-card-back">
-                  <span class="pricing-back-kicker" data-i18n="pricing.freeBackLabel">Для старту</span>
-                  <h3 data-i18n="pricing.freeBackTitle">Що відкриває</h3>
-                  <p data-i18n="pricing.freeBackText">Дає один безкоштовний розрахунок харчування і один розрахунок тренування. Після цього повторні розрахунки, 7-денний план, PDF і Blueprint відкриває Start.</p>
+                  <span class="pricing-back-kicker" data-i18n="pricing.freeBackLabel">Перший крок</span>
+                  <h3 data-i18n="pricing.freeBackTitle">Від цифри до плану</h3>
+                  <p data-i18n="pricing.freeBackText">Free показує лише твій базовий енергетичний орієнтир. Раціон, тренування, корекції та PDF відкриваються після оплати Start.</p>
                   <div class="pricing-back-points">
                     <span data-i18n="pricing.backPointCalculator">Калькулятор</span>
                     <span data-i18n="pricing.backPointSample">Приклад раціону</span>
                     <span data-i18n="pricing.backPointBase">База системи</span>
                   </div>
-                  <a href="nutrition.html" class="btn btn-secondary" data-i18n="pricing.freeCta">Зробити free-розрахунок</a>
+                  <a href="#free-calculator" class="btn btn-secondary" data-i18n="pricing.freeCta">Розрахувати калорії</a>
                 </div>
               </div>
             </article>
@@ -468,6 +413,64 @@
               </div>
             </article>
           </div>
+
+          <section id="free-calculator" class="free-calculator reveal" aria-labelledby="free-calculator-title">
+            <div class="free-calculator-intro">
+              <span class="section-label" data-free-i18n="eyebrow">FREE · персональний старт</span>
+              <h3 id="free-calculator-title" data-free-i18n="title">Дізнайся свій орієнтир калорійності</h3>
+              <p data-free-i18n="text">Кілька даних — і ти отримаєш базовий персональний орієнтир на день. Без раціону, макросів і програми тренувань.</p>
+            </div>
+            <form id="free-calculator-form" class="free-calculator-form">
+              <label>
+                <span data-free-i18n="sex">Стать</span>
+                <select name="sex" required>
+                  <option value="female" data-free-i18n="female">Жінка</option>
+                  <option value="male" data-free-i18n="male">Чоловік</option>
+                </select>
+              </label>
+              <label>
+                <span data-free-i18n="age">Вік</span>
+                <input name="age" type="number" min="16" max="85" step="1" inputmode="numeric" required>
+              </label>
+              <label>
+                <span data-free-i18n="weight">Вага, кг</span>
+                <input name="weight" type="number" min="35" max="250" step="0.1" inputmode="decimal" required>
+              </label>
+              <label>
+                <span data-free-i18n="height">Зріст, см</span>
+                <input name="height" type="number" min="130" max="230" step="1" inputmode="numeric" required>
+              </label>
+              <label>
+                <span data-free-i18n="activity">Активність</span>
+                <select name="activity" required>
+                  <option value="1.2" data-free-i18n="activityLow">Мало руху</option>
+                  <option value="1.375" data-free-i18n="activityLight">1–3 тренування на тиждень</option>
+                  <option value="1.55" selected data-free-i18n="activityMedium">3–5 тренувань на тиждень</option>
+                  <option value="1.725" data-free-i18n="activityHigh">6+ тренувань на тиждень</option>
+                </select>
+              </label>
+              <label>
+                <span data-free-i18n="goal">Ціль</span>
+                <select name="goal" required>
+                  <option value="0.85" data-free-i18n="goalLose">Зниження ваги</option>
+                  <option value="1" selected data-free-i18n="goalKeep">Підтримка ваги</option>
+                  <option value="1.1" data-free-i18n="goalGain">Набір маси</option>
+                </select>
+              </label>
+              <button class="btn btn-primary" type="submit" data-free-i18n="submit">Отримати орієнтир</button>
+            </form>
+            <div id="free-calculator-result" class="free-calculator-result" hidden aria-live="polite">
+              <span class="free-result-kicker" data-free-i18n="resultKicker">Твій базовий орієнтир</span>
+              <strong><span data-free-value>—</span> <small data-free-i18n="kcal">ккал/день</small></strong>
+              <p data-free-result-copy></p>
+              <div class="free-calculator-upsell">
+                <h4 data-free-i18n="upsellTitle">Цифра — це старт, не готовий план</h4>
+                <p data-free-i18n="upsellText">Start перетворює її на 7 днів харчування, тренування та PDF. Pro додає 4-тижневу систему, check-in і супровід.</p>
+                <a href="#pricing" class="btn btn-primary" data-select-plan="start" data-free-i18n="upsellCta">Отримати повний план у Start</a>
+              </div>
+              <p class="free-calculator-note" data-free-i18n="note">Орієнтир не є медичною рекомендацією. За станів здоров’я або різких змін самопочуття звернись до лікаря.</p>
+            </div>
+          </section>
 
           <div class="conversion-grid reveal">
             <section class="conversion-block">
@@ -602,6 +605,10 @@
       </div>
 
       <div class="container footer-bottom">
+        <div class="footer-developer" aria-label="Розробник сайту" data-i18n-aria-label="footerDeveloperAria">
+          <span class="footer-developer-label" data-i18n="footerDeveloperLabel">Розробник сайту</span>
+          <strong class="footer-developer-name">Bielashov Yevgen</strong>
+        </div>
         <span data-i18n="footerCopyright">© 2026 VitalRise. Усі права захищені.</span>
         <span data-i18n="footerBottom">High-level control for athletic recomposition.</span>
       </div>
@@ -704,7 +711,7 @@
   </div>
 
   <script src="assets/js/modules/system.js"></script>
-  <script src="assets/js/modules/i18n.js?v=modules-i18n-12"></script>
+  <script src="assets/js/modules/i18n.js?v=modules-i18n-16"></script>
   <script src="assets/js/modules/mobile-menu.js"></script>
   <script src="assets/js/modules/storage.js"></script>
   <script src="assets/js/modules/print.js?v=print-clean-1"></script>
@@ -713,6 +720,7 @@
   <script src="assets/js/modules/reveal.js"></script>
   <script src="assets/js/modules/dashboard.js"></script>
   <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
+  <script src="assets/js/modules/free-calculator.js?v=free-engagement-1"></script>
   <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
   <script src="assets/js/modules/hero-parallax.js?v=hero-parallax-5"></script>
   <script src="assets/js/modules/nutrition-custom.js"></script>
@@ -724,7 +732,7 @@
   <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
   <script src="assets/js/modules/training-progression.js"></script>
   <script src="assets/js/modules/training-render.js?v=training-copy-fix-1"></script>
-  <script src="assets/js/modules/training-builder.js?v=free-trial-1"></script>
+  <script src="assets/js/modules/training-builder.js?v=paid-gate-1"></script>
   <script src="assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1"></script>
   <script src="assets/js/modules/exercise-atlas.js?v=atlas-clean-1"></script>
   <script src="assets/js/modules/labs.js"></script>
@@ -732,8 +740,9 @@
   <script src="assets/js/modules/progress-decision.js?v=cycle-water-progress-1"></script>
   <script src="assets/js/modules/blueprint.js"></script>
   <script src="assets/js/modules/supplements.js?v=testosterone-ergogenic-2"></script>
-  <script src="assets/js/modules/coach.js?v=quick-profiles-2"></script>
-  <script src="assets/js/modules/access.js?v=free-trial-1"></script>
-  <script src="assets/js/script.js?v=free-trial-1"></script>
+  <script src="assets/js/modules/coach.js?v=coach-contact-1"></script>
+  <script src="assets/js/modules/marketing.js?v=meta-pixel-1"></script>
+  <script src="assets/js/modules/access.js?v=paid-gate-1"></script>
+  <script src="assets/js/script.js?v=paid-gate-1"></script>
 </body>
 </html>

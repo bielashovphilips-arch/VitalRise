@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v296";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v243";
+const CACHE_NAME = "vitalrise-v307";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-v251";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,7 +15,7 @@ const APP_SHELL = [
   "./privacy.html",
   "./terms.html",
   "./disclaimer.html",
-  "./assets/css/style.css?v=legal-contact-1",
+  "./assets/css/style.css?v=footer-signature-1",
   "./assets/images/labs-bloodwork-bg.webp",
   "./assets/images/nutrition-food-bg.webp",
   "./assets/images/vlog-dna-bg-photo.png",
@@ -23,8 +23,8 @@ const APP_SHELL = [
   "./assets/images/exercises/vitalrise-bent-over-row.png",
   "./assets/images/exercises/vitalrise-cable-pullover.png",
   "./assets/js/modules/system.js",
-  "./assets/js/modules/i18n.js?v=modules-i18n-12",
-  "./assets/js/modules/vlog-i18n.js?v=vlog-translation-11",
+  "./assets/js/modules/i18n.js?v=modules-i18n-16",
+  "./assets/js/modules/vlog-i18n.js?v=vlog-translation-13",
   "./assets/js/modules/legal-i18n.js?v=legal-i18n-7",
   "./assets/js/modules/mobile-menu.js",
   "./assets/js/modules/storage.js",
@@ -32,6 +32,8 @@ const APP_SHELL = [
   "./assets/js/modules/data-portability.js",
   "./assets/js/modules/calculator-shell.js?v=single-module-1",
   "./assets/js/modules/pricing-flip.js?v=mobile-flip-1",
+  "./assets/js/modules/free-calculator.js?v=free-engagement-1",
+  "./assets/js/modules/marketing.js?v=meta-pixel-1",
   "./assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1",
   "./assets/js/modules/hero-parallax.js?v=hero-parallax-5",
   "./assets/js/modules/reveal.js",
@@ -40,12 +42,12 @@ const APP_SHELL = [
   "./assets/js/modules/nutrition.js?v=exact-bju-3",
   "./assets/js/modules/nutrition-render.js?v=nutrition-i18n-1",
   "./assets/js/modules/training.js",
-  "./assets/js/modules/training-templates.js?v=gym-dips-1",
+  "./assets/js/modules/training-templates.js?v=training-cycle-safety-1",
   "./assets/js/modules/training-gym-dips-patch.js?v=gym-dips-1",
   "./assets/js/modules/training-guidance.js?v=training-control-1",
   "./assets/js/modules/training-progression.js",
-  "./assets/js/modules/training-render.js?v=training-copy-fix-1",
-  "./assets/js/modules/training-builder.js?v=free-trial-1",
+  "./assets/js/modules/training-render.js?v=training-cycle-safety-1",
+  "./assets/js/modules/training-builder.js?v=training-cycle-safety-1",
   "./assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1",
   "./assets/js/modules/exercise-atlas.js?v=atlas-clean-1",
   "./assets/js/modules/labs.js",
@@ -53,9 +55,9 @@ const APP_SHELL = [
   "./assets/js/modules/progress-decision.js?v=cycle-water-progress-1",
   "./assets/js/modules/blueprint.js",
   "./assets/js/modules/supplements.js?v=testosterone-ergogenic-2",
-  "./assets/js/modules/coach.js?v=quick-profiles-2",
-  "./assets/js/modules/access.js?v=free-trial-1",
-  "./assets/js/script.js?v=free-trial-1",
+  "./assets/js/modules/coach.js?v=coach-contact-1",
+  "./assets/js/modules/access.js?v=paid-gate-1",
+  "./assets/js/script.js?v=training-cycle-safety-1",
   "./manifest.webmanifest"
 ];
 

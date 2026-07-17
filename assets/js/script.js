@@ -12,6 +12,10 @@
   const trainingResult = document.getElementById("training-result");
   const trainingReset = document.getElementById("training-reset");
   const trainingPlaceSelector = document.getElementById("training-place");
+  const trainingProgramModeField = document.getElementById("training-program-mode");
+  const trainingDaysField = document.getElementById("training-days");
+  const pplFixedDaysOption = document.getElementById("ppl-fixed-days-option");
+  const trainingDaysHint = document.getElementById("training-days-hint");
   const trainingOneRmFields = ["bench-1rm", "squat-1rm", "deadlift-1rm"]
     .map(function (id) {
       return document.getElementById(id);
@@ -149,6 +153,30 @@
   }
 
   syncTrainingOneRmVisibility();
+
+  function syncTrainingProgramMode() {
+    if (!trainingProgramModeField || !trainingDaysField) return;
+
+    const isPpl = trainingProgramModeField.value === "ppl_3_1";
+    if (pplFixedDaysOption) pplFixedDaysOption.hidden = !isPpl;
+    if (isPpl) {
+      trainingDaysField.value = "8";
+      trainingDaysField.disabled = true;
+      if (trainingDaysHint) {
+        trainingDaysHint.textContent = "PPL: 3 важкі дні, день відпочинку, 3 середні дні, день відпочинку. Цикл триває 8 днів і не прив’язаний до понеділка-неділі.";
+      }
+    } else {
+      if (trainingDaysField.value === "8") trainingDaysField.value = "3";
+      trainingDaysField.disabled = false;
+      if (trainingDaysHint) {
+        trainingDaysHint.textContent = "Для PPL використовується фіксований цикл, а не календарний тиждень.";
+      }
+    }
+  }
+
+  if (trainingProgramModeField) {
+    trainingProgramModeField.addEventListener("change", syncTrainingProgramMode);
+  }
 
   const persistentForms = [
     nutritionForm,
@@ -315,6 +343,7 @@
     syncLabCycleVisibility();
     syncReviewFemaleFields();
     syncTrainingOneRmVisibility();
+    syncTrainingProgramMode();
     updateCalculatorShell();
   }
 
@@ -476,13 +505,6 @@
     }
 
     return null;
-  }
-
-  function consumeFreeTrialCalculation(formId) {
-    const access = window.VitalRiseSystem && window.VitalRiseSystem.access;
-    if (access && typeof access.consumeFreeTrial === "function") {
-      access.consumeFreeTrial(formId);
-    }
   }
 
   function saveNutritionSnapshot(targets, formData) {
@@ -1091,7 +1113,6 @@ function buildMealConstructorMarkup(targets) {
 
      saveNutritionSnapshot(result, data);
      renderNutritionConstructor(result, data);
-     consumeFreeTrialCalculation("nutrition-form");
     });
   }
 

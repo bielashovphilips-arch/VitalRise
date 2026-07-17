@@ -8,18 +8,13 @@
   const START_DEADLINE_KEY = "vitalrise:access:start-deadline:" + ACCESS_STORAGE_VERSION;
   const ACTIVE_EXPIRES_KEY = "vitalrise:access:active-expires:" + ACCESS_STORAGE_VERSION;
   const ACTIVATED_KEY = "vitalrise:access:activated:" + ACCESS_STORAGE_VERSION;
-  const FREE_TRIAL_KEY_PREFIX = "vitalrise:free-trial:" + ACCESS_STORAGE_VERSION + ":";
   const NEWSLETTER_PENDING_KEY = "vitalrise:newsletter:pending";
   const PENDING_ORDER_KEY = "vitalrise:access:pending-order";
   const tierRank = { free: 0, start: 1, pro: 2, premium: 3, admin: 4 };
   const activationFormIds = new Set(["nutrition-form", "training-form", "blueprint-form", "progress-form"]);
-  const freeTrialModules = {
-    "nutrition-panel": "nutrition",
-    "training-panel": "training",
-    "nutrition-form": "nutrition",
-    "training-form": "training"
-  };
+  const PRO_TELEGRAM_URL = "https://t.me/YourCoachProBot";
   let activationRequestPending = false;
+  let verifiedPaidToken = false;
 
   const plans = {
     start: { 
@@ -64,9 +59,6 @@
         locked: "Платний модуль",
         need: "Потрібен тариф",
         unlock: "Розблокувати",
-        freeTrialDone: "Free-демо використано",
-        freeTrialUsedTitle: "Free-розрахунок уже використано",
-        freeTrialUsedText: "У Free доступний один розрахунок харчування і один розрахунок тренування. Для повторних розрахунків, 7-денного плану, PDF-звіту і Blueprint обери Start.",
         paymentTitle: "Оформлення доступу",
         paymentText: "Введи email для створення замовлення. Після оплати є 45 днів, щоб почати програму. Коли ти вводиш дані й запускаєш перший розрахунок, активується 30 днів програми.",
         renewalConsent: "Увімкнути автопродовження: після завершення активної програми списати вартість обраного тарифу через WayForPay за наступний період. Галочку можна зняти перед оплатою.",
@@ -77,6 +69,7 @@
         code: "Код доступу VitalRise",
         codeHint: "Код VitalRise має формат VR-START-XXXX і видається сайтом після підтвердження оплати. Це не код авторизації WayForPay з квитанції.",
         close: "Закрити",
+        openTelegram: "Відкрити Telegram",
         orderCreated: "Замовлення створено. Після підключення платіжного сервісу тут відкриватиметься сторінка оплати.",
         paymentChecking: "Повернулися з WayForPay. Перевіряємо статус оплати...",
         paymentConfirmed: "Оплату підтверджено. Тариф підключено, доступ відкрито. Можеш закрити це вікно й перейти до модулів.",
@@ -100,9 +93,6 @@
         locked: "Paid module",
         need: "Required plan",
         unlock: "Unlock",
-        freeTrialDone: "Free demo used",
-        freeTrialUsedTitle: "Free calculation already used",
-        freeTrialUsedText: "Free includes one nutrition calculation and one training calculation. Choose Start for repeat calculations, the 7-day plan, PDF report, and Blueprint.",
         paymentTitle: "Access checkout",
         paymentText: "Enter your email to create an order. After payment, you have 45 days to start the program. When you enter data and run the first calculation, 30 days of active program begin.",
         renewalConsent: "Enable auto-renewal: after the active program ends, charge the selected plan through WayForPay for the next period. You can uncheck this before payment.",
@@ -113,6 +103,7 @@
         code: "VitalRise access code",
         codeHint: "A VitalRise code looks like VR-START-XXXX and is issued by the site after payment confirmation. It is not the WayForPay authorization code from the receipt.",
         close: "Close",
+        openTelegram: "Open Telegram",
         orderCreated: "Order created. Once a payment provider is connected, the payment page will open here.",
         paymentChecking: "Returned from WayForPay. Checking payment status...",
         paymentConfirmed: "Payment confirmed. Plan connected and access unlocked. You can close this window and go to the modules.",
@@ -136,9 +127,6 @@
         locked: "Платный модуль",
         need: "Нужен тариф",
         unlock: "Разблокировать",
-        freeTrialDone: "Free-демо использовано",
-        freeTrialUsedTitle: "Free-расчет уже использован",
-        freeTrialUsedText: "В Free доступен один расчет питания и один расчет тренировки. Для повторных расчетов, 7-дневного плана, PDF-отчета и Blueprint выбери Start.",
         paymentTitle: "Оформление доступа",
         paymentText: "Введи email для создания заказа. После оплаты есть 45 дней, чтобы начать программу. Когда ты вводишь данные и запускаешь первый расчет, активируются 30 дней программы.",
         renewalConsent: "Включить автопродление: после завершения активной программы списать стоимость выбранного тарифа через WayForPay за следующий период. Галочку можно снять перед оплатой.",
@@ -149,6 +137,7 @@
         code: "Код доступа VitalRise",
         codeHint: "Код VitalRise имеет формат VR-START-XXXX и выдается сайтом после подтверждения оплаты. Это не код авторизации WayForPay из квитанции.",
         close: "Закрыть",
+        openTelegram: "Открыть Telegram",
         orderCreated: "Заказ создан. После подключения платежного сервиса здесь будет открываться страница оплаты.",
         paymentChecking: "Вернулись из WayForPay. Проверяем статус оплаты...",
         paymentConfirmed: "Оплата подтверждена. Тариф подключен, доступ открыт. Можешь закрыть это окно и перейти к модулям.",
@@ -207,6 +196,7 @@
   }
 
   function clearPaidAccess() {
+    verifiedPaidToken = false;
     try {
       window.localStorage.removeItem(TOKEN_KEY);
       window.localStorage.removeItem(EMAIL_KEY);
@@ -222,7 +212,7 @@
 
   function getTier() {
     const tier = normalizeTier(document.body.dataset.accessTier || getStored(TIER_KEY));
-    if (tier !== "free" && tier !== "admin" && !getStored(TOKEN_KEY)) return "free";
+    if (tier !== "free" && tier !== "admin" && (!getStored(TOKEN_KEY) || !verifiedPaidToken)) return "free";
     return tier;
   }
 
@@ -236,6 +226,7 @@
   function setPaidAccess(payload) {
     const tier = normalizeTier(payload.tier);
     if (!payload.accessToken || tier === "free") return;
+    verifiedPaidToken = true;
     setStored(TOKEN_KEY, payload.accessToken);
     setStored(TIER_KEY, tier);
     if (payload.email) setStored(EMAIL_KEY, payload.email);
@@ -276,34 +267,6 @@
   function hasAccess(requiredTier) {
     const required = normalizeTier(requiredTier);
     return tierRank[getTier()] >= tierRank[required];
-  }
-
-  function getFreeTrialModule(source) {
-    if (!source) return "";
-    if (source === "nutrition" || source === "training") return source;
-    if (typeof source === "string") return freeTrialModules[source] || "";
-    return freeTrialModules[source.id] || "";
-  }
-
-  function getFreeTrialKey(module) {
-    return FREE_TRIAL_KEY_PREFIX + module;
-  }
-
-  function isFreeTrialUsed(module) {
-    return Boolean(module && getStored(getFreeTrialKey(module)));
-  }
-
-  function canUseFreeTrial(source) {
-    const module = getFreeTrialModule(source);
-    return getTier() === "free" && Boolean(module) && !isFreeTrialUsed(module);
-  }
-
-  function consumeFreeTrial(source) {
-    const module = getFreeTrialModule(source);
-    if (!canUseFreeTrial(module)) return false;
-    setStored(getFreeTrialKey(module), new Date().toISOString());
-    applyAccessState();
-    return true;
   }
 
   function getPlanLabel(tier) {
@@ -442,6 +405,7 @@
 
     try {
       const data = await postJson("/api/access/verify", { token: token });
+      verifiedPaidToken = true;
       setStored(TIER_KEY, normalizeTier(data.tier));
       if (data.email) setStored(EMAIL_KEY, data.email);
       if (data.expiresAt) setStored(EXPIRES_KEY, data.expiresAt);
@@ -502,6 +466,7 @@
     modal.querySelector("#payment-close-button").textContent = phrase("close");
     modal.querySelector("#payment-checkout-button").textContent = phrase("checkout");
     modal.querySelector("#payment-redeem-button").textContent = phrase("redeem");
+    clearTelegramHandoff();
     modal.querySelector("#payment-status").textContent = "";
 
     const emailInput = modal.querySelector("#payment-email");
@@ -535,6 +500,32 @@
   function setPaymentStatus(message) {
     const status = document.getElementById("payment-status");
     if (status) status.textContent = message;
+  }
+
+  function clearTelegramHandoff() {
+    const status = document.getElementById("payment-status");
+    const handoff = status ? status.querySelector(".payment-telegram-handoff") : null;
+    if (handoff) handoff.remove();
+  }
+
+  function showTelegramHandoff(tier) {
+    clearTelegramHandoff();
+    if (normalizeTier(tier) !== "pro") return;
+
+    const status = document.getElementById("payment-status");
+    if (!status) return;
+
+    const handoff = document.createElement("div");
+    handoff.className = "payment-telegram-handoff";
+    const link = document.createElement("a");
+    link.className = "btn btn-primary";
+    link.href = PRO_TELEGRAM_URL;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = phrase("openTelegram");
+    link.setAttribute("aria-label", phrase("openTelegram"));
+    handoff.appendChild(link);
+    status.appendChild(handoff);
   }
 
   function wait(ms) {
@@ -595,8 +586,9 @@
         if (window.VitalRiseAnalytics && typeof window.VitalRiseAnalytics.trackPurchase === 'function') {
           window.VitalRiseAnalytics.trackPurchase(tier, data.orderId);
         }
-        
-        closePaymentModal();
+
+        showTelegramHandoff(tier);
+        if (tier !== "pro") closePaymentModal();
         return;
       }
 
@@ -631,21 +623,21 @@
       }
       
       setPaymentStatus(phrase("codeSuccess"));
+      showTelegramHandoff(data.tier);
     } catch (error) {
       setPaymentStatus(error.message || phrase("codeFail"));
     }
   }
 
-  function createPaywall(requiredTier, trialModule) {
+  function createPaywall(requiredTier) {
     const plan = plans[requiredTier] || plans.start;
-    const trialUsed = getTier() === "free" && Boolean(trialModule) && isFreeTrialUsed(trialModule);
     const overlay = document.createElement("div");
     overlay.className = "module-paywall";
     overlay.innerHTML =
       '<div class="module-paywall-card">' +
-        '<span>' + (trialUsed ? phrase("freeTrialDone") : phrase("locked")) + '</span>' +
-        '<h3>' + (trialUsed ? phrase("freeTrialUsedTitle") : phrase("need") + ' ' + plan.label) + '</h3>' +
-        '<p>' + (trialUsed ? phrase("freeTrialUsedText") : getPlanUnlocks(requiredTier)) + '</p>' +
+        '<span>' + phrase("locked") + '</span>' +
+        '<h3>' + phrase("need") + ' ' + plan.label + '</h3>' +
+        '<p>' + getPlanUnlocks(requiredTier) + '</p>' +
         '<button type="button" class="btn btn-primary" data-open-payment="' + requiredTier + '">' + phrase("unlock") + ' ' + plan.label + '</button>' +
       '</div>';
     return overlay;
@@ -672,20 +664,19 @@
 
     document.querySelectorAll("[data-plan-required]").forEach(function (node) {
       const requiredTier = normalizeTier(node.dataset.planRequired);
-      const trialModule = getFreeTrialModule(node);
-      const allowed = hasAccess(requiredTier) || canUseFreeTrial(trialModule);
+      const allowed = hasAccess(requiredTier);
       const existing = node.querySelector(":scope > .module-paywall");
 
       node.classList.toggle("is-locked-module", !allowed);
-      node.classList.toggle("is-free-trial-module", allowed && getTier() === "free" && Boolean(trialModule));
+      node.classList.remove("is-free-trial-module");
       disableInteractive(node, !allowed);
 
       if (!allowed && !existing) {
-        node.insertBefore(createPaywall(requiredTier, trialModule), node.firstChild);
+        node.insertBefore(createPaywall(requiredTier), node.firstChild);
       } else if (allowed && existing) {
         existing.remove();
       } else if (!allowed && existing) {
-        existing.replaceWith(createPaywall(requiredTier, trialModule));
+        existing.replaceWith(createPaywall(requiredTier));
       }
     });
 
@@ -837,7 +828,10 @@
         if (result.ok && result.data.accessToken) {
           setPaidAccess(result.data);
           clearPendingOrder();
-          if (isPaymentReturn) setPaymentStatus(phrase("paymentConfirmed"));
+          if (isPaymentReturn) {
+            setPaymentStatus(phrase("paymentConfirmed"));
+            showTelegramHandoff(result.data.tier);
+          }
 
           if (window.VitalRiseAnalytics && typeof window.VitalRiseAnalytics.trackPurchase === "function") {
             window.VitalRiseAnalytics.trackPurchase(result.data.tier || "unknown", result.data.orderId || orderId);
@@ -895,10 +889,7 @@
 
   system.access = {
     getTier: getTier,
-    setTier: setTier,
     hasAccess: hasAccess,
-    canUseFreeTrial: canUseFreeTrial,
-    consumeFreeTrial: consumeFreeTrial,
     activateProgram: activateProgram,
     openPaymentModal: openPaymentModal,
     apply: applyAccessState

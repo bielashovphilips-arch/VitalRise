@@ -189,6 +189,8 @@
     const duration = Number(data["duration"]);
     const selectedMode = data["training-program-mode"] || "neutral";
     const cyclePhase = data["cycle-phase"] || "none";
+    const genderField = document.getElementById("gender");
+    const gender = data.gender || (genderField && genderField.value) || "male";
     const painStatus = outdoorMetrics.painStatus || "none";
     const hasPainOrFatigue = painStatus !== "none";
     const selectedIsManual = selectedMode !== "neutral";
@@ -197,7 +199,7 @@
     let confidence = "стандартна";
     const reasons = [];
 
-    if (cyclePhase !== "none") {
+    if (cyclePhase !== "none" && gender === "female") {
       if (goal === "fatloss") {
         recommendedMode = "female_fatloss";
         reasons.push("врахована фаза циклу і ціль зниження жиру");
@@ -212,11 +214,11 @@
         reasons.push("врахована фаза циклу, тому потрібен контроль об'єму і самопочуття");
       }
       confidence = "висока";
-    } else if (place === "gym" && goal === "mass" && level !== "beginner" && days >= 4 && !hasPainOrFatigue) {
+    } else if (place === "gym" && goal === "mass" && level === "advanced" && days >= 4 && !hasPainOrFatigue) {
       recommendedMode = "ppl_3_1";
       confidence = "висока";
-      reasons.push("зал, набір м'язів, 4 тренувальні дні і достатній рівень підготовки");
-      reasons.push("PPL 3+1 краще працює під високий калораж, якщо відновлення не просідає");
+      reasons.push("зал, набір м'язів, просунутий рівень і щонайменше 4 доступні тренувальні дні");
+      reasons.push("PPL 3+1 працює як фіксований 8-денний цикл лише за дуже хорошого відновлення");
     } else if (place === "outdoor" && (goal === "strength" || goal === "endurance")) {
       recommendedMode = "prison_workout";
       confidence = "висока";
@@ -235,6 +237,10 @@
       reasons.push("універсальна програма краще підходить, коли потрібна базова структура без вузької спеціалізації");
     }
 
+    if (cyclePhase !== "none" && gender !== "female") {
+      reasons.push("фаза циклу не застосована, бо стать у профілі не жіноча");
+    }
+
     if (hasPainOrFatigue && recommendedMode === "ppl_3_1") {
       recommendedMode = "neutral";
       confidence = "обережна";
@@ -245,7 +251,15 @@
       reasons.push("обмеження у формі зменшують пріоритет агресивних схем і збільшують роль корекції навантаження");
     }
 
-    const appliedMode = selectedIsManual ? selectedMode : recommendedMode;
+    let appliedMode = selectedIsManual ? selectedMode : recommendedMode;
+    if (selectedMode === "ppl_3_1" && level !== "advanced") {
+      appliedMode = "neutral";
+      reasons.push("PPL 3+1 залишено тільки для просунутого рівня з достатнім відновленням");
+    }
+    if (selectedMode.indexOf("female_") === 0 && gender !== "female") {
+      appliedMode = "neutral";
+      reasons.push("жіночий режим доступний лише для жіночого профілю");
+    }
     const summary = selectedIsManual
       ? (selectedMode === recommendedMode
         ? "Обраний вручну тип збігається з рекомендацією."
@@ -295,6 +309,7 @@
     const isPrisonMode = programMode === "prison_workout";
     const isTabataCircuitMode = programMode === "tabata_circuit";
     const isPplMode = programMode === "ppl_3_1";
+    const programDays = isPplMode ? 8 : days;
 
     let caloriesBurned = calculateTrainingCalories(isPplMode ? "gym" : place, goal, bodyWeight, duration);
     if (isPrisonMode) caloriesBurned *= 1.08;
@@ -327,7 +342,7 @@
     }
 
     if (isPplMode) {
-      basePlan = trainingTemplates.getGymPushPullLegsPlan(goal, level, oneRM, days);
+      basePlan = trainingTemplates.getGymPushPullLegsPlan(goal, level, oneRM, programDays);
     } else if (isPrisonMode) {
       basePlan = trainingTemplates.getPrisonWorkoutPlan(level, days, outdoorMetrics);
     } else if (isTabataCircuitMode) {
@@ -347,6 +362,10 @@
       basePlan = trainingTemplates.getOutdoorBasePlan(goal, level, days, outdoorMetrics);
     } else {
       basePlan = trainingTemplates.getHomeBasePlan(goal, level, days, outdoorMetrics);
+    }
+
+    if (!isPplMode && typeof trainingTemplates.applyTrainingDurationConstraints === "function") {
+      basePlan = trainingTemplates.applyTrainingDurationConstraints(basePlan, duration, place);
     }
 
     basePlan = trainingTemplates.applyTrainingConstraints(basePlan, outdoorMetrics);
@@ -418,6 +437,10 @@
         "Програма орієнтована на стабільну форму, контроль техніки та поступове навантаження.";
     }
 
+    if (isPplMode) {
+      volumeNote = "PPL 3+1 — фіксований 8-денний цикл для просунутого рівня: 3 важкі дні, повний відпочинок, 3 середні дні, повний відпочинок. Цикл не прив'язаний до понеділка-неділі й потребує дуже хорошого сну, харчування та відновлення.";
+    }
+
     const tips = [
       "План побудований одразу на весь цикл, а не на один день.",
       "Базові вправи відокремлені від допоміжних — допоміжні не прив’язані до 1ПМ.",
@@ -451,7 +474,7 @@
         "Сон - від 8 годин. Якщо стабільно спиш менше, не форсуй PPL 3+1: спочатку зменш об'єм або обери універсальну програму.",
         "З відновлювальних процедур мінімум має бути масаж: 1 раз на тиждень або частіше за відчуттями, особливо ноги, спина, грудний відділ і плечовий пояс.",
         "У PPL 3+1 не став важкі рекорди шість разів поспіль: важкі тільки перші 3 базові дні, друга половина циклу - тренажери легко-середньо.",
-        "Схема циклу: День 1 штовхай, День 2 тягни, День 3 ноги, День 4 відпочинок, День 5 штовхай тренажери, День 6 тягни тренажери, День 7 ноги тренажери, потім відпочинок або повтор за готовністю.",
+        "Схема циклу: День 1 важкий push, День 2 важкий pull, День 3 важкі ноги, День 4 повний відпочинок, День 5 середній push, День 6 середній pull, День 7 середні ноги, День 8 повний відпочинок. Не прив'язуй цикл до понеділка-неділі.",
         "Якщо сон, апетит або суглоби просідають - прибери 1-2 допоміжні вправи з тренажерних днів, а не чіпай техніку бази."
       );
     }
@@ -481,7 +504,7 @@
         place: isPplMode ? "gym" : place,
         level: place === "outdoor" || place === "home" ? trainingTemplates.getOutdoorEffectiveLevel(level, outdoorMetrics) : level,
         goal: goal,
-        days: days,
+        days: programDays,
         duration: duration,
         outdoorMetrics: outdoorMetrics,
         oneRM: oneRM
@@ -547,11 +570,11 @@
 
     if (isPplMode) {
       guidance.format = "PPL 3+1: штовхай / тягни / ноги";
-      guidance.focus = "3 базові дні + 3 тренажерні дні легко-середньо";
+      guidance.focus = "фіксований 8-денний цикл: 3 важкі + відпочинок + 3 середні + відпочинок";
       guidance.rirRules = [
         "Базові дні: тримай RIR 1-2, без відмови у присіданні, жимі й важких тягах.",
         "Тренажерні дні: RIR 2-3, відчуй м'яз, але не добивайся до стану, коли наступний базовий цикл сиплеться.",
-        "Якщо після дня ніг потрібен повний день відпочинку - це частина схеми 3+1, а не слабкість."
+        "День 4 і День 8 — повне відновлення, а не тренувальні дні. Не переносити цикл у формат понеділок-середа-п'ятниця."
       ];
       guidance.progressionRules = [
         "Для набору м'язів прогрес має йти на фоні великого калоражу, стабільного білка і сну від 8 годин.",
@@ -564,13 +587,13 @@
         "Масаж - мінімальна відновлювальна процедура для цього режиму; якщо м'язи й фасції постійно забиті, прогресія ваги відкладається.",
         "Якщо два цикли поспіль падають повтори у базі - мінус 20-30% допоміжного об'єму.",
         "Біль у плечі, лікті, коліні або попереку - заміни провокуючу вправу тренажером і зменш вагу.",
-        "Кожні 4-6 тижнів зроби полегшений цикл: базу на RIR 3, тренажери без прогресії ваги."
+        "Кожні 4-6 тижнів зроби полегшений цикл: база на RIR 3, середні дні без прогресії ваги, підходи мінус близько 30%."
       ];
       guidance.warnings = [
         "PPL 3+1 не підходить при сильній втомі, поганому сні або болю в суглобах без корекції об'єму.",
         "Якщо сон менше 8 годин, калораж низький або немає відновлювальних процедур, ця схема може швидше накопичувати втому, ніж давати м'язовий ріст.",
         "Не перетворюй тренажерні дні на другий важкий цикл: тоді схема перестає відновлюватися.",
-        "Новачку краще стартувати з універсальної програми; PPL 3+1 логічніший для середнього і просунутого рівня."
+        "PPL 3+1 призначений для просунутого рівня з дуже хорошим сном, харчуванням і відновленням; новачку та більшості середнього рівня краще обрати універсальну програму."
       ].concat(guidance.warnings || []);
     }
 
@@ -591,13 +614,6 @@
         : '<div class="result-placeholder">Не вдалося сформувати план. Перевір параметри та спробуй ще раз.</div>';
   }
 
-  function consumeFreeTrialCalculation(formId) {
-    const access = window.VitalRiseSystem && window.VitalRiseSystem.access;
-    if (access && typeof access.consumeFreeTrial === "function") {
-      access.consumeFreeTrial(formId);
-    }
-  }
-
   if (trainingForm) {
     trainingForm.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -607,7 +623,6 @@
       const result = buildTrainingPlan(data);
 
       renderTrainingResult(result);
-      consumeFreeTrialCalculation("training-form");
     });
   }
 

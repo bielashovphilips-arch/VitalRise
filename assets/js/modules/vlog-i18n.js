@@ -751,6 +751,124 @@
     }
   };
 
+  const thyroidT4Translations = {
+    en: {
+      badge: "Drug 22",
+      title: "Thyroxine (T4): levothyroxine sodium",
+      intro: "Thyroxine, or T4, is the main hormone released into the blood by the thyroid gland. Levothyroxine sodium is a synthetic form of T4; some T4 is converted to the more active T3 in tissues, so its effect is not a short stimulant burst. In sports, T4 is sometimes misrepresented as a milder T3 for cutting, but it is still hormone therapy with risks for the heart, bones, muscles, and nervous system.",
+      headings: ["Why the drug exists in medicine", "Properties and risks", "What to monitor", "When to see a doctor", "Sources for verification"],
+      medical: "Levothyroxine is used as replacement therapy for hypothyroidism, when the body does not produce enough thyroid hormone. TSH suppression is also used in selected oncology contexts, but that does not make T4 a weight-control drug. The official label explicitly warns that thyroid hormones must not be used to treat obesity or for weight loss when thyroid function is normal.",
+      interaction: {
+        title: "Caffeine and thyroid hormones: absorption and symptoms",
+        text: "The best-established issue concerns oral T4: coffee or espresso taken with the tablet or soon after it can reduce or delay levothyroxine absorption. For T3, evidence specifically about coffee is more limited, so the same strength of interaction should not be assumed automatically. Caffeine sodium benzoate is still a source of caffeine, and energy drinks add other ingredients; neither should be used as the liquid for a thyroid tablet. Caffeine does not neutralize the hormone, but its stimulant effect can add to excess T3/T4 and worsen palpitations, tremor, anxiety, and insomnia. Follow the instructions for the specific formulation and discuss timing with a doctor or pharmacist.",
+        bullets: [
+          "If the instructions for a specific T4 formulation require fasting administration, take it with water and do not attach coffee, an energy drink, or caffeine sodium benzoate to the tablet at the same time.",
+          "Caffeine does not switch T4 on, but together with excess hormone it can worsen palpitations, tremor, anxiety, sweating, insomnia, and heat intolerance.",
+          "If TSH worsens after changing the morning routine, do not increase the dose yourself; first review timing, coffee or energy drinks, iron, calcium, antacids, and other medicines."
+        ]
+      },
+      tableHeaders: ["Form", "Duration of action", "Peak effect", "Clearance / decline", "Profile properties"],
+      tableCells: [
+        "Levothyroxine tablets, capsules, or oral solution; the intravenous form is reserved for specific hospital situations",
+        "A long and relatively stable hormone profile; well-being is not a reliable way to judge the effect within one day.",
+        "Concentration changes gradually; clinical response is assessed with TSH, free T4, and symptoms rather than a brief feeling of energy.",
+        "The average half-life is about 7 days, but it varies with thyroid function and clinical state; excess can accumulate and its consequences can last.",
+        "Supports a normal thyroid profile when there is deficiency, but excess can mimic hyperthyroidism and increase cardiovascular and metabolic load."
+      ],
+      risks: [
+        "Excess can cause palpitations, tachycardia, tremor, anxiety, insomnia, sweating, heat intolerance, diarrhea, and unintended weight loss.",
+        "It raises the risk of arrhythmias, angina, or heart failure, especially in older adults and people with cardiovascular disease.",
+        "Long-term excess can worsen muscle loss and reduce bone density; rapid weight loss is not proof of a better metabolism.",
+        "It can change diabetes control and intensify the effect of anticoagulants, so medication lists and comorbidities matter.",
+        "The problem may not be only the dose: food, iron, calcium, antacids, and other medicines can change absorption, so consistency should be discussed with a doctor."
+      ],
+      monitor: [
+        "TSH as the main marker for replacement therapy; free T4 according to the clinical context and the doctor's plan.",
+        "Free T3 is not always needed for routine monitoring, but can help in selected endocrine situations together with TSH and T4.",
+        "Resting pulse, blood pressure, and ECG when there are palpitations, rhythm changes, or cardiovascular risk factors.",
+        "Glucose and HbA1c when diabetes or metabolic risk is present; lipids can change with thyroid status.",
+        "Bone and mineral context, vitamin D, and fracture-risk assessment when excess is prolonged or other risk factors exist."
+      ],
+      symptoms: [
+        "Chest pain, severe or irregular palpitations, shortness of breath, fainting, or a sudden loss of exercise tolerance.",
+        "Severe tremor, anxiety, insomnia, sweating, heat intolerance, marked weakness, or confusion.",
+        "Rapid unintended weight loss, persistent diarrhea, vomiting, or signs of dehydration.",
+        "New muscle weakness, falling strength, bone pain, or recurrent fractures.",
+        "A significant deterioration after changing the brand or formulation, or suspected absorption problems."
+      ],
+      rule: "T4 is not a fat burner and not a safe slow-release T3. If fatigue, weight, pulse, or temperature tolerance changes, start with TSH, free T4, and clinical context—not experiments with thyroid hormone. A doctor determines the dose and treatment changes.",
+      sources: ["DailyMed: levothyroxine sodium tablets", "FDA label: levothyroxine sodium tablets", "American Thyroid Association: hypothyroidism"]
+    },
+    ru: {
+      badge: "Препарат 22",
+      title: "Тироксин (T4): левотироксин натрия",
+      intro: "Тироксин, или T4, — основной гормон, который щитовидная железа выделяет в кровь. Левотироксин натрия — синтетическая форма T4; часть T4 в тканях превращается в более активный T3, поэтому его эффект не сводится к короткому стимулу. В спортивной среде T4 иногда ошибочно подают как более мягкую версию T3 для сушки, но это всё равно гормональная терапия с рисками для сердца, костей, мышц и нервной системы.",
+      headings: ["Зачем препарат существует в медицине", "Свойства и риски", "Что контролировать", "С какими симптомами к врачу", "Источники для сверки"],
+      medical: "Левотироксин применяют как заместительную терапию при гипотиреозе, когда организму не хватает гормонов щитовидной железы. Подавление ТТГ используют и в отдельных онкологических ситуациях, но это не делает T4 препаратом для контроля веса. В официальной инструкции прямо указано: тиреоидные гормоны нельзя использовать для лечения ожирения или похудения при нормальной функции щитовидной железы.",
+      interaction: {
+        title: "Кофеин и тиреоидные гормоны: всасывание и симптомы",
+        text: "Лучше всего подтверждена проблема с пероральным T4: кофе или эспрессо, выпитые вместе с таблеткой или вскоре после нее, могут уменьшить или задержать всасывание левотироксина. Для T3 данных именно о кофе меньше, поэтому автоматически переносить вывод об одинаковой силе взаимодействия не стоит. Кофеин-бензоат натрия все равно остается источником кофеина, а энергетики добавляют другие компоненты; ни то ни другое не должно быть жидкостью для запивания тиреоидной таблетки. Кофеин не нейтрализует гормон, но его стимулирующий эффект может накладываться на избыток T3/T4 и усиливать сердцебиение, тремор, тревогу и бессонницу. Соблюдай инструкцию к конкретной форме и согласуй тайминг с врачом или фармацевтом.",
+        bullets: [
+          "Если инструкция к конкретной форме T4 предусматривает прием натощак, запивай ее водой и не совмещай таблетку с кофе, энергетиком или кофеином-бензоатом натрия.",
+          "Кофеин не включает T4, но вместе с избытком гормона может усиливать сердцебиение, тремор, тревогу, потливость, бессонницу и непереносимость жары.",
+          "Если ТТГ ухудшился после изменения утреннего ритуала, не повышай дозу самостоятельно; сначала проверь тайминг, кофе или энергетики, железо, кальций, антациды и другие лекарства."
+        ]
+      },
+      tableHeaders: ["Форма", "Период действия", "Пик работы", "Выведение / спад", "Особенности профиля"],
+      tableCells: [
+        "Таблетки, капсулы или раствор левотироксина для приема внутрь; внутривенная форма — только для специальных больничных ситуаций",
+        "Длительный и относительно стабильный гормональный профиль; самочувствие не позволяет надежно оценить эффект за один день.",
+        "Концентрация меняется постепенно, а клинический ответ оценивают по ТТГ, свободному T4 и симптомам, а не по краткому приливу энергии.",
+        "Средний период полувыведения — около 7 дней, но он зависит от функции щитовидной железы и состояния пациента; избыток может накапливаться.",
+        "Поддерживает нормальный тиреоидный профиль при дефиците, но избыток имитирует гипертиреоз и увеличивает сердечно-сосудистую и метаболическую нагрузку."
+      ],
+      risks: [
+        "Избыток может вызывать сердцебиение, тахикардию, тремор, тревожность, бессонницу, потливость, непереносимость жары, диарею и непреднамеренное похудение.",
+        "Повышается риск аритмий, стенокардии или сердечной недостаточности, особенно у пожилых людей и при сердечно-сосудистых заболеваниях.",
+        "Длительный избыток может усиливать потерю мышц и снижать плотность костей; быстрое похудение не доказывает улучшение метаболизма.",
+        "Препарат может менять контроль диабета и усиливать действие антикоагулянтов, поэтому важны список лекарств и сопутствующие заболевания.",
+        "Проблема бывает не только в дозе: еда, железо, кальций, антациды и другие препараты меняют всасывание, поэтому стабильность приема обсуждают с врачом."
+      ],
+      monitor: [
+        "ТТГ как основной показатель заместительной терапии; свободный T4 — по клиническому контексту и плану врача.",
+        "Свободный T3 не всегда нужен для обычного контроля, но может помочь в отдельных эндокринологических ситуациях вместе с ТТГ и T4.",
+        "Пульс в покое, давление и ЭКГ при сердцебиении, перебоях ритма или факторах сердечного риска.",
+        "Глюкоза и HbA1c при диабете или метаболическом риске; липиды могут меняться вместе с тиреоидным статусом.",
+        "Костный и минеральный контекст, витамин D и оценка риска переломов при длительном избытке или других факторах риска."
+      ],
+      symptoms: [
+        "Боль в груди, сильное или нерегулярное сердцебиение, одышка, обморок или резкое ухудшение переносимости нагрузки.",
+        "Сильный тремор, тревога, бессонница, потливость, непереносимость жары, выраженная слабость или спутанность.",
+        "Быстрое непреднамеренное похудение, постоянная диарея, рвота или признаки обезвоживания.",
+        "Новая мышечная слабость, падение силы, боль в костях или повторные переломы.",
+        "Заметное ухудшение после смены бренда или формы препарата либо подозрение на нарушение всасывания."
+      ],
+      rule: "T4 — не жиросжигатель и не безопасный медленный T3. Если меняются усталость, вес, пульс или переносимость температуры, сначала нужны ТТГ, свободный T4 и клинический контекст, а не эксперименты с тиреоидным гормоном. Дозу и изменения лечения определяет врач.",
+      sources: ["DailyMed: levothyroxine sodium tablets", "FDA label: levothyroxine sodium tablets", "American Thyroid Association: hypothyroidism"]
+    }
+  };
+
+  const thyroidT3CaffeineTranslations = {
+    en: {
+      title: "Caffeine and thyroid hormones: absorption and symptoms",
+      text: "For T3, evidence specifically about coffee's effect on absorption is less established than for oral T4. That does not make the combination neutral: T3 and caffeine can add to each other's tachycardia, tremor, anxiety, sweating, insomnia, and blood-pressure effects. Caffeine sodium benzoate is still a source of caffeine, not a special hormone formulation; energy drinks may also contain guarana and other stimulants.",
+      bullets: [
+        "If the instructions for a specific T3 formulation require fasting administration, take it with water and do not attach coffee, an energy drink, or caffeine sodium benzoate to the tablet at the same time.",
+        "Do not treat stronger palpitations as proof that the drug is working: this may be combined stimulation from T3 and caffeine.",
+        "With new palpitations, rhythm changes, tremor, or insomnia, do not increase or compensate the dose yourself; review the regimen with a doctor."
+      ]
+    },
+    ru: {
+      title: "Кофеин и тиреоидные гормоны: всасывание и симптомы",
+      text: "Для T3 данные именно о влиянии кофе на всасывание менее убедительны, чем для перорального T4. Но это не делает сочетание нейтральным: T3 и кофеин могут усиливать тахикардию, тремор, тревогу, потливость, бессонницу и повышение давления. Кофеин-бензоат натрия остается источником кофеина, а не особой формой гормона; энергетики также могут содержать гуарану и другие стимуляторы.",
+      bullets: [
+        "Если инструкция к конкретной форме T3 предусматривает прием натощак, запивай ее водой и не совмещай таблетку с кофе, энергетиком или кофеином-бензоатом натрия.",
+        "Не воспринимай усиленное сердцебиение как доказательство, что препарат работает: это может быть суммарная стимуляция T3 и кофеина.",
+        "При новом сердцебиении, перебоях ритма, треморе или бессоннице не повышай и не компенсируй дозу самостоятельно; пересмотри схему с врачом."
+      ]
+    }
+  };
+
   const supplementCatalogTranslations = {
     en: {
       groupLabel: "Group 06",
@@ -2356,6 +2474,109 @@
     }
   }
 
+  function applyThyroidT4Translations(language) {
+    const card = Array.from(document.querySelectorAll(".vlog-topic-item")).find(function (item) {
+      const badge = item.querySelector(":scope > summary span");
+      return /22$/.test(normalize(badge ? badge.textContent : ""));
+    });
+    if (!card) return;
+
+    if (language === "uk") {
+      restoreTranslatedSupportGuide(card);
+      return;
+    }
+
+    const content = thyroidT4Translations[language];
+    if (!content) return;
+
+    const summary = card.querySelector(":scope > summary");
+    const body = card.querySelector(":scope > .vlog-topic-body");
+    const headings = body ? Array.from(body.querySelectorAll(":scope > h3")) : [];
+    const paragraphs = body ? Array.from(body.querySelectorAll(":scope > p")) : [];
+    const lists = body ? Array.from(body.querySelectorAll(":scope > ul:not(.vlog-source-list)")) : [];
+    const table = body ? body.querySelector(":scope > .vlog-topic-table-wrap table") : null;
+    const interaction = body ? body.querySelector(":scope > .vlog-caffeine-interaction") : null;
+    const warning = body ? body.querySelector(":scope > .vlog-topic-warning:not(.vlog-caffeine-interaction)") : null;
+    const sources = body ? body.querySelector(":scope > .vlog-source-list") : null;
+
+    setTranslatedText(summary && summary.querySelector("span"), content.badge);
+    setTranslatedText(summary && summary.querySelector("strong"), content.title);
+    setTranslatedText(paragraphs[0], content.intro);
+    setTranslatedText(paragraphs[1], content.medical);
+
+    if (interaction && content.interaction) {
+      setTranslatedText(interaction.querySelector("strong"), content.interaction.title);
+      setTranslatedText(interaction.querySelector("p"), content.interaction.text);
+      Array.from(interaction.querySelectorAll("li")).forEach(function (item, index) {
+        if (content.interaction.bullets[index]) setTranslatedText(item, content.interaction.bullets[index]);
+      });
+    }
+
+    content.headings.forEach(function (value, index) {
+      setTranslatedText(headings[index], value);
+    });
+
+    if (table) {
+      Array.from(table.querySelectorAll("thead th")).forEach(function (node, index) {
+        if (content.tableHeaders[index]) setTranslatedText(node, content.tableHeaders[index]);
+      });
+      Array.from(table.querySelectorAll("tbody td")).forEach(function (node, index) {
+        if (content.tableCells[index]) setTranslatedText(node, content.tableCells[index]);
+      });
+    }
+
+    [
+      [lists[0], content.risks],
+      [lists[1], content.monitor],
+      [lists[2], content.symptoms]
+    ].forEach(function (entry) {
+      const list = entry[0];
+      const values = entry[1];
+      const items = list ? Array.from(list.children).filter(function (item) {
+        return item.tagName === "LI";
+      }) : [];
+      values.forEach(function (value, index) {
+        setTranslatedText(items[index], value);
+      });
+    });
+
+    if (warning) {
+      setTranslatedText(warning.querySelector("strong"), "VitalRise rule");
+      setTranslatedText(warning.querySelector("p"), content.rule);
+    }
+
+    if (sources) {
+      Array.from(sources.querySelectorAll("a")).forEach(function (link, index) {
+        if (content.sources[index]) setTranslatedText(link, content.sources[index]);
+      });
+    }
+  }
+
+  function applyThyroidT3CaffeineTranslations(language) {
+    const card = Array.from(document.querySelectorAll(".vlog-topic-item")).find(function (item) {
+      const badge = item.querySelector(":scope > summary span");
+      return /21$/.test(normalize(badge ? badge.textContent : ""));
+    });
+    if (!card) return;
+
+    const interaction = card.querySelector(":scope > .vlog-topic-body > .vlog-caffeine-interaction");
+    if (!interaction) return;
+
+    if (language === "uk") {
+      restoreTranslatedSupportGuide(interaction);
+      return;
+    }
+
+    const content = thyroidT3CaffeineTranslations[language];
+    if (!content) return;
+
+    setTranslatedText(interaction.querySelector("strong"), content.title);
+    setTranslatedText(interaction.querySelector("p"), content.text);
+    Array.from(interaction.querySelectorAll("li")).forEach(function (item, index) {
+      if (content.bullets[index]) setTranslatedText(item, content.bullets[index]);
+    });
+  }
+
   function applySupplementCatalogTranslations(language) {
     if (language === "uk") return;
 
@@ -2426,6 +2647,8 @@
     applyEditorialTranslations(language);
     applyDietTranslations(language);
     applySupportGuideTranslations(language);
+    applyThyroidT3CaffeineTranslations(language);
+    applyThyroidT4Translations(language);
     applySupplementCatalogTranslations(language);
     translateAttributes(language);
   }

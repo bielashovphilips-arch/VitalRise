@@ -114,6 +114,21 @@
             '</div>'
           : "";
 
+        if (day.restDay) {
+          return (
+            '<div class="training-day-card training-rest-day-card">' +
+              '<div class="training-day-header">' +
+                '<h4 class="training-day-title">' + t(day.title) + '</h4>' +
+                '<span class="training-day-badge">' + t(day.badge || "відновлення") + '</span>' +
+              '</div>' +
+              '<div class="training-rest-day-note">' +
+                t('Повне відновлення: без важкого силового тренування.') +
+              '</div>' +
+              cardioMarkup +
+            '</div>'
+          );
+        }
+
         const orderedMarkup = day.orderedExercises && day.orderedExercises.length
           ? renderOrderedExerciseGroups(day.orderedExercises)
           : "";

@@ -465,6 +465,7 @@
             '<span class="section-label">Coach Command Center</span>' +
             '<h2>Персональний контроль циклу</h2>' +
             '<p>Timeline, план-факт, check-in, календар, графіки, попередження, швидкі налаштування і Blueprint 2.0 працюють як один кабінет спортсмена.</p>' +
+          '<a class="btn btn-primary" href="https://t.me/bielashov" target="_blank" rel="noopener noreferrer">Написати тренеру</a>' +
           '</div>' +
           '<div class="coach-grid">' +
             renderTimeline() +

@@ -185,8 +185,9 @@
     if (!match) return updated;
 
     const basePercent = Number(match[1]) / 100;
-    const baseWeight = roundTo2_5(source1RM * basePercent);
-    const finalWeight = Math.max(0, baseWeight + weekInfo.baseKg);
+    const loadFactor = updated.shortLoadFactor || 1;
+    const baseWeight = roundTo2_5(source1RM * basePercent * loadFactor);
+    const finalWeight = Math.max(0, baseWeight + (updated.shortSession ? 0 : weekInfo.baseKg));
     updated.weightText = formatWeight(finalWeight);
     updated.percentText = Math.round((finalWeight / source1RM) * 100) + "% від 1ПМ";
     return updated;
@@ -194,6 +195,16 @@
 
   function progressExercise(exercise, goal, weekInfo, oneRM, isAccessory) {
     const updated = Object.assign({}, exercise);
+
+    if (updated.shortSession && isAccessory) {
+      updated.percentText = "Коротка сесія: залиш поточну знижену вагу, повертай навантаження поступово після адаптації.";
+      return updated;
+    }
+
+    if (updated.shortSession && !isAccessory && !(updated.percentText && updated.percentText.indexOf("% РІС–Рґ 1РџРњ") !== -1)) {
+      updated.percentText = "Коротка сесія: залиш поточну знижену вагу, повернення навантаження — поступово після стабільного RIR.";
+      return updated;
+    }
 
     if (updated.progressionType === "gymBeginnerStrength" || updated.progressionType === "gymBeginnerStrengthAccessory") {
       updated.percentText = getGymBeginnerStrengthProgression(updated, weekInfo);
@@ -245,6 +256,18 @@
   function applyWeekProgression(baseDays, goal, weekInfo, oneRM) {
     const weekDays = deepClone(baseDays);
     const safeOneRM = oneRM || {};
+    const isDeload = (goal === "strength" && weekInfo.week === 6) ||
+      ((goal === "mass" || goal === "fatloss" || goal === "endurance" || goal === "support") && weekInfo.week === 4);
+
+    function reduceVolume(value) {
+      if (value === null || value === undefined || value === "") return value;
+      return String(value).replace(/(\d+)(?:-(\d+))?/g, function (match, lowText, highText) {
+        const low = Math.max(1, Math.floor(Number(lowText) * 0.7));
+        if (!highText) return String(low);
+        const high = Math.max(low, Math.floor(Number(highText) * 0.7));
+        return low + "-" + high;
+      });
+    }
 
     weekDays.forEach(function (day) {
       const isOutdoorDay =
@@ -263,6 +286,18 @@
         day.accessory = day.accessory.map(function (exercise) {
           return progressExercise(exercise, goal, weekInfo, safeOneRM, true);
         });
+      }
+
+      if (isDeload) {
+        ["basic", "accessory"].forEach(function (group) {
+          (day[group] || []).forEach(function (exercise) {
+            exercise.sets = reduceVolume(exercise.sets);
+            if (exercise.setsLabel) exercise.setsLabel = reduceVolume(exercise.setsLabel);
+            exercise.percentText = (exercise.percentText || "") + " | полегшений тиждень: мінус близько 30% обсягу";
+          });
+        });
+        day.cardio = day.cardio || [];
+        day.cardio.push("Полегшений тиждень: залиш техніку, ходьбу й відновлення; не додавай вагу.");
       }
 
       if (goal === "fatloss") {

@@ -27,7 +27,19 @@
     const targetDays = normalizeTrainingDays(days, source.length || 3);
     const expanded = [];
     for (let index = 0; index < targetDays; index += 1) {
-      expanded.push(relabelTrainingDay(source[index % source.length], index));
+      if (index < source.length) {
+        expanded.push(relabelTrainingDay(source[index], index));
+        continue;
+      }
+
+      expanded.push({
+        title: "День " + (index + 1) + " — активне відновлення",
+        badge: "відновлення",
+        basic: [],
+        accessory: [],
+        restDay: true,
+        cardio: ["20-40 хв спокійної ходьби, мобільність і сон. Не перетворюй цей день на ще одне важке тренування."]
+      });
     }
     return expanded;
   }
@@ -58,20 +70,150 @@
       ? training.buildOutdoorExercise(name, sets, reps, weightText, progressionPlan)
       : { name: name, sets: sets, reps: reps, weightText: weightText, percentText: progressionPlan[0], progressionType: "outdoor", progressionPlan: progressionPlan };
   }
+
+  function reduceShortSessionLoad(value, factor) {
+    if (value === null || value === undefined || value === "") return value;
+
+    return String(value).replace(/(\d+(?:\.\d+)?)\s*кг/g, function (match, weightText) {
+      const weight = Math.max(0, Math.round((Number(weightText) * factor) / 2.5) * 2.5);
+      return weight + " кг";
+    });
+  }
+
+  function applyTrainingDurationConstraints(basePlan, duration, place) {
+    const minutes = Number(duration);
+    if (place !== "gym" || !Number.isFinite(minutes) || minutes > 60) return basePlan;
+
+    const plan = deepClone(basePlan);
+    const loadFactor = minutes <= 30 ? 0.8 : 0.85;
+
+    plan.forEach(function (day) {
+      if (day.restDay) return;
+
+      ["basic", "accessory"].forEach(function (group) {
+        (day[group] || []).forEach(function (exercise) {
+          exercise.shortSession = true;
+          exercise.shortLoadFactor = loadFactor;
+          exercise.weightText = reduceShortSessionLoad(exercise.weightText, loadFactor);
+          exercise.restText = group === "basic"
+            ? (minutes <= 30 ? "45-60 сек" : "60-75 сек")
+            : (minutes <= 30 ? "30-45 сек" : "45-60 сек");
+          exercise.percentText = "Коротке тренування: вага тимчасово нижча на " + Math.round((1 - loadFactor) * 100) + "%, паузи коротші. " + (exercise.percentText || "");
+        });
+      });
+
+      day.cardio = day.cardio || [];
+      day.cardio.push(
+        minutes <= 30
+          ? "Коротка залова сесія: усі вправи залишені. Тимчасово знизь вагу приблизно на 20% і скороти паузи; повертай навантаження після стабільного RIR."
+          : "Коротка залова сесія: усі вправи залишені. Тимчасово знизь вагу приблизно на 15% і скороти паузи; після адаптації поступово повертай навантаження."
+      );
+    });
+
+    return plan;
+  }
+
+  function reduceSetText(value, factor) {
+    if (value === null || value === undefined || value === "") return value;
+
+    return String(value).replace(/(\d+)(?:-(\d+))?/g, function (match, lowText, highText) {
+      const low = Math.max(1, Math.floor(Number(lowText) * factor));
+      if (!highText) return String(low);
+      const high = Math.max(low, Math.floor(Number(highText) * factor));
+      return low + "-" + high;
+    });
+  }
+
+  function painReplacement(exercise, painStatus) {
+    const copy = Object.assign({}, exercise);
+    const text = String(copy.name || "").toLowerCase();
+
+    if (painStatus === "shoulder") {
+      if (/брус|жим леж|жим гант|жим плеч|жим штан|віджим|pike|над голов/.test(text)) {
+        copy.name = "Жим нейтральним хватом або віджимання від високої опори";
+        copy.weightText = "легко-середньо, тільки без болю";
+        copy.percentText = "ціль: груди / трицепс; комфортна амплітуда, без болю";
+      } else if (/підйом.*сторон|махи|дельт|плеч/.test(text)) {
+        copy.name = "Підйоми через сторони у комфортній амплітуді";
+        copy.weightText = "дуже легка вага";
+        copy.percentText = "ціль: плечі; зупинись до появи болю";
+      }
+    }
+
+    if (painStatus === "elbow") {
+      if (/брус|трицепс|вузьк|француз|розгинання/.test(text)) {
+        copy.name = "Ізометричне напруження трицепса без болю";
+        copy.weightText = "без ваги";
+        copy.percentText = "ціль: трицепс; тільки безболісне утримання";
+      } else if (/підтяг|тяга верх|згинання рук|біцепс|молот/.test(text)) {
+        copy.name = /біцепс|молот|згинання/.test(text)
+          ? "Ізометричне утримання біцепса без болю"
+          : "Тяга нейтральним хватом у комфортній амплітуді";
+        copy.weightText = "легко-середньо, тільки без болю";
+        copy.percentText = "цільова група збережена; без ривків і різкого розгинання ліктя";
+      }
+    }
+
+    if (painStatus === "knee") {
+      if (/берпі/.test(text)) {
+        copy.name = "Крок назад у планку без стрибка";
+        copy.percentText = "без ударного навантаження і без болю в коліні";
+      } else if (/присі|випад|болгар|пістолет|жим ног|розгинання ніг|кроки|стриб/.test(text)) {
+        copy.name = "Сідничний міст або хіп-траст у комфортній амплітуді";
+        copy.weightText = "власна вага / легка вага";
+        copy.percentText = "ціль: нижня частина; коліно без болю, контроль таза";
+      }
+    }
+
+    if (painStatus === "back") {
+      if (/станов|румун|тяга штан|тяга т-гриф|тяга до пояс|нахил|гіперекст|пуловер/.test(text)) {
+        copy.name = "Тяга з опорою грудьми або горизонтальна тяга";
+        copy.weightText = "легко-середньо, спина нейтральна";
+        copy.percentText = "ціль: спина; без навантаження через поперек і без болю";
+      } else if (/присі|випад|болгар|пістолет/.test(text)) {
+        copy.name = "Жим ногами з опорою спини або сідничний міст";
+        copy.weightText = "легка вага";
+        copy.percentText = "ціль: ноги / сідниці; поперек стабільний і без болю";
+      } else if (/прес|планка|корпус|скручування|hollow/.test(text)) {
+        copy.name = "Мертва комаха або антиобертання";
+        copy.weightText = "власна вага / легка резина";
+        copy.percentText = "ціль: корпус; поперек стабільний, без болю";
+      }
+    }
+
+    return copy;
+  }
+
+  function applyExerciseConstraint(exercise, painStatus) {
+    const copy = painReplacement(exercise, painStatus);
+    const factor = painStatus === "fatigue" ? 0.7 : 0.8;
+    copy.sets = reduceSetText(copy.sets, factor);
+    if (copy.setsLabel) copy.setsLabel = reduceSetText(copy.setsLabel, factor);
+    if (painStatus === "fatigue") {
+      copy.percentText = "залиш поточну вагу, RIR 3-4, без відмови";
+    }
+    return copy;
+  }
+
   function applyTrainingConstraints(basePlan, constraints) {
     const painStatus = constraints && constraints.painStatus ? constraints.painStatus : "none";
     if (painStatus === "none") return basePlan;
 
     const plan = deepClone(basePlan);
     const painNotes = {
-      shoulder: "Плече: не йди глибоко в брусах, прибери біль, залиш 2-3 повтори в запасі.",
-      elbow: "Лікоть: без ривків, зменш об'єм брусів/підтягувань на 20%, додай розминку передпліч.",
-      knee: "Коліно: випади й присідання тільки в безболісній амплітуді, без стрибків.",
-      back: "Поперек: без різкого прогину, контроль корпуса, менше вправ із рюкзаком.",
-      fatigue: "Сильна втома: мінус 20-30% підходів цього тижня, без роботи до відмови."
+      shoulder: "Плече: цільова група збережена через комфортнішу варіацію. Будь-який біль — зупинити вправу, не продавлювати амплітуду.",
+      elbow: "Лікоть: залишені лише комфортні варіанти для цільової групи, без ривків і роботи через біль.",
+      knee: "Коліно: ударні й болісні рухи замінені на комфортні варіанти для нижньої частини.",
+      back: "Поперек: тяги й вправи з нестабільним корпусом замінені на варіанти з опорою.",
+      fatigue: "Сильна втома: мінус близько 30% підходів, поточна вага, RIR 3-4, без відмови."
     };
 
     plan.forEach(function (day) {
+      ["basic", "accessory"].forEach(function (group) {
+        day[group] = (day[group] || []).map(function (exercise) {
+          return applyExerciseConstraint(exercise, painStatus);
+        });
+      });
       day.cardio = day.cardio || [];
       day.cardio.push(painNotes[painStatus] || painNotes.fatigue);
     });
@@ -441,7 +583,7 @@
         : { name: name, sets: sets, reps: reps, weightText: baseCue, percentText: baseProgression };
     }
 
-    return expandPlanToDays([
+    const pplPlan = [
       {
         title: "День 1 — штовхай верх: база",
         badge: "PPL 3+1 / базовий",
@@ -483,7 +625,15 @@
           buildAccessoryExercise("Підйоми на литки", "4", "10-15", "пауза внизу і вгорі", "легко-середньо"),
           buildAccessoryExercise("Прес / антиобертання", "3", "10-15", "корпус стабільний", "без ваги / легко")
         ],
-        cardio: ["Після цього дня — 1 день відпочинку: ходьба, сон, вода, без важких ніг."]
+        cardio: ["Після цього дня — повний день відпочинку: ходьба за бажанням, сон, вода, без важких ніг."]
+      },
+      {
+        title: "День 4 — повний відпочинок",
+        badge: "PPL 3+1 / відновлення",
+        basic: [],
+        accessory: [],
+        restDay: true,
+        cardio: ["Без силового тренування. Легка ходьба, сон, вода і відновлення. Наступний день — середньолегкий push."]
       },
       {
         title: "День 5 — штовхай верх: тренажери",
@@ -525,9 +675,21 @@
           buildAccessoryExercise("Відведення стегна в тренажері", "3", "12-18", "без розгойдування", machineCue),
           buildAccessoryExercise("Литки в тренажері", "4", "12-18", "повна амплітуда", machineCue)
         ],
-        cardio: ["Після цього дня — відпочинок або легка ходьба. Далі цикл повторюється з базового дня штовхання."]
+        cardio: ["Після цього дня — повний день відпочинку. Потім цикл починається з важкого push."]
+      },
+      {
+        title: "День 8 — повний відпочинок",
+        badge: "PPL 3+1 / відновлення",
+        basic: [],
+        accessory: [],
+        restDay: true,
+        cardio: ["Без силового тренування. Оціни сон, апетит, суглоби й готовність до наступного важкого циклу."]
       }
-    ], days);
+    ];
+
+    return pplPlan.map(function (day, index) {
+      return relabelTrainingDay(day, index);
+    });
   }
 
   function getHomeBasePlan(goal, level, days) {
@@ -1497,6 +1659,7 @@
 
   system.trainingTemplates = {
     applyTrainingConstraints: applyTrainingConstraints,
+    applyTrainingDurationConstraints: applyTrainingDurationConstraints,
     getGymBeginnerBasePlan: getGymBeginnerBasePlan,
     applyGymBeginnerStrengthWeightCues: applyGymBeginnerStrengthWeightCues,
     getGymIntermediateAdvancedBasePlan: getGymIntermediateAdvancedBasePlan,
