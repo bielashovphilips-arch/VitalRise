@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download Instagram profile and media
+      - name: Download Instagram profile and media data
         env:
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
         run: |
@@ -27,112 +27,137 @@ jobs:
             "https://graph.instagram.com/me/media?fields=id,caption,media_type,media_product_type,permalink,timestamp,like_count,comments_count&limit=100&access_token=${INSTAGRAM_ACCESS_TOKEN}" \
             > instagram-data/media.json
 
-      - name: Collect Instagram Insights
+          echo "PROFILE:"
+          cat instagram-data/profile.json
+          echo ""
+          echo "MEDIA:"
+          cat instagram-data/media.json
+
+      - name: Get insights for each publication
         env:
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
         run: |
-          python3 <<'PY'
+          python <<'PY'
           import json
-          import csv
           import os
-          import urllib.parse
           import urllib.request
-          import urllib.error
-          import time
+          import urllib.parse
 
-          TOKEN = os.environ["INSTAGRAM_ACCESS_TOKEN"]
+          token = os.environ["INSTAGRAM_ACCESS_TOKEN"]
 
           with open("instagram-data/media.json", "r", encoding="utf-8") as f:
-              raw = json.load(f)
+              media_data = json.load(f)
 
-          media_list = raw.get("data", [])
+          posts = media_data.get("data", [])
+          results = []
 
-          metrics_to_try = [
-              "views",
-              "reach",
-              "saved",
-              "shares",
-              "total_interactions"
-          ]
+          for post in posts:
+              media_id = post.get("id")
+              product_type = post.get("media_product_type", "")
+              media_type = post.get("media_type", "")
 
-          def get_metric(media_id, metric):
-              params = urllib.parse.urlencode({
-                  "metric": metric,
-                  "access_token": TOKEN
-              })
+              item = dict(post)
+              item["insights"] = {}
 
-              url = f"https://graph.instagram.com/{media_id}/insights?{params}"
+              # Different media types can expose different metrics.
+              # Ask for useful metrics individually so one unsupported
+              # metric does not break collection for the whole post.
+              if product_type == "REELS":
+                  metrics = [
+                      "reach",
+                      "saved",
+                      "shares",
+                      "likes",
+                      "comments",
+                      "views",
+                      "total_interactions"
+                  ]
+              else:
+                  metrics = [
+                      "reach",
+                      "saved",
+                      "shares",
+                      "likes",
+                      "comments",
+                      "views",
+                      "total_interactions"
+                  ]
 
-              try:
-                  with urllib.request.urlopen(url, timeout=30) as response:
-                      payload = json.loads(response.read().decode("utf-8"))
+              for metric in metrics:
+                  url = (
+                      f"https://graph.instagram.com/{media_id}/insights"
+                      f"?metric={urllib.parse.quote(metric)}"
+                      f"&access_token={urllib.parse.quote(token)}"
+                  )
 
-                  data = payload.get("data", [])
+                  try:
+                      with urllib.request.urlopen(url) as response:
+                          data = json.loads(response.read().decode("utf-8"))
 
-                  if not data:
-                      return None
+                      values = data.get("data", [])
 
-                  values = data[0].get("values", [])
+                      if values:
+                          value = values[0].get("values", [])
+                          if value:
+                              item["insights"][metric] = value[0].get("value")
+                          elif "value" in values[0]:
+                              item["insights"][metric] = values[0].get("value")
 
-                  if values:
-                      return values[-1].get("value")
+                  except Exception as e:
+                      # Unsupported metrics are skipped instead of
+                      # failing the entire workflow.
+                      item["insights"][metric] = None
+                      print(
+                          f"Skipped {metric} for {media_id} "
+                          f"({media_type}/{product_type}): {e}"
+                      )
 
-                  return data[0].get("total_value", {}).get("value")
+              results.append(item)
 
-              except urllib.error.HTTPError as e:
-                  print(f"Metric {metric} unavailable for media {media_id}: HTTP {e.code}")
-                  return None
+          with open(
+              "instagram-data/analytics.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  results,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
 
-              except Exception as e:
-                  print(f"Metric {metric} unavailable for media {media_id}: {e}")
-                  return None
+          print(f"Processed {len(results)} Instagram publications")
+          PY
 
-          rows = []
+      - name: Create analytics CSV
+        run: |
+          python <<'PY'
+          import csv
+          import json
 
-          for index, media in enumerate(media_list, start=1):
-              media_id = media.get("id")
+          with open(
+              "instagram-data/analytics.json",
+              "r",
+              encoding="utf-8"
+          ) as f:
+              posts = json.load(f)
 
-              row = {
-                  "id": media_id,
-                  "timestamp": media.get("timestamp"),
-                  "media_type": media.get("media_type"),
-                  "media_product_type": media.get("media_product_type"),
-                  "caption": media.get("caption", ""),
-                  "permalink": media.get("permalink"),
-                  "likes": media.get("like_count"),
-                  "comments": media.get("comments_count"),
-                  "views": None,
-                  "reach": None,
-                  "saved": None,
-                  "shares": None,
-                  "total_interactions": None
-              }
-
-              print(f"Processing {index}/{len(media_list)}: {media_id}")
-
-              for metric in metrics_to_try:
-                  row[metric] = get_metric(media_id, metric)
-                  time.sleep(0.15)
-
-              rows.append(row)
-
-          with open("instagram-data/analytics.json", "w", encoding="utf-8") as f:
-              json.dump(rows, f, ensure_ascii=False, indent=2)
-
-          fields = [
+          columns = [
+              "id",
               "timestamp",
               "media_type",
               "media_product_type",
               "caption",
               "permalink",
+              "like_count",
+              "comments_count",
               "views",
               "reach",
-              "likes",
-              "comments",
               "saved",
               "shares",
+              "likes",
+              "comments",
               "total_interactions",
-              "id"
           ]
 
           with open(
@@ -141,31 +166,42 @@ jobs:
               newline="",
               encoding="utf-8-sig"
           ) as f:
-              writer = csv.DictWriter(f, fieldnames=fields)
+              writer = csv.DictWriter(f, fieldnames=columns)
               writer.writeheader()
 
-              for row in rows:
+              for post in posts:
+                  insights = post.get("insights", {})
+
                   writer.writerow({
-                      field: row.get(field)
-                      for field in fields
+                      "id": post.get("id"),
+                      "timestamp": post.get("timestamp"),
+                      "media_type": post.get("media_type"),
+                      "media_product_type":
+                          post.get("media_product_type"),
+                      "caption": post.get("caption", ""),
+                      "permalink": post.get("permalink", ""),
+                      "like_count": post.get("like_count"),
+                      "comments_count":
+                          post.get("comments_count"),
+                      "views": insights.get("views"),
+                      "reach": insights.get("reach"),
+                      "saved": insights.get("saved"),
+                      "shares": insights.get("shares"),
+                      "likes": insights.get("likes"),
+                      "comments": insights.get("comments"),
+                      "total_interactions":
+                          insights.get("total_interactions"),
                   })
 
-          print()
-          print(f"Finished. Processed media: {len(rows)}")
-          print("Created:")
-          print("instagram-data/analytics.json")
-          print("instagram-data/analytics.csv")
+          print("analytics.csv created")
           PY
 
-      - name: Show summary
+      - name: Show generated files
         run: |
-          echo "PROFILE:"
-          cat instagram-data/profile.json
-          echo ""
-          echo "FILES:"
-          ls -lh instagram-data
+          echo "Generated files:"
+          ls -lah instagram-data/
 
-      - name: Save Instagram analytics
+      - name: Upload Instagram analytics
         uses: actions/upload-artifact@v4
         with:
           name: instagram-analytics
