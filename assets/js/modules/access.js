@@ -257,6 +257,13 @@
     }
   }
 
+  async function acceptAccessPayload(payload) {
+    const accessToken = String(payload && payload.accessToken || "").trim();
+    if (!accessToken) throw new Error("Missing access token");
+    const verified = await postJson("/api/access/verify", { token: accessToken });
+    setPaidAccess(Object.assign({}, verified, { accessToken: accessToken }));
+  }
+
   function getPendingOrder() {
     try {
       return JSON.parse(window.localStorage.getItem(PENDING_ORDER_KEY) || "null");
@@ -899,7 +906,7 @@
   system.access = {
     getTier: getTier,
     hasAccess: hasAccess,
-    setAccessPayload: setPaidAccess,
+    setAccessPayload: acceptAccessPayload,
     activateProgram: activateProgram,
     openPaymentModal: openPaymentModal,
     apply: applyAccessState

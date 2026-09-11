@@ -36,7 +36,7 @@
           throw new Error("Модуль доступу не завантажився.");
         }
 
-        window.VitalRiseSystem.access.setAccessPayload(data);
+        await window.VitalRiseSystem.access.setAccessPayload(data);
         form.elements.secret.value = "";
         status.textContent = "Безстроковий доступ відкрито. Перенаправляємо...";
         window.setTimeout(function () {
