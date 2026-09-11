@@ -1,5 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="VitalRise">
-  <rect width="192" height="192" rx="36" fill="#0b0b0f"/>
-  <circle cx="96" cy="96" r="66" fill="none" stroke="#d4af37" stroke-width="10"/>
-  <path d="M52 112 79 54l24 63 29-63 14 58" fill="none" stroke="#f3f4f6" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-labelledby="vr-title vr-description">
+  <title id="vr-title">VitalRise</title>
+  <desc id="vr-description">Монограма VR з гранованого золота й платини на графітовому медальйоні. Висхідна золота дуга символізує розвиток.</desc>
+  <defs>
+    <linearGradient id="vr-case" x1="18" y1="0" x2="158" y2="192" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#55534c"/><stop offset=".17" stop-color="#1d2028"/><stop offset=".55" stop-color="#080a10"/><stop offset="1" stop-color="#29251d"/>
+    </linearGradient>
+    <radialGradient id="vr-face" cx=".24" cy=".12" r="1.1">
+      <stop stop-color="#34363b"/><stop offset=".46" stop-color="#161920"/><stop offset="1" stop-color="#080a10"/>
+    </radialGradient>
+    <linearGradient id="vr-rim" x1="22" y1="8" x2="155" y2="187" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff0ba"/><stop offset=".22" stop-color="#b99950"/><stop offset=".47" stop-color="#4c402b"/><stop offset=".72" stop-color="#15171c"/><stop offset="1" stop-color="#a88136"/>
+    </linearGradient>
+    <linearGradient id="vr-gold" x1="48" y1="40" x2="107" y2="154" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff2be"/><stop offset=".23" stop-color="#edcd76"/><stop offset=".48" stop-color="#d4af37"/><stop offset=".7" stop-color="#b67d26"/><stop offset=".87" stop-color="#f2cf73"/><stop offset="1" stop-color="#fff0b3"/>
+    </linearGradient>
+    <linearGradient id="vr-platinum" x1="114" y1="43" x2="151" y2="152" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fffefa"/><stop offset=".3" stop-color="#e4e7e9"/><stop offset=".54" stop-color="#8c97a4"/><stop offset=".74" stop-color="#d6dce1"/><stop offset="1" stop-color="#f7f8f5"/>
+    </linearGradient>
+    <linearGradient id="vr-edge" x1="37" y1="44" x2="156" y2="151" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff8df" stop-opacity=".9"/><stop offset=".5" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff0c2" stop-opacity=".55"/>
+    </linearGradient>
+    <linearGradient id="vr-orbit" x1="21" y1="147" x2="167" y2="31" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#c89839" stop-opacity="0"/><stop offset=".45" stop-color="#c89839" stop-opacity=".35"/><stop offset="1" stop-color="#ffe5a0"/>
+    </linearGradient>
+    <filter id="vr-shadow" x="-25%" y="-20%" width="150%" height="160%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="5" stdDeviation="3.5" flood-color="#000" flood-opacity=".6"/>
+    </filter>
+    <path id="vr-v" d="M20 42h26l28 70 24-70h26L83 151H61Z"/>
+    <path id="vr-r" fill-rule="evenodd" d="M132 42h27c18 0 28 10 23 28-4 15-17 25-35 28l30 53h-23l-28-49-18 49H91Zm10 16-11 29h16c11 0 19-6 22-16 2-8-3-13-13-13Z"/>
+  </defs>
+  <!-- Graphite case and directional champagne-gold edge. -->
+  <rect x="1" y="1" width="190" height="190" rx="43" fill="url(#vr-case)"/>
+  <rect x="5" y="5" width="182" height="182" rx="39" fill="url(#vr-face)" stroke="url(#vr-rim)" stroke-width="1.2"/>
+  <path d="M43 10h92c26 0 47 21 47 47" fill="none" stroke="#fff1c6" stroke-opacity=".09" stroke-width=".7"/>
+  <!-- Open ascent arc, secondary to the monogram. -->
+  <path d="M31 153A79 79 0 0 1 150 38" fill="none" stroke="url(#vr-orbit)" stroke-width="1.5"/>
+  <path d="m145 31 13 12-17-3" fill="#e3bd62"/>
+  <path d="M161 62a73 73 0 0 1-121 88" fill="none" stroke="url(#vr-orbit)" stroke-opacity=".28" stroke-width=".75"/>
+  <!-- Font-independent VR lettering with distinct metal facets. -->
+  <g transform="translate(15 16) scale(.84)" stroke-linejoin="round">
+    <g filter="url(#vr-shadow)">
+      <use href="#vr-v" transform="translate(0 2)" fill="#79501d"/>
+      <use href="#vr-r" transform="translate(0 2)" fill="#59616c"/>
+      <use href="#vr-v" fill="url(#vr-gold)"/>
+      <use href="#vr-r" fill="url(#vr-platinum)"/>
+    </g>
+    <path d="M20 42h26l28 70-7 20Z" fill="#fff3c6" fill-opacity=".19"/>
+    <path d="m98 42 8 7-28 88 5 14 41-109Z" fill="#805019" fill-opacity=".29"/>
+    <path d="m61 151 6-19 11 5 5 14Z" fill="#fff0b6" fill-opacity=".32"/>
+    <path d="m132 42 4 4-41 101-4 4Z" fill="#fff" fill-opacity=".32"/>
+    <path d="m147 98 30 53h-5l-30-55Z" fill="#5a6676" fill-opacity=".4"/>
+    <path d="M132 42h27c18 0 28 10 23 28-4 15-17 25-35 28l-5-4c19-3 32-11 36-25 4-15-4-23-20-23h-22Z" fill="#fff" fill-opacity=".28"/>
+    <path d="m154 151-3-5h20l6 5Z" fill="#fff" fill-opacity=".24"/>
+    <use href="#vr-v" fill="none" stroke="url(#vr-edge)" stroke-width=".9"/>
+    <use href="#vr-r" fill="none" stroke="url(#vr-edge)" stroke-width=".9"/>
+    <path d="M23 44h21m56 0h20M134 44h25c16 0 26 9 21 26" fill="none" stroke="#fff8e4" stroke-width="1" stroke-opacity=".65"/>
+  </g>
+  <path d="M76 170h28" stroke="url(#vr-rim)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="m110 168 2 2-2 2-2-2Z" fill="#d4af37"/>
 </svg>

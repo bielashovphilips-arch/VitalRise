@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <link rel="stylesheet" href="/assets/css/brand-icon.css?v=metallic-r-20260911" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/assets/images/logo-icon.svg?v=metallic-r-20260911" type="image/svg+xml" />
+  <title>Founder access — VitalRise</title>
+  <link rel="stylesheet" href="assets/css/style.css?v=mobile-calculator-title-3" />
+  <style>
+    .founder-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+    .founder-card { width: min(100%, 520px); padding: 32px; border: 1px solid rgba(212,175,55,.25); border-radius: 20px; background: rgba(20,22,29,.94); box-shadow: 0 20px 60px rgba(0,0,0,.28); }
+    .founder-card h1 { margin: 0 0 10px; }
+    .founder-card p { color: rgba(236,240,248,.72); }
+    .founder-card form { display: grid; gap: 16px; margin-top: 24px; }
+    .founder-card label { display: grid; gap: 8px; }
+    .founder-card input { width: 100%; }
+    .founder-status { min-height: 24px; margin: 0; color: #f0d675; }
+    .founder-status.error { color: #ff9d9d; }
+  </style>
+</head>
+<body>
+  <main class="founder-page">
+    <section class="founder-card" aria-labelledby="founder-title">
+      <span class="section-label">VitalRise Founder</span>
+      <h1 id="founder-title">Вхід засновника</h1>
+      <p>Ця сторінка відкриває безстроковий admin-доступ лише для email засновника.</p>
+
+      <form id="founder-access-form">
+        <label for="founder-email">
+          Email засновника
+          <input id="founder-email" name="email" type="email" autocomplete="username" placeholder="Введи email засновника" required />
+        </label>
+        <label for="founder-secret">
+          Founder secret
+          <input id="founder-secret" name="secret" type="password" autocomplete="current-password" required />
+        </label>
+        <button type="submit" class="btn btn-primary">Відкрити безстроковий доступ</button>
+        <p id="founder-status" class="founder-status" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="assets/js/modules/system.js"></script>
+  <script src="assets/js/modules/access.js?v=owner-20260911-1"></script>
+  <script src="assets/js/modules/founder-access.js?v=founder-access-1"></script>
+</body>
+</html>

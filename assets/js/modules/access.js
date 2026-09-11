@@ -15,6 +15,7 @@
   const PRO_TELEGRAM_URL = "https://t.me/YourCoachProBot";
   let activationRequestPending = false;
   let verifiedPaidToken = false;
+  let localAdminPreview = false;
 
   const plans = {
     start: { 
@@ -212,7 +213,8 @@
 
   function getTier() {
     const tier = normalizeTier(document.body.dataset.accessTier || getStored(TIER_KEY));
-    if (tier !== "free" && tier !== "admin" && (!getStored(TOKEN_KEY) || !verifiedPaidToken)) return "free";
+    if (tier === "admin" && localAdminPreview) return "admin";
+    if (tier !== "free" && (!getStored(TOKEN_KEY) || !verifiedPaidToken)) return "free";
     return tier;
   }
 
@@ -226,6 +228,9 @@
   function setPaidAccess(payload) {
     const tier = normalizeTier(payload.tier);
     if (!payload.accessToken || tier === "free") return;
+    if (tier === "admin") {
+      [EXPIRES_KEY, START_DEADLINE_KEY, ACTIVE_EXPIRES_KEY, ACTIVATED_KEY, PENDING_ORDER_KEY].forEach(clearStored);
+    }
     verifiedPaidToken = true;
     setStored(TOKEN_KEY, payload.accessToken);
     setStored(TIER_KEY, tier);
@@ -282,6 +287,7 @@
     const params = new URLSearchParams(window.location.search);
     const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname) || window.location.protocol === "file:";
     if (isLocalPreview && params.get("access") === "admin") {
+      localAdminPreview = true;
       setTier("admin");
       params.delete("access");
       const cleanUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
@@ -401,12 +407,15 @@
 
   async function verifyStoredToken() {
     const token = getStored(TOKEN_KEY);
-    if (!token || getTier() === "admin") return;
+    if (!token || localAdminPreview) return;
 
     try {
       const data = await postJson("/api/access/verify", { token: token });
       verifiedPaidToken = true;
       setStored(TIER_KEY, normalizeTier(data.tier));
+      if (data.tier === "admin") {
+        [EXPIRES_KEY, START_DEADLINE_KEY, ACTIVE_EXPIRES_KEY, ACTIVATED_KEY].forEach(clearStored);
+      }
       if (data.email) setStored(EMAIL_KEY, data.email);
       if (data.expiresAt) setStored(EXPIRES_KEY, data.expiresAt);
       if (data.startDeadlineAt) setStored(START_DEADLINE_KEY, data.startDeadlineAt);
@@ -890,6 +899,7 @@
   system.access = {
     getTier: getTier,
     hasAccess: hasAccess,
+    setAccessPayload: setPaidAccess,
     activateProgram: activateProgram,
     openPaymentModal: openPaymentModal,
     apply: applyAccessState

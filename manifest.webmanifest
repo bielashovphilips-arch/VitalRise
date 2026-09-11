@@ -13,7 +13,7 @@
   "categories": ["health", "fitness", "productivity"],
   "icons": [
     {
-      "src": "assets/images/logo-icon.svg",
+      "src": "assets/images/logo-icon.svg?v=metallic-r-20260911",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

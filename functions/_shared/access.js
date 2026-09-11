@@ -47,6 +47,14 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
 }
 
+async function secretsMatch(expected, provided) {
+  const [left, right] = await Promise.all([
+    crypto.subtle.digest("SHA-256", utf8Bytes(expected)),
+    crypto.subtle.digest("SHA-256", utf8Bytes(provided))
+  ]);
+  return crypto.subtle.timingSafeEqual(left, right);
+}
+
 function addDays(days, fromDate) {
   const base = fromDate ? new Date(fromDate) : new Date();
   return new Date(base.getTime() + days * DAY_MS).toISOString();
@@ -315,6 +323,7 @@ function publicTokenPayload(token) {
   return {
     ok: true,
     tier: token.plan,
+    permanent: token.plan === "admin" && token.permanent === true,
     email: token.email,
     startDeadlineAt: token.startDeadlineAt || token.expiresAt,
     activatedAt: token.activatedAt || null,
@@ -331,6 +340,7 @@ function effectiveExpiresAt(record) {
 }
 
 function isExpired(record) {
+  if (record && record.plan === "admin" && record.permanent === true) return false;
   const expiresAt = effectiveExpiresAt(record);
   return !expiresAt || new Date(expiresAt).getTime() < Date.now();
 }
@@ -604,6 +614,85 @@ async function handleRedeem(request, env) {
   return json({ ok: true, tier: token.plan, accessToken, expiresAt: token.expiresAt });
 }
 
+async function handleFounderAccess(request, env) {
+  if (request.method !== "POST") return methodNotAllowed();
+  const origin = request.headers.get("Origin");
+  if (origin && origin !== new URL(request.url).origin) {
+    return json({ ok: false, error: "Founder authentication failed" }, 403);
+  }
+  if (!String(request.headers.get("Content-Type") || "").toLowerCase().startsWith("application/json")) {
+    return json({ ok: false, error: "JSON required" }, 415);
+  }
+
+  const founderSecret = String(env.FOUNDER_ACCESS_SECRET || "").trim();
+  const founderEmail = String(env.FOUNDER_EMAIL || "").trim().toLowerCase();
+  const providedSecret = request.headers.get("x-founder-secret") || "";
+
+  if (!founderSecret || !founderEmail) {
+    return json({ ok: false, error: "Founder access is not configured" }, 503);
+  }
+
+  if (!providedSecret || providedSecret.length > 512 || !(await secretsMatch(founderSecret, providedSecret))) {
+    return json({ ok: false, error: "Founder authentication failed" }, 403);
+  }
+
+  const reader = request.body?.getReader();
+  if (!reader) return json({ ok: false, error: "Invalid request" }, 400);
+  const chunks = [];
+  let length = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    length += value.byteLength;
+    if (length > 2048) {
+      await reader.cancel();
+      return json({ ok: false, error: "Request too large" }, 413);
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(length);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  let body;
+  try { body = JSON.parse(new TextDecoder().decode(bytes)); }
+  catch { return json({ ok: false, error: "Invalid request" }, 400); }
+  const email = String(body?.email || "").trim().toLowerCase();
+  if (!isValidEmail(email) || email !== founderEmail) {
+    return json({ ok: false, error: "Founder authentication failed" }, 403);
+  }
+
+  const kv = getKv(env);
+  if (!kv) return json({ ok: false, error: "VITALRISE_ACCESS KV binding is not configured" }, 503);
+
+  const accessToken = randomId("founder");
+  const token = {
+    id: randomId("token"),
+    tokenHash: await sha256(accessToken),
+    email: founderEmail,
+    plan: "admin",
+    orderId: "founder:" + founderEmail,
+    createdAt: nowIso(),
+    permanent: true,
+    startDeadlineAt: null,
+    activatedAt: nowIso(),
+    activeExpiresAt: null,
+    expiresAt: null,
+    revokedAt: null,
+    source: "founder_access"
+  };
+
+  await kvPut(kv, `token:${token.tokenHash}`, token);
+
+  return json({
+    ok: true,
+    tier: "admin",
+    email: founderEmail,
+    accessToken,
+    permanent: true,
+    expiresAt: null
+  });
+}
+
 async function handleVerify(request, env) {
   if (request.method !== "POST") return methodNotAllowed();
   const kv = getKv(env);
@@ -783,6 +872,7 @@ export async function handleAccessRequest(context) {
     if (pathname === "/api/access/health") return handleHealth(request, env);
     if (pathname === "/api/access/checkout") return handleCheckout(request, env);
     if (pathname === "/api/access/redeem") return handleRedeem(request, env);
+    if (pathname === "/api/access/founder") return await handleFounderAccess(request, env);
     if (pathname === "/api/access/verify") return handleVerify(request, env);
     if (pathname === "/api/access/activate") return handleActivate(request, env);
     if (pathname === "/api/access/order") return handleOrder(request, env);
@@ -790,6 +880,7 @@ export async function handleAccessRequest(context) {
     if (pathname === "/api/access/webhook/wayforpay") return handleWayForPayWebhook(request, env);
     return json({ ok: false, error: "API route not found" }, 404);
   } catch (error) {
+    if (pathname === "/api/access/founder") return json({ ok: false, error: "Founder access temporarily unavailable" }, 500);
     return json({ ok: false, error: error?.message || "Server error" }, 500);
   }
 }

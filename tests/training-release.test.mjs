@@ -70,8 +70,9 @@ test('calendar never adds kilograms; renders actual reduced deload sets',()=>{
   assert.match(plan.guidance.progressionRules[0],/всіх підходах.*RIR.*технікою.*без болю/);
 });
 
-test('production design, nutrition, access, analytics and backend remain unchanged',()=>{
-  const paths=['assets/css/style.css','assets/images/logo-icon.svg','assets/js/modules/nutrition.js','assets/js/modules/nutrition-render.js','assets/js/modules/access.js','assets/js/modules/marketing.js','assets/js/modules/training-render.js','assets/js/modules/hero-parallax.js','assets/js/modules/pricing-flip.js','functions/_shared/access.js','wrangler.toml'];
+test('production design outside approved logo, nutrition, analytics and training render remain unchanged',()=>{
+  // Logo and owner authentication were separately approved on 2026-09-11.
+  const paths=['assets/css/style.css','assets/js/modules/nutrition.js','assets/js/modules/nutrition-render.js','assets/js/modules/marketing.js','assets/js/modules/training-render.js','assets/js/modules/hero-parallax.js','assets/js/modules/pricing-flip.js','wrangler.toml'];
   for(const path of paths) {
     const before=execFileSync('git',['show','9b88909:'+path],{encoding:'utf8'}).replace(/\r\n/g,'\n');
     assert.equal(readFileSync(path,'utf8').replace(/\r\n/g,'\n'),before,path);

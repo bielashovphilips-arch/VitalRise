@@ -1,6 +1,8 @@
-const CACHE_NAME = "vitalrise-training-20260911-1";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-training-20260911-1";
+const CACHE_NAME = "vitalrise-logo-owner-20260911-1";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-logo-owner-20260911-1";
 const APP_SHELL = [
+  "./assets/css/brand-icon.css?v=metallic-r-20260911",
+  "./assets/images/logo-icon.svg?v=metallic-r-20260911",
   "./",
   "./index.html",
   "./nutrition.html",
@@ -57,7 +59,7 @@ const APP_SHELL = [
   "./assets/js/modules/blueprint.js",
   "./assets/js/modules/supplements.js?v=testosterone-ergogenic-2",
   "./assets/js/modules/coach.js?v=coach-contact-1",
-  "./assets/js/modules/access.js?v=paid-gate-1",
+  "./assets/js/modules/access.js?v=owner-20260911-1",
   "./assets/js/script.js?v=training-cycle-safety-1",
   "./manifest.webmanifest"
 ];
