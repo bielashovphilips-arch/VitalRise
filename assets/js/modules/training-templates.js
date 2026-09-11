@@ -32,14 +32,7 @@
         continue;
       }
 
-      expanded.push({
-        title: "День " + (index + 1) + " — активне відновлення",
-        badge: "відновлення",
-        basic: [],
-        accessory: [],
-        restDay: true,
-        cardio: ["20-40 хв спокійної ходьби, мобільність і сон. Не перетворюй цей день на ще одне важке тренування."]
-      });
+      if (source.length) expanded.push(relabelTrainingDay(source[index % source.length], index));
     }
     return expanded;
   }

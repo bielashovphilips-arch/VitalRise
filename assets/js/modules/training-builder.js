@@ -170,7 +170,7 @@
     neutral: "Універсальна",
     prison_workout: "Вулична сила / драбинки",
     tabata_circuit: "Інтервали 1:1 / кругове",
-    ppl_3_1: "PPL 3+1: штовхай / тягни / ноги",
+    ppl_3_1: "PPL: штовхай / тягни / ноги",
     female_balanced: "Жіноча збалансована",
     female_glutes: "Жіноча: сідниці та ноги",
     female_strength: "Жіноча силова",
@@ -185,7 +185,7 @@
     const place = data["training-place"];
     const level = data["training-level"];
     const goal = data["training-goal"];
-    const days = Number(data["training-days"]);
+    const days = Math.max(2, Math.min(6, Math.round(Number(data["training-days"]) || 3)));
     const duration = Number(data["duration"]);
     const selectedMode = data["training-program-mode"] || "neutral";
     const cyclePhase = data["cycle-phase"] || "none";
@@ -218,7 +218,7 @@
       recommendedMode = "ppl_3_1";
       confidence = "висока";
       reasons.push("зал, набір м'язів, просунутий рівень і щонайменше 4 доступні тренувальні дні");
-      reasons.push("PPL 3+1 працює як фіксований 8-денний цикл лише за дуже хорошого відновлення");
+      reasons.push("Черга PPL продовжується між тижнями й відповідає обраній кількості занять");
     } else if (place === "outdoor" && (goal === "strength" || goal === "endurance")) {
       recommendedMode = "prison_workout";
       confidence = "висока";
@@ -286,7 +286,7 @@
     const level = data["training-level"];
     const goal = data["training-goal"];
     const cyclePhase = data["cycle-phase"] || "none";
-    const days = Number(data["training-days"]);
+    const days = Math.max(2, Math.min(6, Math.round(Number(data["training-days"]) || 3)));
     const bodyWeight = Number(data["body-weight"]);
     const duration = Number(data["duration"]);
     const outdoorMetrics = {
@@ -309,7 +309,7 @@
     const isPrisonMode = programMode === "prison_workout";
     const isTabataCircuitMode = programMode === "tabata_circuit";
     const isPplMode = programMode === "ppl_3_1";
-    const programDays = isPplMode ? 8 : days;
+    const programDays = days;
 
     let caloriesBurned = calculateTrainingCalories(isPplMode ? "gym" : place, goal, bodyWeight, duration);
     if (isPrisonMode) caloriesBurned *= 1.08;
@@ -364,10 +364,6 @@
       basePlan = trainingTemplates.getHomeBasePlan(goal, level, days, outdoorMetrics);
     }
 
-    if (!isPplMode && typeof trainingTemplates.applyTrainingDurationConstraints === "function") {
-      basePlan = trainingTemplates.applyTrainingDurationConstraints(basePlan, duration, place);
-    }
-
     basePlan = trainingTemplates.applyTrainingConstraints(basePlan, outdoorMetrics);
 
     const trainingProgression = window.VitalRiseSystem && window.VitalRiseSystem.trainingProgression
@@ -376,15 +372,20 @@
     const weekScheme = trainingProgression
       ? trainingProgression.getWeekScheme(goal)
       : [{ week: 1, label: "Тиждень 1 — стабільний старт", baseKg: 0, accessoryKg: 0, cardioMinutes: 0 }];
-    const useGymExerciseSequence = (isPplMode || (!isPrisonMode && !isTabataCircuitMode && place === "gym"));
+    const prescription = window.VitalRiseSystem.trainingPrescription;
+    if (!prescription) throw new Error("Training load policy did not load. Refresh the page.");
     const weeks = weekScheme.map(function (weekInfo) {
+      const sourceDays = isPplMode ? prescription.schedulePpl(basePlan, days, weekInfo.week - 1) : basePlan;
+      const preparedDays = sourceDays.map(function (day) {
+        return prescription.prepareDay(day, { goal: goal, level: level, duration: duration, days: days, protocol: isPrisonMode || isTabataCircuitMode });
+      });
       const weekDays = trainingProgression
-        ? annotateRestInDays(trainingProgression.applyWeekProgression(basePlan, goal, weekInfo, oneRM), { place: isPplMode ? "gym" : place, goal: goal, level: level })
-        : annotateRestInDays(basePlan, { place: isPplMode ? "gym" : place, goal: goal, level: level });
+        ? annotateRestInDays(trainingProgression.applyWeekProgression(preparedDays, goal, weekInfo, oneRM), { place: isPplMode ? "gym" : place, goal: goal, level: level })
+        : annotateRestInDays(preparedDays, { place: isPplMode ? "gym" : place, goal: goal, level: level });
 
       return {
         title: weekInfo.label,
-        days: applyGymExerciseSequence(weekDays, useGymExerciseSequence)
+        days: weekDays
       };
     });
 
@@ -441,7 +442,7 @@
       volumeNote = "PPL 3+1 — фіксований 8-денний цикл для просунутого рівня: 3 важкі дні, повний відпочинок, 3 середні дні, повний відпочинок. Цикл не прив'язаний до понеділка-неділі й потребує дуже хорошого сну, харчування та відновлення.";
     }
 
-    const tips = [
+    let tips = [
       "План побудований одразу на весь цикл, а не на один день.",
       "Базові вправи відокремлені від допоміжних — допоміжні не прив’язані до 1ПМ.",
       "Для допоміжних вправ використовуй плавну прогресію: +1 повтор, або +1-2 кг, або +2.5-5% за тиждень.",
@@ -597,7 +598,30 @@
       ].concat(guidance.warnings || []);
     }
 
+    if (!isPrisonMode && !isTabataCircuitMode) {
+      volumeNote = "Обсяг підібрано під рівень, кількість занять і доступний час. Допоміжна робота перед базою перерозподіляється з наявного плану, а не додається зверху. Для сили пріоритетна базова вправа залишається першою.";
+      tips = [
+        "Після загальної розминки виконуй вправи у показаному порядку; перед базовими рухами зроби підвідні підходи.",
+        "Допоміжний блок перед базою: RIR 3-4; основна робота: RIR 2-3. Менша вага після втоми не гарантує запасу повторів.",
+        "Відпочинок: базові рухи 2-3 хвилини (силові — за потреби довше), ізоляція 1-2 хвилини. Не скорочуй паузи заради кількості вправ.",
+        "Записуй робочі підходи, чисті повторення, вагу та запас RIR. Без підтвердженого результату вага автоматично не зростає.",
+        "Розподіли обрану кількість занять протягом тижня з днями відновлення. При втомі скороти обсяг."
+      ];
+      guidance.rirRules = [tips[1], tips[2]];
+      guidance.progressionRules = [prescription.progressionCue, "Змінюй лише один параметр за раз; конкретний крок ваги залежить від доступного обладнання."];
+      (guidance.coachBlocks || []).forEach(function (block) {
+        if (block.label === "Наступний крок") block.items = guidance.progressionRules.slice();
+      });
+      if (isPplMode) {
+        guidance.format = "PPL: штовхай / тягни / ноги";
+        guidance.focus = "Послідовне чергування базових і помірних занять за обраною кількістю днів на тиждень";
+        guidance.deloadRules = ["Якщо працездатність падає або накопичується втома, зменш допоміжний обсяг; не додавай вагу."];
+        guidance.warnings = ["Черга PPL продовжується наступного тижня. Дні відпочинку розподіляй відповідно до самопочуття; масаж не є обов'язковою умовою прогресу."];
+      }
+    }
+
     return {
+      prescriptionVersion: prescription.version,
       caloriesBurned: caloriesBurned,
       volumeNote: volumeNote,
       tips: tips,

@@ -195,6 +195,7 @@
 
   function progressExercise(exercise, goal, weekInfo, oneRM, isAccessory) {
     const updated = Object.assign({}, exercise);
+    if (updated.prescriptionVersion) return updated;
 
     if (updated.shortSession && isAccessory) {
       updated.percentText = "Коротка сесія: залиш поточну знижену вагу, повертай навантаження поступово після адаптації.";
@@ -291,6 +292,7 @@
       if (isDeload) {
         ["basic", "accessory"].forEach(function (group) {
           (day[group] || []).forEach(function (exercise) {
+            exercise.deload = true;
             exercise.sets = reduceVolume(exercise.sets);
             if (exercise.setsLabel) exercise.setsLabel = reduceVolume(exercise.setsLabel);
             exercise.percentText = (exercise.percentText || "") + " | полегшений тиждень: мінус близько 30% обсягу";
@@ -315,6 +317,12 @@
       }
     });
 
+    weekDays.forEach(function (day) {
+      if (!day.orderedExercises) return;
+      day.orderedExercises = day.orderedExercises.map(function (ex) {
+        return (day[ex.sourceGroup] || []).find(function (item) { return item.sourceIndex === ex.sourceIndex; }) || ex;
+      });
+    });
     return weekDays;
   }
 

@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-v307";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-v251";
+const CACHE_NAME = "vitalrise-training-20260911-1";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-training-20260911-1";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -42,14 +42,15 @@ const APP_SHELL = [
   "./assets/js/modules/nutrition.js?v=exact-bju-3",
   "./assets/js/modules/nutrition-render.js?v=nutrition-i18n-1",
   "./assets/js/modules/training.js",
+  "./assets/js/modules/training-prescription.js?v=load-20260911-1",
   "./assets/js/modules/training-templates.js?v=training-cycle-safety-1",
   "./assets/js/modules/training-gym-dips-patch.js?v=gym-dips-1",
   "./assets/js/modules/training-guidance.js?v=training-control-1",
-  "./assets/js/modules/training-progression.js",
+  "./assets/js/modules/training-progression.js?v=load-20260911-1",
   "./assets/js/modules/training-render.js?v=training-cycle-safety-1",
   "./assets/js/modules/training-builder.js?v=training-cycle-safety-1",
   "./assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1",
-  "./assets/js/modules/exercise-atlas.js?v=atlas-clean-1",
+  "./assets/js/modules/exercise-atlas.js?v=load-20260911-1",
   "./assets/js/modules/labs.js",
   "./assets/js/modules/lab-protocols.js?v=expanded-report-1",
   "./assets/js/modules/progress-decision.js?v=cycle-water-progress-1",
