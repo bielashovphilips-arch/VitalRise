@@ -1,0 +1,199 @@
+/* Approved calculator-only system. Original global styles and media remain intact. */
+body.calculator-studio {
+  --studio-bg: #0d1115;
+  --studio-text: #f4f5f6;
+  --studio-muted: #b7c3cf;
+  --studio-line: #46515b;
+  --studio-gold: #f3d389;
+  --studio-control-line: #82919e;
+  --studio-header: 76px;
+  --studio-dock: 104px;
+  background: var(--studio-bg);
+  color: var(--studio-text);
+  color-scheme: dark;
+}
+.calculator-studio .site-shell { overflow: visible; }
+.calculator-studio .site-header { position: sticky; top: 0; z-index: 100; padding-block: 0; background: #10151a; backdrop-filter: none; }
+.calculator-studio .header-inner { min-height: var(--studio-header); padding-block: 12px; }
+.calculator-studio .site-header::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: linear-gradient(90deg,transparent,#9d8050,transparent); }
+.calculator-studio .module-page-main { padding-top: 0; z-index: 2; overflow: visible; }
+.calculator-studio ::selection { background: #e6bb67; color: #171308; }
+.calculator-studio { scrollbar-color: #697681 #10161b; }
+.calculator-studio .studio-summary-list { font-variant-numeric: tabular-nums; }
+.calculator-studio :is(#calculator,#labs) .calculator-wrap { padding-inline: 0; }
+.calculator-studio :is(#calculator,#labs) :is(.calculator-card,.calculator-main,.tab-panel,.lab-protocol) { backdrop-filter: none; transform: none; animation: none; }
+.calculator-studio :is(#calculator,#labs) { padding: 40px 0 64px; overflow: visible; background: radial-gradient(ellipse at 6% 0%,#30281c66,transparent 42%),linear-gradient(145deg,#141a20,#0d1115 66%); }
+.calculator-studio :is(#calculator,#labs) .calculator-wrap { width: min(1240px,calc(100% - 80px)); max-width: none; display: block; position: relative; }
+.calculator-studio :is(#calculator,#labs) .calculator-bg,
+.calculator-studio :is(#calculator,#labs) .calculator-gradient,
+.calculator-studio :is(#calculator,#labs) .calculator-intro,
+.calculator-studio :is(#calculator,#labs) .calculator-console,
+.calculator-studio :is(#calculator,#labs) .blueprint-rail,
+.calculator-studio :is(#calculator,#labs) .calculator-tabs,
+.calculator-studio :is(#calculator,#labs) .panel-chip { display: none; }
+.calculator-studio :is(#calculator,#labs) .calculator-card,
+.calculator-studio :is(#calculator,#labs) .calculator-main,
+.calculator-studio :is(#calculator,#labs) .tab-panel.active { display: block; padding: 0; margin: 0; border: 0; border-radius: 0; box-shadow: none; background: none; overflow: visible; min-width: 0; width: 100%; }
+.calculator-studio :is(#calculator,#labs) .calculator-card::before,
+.calculator-studio :is(#calculator,#labs) .calculator-card::after,
+.calculator-studio :is(#calculator,#labs) .panel-head::after { content: none; }
+.calculator-studio :is(#calculator,#labs) .reveal { opacity: 1; transform: none; filter: none; }
+.calculator-studio :is(#calculator,#labs) .panel-head { min-height: 0; padding: 0; margin: 0 0 32px; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.calculator-studio :is(#calculator,#labs) .panel-head h3 { font-size: 36px; line-height: 1.2; letter-spacing: -.025em; font-weight: 750; color: var(--studio-text); margin: 0 0 10px; }
+.calculator-studio :is(#calculator,#labs) .panel-head p { font-size: 16px; line-height: 1.5; color: var(--studio-muted); max-width: 65ch; margin: 0; }
+.calculator-studio :is(#calculator,#labs) .exercise-atlas-launch { margin: -16px 0 28px; justify-content: flex-start; }
+.calculator-studio :is(#calculator,#labs) .atlas-open-btn { padding: 4px 0; min-height: 40px; border: none; border-radius: 0; background: none; box-shadow: none; font-size: 15px; color: var(--studio-gold); text-decoration: underline; text-underline-offset: 5px; }
+.calculator-studio :is(#calculator,#labs) .studio-workspace { display: grid; grid-template-columns: minmax(0,1fr) 300px; align-items: start; gap: 48px; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form { display: block; margin: 0; padding: 0; min-width: 0; }
+.calculator-studio :is(#calculator,#labs) .studio-section { margin: 0 0 28px; padding: 0; }
+.calculator-studio :is(#calculator,#labs) .studio-section-title { display: flex; align-items: center; gap: 16px; margin: 0 0 20px; font-size: 21px; line-height: 1.3; font-weight: 700; letter-spacing: -.01em; }
+.calculator-studio :is(#calculator,#labs) .studio-section-title::after { content: ''; height: 1px; background: #46515b99; flex: 1; min-width: 16px; }
+.calculator-studio :is(#calculator,#labs) .studio-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px 24px; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .form-group { display: flex; flex-direction: column; gap: 8px; grid-column: auto; min-height: 0; width: auto; min-width: 0; margin: 0; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; overflow: visible; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .form-group::before,
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .form-group::after { content: none; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .studio-field-wide { grid-column: 1 / -1; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form label { color: var(--studio-text); font-size: 15px; font-weight: 500; line-height: 1.4; letter-spacing: 0; text-transform: none; margin: 0; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form input,
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form select { width: 100%; min-width: 0; max-width: 100%; height: 50px; min-height: 50px; padding: 12px 14px; border: 1px solid var(--studio-control-line); border-radius: 10px; color: var(--studio-text); font: inherit; font-size: 16px; line-height: 1.35; letter-spacing: 0; background: linear-gradient(145deg,#222b33,#141b22); box-shadow: none; caret-color: var(--studio-gold); }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form select { padding-right: 34px; text-overflow: ellipsis; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form option { background: #182028; color: #f4f5f6; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form input::placeholder { color: #aab9c7; opacity: 1; font-size: 14px; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .field-hint { color: var(--studio-muted); font-size: 13px; line-height: 1.55; margin: 0; }
+.calculator-studio :is(#calculator,#labs) :is(button,input,select,summary):focus-visible { outline: 2px solid #ffe1a0; outline-offset: 4px; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form input:user-invalid { border-color: #ffa4a4; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .studio-native-select { position: absolute; width: 1px; height: 1px; min-height: 0; overflow: hidden; clip-path: inset(50%); padding: 0; border: 0; }
+.calculator-studio :is(#calculator,#labs) .studio-segments { display: flex; min-width: 0; border: 1px solid var(--studio-control-line); border-radius: 10px; background: linear-gradient(145deg,#222b33,#141b22); }
+.calculator-studio :is(#calculator,#labs) .studio-segment { position: relative; flex: 1; min-width: 0; min-height: 50px; padding: 10px 8px; border: 0; border-radius: 0; background: transparent; color: var(--studio-text); font: inherit; font-size: 15px; font-weight: 500; cursor: pointer; transition: background .16s ease-out,color .16s ease-out; }
+.calculator-studio :is(#calculator,#labs) .studio-segment + .studio-segment { border-left: 1px solid #46515b; }
+.calculator-studio :is(#calculator,#labs) .studio-segment[aria-checked="true"] { background: linear-gradient(140deg,#806432,#332b1d); color: #fff7e7; border-radius: 9px; outline: 1px solid #f3d389; z-index: 1; box-shadow: 0 6px 14px #bc853422; }
+.calculator-studio :is(#calculator,#labs) .studio-segment:focus-visible { outline: 2px solid #fff0cf; outline-offset: 4px; z-index: 2; }
+.calculator-studio :is(#calculator,#labs) .studio-advanced { margin: 0; padding: 0; border: 1px solid #46515b; border-radius: 12px; background: linear-gradient(145deg,#1a232bcc,#11171c); }
+.calculator-studio :is(#calculator,#labs) :is(.studio-advanced,.studio-summary) > summary { position: relative; padding: 18px 40px 18px 16px; list-style: none; color: var(--studio-text); font-size: 16px; font-weight: 600; cursor: pointer; line-height: 1.4; }
+.calculator-studio :is(#calculator,#labs) summary::-webkit-details-marker { display: none; }
+.calculator-studio :is(#calculator,#labs) :is(.studio-advanced,.studio-summary) > summary::after { content: ''; width: 9px; height: 9px; position: absolute; right: 18px; top: 24px; border: solid #ecf1f4; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+.calculator-studio :is(#calculator,#labs) :is(.studio-advanced,.studio-summary)[open] > summary::after { transform: rotate(225deg); top: 29px; }
+.calculator-studio :is(#calculator,#labs) .studio-advanced small { display: block; color: var(--studio-muted); font-size: 13px; font-weight: 400; margin-top: 4px; }
+.calculator-studio :is(#calculator,#labs) .studio-advanced > .studio-fields { padding: 8px 16px 20px; }
+.calculator-studio :is(#calculator,#labs) .studio-sidebar { position: sticky; top: calc(var(--studio-header) + 24px); align-self: start; min-width: 0; border-left: 1px solid #46515b; padding-left: 28px; }
+.calculator-studio :is(#calculator,#labs) .studio-summary > summary { font-size: 21px; padding: 0 28px 20px 0; }
+.calculator-studio :is(#calculator,#labs) .studio-summary > summary::after { top: 9px; right: 4px; }
+.calculator-studio :is(#calculator,#labs) .studio-summary[open] > summary::after { top: 14px; }
+.calculator-studio :is(#calculator,#labs) .studio-summary-list { margin: 0; }
+.calculator-studio :is(#calculator,#labs) .studio-summary-list > div { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.2fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid #46515b80; font-size: 14px; line-height: 1.5; }
+.calculator-studio :is(#calculator,#labs) .studio-summary-list dt { color: #f4f5f6; }
+.calculator-studio :is(#calculator,#labs) .studio-summary-list dd { color: var(--studio-muted); margin: 0; overflow-wrap: anywhere; }
+.calculator-studio :is(#calculator,#labs) .studio-status { margin: 20px 0 8px; color: var(--studio-muted); font-size: 13px; line-height: 1.5; }
+.calculator-studio :is(#calculator,#labs) .studio-status.is-complete { color: #dce5bd; }
+.calculator-studio :is(#calculator,#labs) .studio-reset { display: block; margin: 8px 0 16px; padding: 8px 0; min-height: 44px; background: none; border: 0; border-radius: 0; box-shadow: none; color: var(--studio-muted); font-size: 14px; text-decoration: underline; text-underline-offset: 4px; }
+.calculator-studio :is(#calculator,#labs) .studio-actions { display: block; width: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; }
+.calculator-studio :is(#calculator,#labs) .studio-actions .btn-primary { position: relative; width: 100%; min-height: 54px; padding: 14px 36px 14px 14px; border: 1px solid #fce5a7; border-radius: 10px; background: linear-gradient(120deg,#ffdf90 0%,#e6bb67 54%,#b18c49 100%); box-shadow: 0 8px 20px #af7c282c; color: #171308; font: inherit; font-size: 16px; font-weight: 700; line-height: 1.35; text-align: center; transition: filter .16s ease-out; }
+.calculator-studio :is(#calculator,#labs) .studio-actions .btn-primary::after { content: ''; width: 8px; height: 8px; border: solid currentColor; border-width: 1.5px 1.5px 0 0; position: absolute; right: 18px; top: calc(50% - 4px); transform: rotate(45deg); }
+.calculator-studio :is(#calculator,#labs) button:disabled { cursor: not-allowed; opacity: .55; }
+.calculator-studio :is(#calculator,#labs) .studio-edit { display: none; padding: 12px 0; color: var(--studio-gold); background: none; border: 0; text-decoration: underline; text-underline-offset: 4px; min-height: 44px; font-size: 15px; }
+.calculator-studio :is(#calculator,#labs) .studio-has-result .studio-edit { display: block; }
+.calculator-studio :is(#calculator,#labs) .result-box { scroll-margin-top: calc(var(--studio-header) + 20px); margin-top: 36px; }
+.calculator-studio :is(#calculator,#labs) .result-box:has(> .result-placeholder),
+.calculator-studio :is(#calculator,#labs) .result-box:has(> .result-placeholder) ~ .result-export-actions { display: none; }
+.calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form { scroll-margin-top: calc(var(--studio-header) + 16px); }
+.calculator-studio :is(#calculator,#labs) .is-locked-module .studio-actions { position: static; }
+.calculator-studio :is(#calculator,#labs) .module-paywall { z-index: 40; }
+@media(min-width:1024px) {
+  .calculator-studio :is(#calculator,#labs) .studio-summary { max-height: max(60px,calc(100dvh - var(--studio-sidebar-top,var(--studio-header)) - 200px)); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+}
+@media (hover:hover) {
+  .calculator-studio :is(#calculator,#labs) .studio-actions .btn-primary:not(:disabled):hover { filter: brightness(1.09); }
+  .calculator-studio :is(#calculator,#labs) .studio-segment:not(:disabled):not([aria-checked="true"]):hover { background: #34414b; }
+}
+@media (max-width: 1199px) {
+  .calculator-studio :is(#calculator,#labs) .calculator-wrap { width: calc(100% - 48px); }
+  .calculator-studio :is(#calculator,#labs) .studio-workspace { gap: 28px; grid-template-columns: minmax(0,1fr) 280px; }
+  .calculator-studio :is(#calculator,#labs) .studio-sidebar { padding-left: 20px; }
+}
+@media (max-width: 1023px) {
+  body.calculator-studio { --studio-header: 64px; }
+  .calculator-studio :is(#calculator,#labs) { padding: 28px 0 calc(var(--studio-dock) + 32px + env(safe-area-inset-bottom,0px)); }
+  .calculator-studio :is(#calculator,#labs) .studio-workspace { display: block; }
+  .calculator-studio :is(#calculator,#labs) .studio-sidebar { position: static; border-left: 0; padding: 0; margin-top: 20px; }
+  .calculator-studio :is(#calculator,#labs) .studio-summary { border: 1px solid #46515b; border-radius: 12px; background: #17202866; }
+  .calculator-studio :is(#calculator,#labs) .studio-summary > summary { font-size: 17px; padding: 16px 40px 16px 16px; }
+  .calculator-studio :is(#calculator,#labs) .studio-summary > summary::after { top: 22px; right: 18px; }
+  .calculator-studio :is(#calculator,#labs) .studio-summary[open] > summary::after { top: 27px; }
+  .calculator-studio :is(#calculator,#labs) .studio-summary-list { padding: 0 16px 12px; }
+  .calculator-studio :is(#calculator,#labs) .studio-actions { position: fixed; bottom: 0; left: 0; right: 0; z-index: 80; padding: 12px max(20px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)); background: #10161b; box-shadow: 0 -8px 24px #0005; }
+  .calculator-studio :is(#calculator,#labs) .studio-actions::before { content: ''; height: 1px; position: absolute; inset: 0 0 auto; background: linear-gradient(90deg,transparent,#bfa466,transparent); }
+  .calculator-studio :is(#calculator,#labs) .studio-actions .btn-primary { max-width: 720px; margin-inline: auto; display: block; }
+  .calculator-studio.studio-keyboard :is(#calculator,#labs) .studio-actions,
+  .calculator-studio.modal-open :is(#calculator,#labs) .studio-actions,
+  .calculator-studio:has(.modal.open,.atlas-modal.open,.exercise-atlas-modal.open,.site-header.is-menu-open) :is(#calculator,#labs) .studio-actions { visibility: hidden; pointer-events: none; }
+  .calculator-studio footer { padding-bottom: calc(var(--studio-dock) + env(safe-area-inset-bottom,0px)); }
+}
+@media (max-width: 640px) {
+  body.calculator-studio { --studio-header: 60px; }
+  .calculator-studio .header-inner { padding-block: 8px; gap: 12px; min-height: 60px; }
+  .calculator-studio .brand-icon { width: 34px; height: 34px; }
+  .calculator-studio .brand-name { font-size: 18px; }
+  .calculator-studio .mobile-menu-toggle { width: 44px; height: 44px; min-width: 44px; }
+  .calculator-studio :is(#calculator,#labs) { padding-top: 24px; }
+  .calculator-studio :is(#calculator,#labs) .calculator-wrap { width: calc(100% - 40px); }
+  .calculator-studio :is(#calculator,#labs) .panel-head { margin-bottom: 20px; }
+  .calculator-studio :is(#calculator,#labs) .panel-head h3 { font-size: 26px; line-height: 1.2; letter-spacing: -.025em; margin-bottom: 8px; }
+  .calculator-studio :is(#calculator,#labs) .panel-head p { font-size: 14px; line-height: 1.5; }
+  .calculator-studio :is(#calculator,#labs) .exercise-atlas-launch { margin: -12px 0 20px; }
+  .calculator-studio :is(#calculator,#labs) .studio-section { margin-bottom: 24px; }
+  .calculator-studio :is(#calculator,#labs) .studio-section-title { font-size: 19px; margin-bottom: 16px; gap: 12px; }
+  .calculator-studio :is(#calculator,#labs) .studio-fields { gap: 16px 16px; }
+  /* The incumbent mobile nth-child layout uses !important; neutralize only here. */
+  .calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .form-group { grid-column: 1 / -1 !important; }
+  .calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .studio-field-pair { grid-column: auto !important; }
+  .calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form label { font-size: 14px; }
+  .calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form input,
+  .calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form select,
+  .calculator-studio :is(#calculator,#labs) .studio-segment { min-height: 48px; height: 48px; }
+  .calculator-studio :is(#calculator,#labs) .studio-segment { font-size: 14px; padding-inline: 4px; }
+  .calculator-studio :is(#calculator,#labs) :is(#training-form,#nutrition-form,#lab-form,#lab-review-form).studio-form .studio-native-select { min-height: 0; height: 1px; }
+  .calculator-studio :is(#calculator,#labs) .studio-advanced > .studio-fields { grid-template-columns: minmax(0,1fr); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .calculator-studio :is(#calculator,#labs) *, .calculator-studio :is(#calculator,#labs) *::before, .calculator-studio :is(#calculator,#labs) *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  .calculator-studio :is(#calculator,#labs) .studio-sidebar, .calculator-studio :is(#calculator,#labs) .studio-edit { display: none !important; }
+}
+
+/* Labs shares the controls, not the calculator's training/nutrition logic. */
+.calculator-studio #labs .lab-protocol { margin: 0; padding: 0; background: none; border: 0; box-shadow: none; border-radius: 0; overflow: visible; }
+.calculator-studio #labs .lab-protocol::before,
+.calculator-studio #labs .protocol-head > .section-label,
+.calculator-studio #labs .studio-medical-note > span,
+.calculator-studio #labs .lab-index,
+.calculator-studio #labs .section-label { display: none; }
+.calculator-studio #labs .studio-medical-note { display: block; margin: -12px 0 32px; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; min-height: 0; max-width: 75ch; }
+.calculator-studio #labs .studio-medical-note strong { font-size: 16px; line-height: 1.5; font-weight: 600; color: var(--studio-gold); }
+.calculator-studio #labs .studio-medical-note p { font-size: 14px; line-height: 1.6; color: var(--studio-muted); margin: 6px 0 0; }
+.calculator-studio #labs .lab-review-panel { margin-top: 40px; border: 1px solid var(--studio-line); border-radius: 12px; padding: 0; background: #131b22; box-shadow: none; }
+.calculator-studio #labs .lab-review-summary { padding: 20px; }
+.calculator-studio #labs .lab-review-summary strong { font-size: 21px; }
+.calculator-studio #labs .lab-review-summary small,
+.calculator-studio #labs .lab-review-gate { font-size: 14px; line-height: 1.6; color: var(--studio-muted); }
+.calculator-studio #labs .lab-review-body { padding: 0 20px 24px; }
+.calculator-studio #labs #lab-review-form.studio-form:not([hidden]) { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px 24px; }
+.calculator-studio #labs #lab-review-form[hidden] { display: none; }
+.calculator-studio #labs #lab-review-form .form-actions { grid-column: 1 / -1; padding: 0; border: 0; background: none; }
+.calculator-studio #labs .studio-lab-guide { margin-top: 24px; }
+.calculator-studio #labs .studio-guide-content { padding: 0 20px 24px; }
+.calculator-studio #labs .studio-guide-content .module-hero { padding: 0; margin: 0; }
+.calculator-studio #labs .studio-guide-content .container { display: block; width: 100%; padding: 0; }
+.calculator-studio #labs .studio-guide-content :is(.module-hero-copy,.section-head,.lab-card) { padding: 0; margin: 0 0 24px; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.calculator-studio #labs .studio-guide-content :is(h2,h3) { font-size: 21px; line-height: 1.4; margin-bottom: 8px; }
+.calculator-studio #labs .studio-guide-content p { font-size: 15px; line-height: 1.65; color: var(--studio-muted); max-width: 75ch; }
+.calculator-studio #labs .labs-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+@media(max-width:1023px) {
+  .calculator-studio:has(#lab-review-panel[open]) #labs .studio-actions { display: none; }
+  .calculator-studio #labs.is-locked-module .studio-actions { position: static; }
+}
+@media(max-width:640px) {
+  .calculator-studio #labs .studio-medical-note { margin-bottom: 24px; }
+  .calculator-studio #labs #lab-review-form.studio-form:not([hidden]), .calculator-studio #labs .labs-grid { grid-template-columns: minmax(0,1fr); }
+  .calculator-studio #labs .lab-review-summary strong { font-size: 19px; }
+}
