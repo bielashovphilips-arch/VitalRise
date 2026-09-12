@@ -10,10 +10,16 @@ const ownerFile = process.env.VITALRISE_OWNER_FILE;
 assert.ok(ownerFile, 'Supply VITALRISE_OWNER_FILE pointing to the private owner credentials');
 const login = JSON.parse(await readFile(ownerFile,'utf8'));
 const hash = value => createHash('sha256').update(value).digest('hex');
+// Cloudflare removes email_off comments and appends its managed JS challenge.
+// Normalize only these observed edge transforms, not application markup.
+const edgeHtml = value => value.toString('utf8')
+  .replace(/<!--\/?email_off-->/g,'')
+  .replace(/<script>\(function\(\)\{function c\(\)\{var b=a\.contentDocument[\s\S]*?<\/script>/g,'');
 for (const path of ['training.html','nutrition.html','labs.html','assets/css/calculator-studio.css','assets/js/modules/calculator-studio.js','service-worker.js']) {
   const response = await fetch(origin+'/'+path+'?v=studio-20260912-1');
   assert.equal(response.status,200,path);
-  assert.equal(hash(Buffer.from(await response.arrayBuffer())),hash(execFileSync('git',['show','HEAD:'+path])),path+' deployed bytes');
+  const actual=Buffer.from(await response.arrayBuffer()), expected=execFileSync('git',['show','HEAD:'+path]);
+  assert.equal(hash(path.endsWith('.html')?edgeHtml(actual):actual),hash(path.endsWith('.html')?edgeHtml(expected):expected),path+' deployed bytes');
 }
 const browser = await launchBrowser();
 try {
@@ -57,13 +63,11 @@ try {
   const cacheContext=await browser.newContext();
   const cachePage=await cacheContext.newPage();
   await cachePage.goto(origin+'/training',{waitUntil:'networkidle'});
-  await cachePage.waitForFunction(async()=>{
-    const registration=await navigator.serviceWorker.getRegistration();
-    return registration?.active && (await caches.keys()).includes('vitalrise-studio-20260912-1');
-  },null,{timeout:60000});
   const cached=await cachePage.evaluate(async()=>{
+    // Await the actual activation, not merely the cache created during install.
+    await Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Service worker activation timed out')),55000))]);
     const cache=await caches.open('vitalrise-studio-20260912-1');
-    return Boolean(await cache.match('./assets/css/calculator-studio.css?v=studio-20260912-1')) && Boolean(await cache.match('./assets/js/modules/calculator-studio.js?v=studio-20260912-1'));
+    return Boolean(await cache.match(new URL('/assets/css/calculator-studio.css?v=studio-20260912-1',location.origin))) && Boolean(await cache.match(new URL('/assets/js/modules/calculator-studio.js?v=studio-20260912-1',location.origin)));
   });
   assert.equal(cached,true);
   console.log(JSON.stringify({verifiedAssets:6,serviceWorkerActive:true,studioAssetsCached:true}));

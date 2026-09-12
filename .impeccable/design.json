@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-12T14:08:22.695Z",
+  "title": "Design System: VitalRise calculator studio",
+  "extensions": {
+    "colorMeta": {
+      "studio-bg": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "tonalRamp": [
+          "oklch(15.00% 0.0105 248.4)",
+          "oklch(26.43% 0.0105 248.4)",
+          "oklch(37.86% 0.0105 248.4)",
+          "oklch(49.29% 0.0105 248.4)",
+          "oklch(60.71% 0.0105 248.4)",
+          "oklch(72.14% 0.0105 248.4)",
+          "oklch(83.57% 0.0105 248.4)",
+          "oklch(95.00% 0.0105 248.4)"
+        ]
+      },
+      "studio-text": {
+        "role": "neutral",
+        "displayName": "Warm white",
+        "tonalRamp": [
+          "oklch(15.00% 0.0017 247.8)",
+          "oklch(26.43% 0.0017 247.8)",
+          "oklch(37.86% 0.0017 247.8)",
+          "oklch(49.29% 0.0017 247.8)",
+          "oklch(60.71% 0.0017 247.8)",
+          "oklch(72.14% 0.0017 247.8)",
+          "oklch(83.57% 0.0017 247.8)",
+          "oklch(95.00% 0.0017 247.8)"
+        ]
+      },
+      "studio-muted": {
+        "role": "neutral",
+        "displayName": "Readable secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.0215 248.1)",
+          "oklch(26.43% 0.0215 248.1)",
+          "oklch(37.86% 0.0215 248.1)",
+          "oklch(49.29% 0.0215 248.1)",
+          "oklch(60.71% 0.0215 248.1)",
+          "oklch(72.14% 0.0215 248.1)",
+          "oklch(83.57% 0.0215 248.1)",
+          "oklch(95.00% 0.0215 248.1)"
+        ]
+      },
+      "studio-line": {
+        "role": "neutral",
+        "displayName": "Structural slate",
+        "tonalRamp": [
+          "oklch(15.00% 0.0217 245.8)",
+          "oklch(26.43% 0.0217 245.8)",
+          "oklch(37.86% 0.0217 245.8)",
+          "oklch(49.29% 0.0217 245.8)",
+          "oklch(60.71% 0.0217 245.8)",
+          "oklch(72.14% 0.0217 245.8)",
+          "oklch(83.57% 0.0217 245.8)",
+          "oklch(95.00% 0.0217 245.8)"
+        ]
+      },
+      "studio-gold": {
+        "role": "primary",
+        "displayName": "Champagne",
+        "tonalRamp": [
+          "oklch(15.00% 0.0993 87.0)",
+          "oklch(26.43% 0.0993 87.0)",
+          "oklch(37.86% 0.0993 87.0)",
+          "oklch(49.29% 0.0993 87.0)",
+          "oklch(60.71% 0.0993 87.0)",
+          "oklch(72.14% 0.0993 87.0)",
+          "oklch(83.57% 0.0993 87.0)",
+          "oklch(95.00% 0.0993 87.0)"
+        ]
+      },
+      "studio-control-line": {
+        "role": "neutral",
+        "displayName": "Shared control boundary",
+        "tonalRamp": [
+          "oklch(15.00% 0.0260 244.3)",
+          "oklch(26.43% 0.0260 244.3)",
+          "oklch(37.86% 0.0260 244.3)",
+          "oklch(49.29% 0.0260 244.3)",
+          "oklch(60.71% 0.0260 244.3)",
+          "oklch(72.14% 0.0260 244.3)",
+          "oklch(83.57% 0.0260 244.3)",
+          "oklch(95.00% 0.0260 244.3)"
+        ]
+      },
+      "action-ink": {
+        "role": "neutral",
+        "displayName": "Dark action ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.0215 90.4)",
+          "oklch(26.43% 0.0215 90.4)",
+          "oklch(37.86% 0.0215 90.4)",
+          "oklch(49.29% 0.0215 90.4)",
+          "oklch(60.71% 0.0215 90.4)",
+          "oklch(72.14% 0.0215 90.4)",
+          "oklch(83.57% 0.0215 90.4)",
+          "oklch(95.00% 0.0215 90.4)"
+        ]
+      },
+      "focus-ring": {
+        "role": "primary",
+        "displayName": "Pale gold focus",
+        "tonalRamp": [
+          "oklch(15.00% 0.0886 85.9)",
+          "oklch(26.43% 0.0886 85.9)",
+          "oklch(37.86% 0.0886 85.9)",
+          "oklch(49.29% 0.0886 85.9)",
+          "oklch(60.71% 0.0886 85.9)",
+          "oklch(72.14% 0.0886 85.9)",
+          "oklch(83.57% 0.0886 85.9)",
+          "oklch(95.00% 0.0886 85.9)"
+        ]
+      },
+      "selected-text": {
+        "role": "neutral",
+        "displayName": "Selected warm white",
+        "tonalRamp": [
+          "oklch(15.00% 0.0227 84.6)",
+          "oklch(26.43% 0.0227 84.6)",
+          "oklch(37.86% 0.0227 84.6)",
+          "oklch(49.29% 0.0227 84.6)",
+          "oklch(60.71% 0.0227 84.6)",
+          "oklch(72.14% 0.0227 84.6)",
+          "oklch(83.57% 0.0227 84.6)",
+          "oklch(95.00% 0.0227 84.6)"
+        ]
+      },
+      "invalid": {
+        "role": "state",
+        "displayName": "Invalid field",
+        "tonalRamp": [
+          "oklch(15.00% 0.1083 19.7)",
+          "oklch(26.43% 0.1083 19.7)",
+          "oklch(37.86% 0.1083 19.7)",
+          "oklch(49.29% 0.1083 19.7)",
+          "oklch(60.71% 0.1083 19.7)",
+          "oklch(72.14% 0.1083 19.7)",
+          "oklch(83.57% 0.1083 19.7)",
+          "oklch(95.00% 0.1083 19.7)"
+        ]
+      },
+      "complete": {
+        "role": "state",
+        "displayName": "Settings complete",
+        "tonalRamp": [
+          "oklch(15.00% 0.0538 117.8)",
+          "oklch(26.43% 0.0538 117.8)",
+          "oklch(37.86% 0.0538 117.8)",
+          "oklch(49.29% 0.0538 117.8)",
+          "oklch(60.71% 0.0538 117.8)",
+          "oklch(72.14% 0.0538 117.8)",
+          "oklch(83.57% 0.0538 117.8)",
+          "oklch(95.00% 0.0538 117.8)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Calculator heading",
+        "purpose": "36px CSS request at weight 750; 26px at or below 640px. No individual loaded face is asserted."
+      },
+      "title": {
+        "displayName": "Section heading",
+        "purpose": "21px desktop, 19px at or below 640px."
+      },
+      "body": {
+        "displayName": "Introductory copy",
+        "purpose": "Inter inherited from the site; 65ch measure. No new font assets."
+      }
+    },
+    "shadows": [
+      {
+        "name": "segment-selected",
+        "value": "0 6px 14px #bc853422",
+        "purpose": "Restrained illumination under selected training segments."
+      },
+      {
+        "name": "primary-action",
+        "value": "0 8px 20px #af7c282c",
+        "purpose": "Gold calculator action glow."
+      },
+      {
+        "name": "mobile-dock",
+        "value": "0 -8px 24px #0005",
+        "purpose": "Fixed action dock at or below 1023px."
+      }
+    ],
+    "motion": [
+      {
+        "name": "action-brightness",
+        "value": "filter .16s ease-out",
+        "purpose": "Enabled primary hover uses brightness(1.09) on hover-capable devices."
+      },
+      {
+        "name": "segment-state",
+        "value": "background .16s ease-out, color .16s ease-out",
+        "purpose": "Segment state and unselected hover fill."
+      },
+      {
+        "name": "reset-inherited",
+        "value": "transform .32s ease, border-color .32s ease, background .32s ease, color .32s ease, box-shadow .32s ease",
+        "purpose": "Inherited reset transition; enabled button hover translates -2px. Primary overrides transition with filter only."
+      },
+      {
+        "name": "field-inherited",
+        "value": "border-color .32s ease, background .32s ease, box-shadow .32s ease",
+        "purpose": "Inherited field transition; studio material and no-shadow declarations override global focus materials."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none !important; animation: none !important; scroll-behavior: auto !important",
+        "purpose": "Applied across calculator content and pseudo-elements under prefers-reduced-motion: reduce; hover translation remains a state change."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow-max",
+        "value": "640px"
+      },
+      {
+        "name": "dock-max",
+        "value": "1023px"
+      },
+      {
+        "name": "sidebar-min",
+        "value": "1024px"
+      },
+      {
+        "name": "compact-desktop-max",
+        "value": "1199px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Original calculator submit styling; full width, minimum 54px, gold gradient and enabled hover brightness. Preview omits submission and entitlement logic.",
+      "html": "<button class=\"ds-primary\" type=\"button\">Create training plan</button>",
+      "css": ".ds-primary{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;position:relative;width:100%;min-height:54px;padding:14px 36px 14px 14px;border:1px solid #fce5a7;border-radius:10px;background:linear-gradient(120deg,#ffdf90 0%,#e6bb67 54%,#b18c49 100%);box-shadow:0 8px 20px #af7c282c;color:#171308;font:700 16px/1.35 Inter,sans-serif;letter-spacing:0;text-align:center;cursor:pointer;transition:filter .16s ease-out}.ds-primary::after{content:'';width:8px;height:8px;border:solid currentColor;border-width:1.5px 1.5px 0 0;position:absolute;right:18px;top:calc(50% - 4px);transform:rotate(45deg)}.ds-primary:hover{transform:translateY(-2px)}.ds-primary:focus-visible{outline:2px solid #ffe1a0;outline-offset:4px}.ds-primary:disabled{cursor:not-allowed;opacity:.55;transform:none}@media(hover:hover){.ds-primary:not(:disabled):hover{filter:brightness(1.09)}}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none;animation:none}}"
+    },
+    {
+      "name": "Reset",
+      "kind": "button",
+      "refersTo": "button-reset",
+      "description": "Underlined secondary action, minimum 44px. Scoped transparency overrides the inherited secondary hover fill; hover translation, transition and backdrop blur remain.",
+      "html": "<button class=\"ds-reset\" type=\"button\">Reset settings</button>",
+      "css": ".ds-reset{display:block;margin:8px 0 16px;padding:8px 0;min-height:44px;background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:blur(10px);color:var(--studio-muted,#b7c3cf);font:700 14px/1.5 Inter,sans-serif;letter-spacing:0;text-decoration:underline;text-underline-offset:4px;cursor:pointer;transition:transform .32s ease,border-color .32s ease,background .32s ease,color .32s ease,box-shadow .32s ease}.ds-reset:hover{transform:translateY(-2px)}.ds-reset:focus-visible{outline:2px solid #ffe1a0;outline-offset:4px}.ds-reset:disabled{cursor:not-allowed;opacity:.55;transform:none}@media(prefers-reduced-motion:reduce){.ds-reset{transition:none;animation:none}}"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Shared input/select boundary uses --studio-control-line. Native focus-visible and user-invalid states are shown; source has no distinct input hover treatment.",
+      "html": "<label class=\"ds-field\">Body weight<input class=\"ds-input\" type=\"number\" value=\"75\" aria-label=\"Body weight\"></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:8px;color:var(--studio-text,#f4f5f6);font:500 15px/1.4 Inter,sans-serif;letter-spacing:0}.ds-input{box-sizing:border-box;width:100%;min-width:0;max-width:100%;height:50px;min-height:50px;padding:12px 14px;border:1px solid var(--studio-control-line,#82919e);border-radius:10px;background:linear-gradient(145deg,#222b33,#141b22);color:var(--studio-text,#f4f5f6);font:400 16px/1.35 Inter,sans-serif;letter-spacing:0;box-shadow:none;outline:none;caret-color:var(--studio-gold,#f3d389);color-scheme:dark;transition:border-color .32s ease,background .32s ease,box-shadow .32s ease}.ds-input::placeholder{color:#aab9c7;opacity:1;font-size:14px}.ds-input:focus-visible{outline:2px solid #ffe1a0;outline-offset:4px}.ds-input:user-invalid{border-color:#ffa4a4}@media(max-width:640px){.ds-field{font-size:14px}.ds-input{height:48px;min-height:48px}}@media(prefers-reduced-motion:reduce){.ds-input{transition:none;animation:none}}"
+    },
+    {
+      "name": "Selected segment",
+      "kind": "custom",
+      "refersTo": "segment-selected",
+      "description": "Training format selection: shared neutral container boundary, gold selected outline and glow. Static radio-state preview; production JS supplies select synchronization, arrow/Home/End keys and roving tab stops.",
+      "html": "<div class=\"ds-segments\" role=\"radiogroup\" aria-label=\"Where do you train?\"><button class=\"ds-segment\" type=\"button\" role=\"radio\" aria-checked=\"true\">Gym</button><button class=\"ds-segment\" type=\"button\" role=\"radio\" aria-checked=\"false\" tabindex=\"-1\">Home</button><button class=\"ds-segment\" type=\"button\" role=\"radio\" aria-checked=\"false\" tabindex=\"-1\">Outdoors</button></div>",
+      "css": ".ds-segments{display:flex;min-width:0;border:1px solid var(--studio-control-line,#82919e);border-radius:10px;background:linear-gradient(145deg,#222b33,#141b22)}.ds-segment{position:relative;flex:1;min-width:0;min-height:50px;padding:10px 8px;border:0;border-radius:0;background:transparent;color:var(--studio-text,#f4f5f6);font:500 15px/1.5 Inter,sans-serif;cursor:pointer;transition:background .16s ease-out,color .16s ease-out}.ds-segment+.ds-segment{border-left:1px solid #46515b}.ds-segment[aria-checked=true]{background:linear-gradient(140deg,#806432,#332b1d);color:#fff7e7;border-radius:9px;outline:1px solid #f3d389;z-index:1;box-shadow:0 6px 14px #bc853422}.ds-segment:focus-visible{outline:2px solid #fff0cf;outline-offset:4px;z-index:2}.ds-segment:disabled{cursor:not-allowed;opacity:.55}@media(hover:hover){.ds-segment:not(:disabled):not([aria-checked=true]):hover{background:#34414b}}@media(max-width:640px){.ds-segment{height:48px;min-height:48px;font-size:14px;padding-inline:4px}}@media(prefers-reduced-motion:reduce){.ds-segment{transition:none;animation:none}}"
+    },
+    {
+      "name": "Disclosure",
+      "kind": "card",
+      "refersTo": "disclosure-card",
+      "description": "Native additional-settings disclosure with graphite gradient, 12px corners, explanatory line and CSS chevron. Content is a compact text excerpt; production contains the original optional fields. No distinct hover fill or animated chevron is defined.",
+      "html": "<details class=\"ds-disclosure\"><summary class=\"ds-summary\"><span class=\"ds-title\">Additional settings</span><small class=\"ds-hint\">Equipment, strength data and cycle phase</small></summary><div class=\"ds-fields\"><span class=\"ds-label\">Equipment</span></div></details>",
+      "css": ".ds-disclosure{margin:0;padding:0;border:1px solid #46515b;border-radius:12px;background:linear-gradient(145deg,#1a232bcc,#11171c);color:var(--studio-text,#f4f5f6);font-family:Inter,sans-serif}.ds-summary{position:relative;padding:18px 40px 18px 16px;list-style:none;color:var(--studio-text,#f4f5f6);font-size:16px;font-weight:600;cursor:pointer;line-height:1.4}.ds-summary::-webkit-details-marker{display:none}.ds-summary::after{content:'';width:9px;height:9px;position:absolute;right:18px;top:24px;border:solid #ecf1f4;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}.ds-disclosure[open]>.ds-summary::after{transform:rotate(225deg);top:29px}.ds-summary:focus-visible{outline:2px solid #ffe1a0;outline-offset:4px}.ds-hint{display:block;color:var(--studio-muted,#b7c3cf);font-size:13px;font-weight:400;margin-top:4px}.ds-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 24px;padding:8px 16px 20px}.ds-label{color:var(--studio-text,#f4f5f6);font:500 15px/1.4 Inter,sans-serif}@media(max-width:640px){.ds-fields{grid-template-columns:minmax(0,1fr);gap:16px}.ds-label{font-size:14px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Graphite and gold, subtly illuminated",
+    "overview": "The approved calculator extension uses graphite and gold gradients, warm white text, readable secondary text and subtle illumination. Compact forms keep the original controls prominent; desktop summary and sticky action, and a mobile fixed CTA, support training, nutrition and Labs.\n\nThis document records that existing visual language for the three calculator routes only. It preserves the incumbent site identity, photos, VR logo and calculation/access logic. It establishes no new systemwide visual bans or product context.",
+    "keyCharacteristics": [
+      "Graphite surfaces and champagne accents.",
+      "Gold gradient actions and subtly lit selected states.",
+      "Compact forms with neutral outlines and readable labels.",
+      "Desktop summary/sticky action and mobile fixed CTA across all three routes."
+    ],
+    "rules": [],
+    "dos": [
+      "Do apply this calculator-studio extension only to training, nutrition and Labs.",
+      "Do preserve the approved graphite/gold gradients, subtle illumination, compact forms and readable labels.",
+      "Do preserve desktop summary/sticky actions, measured short-desktop summary sizing and mobile fixed CTA clearance.",
+      "Do preserve native form ownership, keyboard behavior, validation, localization and entitlement boundaries.",
+      "Do keep pain restrictions and the Labs warning visible, and keep the Labs review action inline."
+    ],
+    "donts": [
+      "Don't extend these route-scoped decisions into new systemwide visual bans.",
+      "Don't replace incumbent photos, the VR logo, shared identity or other routes' visuals.",
+      "Don't change formulas, medical interpretation thresholds, access logic or original field constraints as part of this visual system.",
+      "Don't treat preview tonal ramps or isolated snippets as new production tokens or replacement application logic."
+    ]
+  }
+}
