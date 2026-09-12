@@ -41,7 +41,15 @@ try {
     if(width<1024 && metrics.button.y+metrics.button.h>845) failures.push(kind+'/'+width+': dock outside viewport');
     if(metrics.inputs.some(x=>x.h<44 || parseFloat(x.font)<16)) failures.push(kind+'/'+width+': input sizing');
     const border=await page.locator('body').evaluate(el=>getComputedStyle(el).getPropertyValue('--studio-control-line').trim().slice(1));
-    for(const surface of ['1c1d1d','222b33','34414b']) assert.ok((luminance(border)+.05)/(luminance(surface)+.05)>=3,'Control boundary contrast');
+    for(const surface of ['1c1d1d','222b33','34414b','393c3f']) assert.ok((luminance(border)+.05)/(luminance(surface)+.05)>=3,'Control boundary contrast');
+    if(kind!=='training') {
+      const photo=kind==='lab'?'labs-bloodwork-bg.webp':'nutrition-food-bg.webp';
+      const background=await page.locator('main').evaluate(el=>getComputedStyle(el).backgroundImage);
+      assert.ok(background.includes(photo),'Original route photograph remains the background');
+      assert.equal(await page.locator(kind==='lab'?'#labs':'#calculator').evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)','Opaque section must not hide photograph');
+      assert.equal(await page.evaluate(src=>new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(true);img.onerror=()=>resolve(false);img.src=src;}),'/assets/images/'+photo),true,'Original background loads');
+      assert.ok((luminance('b7c3cf')+.05)/(luminance('393c3f')+.05)>=4.5,'Secondary text on brightest possible photograph');
+    }
     const valuesBefore = await form.evaluate(el=>Object.fromEntries(new FormData(el)));
     await page.locator('.studio-actions [type=submit]').click();
     assert.equal(await page.locator('#'+kind+'-result .result-placeholder').count(),0,kind+' calculation should render');
@@ -58,5 +66,6 @@ try {
     const expected=execFileSync('git',['show','e672e4a:'+path],{encoding:'utf8'}).replace(/\r\n/g,'\n');
     assert.equal((await readFile(path,'utf8')).replace(/\r\n/g,'\n'),expected,path);
   }
+  for(const path of ['assets/images/labs-bloodwork-bg.webp','assets/images/nutrition-food-bg.webp']) assert.deepEqual(await readFile(path),execFileSync('git',['show','a302deb:'+path]),'Preserve original photograph bytes');
   assert.deepEqual(failures,[]);
 } finally {await browser.close();await new Promise(done=>preview.server.close(done));}

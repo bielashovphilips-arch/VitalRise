@@ -23,6 +23,30 @@ body.calculator-studio {
 .calculator-studio :is(#calculator,#labs) .calculator-wrap { padding-inline: 0; }
 .calculator-studio :is(#calculator,#labs) :is(.calculator-card,.calculator-main,.tab-panel,.lab-protocol) { backdrop-filter: none; transform: none; animation: none; }
 .calculator-studio :is(#calculator,#labs) { padding: 40px 0 64px; overflow: visible; background: radial-gradient(ellipse at 6% 0%,#30281c66,transparent 42%),linear-gradient(145deg,#141a20,#0d1115 66%); }
+/* Preserve the original route photographs beneath a readable graphite scrim. */
+.calculator-studio .module-page-nutrition { --studio-photo: url("../images/nutrition-food-bg.webp"); }
+.calculator-studio .module-page-labs { --studio-photo: url("../images/labs-bloodwork-bg.webp"); }
+.calculator-studio :is(.module-page-nutrition,.module-page-labs) {
+  background-color: var(--studio-bg);
+  background-image: linear-gradient(90deg,#0d1115db,#0d1115d1),var(--studio-photo);
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll,fixed;
+}
+.calculator-studio :is(.module-page-nutrition,.module-page-labs)::before,
+.calculator-studio :is(.module-page-nutrition,.module-page-labs)::after { content: none; }
+.calculator-studio .module-page-nutrition #calculator,
+.calculator-studio .module-page-labs #labs { background: transparent; }
+.calculator-studio .module-page-labs #labs::before { content: none; }
+@media(max-width:1023px) {
+  /* Avoid mobile fixed-background jumps and an oversized crop on long forms. */
+  .calculator-studio :is(.module-page-nutrition,.module-page-labs) {
+    background-image: linear-gradient(180deg,#0d1115d1 0px,#0d1115db 480px,#0d1115 760px),var(--studio-photo);
+    background-size: 100% 100%,auto 760px;
+    background-attachment: scroll;
+  }
+}
 .calculator-studio :is(#calculator,#labs) .calculator-wrap { width: min(1240px,calc(100% - 80px)); max-width: none; display: block; position: relative; }
 .calculator-studio :is(#calculator,#labs) .calculator-bg,
 .calculator-studio :is(#calculator,#labs) .calculator-gradient,
