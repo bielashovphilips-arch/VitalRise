@@ -6,7 +6,7 @@
       activityLow: "Мало руху", activityLight: "1–3 тренування на тиждень", activityMedium: "3–5 тренувань на тиждень", activityHigh: "6+ тренувань на тиждень",
       goalLose: "Зниження ваги", goalKeep: "Підтримка ваги", goalGain: "Набір маси", submit: "Отримати орієнтир", resultKicker: "Твій базовий орієнтир", kcal: "ккал/день",
       resultCopy: "Це оцінка добової енергії для обраної цілі. Наступний крок — перетворити її на реальні дії.",
-      upsellTitle: "Цифра — це старт, не готовий план", upsellText: "Start перетворює її на 7 днів харчування, тренування та PDF. Pro додає 4-тижневу систему, check-in і супровід.", upsellCta: "Отримати повний план у Start",
+      upsellTitle: "Цифра — це старт, не готовий план", upsellText: "Start додає раціон на 7 днів, базові тренування та PDF. Pro — планування й контроль прогресу. Персональний супровід тренера — у Premium.", upsellCta: "Отримати повний план у Start",
       note: "Орієнтир не є медичною рекомендацією. За станів здоров’я або різких змін самопочуття звернись до лікаря."
     },
     en: {
@@ -15,7 +15,7 @@
       activityLow: "Mostly sedentary", activityLight: "1–3 workouts per week", activityMedium: "3–5 workouts per week", activityHigh: "6+ workouts per week",
       goalLose: "Fat loss", goalKeep: "Maintain weight", goalGain: "Gain mass", submit: "Get my estimate", resultKicker: "Your basic target", kcal: "kcal/day",
       resultCopy: "This is a daily energy estimate for the selected goal. The next step is turning it into real actions.",
-      upsellTitle: "A number is a starting point, not a complete plan", upsellText: "Start turns it into 7 days of nutrition, training, and a PDF. Pro adds a 4-week system, check-ins, and support.", upsellCta: "Get the full Start plan",
+      upsellTitle: "A number is a starting point, not a complete plan", upsellText: "Start adds a 7-day meal plan, basic training and a PDF. Pro adds planning and progress tracking. Personal support from a coach is part of Premium.", upsellCta: "Get the full Start plan",
       note: "This estimate is not medical advice. Consult a doctor for health conditions or sudden changes in how you feel."
     },
     ru: {
@@ -24,7 +24,7 @@
       activityLow: "Мало движения", activityLight: "1–3 тренировки в неделю", activityMedium: "3–5 тренировок в неделю", activityHigh: "6+ тренировок в неделю",
       goalLose: "Снижение веса", goalKeep: "Поддержание веса", goalGain: "Набор массы", submit: "Получить ориентир", resultKicker: "Ваш базовый ориентир", kcal: "ккал/день",
       resultCopy: "Это оценка суточной энергии для выбранной цели. Следующий шаг — превратить её в реальные действия.",
-      upsellTitle: "Цифра — это старт, а не готовый план", upsellText: "Start превращает её в 7 дней питания, тренировок и PDF. Pro добавляет 4-недельную систему, check-in и сопровождение.", upsellCta: "Получить полный план Start",
+      upsellTitle: "Цифра — это старт, а не готовый план", upsellText: "Start добавляет рацион на 7 дней, базовые тренировки и PDF. Pro — планирование и контроль прогресса. Личное сопровождение тренера — в Premium.", upsellCta: "Получить полный план Start",
       note: "Ориентир не является медицинской рекомендацией. При заболеваниях или резком изменении самочувствия обратитесь к врачу."
     }
   };
@@ -74,6 +74,10 @@
 
     localize();
     new MutationObserver(localize).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+    let started = false;
+    form.addEventListener("input", function () {
+      if (!started) { started = true; window.VitalRiseAnalytics?.trackCalculatorStart(); }
+    });
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();

@@ -1,150 +1,95 @@
 (function () {
   "use strict";
-
-  const GA_ID = "G-ZWZ69L25NR";
-  const META_PIXEL_ID = "279102968001873";
-  const CONSENT_KEY = "vitalrise-marketing-consent";
-  const BANNER_SELECTOR = "[data-vitalrise-marketing-banner]";
-  const planValues = { start: 499, pro: 1499, premium: 3500 };
-  let initialized = false;
-
-  function hasConsent() {
-    try {
-      return window.localStorage.getItem(CONSENT_KEY) === "accepted";
-    } catch (error) {
-      return false;
-    }
+  const GA_ID = "G-ZWZ69L25NR", KEY = "vitalrise-marketing-consent";
+  const prices = { start: 499, pro: 1499, premium: 3500 };
+  let initialized = false, memoryConsent = "";
+  const copy = {
+    uk: ["Твій вибір cookies", "Дозволь аналітику, щоб допомогти покращити VitalRise. Сайт працює і без неї.", "Лише необхідні", "Дозволити", "Налаштування cookies", "Деталі"],
+    en: ["Your cookie choice", "Allow analytics to help improve VitalRise. The site works without it.", "Essential only", "Allow", "Cookie settings", "Details"],
+    ru: ["Твой выбор cookies", "Разреши аналитику, чтобы помочь улучшить VitalRise. Сайт работает и без неё.", "Только необходимые", "Разрешить", "Настройки cookies", "Подробнее"]
+  };
+  const read = (storage, key) => { try { return storage.getItem(key) || ""; } catch { return ""; } };
+  const consent = () => memoryConsent || read(window.localStorage, KEY);
+  const lang = () => document.documentElement.lang || "uk";
+  function canTrack() {
+    const route = location.pathname.replace(/^\/(en|ru)(?=\/|$)/, "").replace(/\.html$/, "").replace(/\/$/, "") || "/";
+    return consent() === "accepted" && !["localhost", "127.0.0.1", ""].includes(location.hostname)
+      && ["/", "/index", "/calorie-calculator", "/training-plan", "/meal-planning", "/first-week", "/partners"].includes(route);
   }
-
-  function storeConsent(value) {
-    try {
-      window.localStorage.setItem(CONSENT_KEY, value);
-    } catch (error) {
-      // The website remains usable when browser storage is blocked.
-    }
-  }
-
-  function loadScript(id, src) {
+  function inject(id, src) {
     if (document.getElementById(id)) return;
-    const script = document.createElement("script");
-    script.id = id;
-    script.async = true;
-    script.src = src;
-    document.head.appendChild(script);
+    const script = document.createElement("script"); script.id = id; script.async = true; script.src = src; document.head.appendChild(script);
   }
-
-  function initializeAnalytics() {
-    if (initialized || !hasConsent()) return;
+  function initialize() {
+    if (initialized || !canTrack()) return;
     initialized = true;
-
+    const cleanUrl = new URL(location.pathname, location.origin), params = new URLSearchParams(location.search);
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content"].forEach(key => {
+      const value = params.get(key);
+      if (value && /^[a-zA-Z0-9_-]{1,80}$/.test(value)) cleanUrl.searchParams.set(key, value);
+    });
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
-    loadScript("vitalrise-ga4", "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(GA_ID));
     window.gtag("js", new Date());
-    window.gtag("config", GA_ID, {
-      anonymize_ip: true,
-      allow_google_signals: false,
-      allow_ad_personalization_signals: false
-    });
-
-    if (!window.fbq) {
-      const fbq = function () {
-        fbq.callMethod ? fbq.callMethod.apply(fbq, arguments) : fbq.queue.push(arguments);
-      };
-      fbq.push = fbq;
-      fbq.loaded = true;
-      fbq.version = "2.0";
-      fbq.queue = [];
-      window.fbq = fbq;
-      window._fbq = fbq;
-      loadScript("vitalrise-meta-pixel", "https://connect.facebook.net/en_US/fbevents.js");
-      const fallback = document.createElement("noscript");
-      fallback.innerHTML = '<img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=' + encodeURIComponent(META_PIXEL_ID) + '&ev=PageView&noscript=1" />';
-      document.body.appendChild(fallback);
-    }
-
-    window.fbq("init", META_PIXEL_ID);
-    window.fbq("track", "PageView");
+    window.gtag("config", GA_ID, { page_location: cleanUrl.toString(), page_referrer: "", allow_google_signals: false, allow_ad_personalization_signals: false });
+    inject("vitalrise-ga4", "https://www.googletagmanager.com/gtag/js?id=" + GA_ID);
+    // Meta Pixel is intentionally disabled pending a separate health-data / ads review.
+    // Unlike GA's explicit page_location, a pixel can attach the full current URL.
   }
-
-  function tierValue(tier) {
-    return planValues[tier] || 0;
+  function ga(name, payload) {
+    if (!canTrack()) return false;
+    initialize();
+    window.gtag("event", name, Object.assign({ language: lang(), page_location: location.origin + location.pathname }, payload));
+    return true;
   }
-
-  function productPayload(tier) {
-    return {
-      content_ids: [tier],
-      content_name: "VitalRise " + tier,
-      content_type: "product",
-      value: tierValue(tier),
-      currency: "UAH"
-    };
-  }
-
-  function gaEvent(name, payload) {
-    if (hasConsent() && typeof window.gtag === "function") window.gtag("event", name, payload);
-  }
-
-  function metaEvent(name, payload) {
-    if (hasConsent() && typeof window.fbq === "function") window.fbq("track", name, payload);
-  }
-
+  function product(tier) { return { currency: "UAH", value: prices[tier], items: [{ item_id: tier, item_name: "VitalRise " + tier, price: prices[tier], quantity: 1 }] }; }
   window.VitalRiseAnalytics = {
-    trackTierView: function (tier) {
-      const payload = productPayload(tier);
-      gaEvent("view_tier", Object.assign({ tier: tier }, payload));
-      metaEvent("ViewContent", payload);
-    },
-    trackCheckoutStart: function (tier) {
-      const payload = productPayload(tier);
-      gaEvent("begin_checkout", Object.assign({ tier: tier, items: [{ item_id: tier, item_name: "VitalRise " + tier, price: payload.value, quantity: 1 }] }, payload));
-      metaEvent("InitiateCheckout", payload);
-    },
+    trackTierView: tier => { if (prices[tier]) ga("view_tier", { tier: tier }); },
+    trackCheckoutStart: tier => { if (prices[tier]) ga("begin_checkout", product(tier)); },
     trackPurchase: function (tier, orderId) {
-      const payload = productPayload(tier);
-      gaEvent("purchase", Object.assign({ transaction_id: orderId || ("manual-" + Date.now()), tier: tier, items: [{ item_id: tier, item_name: "VitalRise " + tier, price: payload.value, quantity: 1 }] }, payload));
-      metaEvent("Purchase", payload);
+      if (!prices[tier] || !orderId || /^mock|^manual-/i.test(orderId)) return;
+      const key = "vitalrise:purchase-tracked:" + orderId;
+      if (read(window.localStorage, key)) return;
+      if (ga("purchase", Object.assign({ transaction_id: orderId }, product(tier)))) {
+        try { window.localStorage.setItem(key, "1"); } catch { /* Storage is optional. */ }
+      }
     },
-    trackCodeRedeemed: function (tier) {
-      gaEvent("redeem_code", { tier: tier });
-    },
-    trackNewsletterSignup: function () {
-      gaEvent("newsletter_signup", { source: "pricing", language: document.documentElement.lang || "uk" });
-      metaEvent("Lead", { content_name: "VitalRise newsletter" });
-    },
-    trackFreeCalculation: function () {
-      gaEvent("generate_lead", { content_name: "Free calorie estimate" });
-      metaEvent("Lead", { content_name: "Free calorie estimate" });
-    }
+    trackCodeRedeemed: tier => ga("redeem_code", { tier: tier }),
+    trackNewsletterSignup: () => ga("generate_lead", { lead_source: "site_newsletter" }),
+    trackFreeCalculation: () => ga("calculator_complete", { tool: "calories" }),
+    trackCalculatorStart: () => ga("calculator_start", { tool: "calories" }),
+    trackGuideDownload: () => ga("guide_download", { guide: "first_week" }),
+    trackCta: placement => ga("cta_click", { placement: placement })
   };
-
-  function removeBanner() {
-    document.querySelector(BANNER_SELECTOR)?.remove();
-  }
-
-  function setConsent(value) {
-    storeConsent(value);
-    removeBanner();
-    if (value === "accepted") initializeAnalytics();
-  }
-
-  function createBanner() {
-    if (document.querySelector(BANNER_SELECTOR) || hasConsent()) return;
-    const banner = document.createElement("aside");
-    banner.dataset.vitalriseMarketingBanner = "true";
-    banner.className = "marketing-consent";
-    banner.setAttribute("role", "dialog");
-    banner.setAttribute("aria-label", "Налаштування cookies");
-    banner.innerHTML = '<p><strong>Cookies та аналітика</strong><br>За вашою згодою ми використовуємо Google Analytics і Meta Pixel, щоб вимірювати ефективність реклами та покращувати сайт. Дані з калькуляторів до рекламних систем не передаються. <a href="privacy.html">Детальніше</a></p><div class="marketing-consent-actions"><button type="button" data-marketing-consent="essential">Лише необхідні</button><button type="button" data-marketing-consent="accepted">Дозволити аналітику</button></div>';
-    banner.addEventListener("click", function (event) {
-      const button = event.target.closest("[data-marketing-consent]");
-      if (button) setConsent(button.dataset.marketingConsent);
+  function drawBanner(force) {
+    document.querySelector("[data-vitalrise-marketing-banner]")?.remove();
+    if (!force && ["accepted", "essential"].includes(consent())) return;
+    const words = copy[lang()] || copy.uk;
+    const banner = document.createElement("aside"); banner.className = "marketing-consent"; banner.dataset.vitalriseMarketingBanner = "true";
+    banner.setAttribute("aria-label", words[0]);
+    const title = document.createElement("strong"); title.textContent = words[0];
+    const paragraph = document.createElement("p"); paragraph.append(title, document.createElement("br"), words[1] + " ");
+    const link = document.createElement("a"); link.href = "/privacy" + (lang() === "uk" ? "" : "?lang=" + lang()); link.textContent = words[5]; paragraph.appendChild(link);
+    const actions = document.createElement("div"); actions.className = "marketing-consent-actions";
+    ["essential", "accepted"].forEach((value, index) => {
+      const button = document.createElement("button"); button.type = "button"; button.dataset.marketingConsent = value; button.textContent = words[index + 2];
+      button.addEventListener("click", () => {
+        const previous = consent(); memoryConsent = value;
+        try { window.localStorage.setItem(KEY, value); } catch { /* Honor the in-memory choice. */ }
+        banner.remove();
+        if (value === "accepted") initialize();
+        else if (previous === "accepted" && initialized) { window["ga-disable-" + GA_ID] = true; window.fbq?.("consent", "revoke"); location.reload(); }
+      });
+      actions.appendChild(button);
     });
-    document.body.appendChild(banner);
+    banner.append(paragraph, actions); document.body.appendChild(banner);
   }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    if (hasConsent()) initializeAnalytics();
-    else createBanner();
+  document.addEventListener("DOMContentLoaded", () => {
+    initialize(); drawBanner(false);
+    const settings = document.createElement("button"); settings.type = "button"; settings.className = "footer-clear-data"; settings.dataset.cookieSettings = "true";
+    const localize = () => { settings.textContent = (copy[lang()] || copy.uk)[4]; if (document.querySelector("[data-vitalrise-marketing-banner]")) drawBanner(true); };
+    settings.addEventListener("click", () => drawBanner(true));
+    (document.querySelector("footer .footer-note") || document.querySelector("footer .container") || document.querySelector("footer") || document.body).appendChild(settings);
+    localize(); new MutationObserver(localize).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
   });
 })();

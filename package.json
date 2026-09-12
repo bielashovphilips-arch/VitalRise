@@ -4,6 +4,7 @@
   "private": true,
   "description": "VitalRise static athlete dashboard and calculators.",
   "scripts": {
+    "test:growth": "node --test tests/site-regression.test.mjs",
     "test:owner": "node --test tests/owner-access.test.mjs",
     "test:training": "node --test tests/training-release.test.mjs",
     "build:index": "powershell -ExecutionPolicy Bypass -File tools/build-index.ps1",
@@ -13,6 +14,7 @@
     "check": "powershell -ExecutionPolicy Bypass -File tools/check-project.ps1"
   },
   "devDependencies": {
+    "playwright": "1.63.0",
     "miniflare": "4.20260721.0"
   }
 }

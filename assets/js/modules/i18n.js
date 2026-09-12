@@ -18,6 +18,7 @@
       "nav.progress": "Прогрес",
       "cta.access": "Доступ",
       "cta.startLabs": "Почати з аналізів",
+      "cta.freeCalculator": "Розрахувати калорії",
       "cta.controlSystem": "Система контролю",
       "hero.title": "Система побудови тіла атлета",
       "hero.text": "Харчування, тренування, спортпіт, відновлення і лабораторні маркери в одному маршруті до тіла, що виглядає витесаним з граніту.",
@@ -79,6 +80,7 @@
       "nav.progress": "Progress",
       "cta.access": "Access",
       "cta.startLabs": "Start with labs",
+      "cta.freeCalculator": "Calculate calories",
       "cta.controlSystem": "Control system",
       "hero.title": "Athlete body-building system",
       "hero.text": "Nutrition, training, supplements, recovery, and lab markers in one route toward a body that looks carved from stone.",
@@ -140,6 +142,7 @@
       "nav.progress": "Прогресс",
       "cta.access": "Доступ",
       "cta.startLabs": "Начать с анализов",
+      "cta.freeCalculator": "Рассчитать калории",
       "cta.controlSystem": "Система контроля",
       "hero.title": "Система построения тела атлета",
       "hero.text": "Питание, тренировки, спортпит, восстановление и лабораторные маркеры в одном маршруте к телу, которое выглядит высеченным из камня.",
@@ -1391,12 +1394,12 @@
     "knowledge.healthText": "Сон, втома, цикл, лібідо, тиск, травлення і аналізи можуть пояснити, чому вага або сила стоять. VitalRise не ставить діагноз, але допомагає зрозуміти, що обговорити з фахівцем.",
     "knowledge.healthCta": "Перевірити маркери",
     "pricing.label": "Тарифи",
-    "newsletter.title": "Отримати оновлення про запуск",
-    "newsletter.text": "Email для повідомлень про запуск, нові модулі та відкриття оплати.",
+    "newsletter.title": "Корисні матеріали VitalRise",
+    "newsletter.text": "Матеріали й оновлення на email. Натискаючи «Підписатися», погоджуєшся на розсилку. Відписка — через підтримку.",
     "newsletter.placeholder": "Твій email",
     "newsletter.cta": "Підписатися",
     "pricing.freeCopy": "Введи базові дані та безкоштовно отримай персональний орієнтир калорійності. Повний план залишається у Start.",
-    "pricing.startCopy": "Перший платний крок: готовий тиждень харчування, тренувань і звіту без ручного складання з нуля.",
+    "pricing.startCopy": "Раціон на 7 днів, базові тренування і PDF. 7 днів — обсяг раціону; строк активного доступу — 30 днів.",
     "pricing.proCopy": "Основний формат для результату: план, контроль, check-in і корекція курсу після накопичення даних.",
     "pricing.premiumCopy": "Для тих, кому потрібна ручна увага, розбір складних ситуацій і підтримка під час виконання плану.",
     "pricing.freeBackLabel": "Перший крок",
@@ -1423,8 +1426,8 @@
     "pricing.backPointSupport": "Супровід",
     "pricing.backPointLabs": "Аналізи",
     "pricing.backPointManual": "Ручна корекція",
-    "proof.label": "Кейси",
-    "proof.title": "Що має відчути клієнт",
+    "proof.label": "Сценарії",
+    "proof.title": "Приклади використання системи",
     "proof.case1Title": "Зниження ваги",
     "proof.case1Text": "Помірний дефіцит, кроки, контроль талії і раціон без різких провалів по енергії.",
     "proof.case2Title": "Набір маси",
@@ -1433,12 +1436,12 @@
     "proof.case3Text": "Спокійна динаміка: сила, заміри, фото і харчування коригуються після 14-денного контролю.",
     "faq.label": "FAQ",
     "faq.title": "Питання перед стартом",
-    "faq.q1": "Як працює ранній доступ?",
-    "faq.a1": "Залиш email у формі вище. Ми збережемо його в базі раннього доступу і повідомимо про запуск, нові модулі та відкриття оплати.",
+    "faq.q1": "З чого почати?",
+    "faq.a1": "Розрахуй калорії безкоштовно — реєстрація й аналізи не потрібні. Для повного раціону, базових тренувань і PDF обери Start. Розсилка необов’язкова.",
     "faq.q2": "Що можна подивитися безкоштовно?",
     "faq.a2": "Безкоштовно можна отримати персональний орієнтир калорійності за базовими даними. Раціон, макроси, тренування, плани та PDF відкриваються після оплати Start.",
-    "faq.q3": "Коли буде доступна оплата?",
-    "faq.a3": "Після оплати є 45 днів, щоб почати програму. Коли користувач вводить дані й запускає перший розрахунок, активується 30 днів програми. Автопродовження увімкнене за замовчуванням, але його можна вимкнути перед оплатою.",
+    "faq.q3": "Коли починається платний доступ?",
+    "faq.a3": "Після оплати є 45 днів для початку. Перший розрахунок у платному модулі активує 30 днів доступу; безкоштовний калькулятор його не активує. Автопродовження можна вимкнути перед оплатою.",
     "faq.q4": "Що робити, якщо план не підходить?",
     "faq.a4": "План не повинен бути статичним. Корекція робиться через check-in, 14-денний контроль прогресу, талію, вагу, самопочуття і тренувальну продуктивність.",
     "faq.q5": "Чи потрібні аналізи всім?",
@@ -1446,7 +1449,7 @@
     "faq.q6": "VitalRise замінює лікаря?",
     "faq.a6": "Ні. Сайт не ставить діагнози і не призначає лікування. Лабораторні маркери, препарати, гормони й АС/ААС потрібно обговорювати з лікарем.",
     "faq.q7": "Що буде з моїм email?",
-    "faq.a7": "Email використовується для раннього доступу, повідомлень про запуск і майбутнього доступу до покупки. Деталі описані в Privacy Policy.",
+    "faq.a7": "Email у формі підписки — для матеріалів і новин VitalRise. Email під час оплати — для замовлення та доступу. Для відписки звернись у підтримку. Деталі — у політиці конфіденційності.",
     "faq.q8": "Чи можна буде повернути оплату?",
     "faq.a8": "Повернення можливе до активації програми, при дубль-оплаті або якщо після успішної оплати доступ не відкрився і технічну проблему не вдалося вирішити. Після активації 30-денної програми повернення не застосовується, але можна скасувати наступне продовження.",
     "policy.label": "Гарантія",
@@ -1482,7 +1485,7 @@
     "pricing.proTitle": "Система на 4 тижні",
     "pricing.proItem1": "30-денний раціон і заміни продуктів",
     "pricing.proItem2": "4-тижнева програма тренувань",
-    "pricing.proItem3": "Coach, weekly check-in, графіки",
+    "pricing.proItem3": "Інструменти Coach, check-in, графіки",
     "pricing.proItem4": "Розширений Blueprint і аналізи",
     "pricing.proCta": "Обрати Pro",
     "pricing.premiumPrice": "3 500 грн",
@@ -1632,12 +1635,12 @@
     "knowledge.healthText": "Sleep, fatigue, cycle, libido, blood pressure, digestion, and labs can explain why body weight or strength stalls. VitalRise does not diagnose, but helps clarify what to discuss with a specialist.",
     "knowledge.healthCta": "Check markers",
     "pricing.label": "Pricing",
-    "newsletter.title": "Get launch updates",
-    "newsletter.text": "Email for launch updates, new modules, and payment opening.",
+    "newsletter.title": "Useful VitalRise updates",
+    "newsletter.text": "Materials and updates by email. Clicking “Subscribe” confirms your subscription. Contact support to unsubscribe.",
     "newsletter.placeholder": "Your email",
     "newsletter.cta": "Subscribe",
     "pricing.freeCopy": "Enter your basics and get a free personal calorie estimate. The complete plan stays in Start.",
-    "pricing.startCopy": "The first paid step: a ready week of nutrition, training, and reporting without building from scratch.",
+    "pricing.startCopy": "A 7-day meal plan, basic training and a PDF. Seven days describes the meal plan; active access lasts 30 days.",
     "pricing.proCopy": "The main result format: plan, control, check-in, and course correction after enough data is collected.",
     "pricing.premiumCopy": "For those who need manual attention, complex-case review, and support while following the plan.",
     "pricing.freeBackLabel": "First step",
@@ -1664,8 +1667,8 @@
     "pricing.backPointSupport": "Support",
     "pricing.backPointLabs": "Labs",
     "pricing.backPointManual": "Manual correction",
-    "proof.label": "Cases",
-    "proof.title": "What the client should feel",
+    "proof.label": "Use cases",
+    "proof.title": "Ways to use the system",
     "proof.case1Title": "Weight loss",
     "proof.case1Text": "Moderate deficit, daily steps, waist control, and nutrition without sharp energy crashes.",
     "proof.case2Title": "Mass gain",
@@ -1674,12 +1677,12 @@
     "proof.case3Text": "Calm progress: strength, measurements, photos, and nutrition are corrected after 14-day control.",
     "faq.label": "FAQ",
     "faq.title": "Questions before starting",
-    "faq.q1": "How does early access work?",
-    "faq.a1": "Leave your email in the form above. We will save it in the early access list and notify you about launch, new modules, and payment opening.",
+    "faq.q1": "How do I start?",
+    "faq.a1": "Calculate your calories for free: no account or blood tests needed. Choose Start for a full meal plan, basic workouts and a PDF. The newsletter is optional.",
     "faq.q2": "What can I view for free?",
     "faq.a2": "Free includes a personal calorie estimate based on basic details. Nutrition, macros, training, plans, and PDF unlock after purchasing Start.",
-    "faq.q3": "When will payment be available?",
-    "faq.a3": "After payment, the user has 45 days to start the program. When the user enters data and runs the first calculation, 30 days of active program begin. Auto-renewal is enabled by default but can be turned off before payment.",
+    "faq.q3": "When does paid access start?",
+    "faq.a3": "After payment, you have 45 days to start. The first calculation in a paid module activates 30 days of access; the free calculator does not activate it. Auto-renewal can be disabled before payment.",
     "faq.q4": "What if the plan does not fit?",
     "faq.a4": "The plan should not be static. Adjustments are made through check-ins, 14-day progress control, waist, weight, well-being, and training performance.",
     "faq.q5": "Does everyone need lab tests?",
@@ -1687,7 +1690,7 @@
     "faq.q6": "Does VitalRise replace a doctor?",
     "faq.a6": "No. The site does not diagnose or prescribe treatment. Lab markers, drugs, hormones, and AAS should be discussed with a doctor.",
     "faq.q7": "What happens to my email?",
-    "faq.a7": "Email is used for early access, launch updates, and future purchase access. Details are described in the Privacy Policy.",
+    "faq.a7": "The newsletter email is used for VitalRise materials and updates. The checkout email is used for your order and access. Contact support to unsubscribe. See the Privacy Policy.",
     "faq.q8": "Will refunds be possible?",
     "faq.a8": "A refund is possible before program activation, for duplicate payments, or if access does not open after successful payment and the technical issue cannot be resolved. After the 30-day program is activated, refunds do not apply, but the next renewal can be cancelled.",
     "policy.label": "Guarantee",
@@ -1723,7 +1726,7 @@
     "pricing.proTitle": "4-week system",
     "pricing.proItem1": "30-day nutrition and food swaps",
     "pricing.proItem2": "4-week training program",
-    "pricing.proItem3": "Coach, weekly check-in, charts",
+    "pricing.proItem3": "Coach tools, check-ins, charts",
     "pricing.proItem4": "Extended Blueprint and lab analysis",
     "pricing.proCta": "Choose Pro",
     "pricing.premiumPrice": "3,500 UAH",
@@ -1857,12 +1860,12 @@
     "knowledge.healthText": "Сон, усталость, цикл, либидо, давление, пищеварение и анализы могут объяснить, почему вес или сила стоят. VitalRise не ставит диагноз, но помогает понять, что обсудить со специалистом.",
     "knowledge.healthCta": "Проверить маркеры",
     "pricing.label": "Тарифы",
-    "newsletter.title": "Получить обновления о запуске",
-    "newsletter.text": "Email для сообщений о запуске, новых модулях и открытии оплаты.",
+    "newsletter.title": "Полезные материалы VitalRise",
+    "newsletter.text": "Материалы и обновления по email. Нажимая «Подписаться», соглашаешься на рассылку. Отписка — через поддержку.",
     "newsletter.placeholder": "Твой email",
     "newsletter.cta": "Подписаться",
     "pricing.freeCopy": "Введите базовые данные и бесплатно получите персональный ориентир по калорийности. Полный план остаётся в Start.",
-    "pricing.startCopy": "Первый платный шаг: готовая неделя питания, тренировок и отчета без ручной сборки с нуля.",
+    "pricing.startCopy": "Рацион на 7 дней, базовые тренировки и PDF. 7 дней — объём рациона; активный доступ — 30 дней.",
     "pricing.proCopy": "Основной формат для результата: план, контроль, check-in и коррекция курса после накопления данных.",
     "pricing.premiumCopy": "Для тех, кому нужны ручное внимание, разбор сложных ситуаций и поддержка во время выполнения плана.",
     "pricing.freeBackLabel": "Первый шаг",
@@ -1889,8 +1892,8 @@
     "pricing.backPointSupport": "Сопровождение",
     "pricing.backPointLabs": "Анализы",
     "pricing.backPointManual": "Ручная коррекция",
-    "proof.label": "Кейсы",
-    "proof.title": "Что должен почувствовать клиент",
+    "proof.label": "Сценарии",
+    "proof.title": "Примеры использования системы",
     "proof.case1Title": "Снижение веса",
     "proof.case1Text": "Умеренный дефицит, шаги, контроль талии и рацион без резких провалов по энергии.",
     "proof.case2Title": "Набор массы",
@@ -1899,12 +1902,12 @@
     "proof.case3Text": "Спокойная динамика: сила, замеры, фото и питание корректируются после 14-дневного контроля.",
     "faq.label": "FAQ",
     "faq.title": "Вопросы перед стартом",
-    "faq.q1": "Как работает ранний доступ?",
-    "faq.a1": "Оставь email в форме выше. Мы сохраним его в базе раннего доступа и сообщим о запуске, новых модулях и открытии оплаты.",
+    "faq.q1": "С чего начать?",
+    "faq.a1": "Рассчитай калории бесплатно — регистрация и анализы не нужны. Для полного рациона, базовых тренировок и PDF выбери Start. Рассылка необязательна.",
     "faq.q2": "Что можно посмотреть бесплатно?",
     "faq.a2": "Бесплатно можно получить персональный ориентир по калорийности на основе базовых данных. Рацион, макросы, тренировки, планы и PDF открываются после оплаты Start.",
-    "faq.q3": "Когда будет доступна оплата?",
-    "faq.a3": "После оплаты есть 45 дней, чтобы начать программу. Когда пользователь вводит данные и запускает первый расчет, активируются 30 дней программы. Автопродление включено по умолчанию, но его можно выключить перед оплатой.",
+    "faq.q3": "Когда начинается платный доступ?",
+    "faq.a3": "После оплаты есть 45 дней для начала. Первый расчёт в платном модуле активирует 30 дней доступа; бесплатный калькулятор его не активирует. Автопродление можно отключить перед оплатой.",
     "faq.q4": "Что делать, если план не подходит?",
     "faq.a4": "План не должен быть статичным. Коррекция делается через check-in, 14-дневный контроль прогресса, талию, вес, самочувствие и тренировочную продуктивность.",
     "faq.q5": "Анализы нужны всем?",
@@ -1912,7 +1915,7 @@
     "faq.q6": "VitalRise заменяет врача?",
     "faq.a6": "Нет. Сайт не ставит диагнозы и не назначает лечение. Лабораторные маркеры, препараты, гормоны и АС/ААС нужно обсуждать с врачом.",
     "faq.q7": "Что будет с моим email?",
-    "faq.a7": "Email используется для раннего доступа, сообщений о запуске и будущего доступа к покупке. Детали описаны в Privacy Policy.",
+    "faq.a7": "Email в форме подписки — для материалов и новостей VitalRise. Email при оплате — для заказа и доступа. Для отписки обратись в поддержку. Подробнее — в политике конфиденциальности.",
     "faq.q8": "Можно будет вернуть оплату?",
     "faq.a8": "Возврат возможен до активации программы, при дубль-оплате или если после успешной оплаты доступ не открылся и техническую проблему не удалось решить. После активации 30-дневной программы возврат не применяется, но можно отменить следующее продление.",
     "policy.label": "Гарантия",
@@ -1948,7 +1951,7 @@
     "pricing.proTitle": "Система на 4 недели",
     "pricing.proItem1": "30-дневный рацион и замены продуктов",
     "pricing.proItem2": "4-недельная программа тренировок",
-    "pricing.proItem3": "Coach, weekly check-in, графики",
+    "pricing.proItem3": "Инструменты Coach, check-in, графики",
     "pricing.proItem4": "Расширенный Blueprint и анализы",
     "pricing.proCta": "Выбрать Pro",
     "pricing.premiumPrice": "3 500 грн",
@@ -1982,8 +1985,69 @@
     }
   }
 
+  const pageMeta = {
+    "/nutrition": {
+      uk: { title: "План харчування для спортсменів — калорії, БЖВ і меню | VitalRise", description: "Розрахуй калорії, білки, жири, вуглеводи, прийоми їжі та заміни продуктів під набір, сушку або підтримку форми." },
+      en: { title: "Athlete nutrition plan — calories, macros, and meals | VitalRise", description: "Calculate calories, protein, fats, carbs, meals, and food swaps for muscle gain, fat loss, or maintaining your shape." },
+      ru: { title: "План питания для спортсменов — калории, БЖУ и меню | VitalRise", description: "Рассчитай калории, белки, жиры, углеводы, приемы пищи и замены продуктов для набора, сушки или поддержания формы." }
+    },
+    "/training": {
+      uk: { title: "Програма тренувань у залі й вдома — прогресія та PPL | VitalRise", description: "Створи програму тренувань під зал, дім або вулицю: рівень, ціль, Push/Pull/Legs, прогресія навантаження і контроль відновлення." },
+      en: { title: "Gym and home workout plan — progression and PPL | VitalRise", description: "Build a gym, home, or outdoor training plan with your level, goal, Push/Pull/Legs split, progression, and recovery control." },
+      ru: { title: "Программа тренировок в зале и дома — прогрессия и PPL | VitalRise", description: "Создай программу для зала, дома или улицы: уровень, цель, Push/Pull/Legs, прогрессия нагрузки и контроль восстановления." }
+    },
+    "/labs": {
+      uk: { title: "Аналізи для спортсменів — лабораторні маркери і ризики | VitalRise", description: "Збери лабораторні маркери спортсмена в зрозумілий огляд: ризики, відновлення, печінка, нирки, гормональний і метаболічний контекст." },
+      en: { title: "Athlete blood tests — lab markers and risks | VitalRise", description: "Turn athlete lab markers into a clear overview of risks, recovery, liver, kidney, hormonal, and metabolic context." },
+      ru: { title: "Анализы для спортсменов — лабораторные маркеры и риски | VitalRise", description: "Собери лабораторные маркеры спортсмена в понятный обзор: риски, восстановление, печень, почки, гормональный и метаболический контекст." }
+    },
+    "/supplements": {
+      uk: { title: "Спортпіт і добавки — підтримка відновлення та ШКТ | VitalRise", description: "Підбери спортпіт і добавки для тренувань, травлення, ШКТ, печінки, нирок і відновлення з практичним контекстом." },
+      en: { title: "Sports supplements — recovery and gut support | VitalRise", description: "Choose sports supplements for training, digestion, gut, liver, kidney, and recovery support with practical context." },
+      ru: { title: "Спортпит и добавки — поддержка восстановления и ЖКТ | VitalRise", description: "Подбери спортпит и добавки для тренировок, пищеварения, ЖКТ, печени, почек и восстановления с практическим контекстом." }
+    },
+    "/recovery": {
+      uk: { title: "Відновлення спортсмена — сон, вода, сауна і готовність | VitalRise", description: "Контролюй відновлення спортсмена: сон, вода, сауна, масаж, готовність до навантаження і ознаки накопиченої втоми." },
+      en: { title: "Athlete recovery — sleep, hydration, sauna, and readiness | VitalRise", description: "Track athlete recovery: sleep, hydration, sauna, massage, readiness for training, and signs of accumulated fatigue." },
+      ru: { title: "Восстановление спортсмена — сон, вода, сауна и готовность | VitalRise", description: "Контролируй восстановление спортсмена: сон, вода, сауна, массаж, готовность к нагрузке и признаки накопленной усталости." }
+    },
+    "/profile": {
+      uk: { title: "Профіль атлета — ціль, рівень і базові дані | VitalRise", description: "Заповни профіль атлета: базові дані, ціль, рівень, тренувальний формат, лабораторний контекст і стан системи." },
+      en: { title: "Athlete profile — goal, level, and baseline data | VitalRise", description: "Complete an athlete profile with baseline data, goal, level, training format, lab context, and system status." },
+      ru: { title: "Профиль атлета — цель, уровень и базовые данные | VitalRise", description: "Заполни профиль атлета: базовые данные, цель, уровень, формат тренировок, лабораторный контекст и состояние системы." }
+    },
+    "/progress": {
+      uk: { title: "Трекер прогресу спортсмена — вага, талія, фото і check-in | VitalRise", description: "Веди check-in прогресу: вага, талія, фото, сон, дисципліна і рішення щодо корекції плану після 14 днів." },
+      en: { title: "Athlete progress tracker — weight, waist, photos, and check-ins | VitalRise", description: "Track progress check-ins with weight, waist, photos, sleep, discipline, and plan-correction decisions after 14 days." },
+      ru: { title: "Трекер прогресса спортсмена — вес, талия, фото и check-in | VitalRise", description: "Веди check-in прогресса: вес, талия, фото, сон, дисциплина и решения по коррекции плана после 14 дней." }
+    },
+    "/blueprint": {
+      uk: { title: "Athlete Blueprint — персональний план тіла на 4 тижні | VitalRise", description: "Фінальний Athlete Blueprint показує пріоритети, стан системи і план дій на 4 тижні після харчування, тренувань, аналізів і прогресу." },
+      en: { title: "Athlete Blueprint — a personal 4-week body plan | VitalRise", description: "The final Athlete Blueprint shows priorities, system status, and a 4-week action plan after nutrition, training, labs, and progress data." },
+      ru: { title: "Athlete Blueprint — персональный план тела на 4 недели | VitalRise", description: "Финальный Athlete Blueprint показывает приоритеты, состояние системы и план действий на 4 недели после питания, тренировок, анализов и прогресса." }
+    }
+  };
+
+  function getPageRouteKey() {
+    const pathname = window.location.pathname || "/";
+    return pathname.replace(/\/(?:index)?\.html$/, "/").replace(/\.template\.html$/, "").replace(/\.html$/, "").replace(/\/$/, "") || "/";
+  }
+
   function getLanguage(language) {
     return supportedLanguages.includes(language) ? language : DEFAULT_LANGUAGE;
+  }
+
+  function getUrlLanguage() {
+    try {
+      const language = new URLSearchParams(window.location.search).get("lang");
+      return supportedLanguages.includes(language) ? language : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getInitialLanguage() {
+    return getLanguage(getUrlLanguage() || getSavedLanguage() || document.documentElement.lang);
   }
 
   function translate(key, language) {
@@ -2478,16 +2542,31 @@
 
   function applyTranslations(language) {
     const currentLanguage = getLanguage(language);
-    const title = translate("metaTitle", currentLanguage);
-    const description = translate("metaDescription", currentLanguage);
+    const routeMeta = pageMeta[getPageRouteKey()] && pageMeta[getPageRouteKey()][currentLanguage];
+    const title = routeMeta ? routeMeta.title : translate("metaTitle", currentLanguage);
+    const description = routeMeta ? routeMeta.description : translate("metaDescription", currentLanguage);
     const descriptionNode = document.querySelector('meta[name="description"]');
-    const shouldUpdateGlobalMeta = !document.querySelector(".module-page-main, .vlog-main, [data-legal-page]");
+    const canonicalNode = document.querySelector('link[rel="canonical"]');
+    const shouldUpdatePageMeta = Boolean(routeMeta) || !document.querySelector(".module-page-main, .vlog-main, [data-legal-page]");
 
     isApplyingTranslations = true;
     document.documentElement.lang = currentLanguage;
     document.body.dataset.language = currentLanguage;
-    if (shouldUpdateGlobalMeta && title) document.title = title;
-    if (shouldUpdateGlobalMeta && descriptionNode && description) descriptionNode.setAttribute("content", description);
+    if (shouldUpdatePageMeta && title) document.title = title;
+    if (shouldUpdatePageMeta && descriptionNode && description) descriptionNode.setAttribute("content", description);
+    if (canonicalNode) {
+      const canonicalUrl = new URL(getPageRouteKey(), "https://vitalrise.com.ua");
+      if (currentLanguage !== DEFAULT_LANGUAGE) canonicalUrl.searchParams.set("lang", currentLanguage);
+      canonicalNode.setAttribute("href", canonicalUrl.toString());
+      const ogUrl = document.querySelector('meta[property="og:url"]');
+      if (ogUrl) ogUrl.setAttribute("content", canonicalUrl.toString());
+    }
+    if (shouldUpdatePageMeta) {
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      const ogDescription = document.querySelector('meta[property="og:description"]');
+      if (ogTitle && title) ogTitle.setAttribute("content", title);
+      if (ogDescription && description) ogDescription.setAttribute("content", description);
+    }
 
     document.querySelectorAll("[data-i18n]").forEach(function (node) {
       const value = translate(node.dataset.i18n, currentLanguage);
@@ -2520,6 +2599,24 @@
       button.setAttribute("aria-pressed", String(isActive));
     });
 
+    document.querySelectorAll('a[href]').forEach(function (link) {
+      const rawHref = link.getAttribute("href");
+      if (!rawHref || rawHref.charAt(0) === "#" || /^(?:https?:|mailto:|tel:|javascript:)/i.test(rawHref)) return;
+
+      try {
+        const linkUrl = new URL(rawHref, window.location.href);
+        if (linkUrl.origin !== window.location.origin || linkUrl.pathname.indexOf("/api/") === 0) return;
+        if (currentLanguage === DEFAULT_LANGUAGE && !getUrlLanguage()) {
+          linkUrl.searchParams.delete("lang");
+        } else {
+          linkUrl.searchParams.set("lang", currentLanguage);
+        }
+        link.setAttribute("href", linkUrl.pathname + linkUrl.search + linkUrl.hash);
+      } catch (error) {
+        // Ignore malformed or non-navigation links.
+      }
+    });
+
     window.setTimeout(function () {
       isApplyingTranslations = false;
     }, 0);
@@ -2528,11 +2625,23 @@
   function setLanguage(language) {
     const nextLanguage = getLanguage(language);
     saveLanguage(nextLanguage);
+    try {
+      const nextUrl = new URL(window.location.href);
+      if (nextLanguage === DEFAULT_LANGUAGE) {
+        nextUrl.searchParams.delete("lang");
+      } else {
+        nextUrl.searchParams.set("lang", nextLanguage);
+      }
+      window.history.replaceState({}, "", nextUrl.pathname + nextUrl.search + nextUrl.hash);
+    } catch (error) {
+      // URL state is optional when history is unavailable.
+    }
     applyTranslations(nextLanguage);
   }
 
   function initLanguageSwitcher() {
-    const language = getLanguage(getSavedLanguage() || document.documentElement.lang);
+    const language = getInitialLanguage();
+    saveLanguage(language);
     applyTranslations(language);
 
     const observer = new MutationObserver(function (mutations) {

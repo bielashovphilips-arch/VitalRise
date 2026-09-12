@@ -5,10 +5,10 @@
           </div>
 
           <div class="newsletter-capture reveal">
-            <h3 data-i18n="newsletter.title">Отримати оновлення про запуск</h3>
-            <p data-i18n="newsletter.text">Email для повідомлень про запуск, нові модулі та відкриття оплати.</p>
+            <h3 data-i18n="newsletter.title">Корисні матеріали VitalRise</h3>
+            <p data-i18n="newsletter.text">Матеріали й оновлення на email. Натискаючи «Підписатися», погоджуєшся на розсилку. Відписка — через підтримку.</p>
             <form id="newsletter-form">
-              <input type="email" data-i18n-placeholder="newsletter.placeholder" placeholder="Твій email" required />
+              <input type="email" autocomplete="email" aria-label="Твій email" data-i18n-aria-label="newsletter.placeholder" data-i18n-placeholder="newsletter.placeholder" placeholder="Твій email" required />
               <button type="submit" data-i18n="newsletter.cta">Підписатися</button>
             </form>
             <div class="newsletter-status" id="newsletter-status" aria-live="polite"></div>
@@ -56,7 +56,7 @@
                     <strong data-i18n="pricing.startPrice">499 грн</strong>
                   </div>
                   <h3 data-i18n="pricing.startTitle">План на 7 днів</h3>
-                  <p class="pricing-card-copy" data-i18n="pricing.startCopy">Перший платний крок: готовий тиждень харчування, тренувань і звіту без ручного складання з нуля.</p>
+                  <p class="pricing-card-copy" data-i18n="pricing.startCopy">Раціон на 7 днів, базові тренування і PDF. 7 днів — обсяг раціону; строк активного доступу — 30 днів.</p>
                   <ul>
                     <li data-i18n="pricing.startItem1">7-денний раціон під ціль</li>
                     <li data-i18n="pricing.startItem2">Стабільний раціон + протокол гідратації</li>
@@ -91,7 +91,7 @@
                   <ul>
                     <li data-i18n="pricing.proItem1">30-денний раціон і заміни продуктів</li>
                     <li data-i18n="pricing.proItem2">4-тижнева програма тренувань</li>
-                    <li data-i18n="pricing.proItem3">Coach, weekly check-in, графіки</li>
+                    <li data-i18n="pricing.proItem3">Інструменти Coach, check-in, графіки</li>
                     <li data-i18n="pricing.proItem4">Розширений Blueprint і аналізи</li>
                   </ul>
                   <a href="#pricing" class="btn btn-primary" data-i18n="pricing.proCta" data-select-plan="pro">Обрати Pro</a>
@@ -193,7 +193,7 @@
               <p data-free-result-copy></p>
               <div class="free-calculator-upsell">
                 <h4 data-free-i18n="upsellTitle">Цифра — це старт, не готовий план</h4>
-                <p data-free-i18n="upsellText">Start перетворює її на 7 днів харчування, тренування та PDF. Pro додає 4-тижневу систему, check-in і супровід.</p>
+                <p data-free-i18n="upsellText">Start додає раціон на 7 днів, базові тренування та PDF. Pro — планування й контроль прогресу. Персональний супровід тренера — у Premium.</p>
                 <a href="#pricing" class="btn btn-primary" data-select-plan="start" data-free-i18n="upsellCta">Отримати повний план у Start</a>
               </div>
               <p class="free-calculator-note" data-free-i18n="note">Орієнтир не є медичною рекомендацією. За станів здоров’я або різких змін самопочуття звернись до лікаря.</p>
@@ -202,8 +202,8 @@
 
           <div class="conversion-grid reveal">
             <section class="conversion-block">
-              <span class="section-label" data-i18n="proof.label">Кейси</span>
-              <h3 data-i18n="proof.title">Що має відчути клієнт</h3>
+              <span class="section-label" data-i18n="proof.label">Сценарії</span>
+              <h3 data-i18n="proof.title">Приклади використання системи</h3>
               <div class="proof-list">
                 <article>
                   <strong data-i18n="proof.case1Title">Зниження ваги</strong>
@@ -224,16 +224,16 @@
               <span class="section-label" data-i18n="faq.label">FAQ</span>
               <h3 data-i18n="faq.title">Питання перед стартом</h3>
               <details open>
-                <summary data-i18n="faq.q1">Як працює ранній доступ?</summary>
-                <p data-i18n="faq.a1">Залиш email у формі вище. Ми збережемо його в базі раннього доступу і повідомимо про запуск, нові модулі та відкриття оплати.</p>
+                <summary data-i18n="faq.q1">З чого почати?</summary>
+                <p data-i18n="faq.a1">Розрахуй калорії безкоштовно — реєстрація й аналізи не потрібні. Для повного раціону, базових тренувань і PDF обери Start. Розсилка необов’язкова.</p>
               </details>
               <details>
                 <summary data-i18n="faq.q2">Що можна подивитися безкоштовно?</summary>
-                <p data-i18n="faq.a2">Безкоштовно можна один раз зробити розрахунок харчування на день і один раз сформувати тренування. Повний тиждень харчування, тренувань і PDF-звіт — у Start.</p>
+                <p data-i18n="faq.a2">Безкоштовно можна отримати персональний орієнтир калорійності за базовими даними. Раціон, макроси, тренування, плани та PDF відкриваються після оплати Start.</p>
               </details>
               <details>
-                <summary data-i18n="faq.q3">Коли буде доступна оплата?</summary>
-                <p data-i18n="faq.a3">Після оплати є 45 днів, щоб почати програму. Коли користувач вводить дані й запускає перший розрахунок, активується 30 днів програми. Автопродовження увімкнене за замовчуванням, але його можна вимкнути перед оплатою.</p>
+                <summary data-i18n="faq.q3">Коли починається платний доступ?</summary>
+                <p data-i18n="faq.a3">Після оплати є 45 днів для початку. Перший розрахунок у платному модулі активує 30 днів доступу; безкоштовний калькулятор його не активує. Автопродовження можна вимкнути перед оплатою.</p>
               </details>
               <details>
                 <summary data-i18n="faq.q4">Що робити, якщо план не підходить?</summary>
@@ -249,7 +249,7 @@
               </details>
               <details>
                 <summary data-i18n="faq.q7">Що буде з моїм email?</summary>
-                <p data-i18n="faq.a7">Email використовується для раннього доступу, повідомлень про запуск і майбутнього доступу до покупки. Деталі описані в Privacy Policy.</p>
+                <p data-i18n="faq.a7">Email у формі підписки — для матеріалів і новин VitalRise. Email під час оплати — для замовлення та доступу. Для відписки звернись у підтримку. Деталі — у політиці конфіденційності.</p>
               </details>
               <details>
                 <summary data-i18n="faq.q8">Чи можна буде повернути оплату?</summary>

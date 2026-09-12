@@ -12,7 +12,7 @@
   const PENDING_ORDER_KEY = "vitalrise:access:pending-order";
   const tierRank = { free: 0, start: 1, pro: 2, premium: 3, admin: 4 };
   const activationFormIds = new Set(["nutrition-form", "training-form", "blueprint-form", "progress-form"]);
-  const PRO_TELEGRAM_URL = "https://t.me/YourCoachProBot";
+  const PRO_TELEGRAM_URL = "https://t.me/bielashov";
   let activationRequestPending = false;
   let verifiedPaidToken = false;
   let localAdminPreview = false;
@@ -50,7 +50,7 @@
   function getLanguage() {
     return window.VitalRiseI18n && typeof window.VitalRiseI18n.getLanguage === "function"
       ? window.VitalRiseI18n.getLanguage()
-      : "uk";
+      : (document.documentElement.lang || "uk");
   }
 
   function phrase(key) {
@@ -302,11 +302,12 @@
     }
   }
 
-  async function postJson(url, payload) {
+  async function postJson(url, payload, signal) {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload || {})
+      body: JSON.stringify(payload || {}),
+      signal: signal
     });
     const text = await response.text();
     let data = {};
@@ -389,12 +390,20 @@
   }
 
   async function submitNewsletterEmail(email) {
-    return postJson("/api/newsletter", {
-      email: email,
-      language: getLanguage(),
-      source: "pricing",
-      page: window.location.pathname || "index.html"
-    });
+    const controller = new AbortController();
+    const timeout = window.setTimeout(function () { controller.abort(); }, 12000);
+    try {
+      const result = await postJson("/api/newsletter", {
+        email: email,
+        language: getLanguage(),
+        source: "pricing",
+        page: window.location.pathname || "/",
+        consent: true,
+        consentVersion: "2026-09-06"
+      }, controller.signal);
+      if (!result || !result.ok || !result.stored) throw new Error("Subscription not saved");
+      return result;
+    } finally { window.clearTimeout(timeout); }
   }
 
   async function flushPendingNewsletter() {
@@ -730,6 +739,7 @@
       const button = form.querySelector('button[type="submit"]');
       const status = document.getElementById("newsletter-status");
       if (!input) return;
+      if (button && button.disabled) return;
 
       const email = (input.value || "").trim().toLowerCase();
       
@@ -738,9 +748,6 @@
         return;
       }
       
-      // Store email for future use
-      setStored(EMAIL_KEY, email);
-
       let message = phrase("newsletterSuccess");
       const originalButtonText = button ? button.textContent : "";
       if (button) {
@@ -756,8 +763,10 @@
           window.VitalRiseAnalytics.trackNewsletterSignup();
         }
       } catch (error) {
-        rememberPendingNewsletter(email);
-        message = phrase("newsletterQueued");
+        message = getLanguage() === "en" ? "Not saved. Please try again." : getLanguage() === "ru" ? "Не сохранено. Попробуйте ещё раз." : "Не збережено. Спробуй ще раз.";
+        if (status) status.textContent = message;
+        if (button) { button.disabled = false; button.textContent = originalButtonText; }
+        return;
       }
 
       input.value = "";
@@ -894,7 +903,7 @@
     bindPricingButtons();
     bindNewsletterForm();
     bindProgramActivation();
-    flushPendingNewsletter().catch(function () {});
+    // Old unconfirmed browser queues are not submitted without a fresh consent action.
     claimPendingPayment().catch(function () {});
     applyAccessState();
     verifyStoredToken();

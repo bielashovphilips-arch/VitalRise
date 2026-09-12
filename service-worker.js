@@ -1,5 +1,5 @@
-const CACHE_NAME = "vitalrise-logo-owner-20260911-2";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-logo-owner-20260911-2";
+const CACHE_NAME = "vitalrise-growth-20260912-1";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-growth-20260912-1";
 const APP_SHELL = [
   "./assets/css/brand-icon.css?v=metallic-r-20260911",
   "./assets/images/logo-icon.svg?v=metallic-r-20260911",
@@ -25,7 +25,7 @@ const APP_SHELL = [
   "./assets/images/exercises/vitalrise-bent-over-row.png",
   "./assets/images/exercises/vitalrise-cable-pullover.png",
   "./assets/js/modules/system.js",
-  "./assets/js/modules/i18n.js?v=modules-i18n-16",
+  "./assets/js/modules/i18n.js?v=growth-20260912-1",
   "./assets/js/modules/vlog-i18n.js?v=vlog-translation-13",
   "./assets/js/modules/legal-i18n.js?v=legal-i18n-7",
   "./assets/js/modules/mobile-menu.js",
@@ -34,8 +34,8 @@ const APP_SHELL = [
   "./assets/js/modules/data-portability.js",
   "./assets/js/modules/calculator-shell.js?v=single-module-1",
   "./assets/js/modules/pricing-flip.js?v=mobile-flip-1",
-  "./assets/js/modules/free-calculator.js?v=free-engagement-1",
-  "./assets/js/modules/marketing.js?v=meta-pixel-1",
+  "./assets/js/modules/free-calculator.js?v=growth-20260912-1",
+  "./assets/js/modules/marketing.js?v=growth-20260912-1",
   "./assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1",
   "./assets/js/modules/hero-parallax.js?v=hero-parallax-5",
   "./assets/js/modules/reveal.js",
@@ -59,7 +59,7 @@ const APP_SHELL = [
   "./assets/js/modules/blueprint.js",
   "./assets/js/modules/supplements.js?v=testosterone-ergogenic-2",
   "./assets/js/modules/coach.js?v=coach-contact-1",
-  "./assets/js/modules/access.js?v=owner-20260911-2",
+  "./assets/js/modules/access.js?v=growth-20260912-1",
   "./assets/js/script.js?v=training-cycle-safety-1",
   "./manifest.webmanifest"
 ];
