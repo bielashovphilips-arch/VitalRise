@@ -1,7 +1,8 @@
-const CACHE_NAME = "vitalrise-studio-20260912-2";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-studio-20260912-2";
+const CACHE_NAME = "vitalrise-studio-20260912-3";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-studio-20260912-3";
 const APP_SHELL = [
-  "./assets/css/calculator-studio.css?v=studio-20260912-2",
+  "./assets/css/calculator-studio.css?v=studio-20260912-3",
+  "./assets/images/training-gym-vitalrise.webp",
   "./assets/js/modules/calculator-studio.js?v=studio-20260912-1",
   "./assets/css/brand-icon.css?v=metallic-r-20260911",
   "./assets/images/logo-icon.svg?v=metallic-r-20260911",

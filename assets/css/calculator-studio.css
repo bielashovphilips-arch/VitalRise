@@ -26,7 +26,8 @@ body.calculator-studio {
 /* Preserve the original route photographs beneath a readable graphite scrim. */
 .calculator-studio .module-page-nutrition { --studio-photo: url("../images/nutrition-food-bg.webp"); }
 .calculator-studio .module-page-labs { --studio-photo: url("../images/labs-bloodwork-bg.webp"); }
-.calculator-studio :is(.module-page-nutrition,.module-page-labs) {
+.calculator-studio .module-page-training { --studio-photo: url("../images/training-gym-vitalrise.webp"); }
+.calculator-studio :is(.module-page-nutrition,.module-page-labs,.module-page-training) {
   background-color: var(--studio-bg);
   background-image: linear-gradient(90deg,#0d1115db,#0d1115d1),var(--studio-photo);
   background-position: center top;
@@ -34,14 +35,15 @@ body.calculator-studio {
   background-repeat: no-repeat;
   background-attachment: scroll,fixed;
 }
-.calculator-studio :is(.module-page-nutrition,.module-page-labs)::before,
-.calculator-studio :is(.module-page-nutrition,.module-page-labs)::after { content: none; }
+.calculator-studio :is(.module-page-nutrition,.module-page-labs,.module-page-training)::before,
+.calculator-studio :is(.module-page-nutrition,.module-page-labs,.module-page-training)::after { content: none; }
 .calculator-studio .module-page-nutrition #calculator,
+.calculator-studio .module-page-training #calculator,
 .calculator-studio .module-page-labs #labs { background: transparent; }
 .calculator-studio .module-page-labs #labs::before { content: none; }
 @media(max-width:1023px) {
   /* Avoid mobile fixed-background jumps and an oversized crop on long forms. */
-  .calculator-studio :is(.module-page-nutrition,.module-page-labs) {
+  .calculator-studio :is(.module-page-nutrition,.module-page-labs,.module-page-training) {
     background-image: linear-gradient(180deg,#0d1115d1 0px,#0d1115db 480px,#0d1115 760px),var(--studio-photo);
     background-size: 100% 100%,auto 760px;
     background-attachment: scroll;

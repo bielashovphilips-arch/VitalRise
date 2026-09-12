@@ -202,7 +202,7 @@ The dock hides while the keyboard shrinks the visual viewport during text input 
 
 ## Elevation & Depth
 
-Labs and nutrition retain their original background photographs (`labs-bloodwork-bg.webp` and `nutrition-food-bg.webp`). A graphite scrim with minimum alpha 209/255 protects text contrast; controls keep their opaque materials. The section above the photograph stays transparent. Desktop imagery uses the incumbent fixed attachment. On mobile, a 760px-high photo scrolls naturally and fades into graphite, avoiding fixed-background jumps and excessively enlarged crops on long forms. Training is unchanged. Do not replace or remove these backgrounds in later calculator refinements.
+Labs and nutrition retain their original background photographs (`labs-bloodwork-bg.webp` and `nutrition-food-bg.webp`). Training uses the user-approved generated gym image (`training-gym-vitalrise.webp`), encoded from the approved PNG at its original 1672×941 resolution. A graphite scrim with minimum alpha 209/255 protects text contrast; controls keep their opaque materials. The section above the photograph stays transparent. Desktop imagery uses the incumbent fixed attachment. On mobile, a 760px-high photo scrolls naturally and fades into graphite, avoiding fixed-background jumps and excessively enlarged crops on long forms. Do not replace or remove these backgrounds in later calculator refinements.
 
 Depth comes from graphite tonal layers, gold gradients and restrained illumination. The form workspace itself has no surrounding raised card. Inputs have no box shadow; optional disclosures use a translucent dark gradient and a thin boundary. The sidebar relies on a divider.
 

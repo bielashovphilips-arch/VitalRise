@@ -4,7 +4,7 @@
   "title": "Design System: VitalRise calculator studio",
   "extensions": {
     "photography": {
-      "routes": {"labs": "assets/images/labs-bloodwork-bg.webp", "nutrition": "assets/images/nutrition-food-bg.webp"},
+      "routes": {"labs": "assets/images/labs-bloodwork-bg.webp", "nutrition": "assets/images/nutrition-food-bg.webp", "training": "assets/images/training-gym-vitalrise.webp"},
       "scrim": "Graphite #0d1115 with minimum alpha 209/255; controls remain opaque",
       "desktop": "Fixed original photograph below the transparent calculator section",
       "mobile": "Scroll attachment, 760px image height, fade to graphite by 760px"

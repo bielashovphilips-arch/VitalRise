@@ -42,8 +42,8 @@ try {
     if(metrics.inputs.some(x=>x.h<44 || parseFloat(x.font)<16)) failures.push(kind+'/'+width+': input sizing');
     const border=await page.locator('body').evaluate(el=>getComputedStyle(el).getPropertyValue('--studio-control-line').trim().slice(1));
     for(const surface of ['1c1d1d','222b33','34414b','393c3f']) assert.ok((luminance(border)+.05)/(luminance(surface)+.05)>=3,'Control boundary contrast');
-    if(kind!=='training') {
-      const photo=kind==='lab'?'labs-bloodwork-bg.webp':'nutrition-food-bg.webp';
+    {
+      const photo=kind==='lab'?'labs-bloodwork-bg.webp':kind==='training'?'training-gym-vitalrise.webp':'nutrition-food-bg.webp';
       const background=await page.locator('main').evaluate(el=>getComputedStyle(el).backgroundImage);
       assert.ok(background.includes(photo),'Original route photograph remains the background');
       assert.equal(await page.locator(kind==='lab'?'#labs':'#calculator').evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)','Opaque section must not hide photograph');

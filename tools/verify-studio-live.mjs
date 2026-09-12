@@ -15,8 +15,8 @@ const hash = value => createHash('sha256').update(value).digest('hex');
 const edgeHtml = value => value.toString('utf8')
   .replace(/<!--\/?email_off-->/g,'')
   .replace(/<script>\(function\(\)\{function c\(\)\{var b=a\.contentDocument[\s\S]*?<\/script>/g,'');
-for (const path of ['training.html','nutrition.html','labs.html','assets/css/calculator-studio.css','assets/js/modules/calculator-studio.js','service-worker.js']) {
-  const response = await fetch(origin+'/'+path+'?v=studio-20260912-2');
+for (const path of ['training.html','nutrition.html','labs.html','assets/css/calculator-studio.css','assets/js/modules/calculator-studio.js','service-worker.js','assets/images/training-gym-vitalrise.webp']) {
+  const response = await fetch(origin+'/'+path+'?v=studio-20260912-3');
   assert.equal(response.status,200,path);
   const actual=Buffer.from(await response.arrayBuffer()), expected=execFileSync('git',['show','HEAD:'+path]);
   assert.equal(hash(path.endsWith('.html')?edgeHtml(actual):actual),hash(path.endsWith('.html')?edgeHtml(expected):expected),path+' deployed bytes');
@@ -66,10 +66,10 @@ try {
   const cached=await cachePage.evaluate(async()=>{
     // Await the actual activation, not merely the cache created during install.
     await Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Service worker activation timed out')),55000))]);
-    const cache=await caches.open('vitalrise-studio-20260912-2');
-    return Boolean(await cache.match(new URL('/assets/css/calculator-studio.css?v=studio-20260912-2',location.origin))) && Boolean(await cache.match(new URL('/assets/js/modules/calculator-studio.js?v=studio-20260912-1',location.origin)));
+    const cache=await caches.open('vitalrise-studio-20260912-3');
+    return Boolean(await cache.match(new URL('/assets/css/calculator-studio.css?v=studio-20260912-3',location.origin))) && Boolean(await cache.match(new URL('/assets/js/modules/calculator-studio.js?v=studio-20260912-1',location.origin))) && Boolean(await cache.match(new URL('/assets/images/training-gym-vitalrise.webp',location.origin)));
   });
   assert.equal(cached,true);
-  console.log(JSON.stringify({verifiedAssets:6,serviceWorkerActive:true,studioAssetsCached:true}));
+  console.log(JSON.stringify({verifiedAssets:7,serviceWorkerActive:true,studioAssetsCached:true}));
   await cacheContext.close();
 } finally {await browser.close();}
