@@ -571,7 +571,11 @@
     }
 
     if (glucose !== null) {
-      if (glucose >= 7) {
+      if (glucose < 3.9) {
+        addLabFinding(findings, "attention", "Глюкоза", glucose + " ммоль/л", "Глюкоза нижче типового орієнтира", "Оцінка залежить від симптомів, ліків та умов забору.", "При слабкості, пітливості або сплутаності свідомості потрібна невідкладна оцінка; не чекай планової перездачі.");
+      } else if (fasting !== "fasting") {
+        addLabFinding(findings, glucose >= 11.1 ? "critical" : "info", "Глюкоза", glucose + " ммоль/л", "Потрібен контекст умов забору", "Пороги глюкози натще не застосовують до аналізу після їжі або невідомих умов.", glucose >= 11.1 ? "Підвищення потребує медичної оцінки; за вираженої спраги, блювання або різкого погіршення звернися невідкладно." : "Уточни умови забору; потребу повтору або HbA1c визначить лікар.");
+      } else if (glucose >= 7) {
         addLabFinding(findings, "critical", "Глюкоза", glucose + " ммоль/л", "Висока глюкоза натще", "Для рекомпозиції це важливий метаболічний сигнал, який не варто ігнорувати.", "Потрібна медична оцінка і, ймовірно, повторне підтвердження.");
       } else if (glucose >= 5.6) {
         addLabFinding(findings, "attention", "Глюкоза", glucose + " ммоль/л", "Глюкоза натще потребує уваги", "Може впливати на апетит, енергію і роботу з відсотком жиру.", "Звірити з HbA1c, інсуліном, сном, кроками і харчуванням.");
@@ -586,8 +590,8 @@
       }
     }
 
-    if (insulin !== null && insulin > 15) {
-      addLabFinding(findings, "attention", "Інсулін", insulin + " мкОд/мл", "Інсулін натще високий за спортивним орієнтиром", "Може пояснювати складність контролю апетиту, енергії та відсотка жиру.", "Оцінювати разом із глюкозою, HbA1c, талією, кроками, сном і лікарем.");
+    if (insulin !== null) {
+      addLabFinding(findings, "info", "Інсулін", insulin + " мкОд/мл", "Оцінюється у клінічному контексті", "Універсального спортивного порога інсуліну немає. Один результат не встановлює інсулінорезистентність.", "Звір референси методу, умови натще, глюкозу та HbA1c з лікарем.");
     }
 
     if (ldl !== null && ldl > 3.4) {
@@ -823,8 +827,8 @@
     const attentionCount = findings.filter(function (item) { return item.severity === "attention"; }).length;
 
     let status = "green";
-    let title = "Оптимально за введеними маркерами";
-    let summary = "У заповнених показниках немає явних спортивних обмежувачів. Продовжуй дивитися на тренувальний прогрес, сон, раціон і динаміку тіла.";
+    let title = "Без явних сигналів за орієнтирами програми";
+    let summary = "Це не підтверджує відсутності захворювань. Звір результати з референсами лабораторії, симптомами й попередніми аналізами.";
 
     if (!enteredValues.length) {
       status = "neutral";
@@ -838,10 +842,15 @@
       status = "yellow";
       title = "Є фактори, які можуть гальмувати прогрес";
       summary = "Це не діагноз, але такі маркери можуть впливати на енергію, відновлення, апетит, силу або гормональний фон.";
+    } else if (findings.some(function (item) { return item.severity === "info"; })) {
+      status = "neutral";
+      title = "Потрібен додатковий контекст";
+      summary = "Частину показників неможливо надійно оцінити без умов забору, референсів лабораторії та клінічної інформації.";
     }
 
     return {
       status: status,
+      sex: sex,
       title: title,
       summary: summary,
       reviewDate: reviewDate,
@@ -967,6 +976,7 @@
       '<div class="lab-findings-grid">' + findingsMarkup + '</div>' +
       '</section>' +
       lifestyleMarkup +
+      (system.labEvidence ? system.labEvidence.renderReview(review) + '<details class="lab-report-section"><summary>' + translateLabText('Підготовка до здачі крові') + '</summary>' + system.labEvidence.renderPreparation() + '</details>' : '') +
       '<div class="tip-item">' + getLabPreparationNote(review.fasting) + '</div>' +
       '<p class="result-note">Орієнтири в цьому блоці не замінюють референсні межі лабораторії. На результати впливають підготовка, час забору, важкі тренування напередодні, ліки, цикл, вагітність, лактація, сон і гострий стрес.</p>';
 
@@ -1006,6 +1016,10 @@
   }
 
   setReviewGateState(null);
+
+  if (labForm && system.labEvidence) {
+    labForm.insertAdjacentHTML("beforebegin", '<details class="lab-report-section lab-preparation-before"><summary>' + translateLabText('Підготовка до здачі крові') + '</summary>' + system.labEvidence.renderPreparation() + '</details>');
+  }
 
 
   system.labProtocols = {

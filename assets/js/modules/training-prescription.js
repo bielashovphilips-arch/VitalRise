@@ -80,7 +80,7 @@
         if (prep) {
           ex.reps = "12-20";
           ex.weightText = "Підбери вагу із запасом 3-4 повторення";
-        } else if (group === "basic" && allowPreparation) {
+        } else if (group === "basic" && allowPreparation && ex.progressionType !== "outdoor") {
           // A fresh 1RM cannot prescribe a fixed load after a new preparation block.
           ex.weightText = "Підбери вагу сьогодні: RIR 2-3";
         }

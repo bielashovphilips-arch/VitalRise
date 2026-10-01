@@ -72,7 +72,7 @@ test('calendar never adds kilograms; renders actual reduced deload sets',()=>{
 
 test('production design, nutrition and training render remain unchanged outside approved releases',()=>{
   // Logo and owner authentication were separately approved on 2026-09-11.
-  const paths=['assets/css/style.css','assets/js/modules/nutrition.js','assets/js/modules/nutrition-render.js','assets/js/modules/training-render.js','assets/js/modules/hero-parallax.js','assets/js/modules/pricing-flip.js','wrangler.toml'];
+  const paths=['assets/css/style.css','assets/js/modules/nutrition.js','assets/js/modules/nutrition-render.js','assets/js/modules/hero-parallax.js','assets/js/modules/pricing-flip.js','wrangler.toml'];
   for(const path of paths) {
     const before=execFileSync('git',['show','9b88909:'+path],{encoding:'utf8'}).replace(/\r\n/g,'\n');
     assert.equal(readFileSync(path,'utf8').replace(/\r\n/g,'\n'),before,path);

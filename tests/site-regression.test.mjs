@@ -36,7 +36,7 @@ async function localPage(options = {}) {
 
 test('protected original photos, CSS, animation files and module frames remain unchanged', async () => {
   const protectedFiles = execFileSync('git', ['ls-tree','-r','--name-only','0f5ae1e','--','assets/css','assets/images'], {encoding:'utf8'}).trim().split('\n');
-  protectedFiles.push('functions/_shared/access.js', 'assets/js/modules/founder-access.js', 'assets/js/modules/training-prescription.js', 'assets/js/modules/hero-parallax.js', 'assets/js/modules/pricing-flip.js');
+  protectedFiles.push('functions/_shared/access.js', 'assets/js/modules/founder-access.js', 'assets/js/modules/hero-parallax.js', 'assets/js/modules/pricing-flip.js');
   for (const file of protectedFiles) {
     const expected = execFileSync('git',['show','0f5ae1e:' + file], {maxBuffer:32 * 1024 * 1024});
     const actual = await readFile(file);

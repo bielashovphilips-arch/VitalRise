@@ -88,6 +88,9 @@ function Test-LocalReference([string]$sourceFile, [string]$rawRef) {
   $pathPart = $parts[0]
   $anchorPart = if ($parts.Count -gt 1) { $parts[1] } else { "" }
   $targetPath = if ($pathPart) { Join-Path $root $pathPart } else { $sourceFile }
+  if (Test-Path -LiteralPath $targetPath -PathType Container) {
+    $targetPath = Join-Path $targetPath 'index.html'
+  }
 
   if ($pathPart -and -not (Test-Path -LiteralPath $targetPath)) {
     Add-Failure "Missing local reference: $rawRef"
