@@ -206,6 +206,13 @@
     };
   }
 
+  function exerciseNeedsPhoto(exercise) {
+    if (!exercise) return true;
+    if (typeof exercise === "object" && exercise.image) return false;
+    const name = typeof exercise === "string" ? exercise : exercise.name;
+    return !findExerciseImageName(name || "");
+  }
+
   function renderExerciseAtlas(filter, focusName) {
     if (!exerciseAtlasGrid || !exerciseAtlasFilters) return;
 

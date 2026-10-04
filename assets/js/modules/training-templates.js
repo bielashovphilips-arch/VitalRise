@@ -32,14 +32,7 @@
         continue;
       }
 
-      expanded.push({
-        title: "День " + (index + 1) + " — активне відновлення",
-        badge: "відновлення",
-        basic: [],
-        accessory: [],
-        restDay: true,
-        cardio: ["20-40 хв спокійної ходьби, мобільність і сон. Не перетворюй цей день на ще одне важке тренування."]
-      });
+      if (source.length) expanded.push(relabelTrainingDay(source[index % source.length], index));
     }
     return expanded;
   }
@@ -71,46 +64,12 @@
       : { name: name, sets: sets, reps: reps, weightText: weightText, percentText: progressionPlan[0], progressionType: "outdoor", progressionPlan: progressionPlan };
   }
 
-  function reduceShortSessionLoad(value, factor) {
-    if (value === null || value === undefined || value === "") return value;
-
-    return String(value).replace(/(\d+(?:\.\d+)?)\s*кг/g, function (match, weightText) {
-      const weight = Math.max(0, Math.round((Number(weightText) * factor) / 2.5) * 2.5);
-      return weight + " кг";
+  function applyTrainingDurationConstraints(basePlan, duration, place, context) {
+    const policy = system.trainingPrescription;
+    if (!policy) return deepClone(basePlan);
+    return basePlan.map(function (day) {
+      return policy.prepareDay(day, Object.assign({ duration: duration, place: place, goal: "support", level: "intermediate", days: basePlan.length }, context || {}));
     });
-  }
-
-  function applyTrainingDurationConstraints(basePlan, duration, place) {
-    const minutes = Number(duration);
-    if (place !== "gym" || !Number.isFinite(minutes) || minutes > 60) return basePlan;
-
-    const plan = deepClone(basePlan);
-    const loadFactor = minutes <= 30 ? 0.8 : 0.85;
-
-    plan.forEach(function (day) {
-      if (day.restDay) return;
-
-      ["basic", "accessory"].forEach(function (group) {
-        (day[group] || []).forEach(function (exercise) {
-          exercise.shortSession = true;
-          exercise.shortLoadFactor = loadFactor;
-          exercise.weightText = reduceShortSessionLoad(exercise.weightText, loadFactor);
-          exercise.restText = group === "basic"
-            ? (minutes <= 30 ? "45-60 сек" : "60-75 сек")
-            : (minutes <= 30 ? "30-45 сек" : "45-60 сек");
-          exercise.percentText = "Коротке тренування: вага тимчасово нижча на " + Math.round((1 - loadFactor) * 100) + "%, паузи коротші. " + (exercise.percentText || "");
-        });
-      });
-
-      day.cardio = day.cardio || [];
-      day.cardio.push(
-        minutes <= 30
-          ? "Коротка залова сесія: усі вправи залишені. Тимчасово знизь вагу приблизно на 20% і скороти паузи; повертай навантаження після стабільного RIR."
-          : "Коротка залова сесія: усі вправи залишені. Тимчасово знизь вагу приблизно на 15% і скороти паузи; після адаптації поступово повертай навантаження."
-      );
-    });
-
-    return plan;
   }
 
   function reduceSetText(value, factor) {
@@ -265,6 +224,29 @@
     ];
 
     return expandPlanToDays(templates, days);
+  }
+
+  function getGymBeginnerCircuitPlan(days) {
+    return getGymBeginnerBasePlan(days).map(function (day) {
+      if (day.restDay) return day;
+
+      const exercises = (day.basic || []).concat(day.accessory || []).map(function (exercise) {
+        const copy = deepClone(exercise);
+        copy.sets = "3 кола";
+        copy.weightText = "дуже легка вага / контроль техніки";
+        copy.percentText = "Виконуй вправи послідовно по колу. Між колами 60-90 сек. Залишай 3-4 повтори в запасі.";
+        copy.progressionType = "gymBeginnerCircuit";
+        return copy;
+      });
+
+      return {
+        title: day.title.replace("все тіло", "кругове Full Body"),
+        badge: "1-й тиждень — адаптація",
+        basic: exercises,
+        accessory: [],
+        cardio: ["Зроби 3 спокійні кола. Мета першого тижня — вивчити рухи, а не втомитися до відмови."]
+      };
+    });
   }
 
   function applyGymBeginnerStrengthWeightCues(basePlan) {
@@ -1114,90 +1096,9 @@
     };
   }
 
-  function getPrisonWorkoutPlan(level, days, metrics) {
-    const data = metrics || {};
-    const effectiveLevel = getOutdoorEffectiveLevel(level, data);
-    const isBeginner = effectiveLevel === "beginner";
-    const isAdvanced = effectiveLevel === "advanced";
-    const ladderTop = isBeginner ? "5 сходинок" : isAdvanced ? "10-12 сходинок" : "7-9 сходинок";
-    const rounds = isBeginner ? "3-4 кола" : isAdvanced ? "6-8 кіл" : "4-6 кіл";
-    const rest = isBeginner ? "90-120 сек відпочинку" : isAdvanced ? "45-75 сек відпочинку" : "60-90 сек відпочинку";
-    const prisonPlan = [
-      {
-        title: "День 1 - Prison драбинка: верх тіла",
-        badge: "вулична сила / драбинки",
-        basic: [
-          buildProgramExercise("Підтягування або австралійські підтягування", ladderTop, "1-2-3... по сходинках", "власна вага / резина", "Зупинись за 1-2 сходинки до зриву техніки.", "prison", [
-            "Вхід: знайди верхню чисту сходинку без відмови.",
-            "Додай 1 сходинку або 1 повтор у перших сходинках.",
-            "Повтори верхню сходинку двічі тільки якщо техніка чиста.",
-            "Контроль: залиш 1-2 повтори в запасі, не ламай плечі."
-          ]),
-          buildProgramExercise("Віджимання", ladderTop, "2-4-6... по сходинках", "власна вага", "Корпус рівний, груди нижче ліктя тільки без болю.", "prison", [
-            "Вхід: чисті повтори без провалу таза.",
-            "Додай 1 сходинку або підніми ноги на опору.",
-            "Скороти відпочинок на 10-15 сек, якщо техніка стабільна.",
-            "Контроль: без постійної відмови."
-          ])
-        ],
-        accessory: [
-          buildProgramExercise("Присідання з власною вагою", rounds, "15-25", "власна вага", rest, "prison", [
-            "Тримай рівний темп і повну стопу.",
-            "Додай 5 повторів сумарно.",
-            "Додай 1 коло, якщо коліна стабільні.",
-            "Контроль: без поспіху і втрати глибини."
-          ]),
-          buildProgramExercise("Планка", rounds, "30-60 сек", "власна вага", "Корпус жорсткий, дихання рівне.", "prison")
-        ]
-      },
-      {
-        title: "День 2 - Prison ноги + корпус",
-        badge: "власна вага і контроль",
-        basic: [
-          buildProgramExercise("Випади назад", rounds, "10-16 на ногу", "власна вага / рюкзак", "Працюй без болю в коліні, не поспішай.", "prison"),
-          buildProgramExercise("Берпі без стрибка або класичні берпі", isBeginner ? "4 раунди" : "6-8 раундів", "6-12", "власна вага", "Ціль - рівний темп, а не хаос.", "prison", [
-            "Почни з нижньої межі повторів.",
-            "Додай 1-2 повтори за раунд.",
-            "Додай 1 раунд або скороти відпочинок.",
-            "Контроль: прибери стрибок, якщо падає техніка."
-          ])
-        ],
-        accessory: [
-          buildProgramExercise("Підйом ніг лежачи або у висі", rounds, "10-20", "власна вага", "Без розгойдування, поперек під контролем.", "prison"),
-          buildProgramExercise("Стілець біля стіни", "3-5 раундів", "30-60 сек", "власна вага", "Стегна горять, але коліна без гострого болю.", "prison")
-        ]
-      },
-      {
-        title: "День 3 - Prison кола на все тіло",
-        badge: "щільність",
-        basic: [
-          buildProgramExercise("Коло: підтягування / віджимання / присідання", rounds, "5 / 10 / 20", "власна вага", "Виконай кола рівно, залишаючи 1-2 повтори в запасі.", "prison", [
-            "Вхід: 3-4 рівні кола без провалу техніки.",
-            "Додай 1 коло або 2 повтори у присіданнях.",
-            "Скороти відпочинок на 10-15 сек.",
-            "Контроль: якість руху важливіша за час."
-          ]),
-          buildProgramExercise("Фінішер: віджимання щохвилини", "6-10 хв", "5-12 щохвилини", "власна вага", "Обери повтори, які не зламають техніку до кінця.", "prison")
-        ],
-        accessory: [
-          buildProgramExercise("Бічна планка", "3-4 раунди", "20-45 сек на бік", "власна вага", "Таз не провалюється.", "prison"),
-          buildProgramExercise("Легка ходьба після тренування", "1 блок", "20-40 хв", "без ваги", "Відновлення без додаткового стресу.", "prison")
-        ]
-      },
-      {
-        title: "День 4 - Prison контрольний день",
-        badge: "виклик без его",
-        basic: [
-          buildProgramExercise("Контроль: максимум чистих кіл за 20 хв", "20 хв", "3 підтягування / 6 віджимань / 12 присідань", "власна вага", "Зупиняй сет до зламу техніки, записуй кількість кіл.", "prison"),
-          buildProgramExercise("Корпус: hollow body або планка", "4-6 раундів", "20-45 сек", "власна вага", "Тримай ребра вниз і поперек стабільним.", "prison")
-        ],
-        accessory: [
-          buildProgramExercise("Мобільність плечей і стегон", "1 блок", "8-12 хв", "без ваги", "Це частина програми, а не пропуск тренування.", "prison")
-        ]
-      }
-    ];
-
-    return expandPlanToDays(prisonPlan, days);
+  // Keep the legacy mode key compatible with saved form selections.
+  function getPrisonWorkoutPlan(level, days, metrics, goal) {
+    return getOutdoorBasePlan(goal || "strength", level, days, metrics);
   }
 
   function getTabataCircuitPlan(goal, level, days, duration) {
@@ -1661,6 +1562,7 @@
     applyTrainingConstraints: applyTrainingConstraints,
     applyTrainingDurationConstraints: applyTrainingDurationConstraints,
     getGymBeginnerBasePlan: getGymBeginnerBasePlan,
+    getGymBeginnerCircuitPlan: getGymBeginnerCircuitPlan,
     applyGymBeginnerStrengthWeightCues: applyGymBeginnerStrengthWeightCues,
     getGymIntermediateAdvancedBasePlan: getGymIntermediateAdvancedBasePlan,
     getGymPushPullLegsPlan: getGymPushPullLegsPlan,

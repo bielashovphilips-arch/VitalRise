@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-labelledby="title desc">
+  <title id="title">VitalRise</title>
+  <desc id="desc">Geometric gold and ivory VitalRise V-R monogram with an upward arrow</desc>
+  <rect width="192" height="192" rx="40" fill="#0b0b0f"/>
+
+  <!-- Gold V becomes an upward progression arrow. -->
+  <path fill="#d4af37" d="M29 44h25l35 70 23-44h25l-48 78h-20z"/>
+  <path fill="#d4af37" d="m111 115 19-33 18 10-30 52h-25z"/>
+  <path fill="#d4af37" d="m119 85 30-52 25 43h-17l-19 33z"/>
+
+  <!-- Ivory R is kept open so the mark remains legible at favicon size. -->
+  <path fill="#f3f4f6" d="M91 43h35c22 0 36 12 36 31 0 13-7 23-19 28l22 39h-23l-19-35h-12v35H91zm20 17v29h13c11 0 17-5 17-15s-6-14-17-14z"/>
+</svg>

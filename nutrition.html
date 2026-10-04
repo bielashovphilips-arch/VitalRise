@@ -6,13 +6,15 @@
   <meta name="theme-color" content="#0b0b0f" />
   <meta name="robots" content="index, follow" />
   <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/images/logo-icon.svg?v=logo-v2" />
+  <link rel="icon" href="/assets/images/logo-icon.svg?v=logo-v2" type="image/svg+xml" />
   <title>План харчування для спортсменів — калорії, БЖВ і меню | VitalRise</title>
   <meta name="description" content="Розрахуй калорії, білки, жири, вуглеводи, прийоми їжі та заміни продуктів під набір, сушку або підтримку форми." />
-  <link rel="canonical" href="https://vitalrise.com.ua/nutrition.html" />
+  <link rel="canonical" href="https://vitalrise.com.ua/nutrition" />
   <meta property="og:locale" content="uk_UA" />
   <meta property="og:site_name" content="VitalRise" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://vitalrise.com.ua/nutrition.html" />
+  <meta property="og:url" content="https://vitalrise.com.ua/nutrition" />
   <meta property="og:title" content="План харчування для спортсменів — калорії, БЖВ і меню | VitalRise" />
   <meta property="og:description" content="Розрахуй калорії, білки, жири, вуглеводи, прийоми їжі та заміни продуктів під набір, сушку або підтримку форми." />
   <meta property="og:image" content="https://vitalrise.com.ua/assets/images/athlete-optimized.jpg" />
@@ -25,13 +27,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=footer-signature-1" />
+  <link rel="stylesheet" href="assets/css/style.css?v=mobile-calculator-title-4" />
 </head>
 <body>
   <div class="site-shell">
     <header class="site-header">
       <div class="container header-inner">
-        <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+        <a href="/" class="brand-mark" aria-label="VitalRise головна">
           <span>VR</span>
           <strong>VitalRise</strong>
         </a>
@@ -46,7 +48,7 @@
           <a href="training.html" data-i18n="nav.training">Тренування</a>
           <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
           <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
-          <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
+          <a href="/#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
           <a href="https://t.me/bielashov" class="nav-accent" target="_blank" rel="noopener noreferrer" data-i18n="nav.writeCoach">Написати тренеру</a>
         </nav>
 
@@ -227,7 +229,7 @@
   </select>
 </div>
 
-<div class="form-group" id="progress-week-group" style="display: none;">
+<div class="form-group initially-hidden" id="progress-week-group">
   <label for="progress-week">Тиждень прогресії</label>
   <select id="progress-week" name="progress-week">
     <option value="1" selected>1 тиждень</option>
@@ -247,6 +249,17 @@
   </div>
 
   <div class="form-group">
+    <label for="weight-mode-toggle">Як рахувати вагу продуктів</label>
+    <label class="nutrition-weight-toggle">
+      <input type="checkbox" id="weight-mode-toggle" aria-describedby="weight-mode-hint" />
+      <span id="weight-mode-label">Готовий продукт</span>
+    </label>
+    <label for="weight-mode" hidden>Режим ваги</label>
+    <input type="hidden" id="weight-mode" name="weight-mode" value="ready" />
+    <small class="field-hint" id="weight-mode-hint">За замовчуванням рахуємо готову їжу. Перемкни, якщо зважуєш крупи або макарони сухими.</small>
+  </div>
+
+  <div class="form-group">
     <label for="meals-count">Прийомів їжі</label>
     <select id="meals-count" name="meals-count">
       <option value="3">3 прийоми</option>
@@ -259,9 +272,11 @@
   <div class="form-group">
     <label for="diet-style">Стиль харчування</label>
     <select id="diet-style" name="diet-style">
-      <option value="standard" selected>Звичайний</option>
-      <option value="simple">Простий</option>
+      <option value="standard" selected>Збалансований</option>
       <option value="sport">Спортивний</option>
+      <option value="carnivore">Карнівор</option>
+      <option value="keto">Кето</option>
+      <option value="vegan">Веганський</option>
     </select>
   </div>
 
@@ -334,9 +349,9 @@
                   <label for="training-program-mode">Тип програми</label>
                   <select id="training-program-mode" name="training-program-mode">
                     <option value="neutral" selected>Універсальна</option>
-                    <option value="prison_workout">Вулична сила / драбинки</option>
+                    <option value="prison_workout">Тренування на вулиці</option>
                     <option value="tabata_circuit">Інтервали 1:1 / кругове</option>
-                    <option value="ppl_3_1">PPL 3+1: штовхай / тягни / ноги</option>
+                    <option value="ppl_3_1">PPL: штовхай / тягни / ноги</option>
                     <option value="female_balanced">Жіноча збалансована</option>
                     <option value="female_glutes">Жіноча: сідниці та ноги</option>
                     <option value="female_strength">Жіноча силова</option>
@@ -460,7 +475,7 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <a href="index.html" class="brand-mark" aria-label="VitalRise головна" data-i18n-aria-label="footerBrandAria">
+          <a href="/" class="brand-mark" aria-label="VitalRise головна" data-i18n-aria-label="footerBrandAria">
             <span>VR</span>
             <strong>VitalRise</strong>
           </a>
@@ -479,7 +494,7 @@
         </div>
 
         <div class="footer-links" aria-label="Швидкі посилання" data-i18n-aria-label="footerLinksAria">
-          <a href="index.html#features" data-i18n="system">Система</a>
+          <a href="/#features" data-i18n="system">Система</a>
           <a href="profile.html" data-i18n="nav.profile">Профіль</a>
           <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
           <a href="nutrition.html" data-i18n="nav.nutrition">Харчування</a>
@@ -490,11 +505,11 @@
           <a href="progress.html">Coach</a>
           <a href="progress.html" data-i18n="nav.progress">Прогрес</a>
           <a href="progress.html#knowledge" data-i18n="nav.knowledge">База знань</a>
-          <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
+          <a href="/#pricing" data-i18n="nav.pricing">Тарифи</a>
           <a href="blueprint.html">Blueprint</a>
-          <a href="privacy.html" data-i18n="footerPrivacy">Політика конфіденційності</a>
-          <a href="terms.html" data-i18n="footerTerms">Умови використання</a>
-          <a href="disclaimer.html" data-i18n="footerDisclaimer">Медичний / АС/ААС дисклеймер</a>
+          <a href="/privacy" data-i18n="footerPrivacy">Політика конфіденційності</a>
+          <a href="/terms" data-i18n="footerTerms">Умови використання</a>
+          <a href="/disclaimer" data-i18n="footerDisclaimer">Медичний / АС/ААС дисклеймер</a>
         </div>
 
         <div class="footer-note">
@@ -625,22 +640,25 @@
     </div>
   </div>
   <script src="assets/js/modules/system.js"></script>
-  <script src="assets/js/modules/i18n.js?v=modules-i18n-16"></script>
+  <script src="assets/js/modules/i18n.js?v=nutrition-workspace-20261004-2"></script>
   <script src="assets/js/modules/mobile-menu.js"></script>
   <script src="assets/js/modules/storage.js"></script>
-  <script src="assets/js/modules/print.js?v=print-clean-1"></script>
+  <script src="assets/js/modules/print.js?v=nutrition-workspace-20261004-2"></script>
   <script src="assets/js/modules/data-portability.js"></script>
-  <script src="assets/js/modules/calculator-shell.js?v=single-module-1"></script>
+  <script src="assets/js/modules/calculator-shell.js?v=single-module-2"></script>
   <script src="assets/js/modules/reveal.js"></script>
   <script src="assets/js/modules/dashboard.js"></script>
   <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
   <script src="assets/js/modules/free-calculator.js?v=free-engagement-1"></script>
   <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
   <script src="assets/js/modules/hero-parallax.js?v=hero-parallax-5"></script>
-  <script src="assets/js/modules/nutrition-custom.js"></script>
-  <script src="assets/js/modules/nutrition.js?v=exact-bju-3"></script>
-  <script src="assets/js/modules/nutrition-render.js?v=nutrition-i18n-1"></script>
+  <script src="assets/js/modules/nutrition-custom.js?v=nutrition-workspace-20261004-2"></script>
+  <script src="assets/js/modules/nutrition-catalog.js?v=20261004-1"></script>
+  <script src="assets/js/modules/nutrition.js?v=nutrition-workspace-20261004-2"></script>
+  <script src="assets/js/modules/nutrition-render.js?v=nutrition-workspace-20261004-2"></script>
+  <script src="assets/js/modules/nutrition-workspace.js?v=20261004-2"></script>
   <script src="assets/js/modules/training.js"></script>
+  <script src="assets/js/modules/training-prescription.js?v=load-policy-1"></script>
   <script src="assets/js/modules/training-templates.js?v=gym-dips-1"></script>
   <script src="assets/js/modules/training-gym-dips-patch.js?v=gym-dips-1"></script>
   <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
@@ -648,15 +666,17 @@
   <script src="assets/js/modules/training-render.js?v=training-copy-fix-1"></script>
   <script src="assets/js/modules/training-builder.js?v=paid-gate-1"></script>
   <script src="assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1"></script>
-  <script src="assets/js/modules/exercise-atlas.js?v=atlas-clean-1"></script>
+  <script src="assets/js/modules/exercise-atlas.js?v=technical-20260907-1"></script>
   <script src="assets/js/modules/labs.js"></script>
   <script src="assets/js/modules/lab-protocols.js?v=expanded-report-1"></script>
   <script src="assets/js/modules/progress-decision.js?v=cycle-water-progress-1"></script>
   <script src="assets/js/modules/blueprint.js"></script>
   <script src="assets/js/modules/supplements.js?v=testosterone-ergogenic-2"></script>
   <script src="assets/js/modules/coach.js?v=coach-contact-1"></script>
-  <script src="assets/js/modules/marketing.js?v=meta-pixel-1"></script>
-  <script src="assets/js/modules/access.js?v=paid-gate-1"></script>
-  <script src="assets/js/script.js?v=paid-gate-1"></script>
+  <script src="assets/js/modules/marketing.js?v=technical-20260907-1"></script>
+  <script src="assets/js/modules/access.js?v=technical-20260907-1"></script>
+  <script src="assets/js/script.js?v=nutrition-workspace-20261004-2"></script>
+<script src="assets/js/modules/training-session.js?v=training-20260930-1"></script>
+<script src="assets/js/modules/training-progress.js?v=training-20260930-1"></script>
 </body>
 </html>

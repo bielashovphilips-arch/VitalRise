@@ -41,6 +41,8 @@ const HOST = process.env.HOST || "127.0.0.1";
 const DATA_DIR = path.join(ROOT, ".vitalrise-access");
 const DB_FILE = path.join(DATA_DIR, "access-db.json");
 const ADMIN_SECRET = process.env.ACCESS_ADMIN_SECRET || "";
+const FOUNDER_ACCESS_SECRET = process.env.FOUNDER_ACCESS_SECRET || "";
+const FOUNDER_EMAIL = String(process.env.FOUNDER_EMAIL || "").trim().toLowerCase();
 const MOCK_PAYMENTS = process.env.ACCESS_MOCK_PAYMENTS === "1";
 const CHECKOUT_URL_TEMPLATE = process.env.CHECKOUT_URL_TEMPLATE || "";
 const NEWSLETTER_WEBHOOK_URL = process.env.NEWSLETTER_WEBHOOK_URL || "";
@@ -128,6 +130,20 @@ function addDays(days, fromDate) {
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
+}
+
+function secretsMatch(expected, provided) {
+  const left = String(expected || "");
+  const right = String(provided || "");
+  let difference = left.length ^ right.length;
+  const length = Math.max(left.length, right.length);
+
+  for (let index = 0; index < length; index += 1) {
+    difference |= (left.charCodeAt(index % Math.max(left.length, 1)) || 0) ^
+      (right.charCodeAt(index % Math.max(right.length, 1)) || 0);
+  }
+
+  return difference === 0 && left.length > 0;
 }
 
 function readJsonBody(request) {
@@ -272,6 +288,7 @@ function getEffectiveExpiresAt(record) {
 }
 
 function isAccessExpired(record) {
+  if (record && (record.permanent === true || record.plan === "admin")) return false;
   const expiresAt = getEffectiveExpiresAt(record);
   return !expiresAt || new Date(expiresAt).getTime() < Date.now();
 }
@@ -513,6 +530,47 @@ async function handleApi(request, response, pathname) {
     writeDb(db);
 
     return sendJson(response, 200, { ok: true, tier: token.plan, accessToken: rawToken, expiresAt: token.expiresAt });
+  }
+
+  if (request.method === "POST" && pathname === "/api/access/founder") {
+    const providedSecret = request.headers["x-founder-secret"] || "";
+    if (!FOUNDER_ACCESS_SECRET || !FOUNDER_EMAIL || !secretsMatch(FOUNDER_ACCESS_SECRET, providedSecret)) {
+      return sendJson(response, 403, { ok: false, error: "Founder authentication failed" });
+    }
+
+    const body = await readJsonBody(request);
+    const email = String(body.email || "").trim().toLowerCase();
+    if (!isValidEmail(email) || email !== FOUNDER_EMAIL) {
+      return sendJson(response, 403, { ok: false, error: "Founder email does not match" });
+    }
+
+    const db = readDb();
+    const rawToken = randomId("founder");
+    db.tokens.push({
+      id: randomId("token"),
+      tokenHash: hash(rawToken),
+      email: FOUNDER_EMAIL,
+      plan: "admin",
+      orderId: "founder:" + FOUNDER_EMAIL,
+      createdAt: nowIso(),
+      permanent: true,
+      startDeadlineAt: null,
+      activatedAt: nowIso(),
+      activeExpiresAt: null,
+      expiresAt: null,
+      revokedAt: null,
+      source: "founder_access"
+    });
+    writeDb(db);
+
+    return sendJson(response, 200, {
+      ok: true,
+      tier: "admin",
+      email: FOUNDER_EMAIL,
+      accessToken: rawToken,
+      permanent: true,
+      expiresAt: null
+    });
   }
 
   if (request.method === "POST" && pathname === "/api/access/verify") {

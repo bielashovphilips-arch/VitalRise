@@ -4,10 +4,18 @@
   "private": true,
   "description": "VitalRise static athlete dashboard and calculators.",
   "scripts": {
+    "preview:growth": "node tools/preview-growth.mjs",
+    "test:growth": "node --test tests/site-regression.test.mjs",
+    "test:training": "node --test tests/training-prescription.test.mjs tests/training-browser.test.mjs",
+    "test:nutrition": "node --test tests/nutrition-workspace.test.mjs tests/nutrition-browser.test.mjs",
     "build:index": "powershell -ExecutionPolicy Bypass -File tools/build-index.ps1",
     "dev": "powershell -ExecutionPolicy Bypass -File tools/dev-server.ps1",
     "dev:access": "node tools/access-server.js",
     "dev:access:mock": "set ACCESS_MOCK_PAYMENTS=1&& node tools/access-server.js",
     "check": "powershell -ExecutionPolicy Bypass -File tools/check-project.ps1"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0",
+    "wrangler": "^4.113.0"
   }
 }

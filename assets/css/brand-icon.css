@@ -1,0 +1,12 @@
+/* Approved logo replacement; retain the existing responsive holder dimensions. */
+.brand-mark .brand-icon {
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.brand-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}

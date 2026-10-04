@@ -35,6 +35,10 @@
       "Після контрольного блоку": { en: "After the control block", ru: "После контрольного блока" },
       "Корекція": { en: "Correction", ru: "Коррекция" },
       "Як змінювати план": { en: "How to change the plan", ru: "Как менять план" },
+      "Прогресія з журналу": { en: "Log-based progression", ru: "Прогрессия по журналу" },
+      "Поточний тиждень": { en: "Current week", ru: "Текущая неделя" },
+      "Поточна тренувальна неділя": { en: "Current training week", ru: "Текущая тренировочная неделя" },
+      "Наступний тиждень відкриється після завершення всіх тренувальних днів.": { en: "The next week unlocks after all training days are completed.", ru: "Следующая неделя откроется после завершения всех тренировочных дней." },
       "Відпочинок": { en: "Rest", ru: "Отдых" },
       "за протоколом вправи": { en: "by exercise protocol", ru: "по протоколу упражнения" },
       "за таймером": { en: "by timer", ru: "по таймеру" },
@@ -62,6 +66,13 @@
       .map(function (exercise) {
         const exerciseName = t(exercise.name);
         const setsText = exercise.setsLabel ? t(exercise.setsLabel) : formatSets(exercise.sets);
+        const adaptationMarkup = exercise.adaptation
+          ? '<div class="exercise-adaptation exercise-adaptation-' + escapeAttr(exercise.adaptation.mode || "hold") + '">' +
+              '<strong>' + t('Прогресія з журналу') + '</strong>' +
+              '<span>' + t(exercise.adaptation.label || '') + '</span>' +
+              '<small>' + t(exercise.adaptation.reason || '') + '</small>' +
+            '</div>'
+          : "";
 
         return (
           '<div class="exercise-item">' +
@@ -71,6 +82,7 @@
             '<div class="exercise-meta">' + t(exercise.weightText) + '</div>' +
             '<div class="exercise-meta exercise-rest">' + t('Відпочинок') + ': ' + t(exercise.restText || '60-90 сек') + '</div>' +
             '<button type="button" class="atlas-inline-btn" data-exercise-name="' + escapeAttr(exercise.name) + '">' + t('Техніка') + '</button>' +
+            adaptationMarkup +
           '</div>' +
           '<div class="exercise-item" style="margin-top: -2px;">' +
             '<div class="exercise-meta muted" style="grid-column: 1 / -1; text-align: left;">' +
@@ -103,9 +115,20 @@
     }).join("");
   }
 
-  function renderWeekDays(days) {
+  function getSessionStartLabel() {
+    const language = window.VitalRiseI18n && typeof window.VitalRiseI18n.getLanguage === "function"
+      ? window.VitalRiseI18n.getLanguage()
+      : "uk";
+    return {
+      uk: "Почати тренування",
+      en: "Start workout",
+      ru: "Начать тренировку"
+    }[language] || "Почати тренування";
+  }
+
+  function renderWeekDays(days, weekIndex) {
     return days
-      .map(function (day) {
+      .map(function (day, dayIndex) {
         const cardioMarkup = day.cardio && day.cardio.length
           ? '<div class="tip-list" style="margin-top: 14px;">' +
               day.cardio.map(function (item) {
@@ -150,6 +173,11 @@
             basicMarkup +
             accessoryMarkup +
             cardioMarkup +
+            '<div class="training-day-actions">' +
+              '<button type="button" class="btn btn-primary training-start-day" data-training-start-week="' + weekIndex + '" data-training-start-day="' + dayIndex + '">' +
+                getSessionStartLabel() +
+              '</button>' +
+            '</div>' +
           '</div>'
         );
       })
@@ -215,16 +243,17 @@
       return '<div class="result-placeholder">Не вдалося сформувати план. Перевір параметри та спробуй ще раз.</div>';
     }
 
-    const weeksMarkup = result.weeks
-      .map(function (week) {
-        return (
-          '<h4 class="result-subtitle">' + t(week.title) + '</h4>' +
-          '<div class="training-days-list">' +
-            renderWeekDays(week.days) +
-          '</div>'
-        );
-      })
-      .join("");
+    const activeWeekIndex = Math.min(result.weeks.length - 1, Math.max(0, Number(result.activeWeekIndex) || 0));
+    const activeWeek = result.weeks[activeWeekIndex];
+    const weeksMarkup =
+      '<div class="training-current-week-note">' +
+        '<strong>' + t('Поточний тиждень') + ': ' + (activeWeekIndex + 1) + ' / ' + result.weeks.length + '</strong>' +
+        '<span>' + t('Наступний тиждень відкриється після завершення всіх тренувальних днів.') + '</span>' +
+      '</div>' +
+      '<h4 class="result-subtitle">' + t(activeWeek.title) + '</h4>' +
+      '<div class="training-days-list">' +
+        renderWeekDays(activeWeek.days, activeWeekIndex) +
+      '</div>';
 
     const tipsMarkup = result.tips
       .map(function (tip) {
@@ -273,7 +302,7 @@
       '</div>';
 
     return (
-      '<h3 class="result-title">' + t('Структура тренувального плану на ' + result.weeks.length + ' тиж.') + '</h3>' +
+      '<h3 class="result-title">' + t('Поточна тренувальна неділя') + '</h3>' +
       '<div class="kcal-badge">' + t('Орієнтовне спалювання за тренування: ' + formatKcal(result.caloriesBurned)) + '</div>' +
       '<p class="result-note">' + t(result.volumeNote) + '</p>' +
       programRecommendationMarkup +

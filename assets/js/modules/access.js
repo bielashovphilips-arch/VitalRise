@@ -12,9 +12,10 @@
   const PENDING_ORDER_KEY = "vitalrise:access:pending-order";
   const tierRank = { free: 0, start: 1, pro: 2, premium: 3, admin: 4 };
   const activationFormIds = new Set(["nutrition-form", "training-form", "blueprint-form", "progress-form"]);
-  const PRO_TELEGRAM_URL = "https://t.me/YourCoachProBot";
+  const PRO_TELEGRAM_URL = "https://t.me/bielashov";
   let activationRequestPending = false;
   let verifiedPaidToken = false;
+  let localAdminPreview = false;
 
   const plans = {
     start: { 
@@ -49,7 +50,7 @@
   function getLanguage() {
     return window.VitalRiseI18n && typeof window.VitalRiseI18n.getLanguage === "function"
       ? window.VitalRiseI18n.getLanguage()
-      : "uk";
+      : (document.documentElement.lang || "uk");
   }
 
   function phrase(key) {
@@ -212,7 +213,8 @@
 
   function getTier() {
     const tier = normalizeTier(document.body.dataset.accessTier || getStored(TIER_KEY));
-    if (tier !== "free" && tier !== "admin" && (!getStored(TOKEN_KEY) || !verifiedPaidToken)) return "free";
+    if (tier === "admin" && localAdminPreview) return "admin";
+    if (tier !== "free" && (!getStored(TOKEN_KEY) || !verifiedPaidToken)) return "free";
     return tier;
   }
 
@@ -226,6 +228,9 @@
   function setPaidAccess(payload) {
     const tier = normalizeTier(payload.tier);
     if (!payload.accessToken || tier === "free") return;
+    if (tier === "admin") {
+      [EXPIRES_KEY, START_DEADLINE_KEY, ACTIVE_EXPIRES_KEY, ACTIVATED_KEY, PENDING_ORDER_KEY].forEach(clearStored);
+    }
     verifiedPaidToken = true;
     setStored(TOKEN_KEY, payload.accessToken);
     setStored(TIER_KEY, tier);
@@ -250,6 +255,13 @@
     } catch (error) {
       // Ignore storage failures.
     }
+  }
+
+  async function acceptAccessPayload(payload) {
+    const accessToken = String(payload && payload.accessToken || "").trim();
+    if (!accessToken) throw new Error("Missing access token");
+    const verified = await postJson("/api/access/verify", { token: accessToken });
+    setPaidAccess(Object.assign({}, verified, { accessToken: accessToken }));
   }
 
   function getPendingOrder() {
@@ -282,6 +294,7 @@
     const params = new URLSearchParams(window.location.search);
     const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname) || window.location.protocol === "file:";
     if (isLocalPreview && params.get("access") === "admin") {
+      localAdminPreview = true;
       setTier("admin");
       params.delete("access");
       const cleanUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
@@ -289,11 +302,12 @@
     }
   }
 
-  async function postJson(url, payload) {
+  async function postJson(url, payload, signal) {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload || {})
+      body: JSON.stringify(payload || {}),
+      signal: signal
     });
     const text = await response.text();
     let data = {};
@@ -376,12 +390,20 @@
   }
 
   async function submitNewsletterEmail(email) {
-    return postJson("/api/newsletter", {
-      email: email,
-      language: getLanguage(),
-      source: "pricing",
-      page: window.location.pathname || "index.html"
-    });
+    const controller = new AbortController();
+    const timeout = window.setTimeout(function () { controller.abort(); }, 12000);
+    try {
+      const result = await postJson("/api/newsletter", {
+        email: email,
+        language: getLanguage(),
+        source: "pricing",
+        page: window.location.pathname || "/",
+        consent: true,
+        consentVersion: "2026-09-06"
+      }, controller.signal);
+      if (!result || !result.ok || !result.stored) throw new Error("Subscription not saved");
+      return result;
+    } finally { window.clearTimeout(timeout); }
   }
 
   async function flushPendingNewsletter() {
@@ -401,12 +423,15 @@
 
   async function verifyStoredToken() {
     const token = getStored(TOKEN_KEY);
-    if (!token || getTier() === "admin") return;
+    if (!token || (getTier() === "admin" && localAdminPreview)) return;
 
     try {
       const data = await postJson("/api/access/verify", { token: token });
       verifiedPaidToken = true;
       setStored(TIER_KEY, normalizeTier(data.tier));
+      if (data.tier === "admin") {
+        [EXPIRES_KEY, START_DEADLINE_KEY, ACTIVE_EXPIRES_KEY, ACTIVATED_KEY].forEach(clearStored);
+      }
       if (data.email) setStored(EMAIL_KEY, data.email);
       if (data.expiresAt) setStored(EXPIRES_KEY, data.expiresAt);
       if (data.startDeadlineAt) setStored(START_DEADLINE_KEY, data.startDeadlineAt);
@@ -714,6 +739,7 @@
       const button = form.querySelector('button[type="submit"]');
       const status = document.getElementById("newsletter-status");
       if (!input) return;
+      if (button && button.disabled) return;
 
       const email = (input.value || "").trim().toLowerCase();
       
@@ -722,9 +748,6 @@
         return;
       }
       
-      // Store email for future use
-      setStored(EMAIL_KEY, email);
-
       let message = phrase("newsletterSuccess");
       const originalButtonText = button ? button.textContent : "";
       if (button) {
@@ -740,8 +763,10 @@
           window.VitalRiseAnalytics.trackNewsletterSignup();
         }
       } catch (error) {
-        rememberPendingNewsletter(email);
-        message = phrase("newsletterQueued");
+        message = getLanguage() === "en" ? "Not saved. Please try again." : getLanguage() === "ru" ? "Не сохранено. Попробуйте ещё раз." : "Не збережено. Спробуй ще раз.";
+        if (status) status.textContent = message;
+        if (button) { button.disabled = false; button.textContent = originalButtonText; }
+        return;
       }
 
       input.value = "";
@@ -878,7 +903,7 @@
     bindPricingButtons();
     bindNewsletterForm();
     bindProgramActivation();
-    flushPendingNewsletter().catch(function () {});
+    // Old unconfirmed browser queues are not submitted without a fresh consent action.
     claimPendingPayment().catch(function () {});
     applyAccessState();
     verifyStoredToken();
@@ -890,6 +915,7 @@
   system.access = {
     getTier: getTier,
     hasAccess: hasAccess,
+    setAccessPayload: acceptAccessPayload,
     activateProgram: activateProgram,
     openPaymentModal: openPaymentModal,
     apply: applyAccessState

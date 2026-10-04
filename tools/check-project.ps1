@@ -13,9 +13,19 @@ function Get-FileText([string]$path) {
   return Get-Content -Encoding UTF8 -Raw -Path $path
 }
 
-$htmlFiles = Get-ChildItem -Path $root -Filter "*.html" -File | ForEach-Object { $_.FullName }
+$htmlFiles = @($root, (Join-Path $root "en"), (Join-Path $root "ru")) | Where-Object { Test-Path -LiteralPath $_ } | ForEach-Object { Get-ChildItem -LiteralPath $_ -Filter "*.html" -File } | ForEach-Object { $_.FullName }
 $htmlPath = Join-Path $root "index.html"
 $html = Get-FileText $htmlPath
+
+$sitemapCandidates = @(
+  (Join-Path $root "sitemap.xml"),
+  (Join-Path $root "public/sitemap.xml"),
+  (Join-Path $root "dist/sitemap.xml")
+)
+if (-not ($sitemapCandidates | Where-Object { Test-Path -LiteralPath $_ })) {
+  Add-Failure "sitemap.xml missing from project root, public, and dist"
+}
+
 $htmlDocuments = @{}
 foreach ($file in $htmlFiles) {
   $htmlDocuments[$file] = Get-FileText $file
@@ -87,6 +97,38 @@ function Test-LocalReference([string]$sourceFile, [string]$rawRef) {
   $parts = $cleanRef.Split("#", 2)
   $pathPart = $parts[0]
   $anchorPart = if ($parts.Count -gt 1) { $parts[1] } else { "" }
+
+  $cleanRouteFiles = @{
+    "/" = "index.html"
+    "/nutrition" = "nutrition.html"
+    "/training" = "training.html"
+    "/blueprint" = "blueprint.html"
+    "/labs" = "labs.html"
+    "/profile" = "profile.html"
+    "/progress" = "progress.html"
+    "/recovery" = "recovery.html"
+    "/supplements" = "supplements.html"
+    "/vlog" = "vlog.html"
+    "/privacy" = "privacy.html"
+    "/terms" = "terms.html"
+    "/disclaimer" = "disclaimer.html"
+  }
+
+  if ($cleanRouteFiles.ContainsKey($pathPart)) {
+    if ($anchorPart) {
+      $targetPath = Join-Path $root $cleanRouteFiles[$pathPart]
+      $targetHtml = if ($htmlDocuments.ContainsKey($targetPath)) { $htmlDocuments[$targetPath] } else { Get-FileText $targetPath }
+      if ($targetHtml -notmatch ('id="' + [regex]::Escape($anchorPart) + '"')) {
+        Add-Failure "Missing anchor reference: $rawRef"
+      }
+    }
+    return
+  }
+
+  if ($pathPart.StartsWith("/")) {
+    return
+  }
+
   $targetPath = if ($pathPart) { Join-Path $root $pathPart } else { $sourceFile }
 
   if ($pathPart -and -not (Test-Path -LiteralPath $targetPath)) {
@@ -223,8 +265,8 @@ $expectedModules = @(
 foreach ($module in $expectedModules) {
   $modulePath = Join-Path $root $module.Path
 
-  if ($html -notmatch [regex]::Escape($module.Path)) {
-    Add-Failure "Module script not referenced in index.html: $($module.Path)"
+  if ($allHtml -notmatch [regex]::Escape($module.Path)) {
+    Add-Failure "Module script not referenced in any page: $($module.Path)"
     continue
   }
 

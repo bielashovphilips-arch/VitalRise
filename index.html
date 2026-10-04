@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#0b0b0f" />
   <meta name="robots" content="index, follow" />
   <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/images/logo-icon.svg?v=logo-v2" />
+  <link rel="icon" href="/assets/images/logo-icon.svg?v=logo-v2" type="image/svg+xml" />
   <title>VitalRise — план харчування, тренувань і аналізів для спортсменів</title>
   <meta
     name="description"
@@ -31,7 +33,7 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="assets/css/style.css?v=footer-signature-1" />
+  <link rel="stylesheet" href="assets/css/style.css?v=mobile-calculator-title-3" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -98,7 +100,7 @@
   <div class="site-shell">
     <header class="site-header">
       <div class="container header-inner">
-        <a href="index.html" class="brand-mark" aria-label="VitalRise головна">
+        <a href="/" class="brand-mark" aria-label="VitalRise головна">
           <span>VR</span>
           <strong>VitalRise</strong>
         </a>
@@ -108,12 +110,12 @@
         </button>
 
         <nav class="site-nav" aria-label="Головна навігація">
-          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
-          <a href="nutrition.html" data-i18n="nav.nutrition">Харчування</a>
-          <a href="training.html" data-i18n="nav.training">Тренування</a>
-          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
-          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
-          <a href="index.html#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
+          <a href="/labs" data-i18n="nav.labs">Аналізи</a>
+          <a href="/nutrition" data-i18n="nav.nutrition">Харчування</a>
+          <a href="/training" data-i18n="nav.training">Тренування</a>
+          <a href="/supplements" data-i18n="nav.supplements">Спортпіт</a>
+          <a href="/vlog" data-i18n="nav.vlog">Влог</a>
+          <a href="/#pricing" class="nav-accent" data-i18n="nav.pricing">Тарифи</a>
           <a href="https://t.me/bielashov" class="nav-accent" target="_blank" rel="noopener noreferrer" data-i18n="nav.writeCoach">Написати тренеру</a>
         </nav>
 
@@ -123,14 +125,14 @@
           <button type="button" data-lang-switch="ru" aria-pressed="false">RU</button>
         </div>
 
-        <a href="labs.html" class="header-cta" data-i18n="cta.startLabs">Почати з аналізів</a>
+          <a href="/labs" class="header-cta" data-i18n="cta.startLabs">Почати з аналізів</a>
       </div>
     </header>
 
     <header class="hero" data-parallax-hero>
       <picture class="hero-media" aria-hidden="true">
         <source media="(max-width: 768px)" srcset="assets/images/athlete-mobile.jpg">
-        <img src="assets/images/athlete-optimized.jpg" alt="" width="1536" height="1024" fetchpriority="high">
+        <img src="assets/images/athlete-optimized.jpg" alt="Атлет зі спини у тренажерному залі" width="1536" height="1024" fetchpriority="high">
       </picture>
       <div class="hero-overlay"></div>
       <div class="hero-cinematic-grid" aria-hidden="true"></div>
@@ -149,26 +151,26 @@
           </p>
 
           <div class="hero-metrics reveal" aria-label="Ключові напрямки VitalRise">
-            <a class="hero-metric" href="labs.html">
+            <a class="hero-metric" href="/labs">
               <span>01</span>
               <strong data-i18n="hero.metricLabs">Аналізи</strong>
             </a>
-            <a class="hero-metric" href="nutrition.html">
+            <a class="hero-metric" href="/nutrition">
               <span>02</span>
               <strong data-i18n="hero.metricMacros">Макроси</strong>
             </a>
-            <a class="hero-metric" href="training.html">
+            <a class="hero-metric" href="/training">
               <span>03</span>
               <strong data-i18n="hero.metricStrength">Сила</strong>
             </a>
-            <a class="hero-metric" href="recovery.html">
+            <a class="hero-metric" href="/recovery">
               <span>04</span>
               <strong data-i18n="hero.metricRecovery">Відновлення</strong>
             </a>
           </div>
 
           <div class="hero-actions reveal">
-            <a href="labs.html" class="btn btn-primary" data-i18n="cta.startLabs">Почати з аналізів</a>
+            <a href="#free-calculator" class="btn btn-primary" data-i18n="cta.freeCalculator">Розрахувати калорії</a>
             <a href="#features" class="btn btn-secondary" data-i18n="cta.controlSystem">Система контролю</a>
           </div>
         </div>
@@ -219,7 +221,7 @@
           </div>
 
           <div class="module-grid reveal" aria-label="Модулі VitalRise" data-i18n-aria-label="features.modulesAria">
-            <a class="module-card module-card-primary" href="nutrition.html" aria-label="Відкрити модуль Харчування" data-i18n-aria-label="features.openNutrition">
+            <a class="module-card module-card-primary" href="/nutrition" aria-label="Відкрити модуль Харчування" data-i18n-aria-label="features.openNutrition">
               <div class="module-card-head">
                 <strong class="module-card-title" data-i18n="nav.nutrition">Харчування</strong>
               </div>
@@ -227,7 +229,7 @@
               <i class="module-card-arrow" aria-hidden="true">→</i>
             </a>
 
-            <a class="module-card" href="training.html" aria-label="Відкрити модуль Тренування" data-i18n-aria-label="features.openTraining">
+            <a class="module-card" href="/training" aria-label="Відкрити модуль Тренування" data-i18n-aria-label="features.openTraining">
               <div class="module-card-head">
                 <strong class="module-card-title" data-i18n="nav.training">Тренування</strong>
               </div>
@@ -235,7 +237,7 @@
               <i class="module-card-arrow" aria-hidden="true">→</i>
             </a>
 
-            <a class="module-card" href="progress.html" aria-label="Відкрити модуль Прогрес" data-i18n-aria-label="features.openProgress">
+            <a class="module-card" href="/progress" aria-label="Відкрити модуль Прогрес" data-i18n-aria-label="features.openProgress">
               <div class="module-card-head">
                 <strong class="module-card-title" data-i18n="nav.progress">Прогрес</strong>
               </div>
@@ -243,7 +245,7 @@
               <i class="module-card-arrow" aria-hidden="true">→</i>
             </a>
 
-            <a class="module-card" href="labs.html" aria-label="Відкрити модуль Аналізи" data-i18n-aria-label="features.openLabs">
+            <a class="module-card" href="/labs" aria-label="Відкрити модуль Аналізи" data-i18n-aria-label="features.openLabs">
               <div class="module-card-head">
                 <strong class="module-card-title" data-i18n="nav.labs">Аналізи</strong>
               </div>
@@ -251,7 +253,7 @@
               <i class="module-card-arrow" aria-hidden="true">→</i>
             </a>
 
-            <a class="module-card" href="supplements.html" aria-label="Відкрити модуль Добавки" data-i18n-aria-label="features.openSupplements">
+            <a class="module-card" href="/supplements" aria-label="Відкрити модуль Добавки" data-i18n-aria-label="features.openSupplements">
               <div class="module-card-head">
                 <strong class="module-card-title" data-i18n="features.supplementsCardTitle">Добавки</strong>
               </div>
@@ -259,7 +261,7 @@
               <i class="module-card-arrow" aria-hidden="true">→</i>
             </a>
 
-            <a class="module-card" href="recovery.html" aria-label="Відкрити модуль Відновлення" data-i18n-aria-label="features.openRecovery">
+            <a class="module-card" href="/recovery" aria-label="Відкрити модуль Відновлення" data-i18n-aria-label="features.openRecovery">
               <div class="module-card-head">
                 <strong class="module-card-title" data-i18n="nav.recovery">Відновлення</strong>
               </div>
@@ -277,8 +279,8 @@
           </div>
 
           <div class="newsletter-capture reveal">
-            <h3 data-i18n="newsletter.title">Отримати оновлення про запуск</h3>
-            <p data-i18n="newsletter.text">Email для повідомлень про запуск, нові модулі та відкриття оплати.</p>
+            <h3 data-i18n="newsletter.title">Корисні матеріали VitalRise</h3>
+            <p data-i18n="newsletter.text">Матеріали й оновлення на email. Натискаючи «Підписатися», погоджуєшся на розсилку. Відписка — через підтримку.</p>
             <form id="newsletter-form">
               <input type="email" data-i18n-placeholder="newsletter.placeholder" placeholder="Твій email" required />
               <button type="submit" data-i18n="newsletter.cta">Підписатися</button>
@@ -328,7 +330,7 @@
                     <strong data-i18n="pricing.startPrice">499 грн</strong>
                   </div>
                   <h3 data-i18n="pricing.startTitle">План на 7 днів</h3>
-                  <p class="pricing-card-copy" data-i18n="pricing.startCopy">Перший платний крок: готовий тиждень харчування, тренувань і звіту без ручного складання з нуля.</p>
+                  <p class="pricing-card-copy" data-i18n="pricing.startCopy">Раціон на 7 днів, базові тренування і PDF. 7 днів — обсяг раціону; строк активного доступу — 30 днів.</p>
                   <ul>
                     <li data-i18n="pricing.startItem1">7-денний раціон під ціль</li>
                     <li data-i18n="pricing.startItem2">Стабільний раціон + протокол гідратації</li>
@@ -363,7 +365,7 @@
                   <ul>
                     <li data-i18n="pricing.proItem1">30-денний раціон і заміни продуктів</li>
                     <li data-i18n="pricing.proItem2">4-тижнева програма тренувань</li>
-                    <li data-i18n="pricing.proItem3">Coach, weekly check-in, графіки</li>
+                    <li data-i18n="pricing.proItem3">Інструменти Coach, check-in, графіки</li>
                     <li data-i18n="pricing.proItem4">Розширений Blueprint і аналізи</li>
                   </ul>
                   <a href="#pricing" class="btn btn-primary" data-i18n="pricing.proCta" data-select-plan="pro">Обрати Pro</a>
@@ -465,7 +467,7 @@
               <p data-free-result-copy></p>
               <div class="free-calculator-upsell">
                 <h4 data-free-i18n="upsellTitle">Цифра — це старт, не готовий план</h4>
-                <p data-free-i18n="upsellText">Start перетворює її на 7 днів харчування, тренування та PDF. Pro додає 4-тижневу систему, check-in і супровід.</p>
+                <p data-free-i18n="upsellText">Start додає раціон на 7 днів, базові тренування та PDF. Pro — планування й контроль прогресу. Персональний супровід тренера — у Premium.</p>
                 <a href="#pricing" class="btn btn-primary" data-select-plan="start" data-free-i18n="upsellCta">Отримати повний план у Start</a>
               </div>
               <p class="free-calculator-note" data-free-i18n="note">Орієнтир не є медичною рекомендацією. За станів здоров’я або різких змін самопочуття звернись до лікаря.</p>
@@ -474,8 +476,8 @@
 
           <div class="conversion-grid reveal">
             <section class="conversion-block">
-              <span class="section-label" data-i18n="proof.label">Кейси</span>
-              <h3 data-i18n="proof.title">Що має відчути клієнт</h3>
+              <span class="section-label" data-i18n="proof.label">Сценарії</span>
+              <h3 data-i18n="proof.title">Приклади використання системи</h3>
               <div class="proof-list">
                 <article>
                   <strong data-i18n="proof.case1Title">Зниження ваги</strong>
@@ -496,16 +498,16 @@
               <span class="section-label" data-i18n="faq.label">FAQ</span>
               <h3 data-i18n="faq.title">Питання перед стартом</h3>
               <details open>
-                <summary data-i18n="faq.q1">Як працює ранній доступ?</summary>
-                <p data-i18n="faq.a1">Залиш email у формі вище. Ми збережемо його в базі раннього доступу і повідомимо про запуск, нові модулі та відкриття оплати.</p>
+                <summary data-i18n="faq.q1">З чого почати?</summary>
+                <p data-i18n="faq.a1">Розрахуй калорії безкоштовно — реєстрація й аналізи не потрібні. Для повного раціону, базових тренувань і PDF обери Start. Розсилка необов’язкова.</p>
               </details>
               <details>
                 <summary data-i18n="faq.q2">Що можна подивитися безкоштовно?</summary>
-                <p data-i18n="faq.a2">Безкоштовно можна один раз зробити розрахунок харчування на день і один раз сформувати тренування. Повний тиждень харчування, тренувань і PDF-звіт — у Start.</p>
+                <p data-i18n="faq.a2">Безкоштовно можна отримати персональний орієнтир калорійності за базовими даними. Раціон, макроси, тренування, плани та PDF відкриваються після оплати Start.</p>
               </details>
               <details>
-                <summary data-i18n="faq.q3">Коли буде доступна оплата?</summary>
-                <p data-i18n="faq.a3">Після оплати є 45 днів, щоб почати програму. Коли користувач вводить дані й запускає перший розрахунок, активується 30 днів програми. Автопродовження увімкнене за замовчуванням, але його можна вимкнути перед оплатою.</p>
+                <summary data-i18n="faq.q3">Коли починається платний доступ?</summary>
+                <p data-i18n="faq.a3">Після оплати є 45 днів для початку. Перший розрахунок у платному модулі активує 30 днів доступу; безкоштовний калькулятор його не активує. Автопродовження можна вимкнути перед оплатою.</p>
               </details>
               <details>
                 <summary data-i18n="faq.q4">Що робити, якщо план не підходить?</summary>
@@ -521,7 +523,7 @@
               </details>
               <details>
                 <summary data-i18n="faq.q7">Що буде з моїм email?</summary>
-                <p data-i18n="faq.a7">Email використовується для раннього доступу, повідомлень про запуск і майбутнього доступу до покупки. Деталі описані в Privacy Policy.</p>
+                <p data-i18n="faq.a7">Email у формі підписки — для матеріалів і новин VitalRise. Email під час оплати — для замовлення та доступу. Для відписки звернись у підтримку. Деталі — у політиці конфіденційності.</p>
               </details>
               <details>
                 <summary data-i18n="faq.q8">Чи можна буде повернути оплату?</summary>
@@ -544,7 +546,7 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <a href="index.html" class="brand-mark" aria-label="VitalRise головна" data-i18n-aria-label="footerBrandAria">
+          <a href="/" class="brand-mark" aria-label="VitalRise головна" data-i18n-aria-label="footerBrandAria">
             <span>VR</span>
             <strong>VitalRise</strong>
           </a>
@@ -563,22 +565,22 @@
         </div>
 
         <div class="footer-links" aria-label="Швидкі посилання" data-i18n-aria-label="footerLinksAria">
-          <a href="index.html#features" data-i18n="system">Система</a>
-          <a href="profile.html" data-i18n="nav.profile">Профіль</a>
-          <a href="labs.html" data-i18n="nav.labs">Аналізи</a>
-          <a href="nutrition.html" data-i18n="nav.nutrition">Харчування</a>
-          <a href="training.html" data-i18n="nav.training">Тренування</a>
-          <a href="supplements.html" data-i18n="nav.supplements">Спортпіт</a>
-          <a href="vlog.html" data-i18n="nav.vlog">Влог</a>
-          <a href="recovery.html" data-i18n="nav.recovery">Відновлення</a>
-          <a href="progress.html">Coach</a>
-          <a href="progress.html" data-i18n="nav.progress">Прогрес</a>
-          <a href="progress.html#knowledge" data-i18n="nav.knowledge">База знань</a>
-          <a href="index.html#pricing" data-i18n="nav.pricing">Тарифи</a>
-          <a href="blueprint.html">Blueprint</a>
-          <a href="privacy.html" data-i18n="footerPrivacy">Політика конфіденційності</a>
-          <a href="terms.html" data-i18n="footerTerms">Умови використання</a>
-          <a href="disclaimer.html" data-i18n="footerDisclaimer">Медичний / АС/ААС дисклеймер</a>
+          <a href="/#features" data-i18n="system">Система</a>
+          <a href="/profile" data-i18n="nav.profile">Профіль</a>
+          <a href="/labs" data-i18n="nav.labs">Аналізи</a>
+          <a href="/nutrition" data-i18n="nav.nutrition">Харчування</a>
+          <a href="/training" data-i18n="nav.training">Тренування</a>
+          <a href="/supplements" data-i18n="nav.supplements">Спортпіт</a>
+          <a href="/vlog" data-i18n="nav.vlog">Влог</a>
+          <a href="/recovery" data-i18n="nav.recovery">Відновлення</a>
+          <a href="/progress">Coach</a>
+          <a href="/progress" data-i18n="nav.progress">Прогрес</a>
+          <a href="/progress#knowledge" data-i18n="nav.knowledge">База знань</a>
+          <a href="/#pricing" data-i18n="nav.pricing">Тарифи</a>
+          <a href="/blueprint">Blueprint</a>
+          <a href="/privacy" data-i18n="footerPrivacy">Політика конфіденційності</a>
+          <a href="/terms" data-i18n="footerTerms">Умови використання</a>
+          <a href="/disclaimer" data-i18n="footerDisclaimer">Медичний / АС/ААС дисклеймер</a>
         </div>
 
         <div class="footer-note">
@@ -710,39 +712,45 @@
     </div>
   </div>
 
-  <script src="assets/js/modules/system.js"></script>
-  <script src="assets/js/modules/i18n.js?v=modules-i18n-16"></script>
-  <script src="assets/js/modules/mobile-menu.js"></script>
-  <script src="assets/js/modules/storage.js"></script>
-  <script src="assets/js/modules/print.js?v=print-clean-1"></script>
-  <script src="assets/js/modules/data-portability.js"></script>
-  <script src="assets/js/modules/calculator-shell.js?v=single-module-1"></script>
-  <script src="assets/js/modules/reveal.js"></script>
-  <script src="assets/js/modules/dashboard.js"></script>
-  <script src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
-  <script src="assets/js/modules/free-calculator.js?v=free-engagement-1"></script>
-  <script src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
-  <script src="assets/js/modules/hero-parallax.js?v=hero-parallax-5"></script>
-  <script src="assets/js/modules/nutrition-custom.js"></script>
-  <script src="assets/js/modules/nutrition.js?v=exact-bju-3"></script>
-  <script src="assets/js/modules/nutrition-render.js?v=nutrition-i18n-1"></script>
-  <script src="assets/js/modules/training.js"></script>
-  <script src="assets/js/modules/training-templates.js?v=gym-dips-1"></script>
-  <script src="assets/js/modules/training-gym-dips-patch.js?v=gym-dips-1"></script>
-  <script src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
-  <script src="assets/js/modules/training-progression.js"></script>
-  <script src="assets/js/modules/training-render.js?v=training-copy-fix-1"></script>
-  <script src="assets/js/modules/training-builder.js?v=paid-gate-1"></script>
-  <script src="assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1"></script>
-  <script src="assets/js/modules/exercise-atlas.js?v=atlas-clean-1"></script>
-  <script src="assets/js/modules/labs.js"></script>
-  <script src="assets/js/modules/lab-protocols.js?v=expanded-report-1"></script>
-  <script src="assets/js/modules/progress-decision.js?v=cycle-water-progress-1"></script>
-  <script src="assets/js/modules/blueprint.js"></script>
-  <script src="assets/js/modules/supplements.js?v=testosterone-ergogenic-2"></script>
-  <script src="assets/js/modules/coach.js?v=coach-contact-1"></script>
-  <script src="assets/js/modules/marketing.js?v=meta-pixel-1"></script>
-  <script src="assets/js/modules/access.js?v=paid-gate-1"></script>
-  <script src="assets/js/script.js?v=paid-gate-1"></script>
+  <script defer src="assets/js/modules/system.js"></script>
+  <script defer src="assets/js/modules/i18n.js?v=nutrition-workspace-20261004-2"></script>
+  <script defer src="assets/js/modules/mobile-menu.js"></script>
+  <script defer src="assets/js/modules/storage.js"></script>
+  <script defer src="assets/js/modules/print.js?v=nutrition-workspace-20261004-2"></script>
+  <script defer src="assets/js/modules/data-portability.js"></script>
+  <script defer src="assets/js/modules/calculator-shell.js?v=single-module-2"></script>
+  <script defer src="assets/js/modules/reveal.js"></script>
+  <script defer src="assets/js/modules/dashboard.js"></script>
+  <script defer src="assets/js/modules/pricing-flip.js?v=mobile-flip-1"></script>
+  <script defer src="assets/js/modules/free-calculator.js?v=technical-20260907-1"></script>
+  <script defer src="assets/js/modules/module-orbit.js?v=mobile-orbit-glow-1"></script>
+  <script defer src="assets/js/modules/hero-parallax.js?v=hero-parallax-5"></script>
+  <script defer src="assets/js/modules/nutrition-custom.js?v=nutrition-workspace-20261004-2"></script>
+  <script defer src="assets/js/modules/nutrition-catalog.js?v=20261004-1"></script>
+  <script defer src="assets/js/modules/nutrition.js?v=nutrition-workspace-20261004-2"></script>
+  <script defer src="assets/js/modules/nutrition-render.js?v=nutrition-workspace-20261004-2"></script>
+  <script defer src="assets/js/modules/nutrition-workspace.js?v=20261004-2"></script>
+  <script defer src="assets/js/modules/training.js"></script>
+  <script defer src="assets/js/modules/training-prescription.js?v=load-policy-1"></script>
+  <script defer src="assets/js/modules/training-templates.js?v=beginner-circuit-1"></script>
+  <script defer src="assets/js/modules/training-gym-dips-patch.js?v=gym-dips-1"></script>
+  <script defer src="assets/js/modules/training-guidance.js?v=training-control-1"></script>
+  <script defer src="assets/js/modules/training-progression.js"></script>
+  <script defer src="assets/js/modules/training-adaptation.js?v=beginner-period-1"></script>
+  <script defer src="assets/js/modules/training-render.js?v=training-copy-fix-1"></script>
+  <script defer src="assets/js/modules/training-builder.js?v=beginner-period-1"></script>
+  <script defer src="assets/js/modules/training-session.js?v=training-session-3"></script>
+  <script defer src="assets/js/modules/training-progress.js?v=training-progress-1"></script>
+  <script defer src="assets/js/modules/exercise-atlas-data.js?v=bulgarian-split-squat-1"></script>
+  <script defer src="assets/js/modules/exercise-atlas.js?v=technical-20260907-1"></script>
+  <script defer src="assets/js/modules/labs.js"></script>
+  <script defer src="assets/js/modules/lab-protocols.js?v=expanded-report-1"></script>
+  <script defer src="assets/js/modules/progress-decision.js?v=cycle-water-progress-1"></script>
+  <script defer src="assets/js/modules/blueprint.js"></script>
+  <script defer src="assets/js/modules/supplements.js?v=testosterone-ergogenic-2"></script>
+  <script defer src="assets/js/modules/coach.js?v=coach-contact-1"></script>
+  <script defer src="assets/js/modules/marketing.js?v=technical-20260907-1"></script>
+  <script defer src="assets/js/modules/access.js?v=technical-20260907-1"></script>
+  <script defer src="assets/js/script.js?v=nutrition-workspace-20261004-2"></script>
 </body>
 </html>

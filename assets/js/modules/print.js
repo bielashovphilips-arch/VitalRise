@@ -153,7 +153,7 @@
     // Якщо html2pdf доступна, використовуємо її
     if (typeof window.html2pdf !== "undefined") {
       try {
-        const element = source.cloneNode(true);
+        const element = target === 'nutrition-result' ? buildNutritionReportContent(source) : source.cloneNode(true);
         const opt = {
           margin: layout === "mobile" ? 5 : 14,
           filename: fileName,
@@ -478,13 +478,29 @@
     return content;
   }
 
+  function buildNutritionReportContent(source) {
+    const content = buildGenericReportContent(source);
+    content.querySelectorAll('.nutrition-portion-input').forEach(function (input) {
+      const amount = document.createElement('strong');
+      amount.textContent = input.value;
+      input.closest('label').replaceWith(amount);
+    });
+    content.querySelectorAll('.nw-meal-card').forEach(function (card) { card.classList.add('selected-day-card'); });
+    content.querySelectorAll('.nw-day-summary').forEach(function (node) { node.classList.add('nutrition-summary'); node.style.position = 'static'; });
+    content.querySelectorAll('button,.nw-add-food,.nw-source,.nw-eaten,.nw-adherence-summary,[data-nutrition-disclosure="menu-template"],[data-nutrition-disclosure="summary"],.nutrition-custom-tools').forEach(function (node) { node.remove(); });
+    content.querySelectorAll('[data-nutrition-disclosure^="recipe-"]').forEach(function (node) { node.remove(); });
+    content.querySelectorAll('.nw-choice-section').forEach(function (node) { if (!node.querySelector('.nw-meal-food')) node.remove(); });
+    content.querySelectorAll('details').forEach(function (node) { node.open = true; });
+    return content;
+  }
+
   function buildReportContent(target) {
     const source = $(target);
     if (!source) return "";
 
     const body = target === "training-result"
       ? buildTrainingReportContent(source)
-      : buildGenericReportContent(source);
+      : target === 'nutrition-result' ? buildNutritionReportContent(source) : buildGenericReportContent(source);
 
     return (
       '<div class="mobile-report-document">' +

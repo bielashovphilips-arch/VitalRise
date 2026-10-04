@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const system = window.VitalRiseSystem || {};
   const $ = system.$ || function (id) { return document.getElementById(id); };
 
@@ -24,6 +24,52 @@
     function deepClone(data) {
       return JSON.parse(JSON.stringify(data));
     }
+
+    const BEGINNER_INITIAL_PERIOD_WEEKS = 4;
+
+    function getBeginnerInitialPeriodState(place, level) {
+      const isGymBeginner = place === "gym" && level === "beginner";
+      if (!isGymBeginner) {
+        return {
+          isGymBeginner: false,
+          locked: false,
+          circuitWeek: false,
+          activeWeekIndex: 0,
+          weeks: BEGINNER_INITIAL_PERIOD_WEEKS
+        };
+      }
+
+      const adaptation = window.VitalRiseSystem && window.VitalRiseSystem.trainingAdaptation;
+      const complete = adaptation && typeof adaptation.isInitialPeriodComplete === "function"
+        ? adaptation.isInitialPeriodComplete()
+        : false;
+      const activeWeekIndex = adaptation && typeof adaptation.getActiveWeekIndex === "function"
+        ? adaptation.getActiveWeekIndex({ weeks: new Array(BEGINNER_INITIAL_PERIOD_WEEKS) })
+        : 0;
+
+      return {
+        isGymBeginner: true,
+        locked: !complete,
+        circuitWeek: !complete && activeWeekIndex === 0,
+        activeWeekIndex: activeWeekIndex,
+        weeks: BEGINNER_INITIAL_PERIOD_WEEKS
+      };
+    }
+
+    function extendBeginnerWeekScheme(weekScheme) {
+      const source = Array.isArray(weekScheme) && weekScheme.length
+        ? weekScheme
+        : [{ week: 1, baseKg: 0, accessoryKg: 0, cardioMinutes: 0 }];
+
+      return Array.from({ length: BEGINNER_INITIAL_PERIOD_WEEKS }, function (_, index) {
+        const sourceWeek = source[index % source.length];
+        return Object.assign({}, sourceWeek, {
+          week: index + 1,
+          label: "Тиждень " + (index + 1) + " — адаптація Full Body"
+        });
+      });
+    }
+
   function calculateTrainingCalories(place, goal, weight, duration) {
     return window.VitalRiseSystem && window.VitalRiseSystem.training
       ? window.VitalRiseSystem.training.calculateTrainingCalories(place, goal, weight, duration)
@@ -168,9 +214,10 @@
 
   const programLabels = {
     neutral: "Універсальна",
-    prison_workout: "Вулична сила / драбинки",
+    beginner_circuit: "Кругове Full Body — адаптація",
+    prison_workout: "Тренування на вулиці",
     tabata_circuit: "Інтервали 1:1 / кругове",
-    ppl_3_1: "PPL 3+1: штовхай / тягни / ноги",
+    ppl_3_1: "PPL: штовхай / тягни / ноги",
     female_balanced: "Жіноча збалансована",
     female_glutes: "Жіноча: сідниці та ноги",
     female_strength: "Жіноча силова",
@@ -185,7 +232,7 @@
     const place = data["training-place"];
     const level = data["training-level"];
     const goal = data["training-goal"];
-    const days = Number(data["training-days"]);
+    const days = Math.max(2, Math.min(6, Math.round(Number(data["training-days"]) || 3)));
     const duration = Number(data["duration"]);
     const selectedMode = data["training-program-mode"] || "neutral";
     const cyclePhase = data["cycle-phase"] || "none";
@@ -194,12 +241,22 @@
     const painStatus = outdoorMetrics.painStatus || "none";
     const hasPainOrFatigue = painStatus !== "none";
     const selectedIsManual = selectedMode !== "neutral";
+    const beginnerPeriod = getBeginnerInitialPeriodState(place, level);
 
     let recommendedMode = "neutral";
     let confidence = "стандартна";
     const reasons = [];
 
-    if (cyclePhase !== "none" && gender === "female") {
+    if (beginnerPeriod.locked) {
+      recommendedMode = beginnerPeriod.circuitWeek ? "beginner_circuit" : "neutral";
+      confidence = "висока";
+      reasons.push(
+        beginnerPeriod.circuitWeek
+          ? "перший тиждень новачка в залі: кругове Full Body для адаптації"
+          : "новачок у залі: до завершення початкового 4-тижневого періоду використовується Full Body"
+      );
+      reasons.push("жіночі та інші спеціалізовані/спліт-режими відкриваються після початкового періоду");
+    } else if (cyclePhase !== "none" && gender === "female") {
       if (goal === "fatloss") {
         recommendedMode = "female_fatloss";
         reasons.push("врахована фаза циклу і ціль зниження жиру");
@@ -218,11 +275,11 @@
       recommendedMode = "ppl_3_1";
       confidence = "висока";
       reasons.push("зал, набір м'язів, просунутий рівень і щонайменше 4 доступні тренувальні дні");
-      reasons.push("PPL 3+1 працює як фіксований 8-денний цикл лише за дуже хорошого відновлення");
+      reasons.push("Черга PPL продовжується між тижнями й відповідає обраній кількості занять");
     } else if (place === "outdoor" && (goal === "strength" || goal === "endurance")) {
       recommendedMode = "prison_workout";
       confidence = "висока";
-      reasons.push("вуличний формат краще розкривається через драбинки, турнік, бруси і контроль об'єму");
+      reasons.push("вуличний формат використовує окремі вправи, підходи та повтори з обліком виконання");
     } else if ((goal === "fatloss" || goal === "endurance") && duration <= 50 && !hasPainOrFatigue) {
       recommendedMode = "tabata_circuit";
       confidence = "середня";
@@ -251,12 +308,14 @@
       reasons.push("обмеження у формі зменшують пріоритет агресивних схем і збільшують роль корекції навантаження");
     }
 
-    let appliedMode = selectedIsManual ? selectedMode : recommendedMode;
-    if (selectedMode === "ppl_3_1" && level !== "advanced") {
+    let appliedMode = beginnerPeriod.locked
+      ? recommendedMode
+      : selectedIsManual ? selectedMode : recommendedMode;
+    if (!beginnerPeriod.locked && selectedMode === "ppl_3_1" && level !== "advanced") {
       appliedMode = "neutral";
       reasons.push("PPL 3+1 залишено тільки для просунутого рівня з достатнім відновленням");
     }
-    if (selectedMode.indexOf("female_") === 0 && gender !== "female") {
+    if (!beginnerPeriod.locked && selectedMode.indexOf("female_") === 0 && gender !== "female") {
       appliedMode = "neutral";
       reasons.push("жіночий режим доступний лише для жіночого профілю");
     }
@@ -277,7 +336,10 @@
       appliedLabel: getProgramLabel(appliedMode),
       confidence: confidence,
       summary: summary,
-      reasons: reasons
+      reasons: reasons,
+      beginnerInitialPeriodLocked: beginnerPeriod.locked,
+      beginnerCircuitWeek: beginnerPeriod.circuitWeek,
+      beginnerInitialPeriodWeeks: beginnerPeriod.weeks
     };
   }
 
@@ -286,7 +348,7 @@
     const level = data["training-level"];
     const goal = data["training-goal"];
     const cyclePhase = data["cycle-phase"] || "none";
-    const days = Number(data["training-days"]);
+    const days = Math.max(2, Math.min(6, Math.round(Number(data["training-days"]) || 3)));
     const bodyWeight = Number(data["body-weight"]);
     const duration = Number(data["duration"]);
     const outdoorMetrics = {
@@ -306,10 +368,11 @@
     const programRecommendation = buildProgramRecommendation(data, outdoorMetrics);
     const programMode = programRecommendation.appliedMode;
     const isFemaleMode = programMode.indexOf("female_") === 0;
+    const isBeginnerCircuitMode = programMode === "beginner_circuit";
     const isPrisonMode = programMode === "prison_workout";
     const isTabataCircuitMode = programMode === "tabata_circuit";
     const isPplMode = programMode === "ppl_3_1";
-    const programDays = isPplMode ? 8 : days;
+    const programDays = days;
 
     let caloriesBurned = calculateTrainingCalories(isPplMode ? "gym" : place, goal, bodyWeight, duration);
     if (isPrisonMode) caloriesBurned *= 1.08;
@@ -341,10 +404,12 @@
       };
     }
 
-    if (isPplMode) {
+    if (isBeginnerCircuitMode) {
+      basePlan = trainingTemplates.getGymBeginnerCircuitPlan(days);
+    } else if (isPplMode) {
       basePlan = trainingTemplates.getGymPushPullLegsPlan(goal, level, oneRM, programDays);
     } else if (isPrisonMode) {
-      basePlan = trainingTemplates.getPrisonWorkoutPlan(level, days, outdoorMetrics);
+      basePlan = trainingTemplates.getPrisonWorkoutPlan(level, days, outdoorMetrics, goal);
     } else if (isTabataCircuitMode) {
       basePlan = trainingTemplates.getTabataCircuitPlan(goal, level, days, duration);
     } else if (isFemaleMode) {
@@ -364,38 +429,66 @@
       basePlan = trainingTemplates.getHomeBasePlan(goal, level, days, outdoorMetrics);
     }
 
-    if (!isPplMode && typeof trainingTemplates.applyTrainingDurationConstraints === "function") {
-      basePlan = trainingTemplates.applyTrainingDurationConstraints(basePlan, duration, place);
-    }
-
     basePlan = trainingTemplates.applyTrainingConstraints(basePlan, outdoorMetrics);
+
+    let beginnerFullBodyPlan = null;
+    if (isBeginnerCircuitMode) {
+      beginnerFullBodyPlan = trainingTemplates.getGymBeginnerBasePlan(days);
+      beginnerFullBodyPlan = trainingTemplates.applyTrainingConstraints(beginnerFullBodyPlan, outdoorMetrics);
+    }
 
     const trainingProgression = window.VitalRiseSystem && window.VitalRiseSystem.trainingProgression
       ? window.VitalRiseSystem.trainingProgression
       : null;
-    const weekScheme = trainingProgression
+    let weekScheme = trainingProgression
       ? trainingProgression.getWeekScheme(goal)
       : [{ week: 1, label: "Тиждень 1 — стабільний старт", baseKg: 0, accessoryKg: 0, cardioMinutes: 0 }];
-    const useGymExerciseSequence = (isPplMode || (!isPrisonMode && !isTabataCircuitMode && place === "gym"));
+    if (programRecommendation.beginnerInitialPeriodLocked) {
+      weekScheme = extendBeginnerWeekScheme(weekScheme);
+    }
+    const trainingAdaptation = window.VitalRiseSystem && window.VitalRiseSystem.trainingAdaptation
+      ? window.VitalRiseSystem.trainingAdaptation
+      : null;
+    const activeWeekIndex = trainingAdaptation
+      ? trainingAdaptation.getActiveWeekIndex({ weeks: weekScheme })
+      : 0;
+    const trainingHistory = trainingAdaptation ? trainingAdaptation.getHistory() : [];
+    const useGymExerciseSequence = (isPplMode || (!isPrisonMode && !isTabataCircuitMode && !isBeginnerCircuitMode && place === "gym"));
     const weeks = weekScheme.map(function (weekInfo) {
-      const weekDays = trainingProgression
-        ? annotateRestInDays(trainingProgression.applyWeekProgression(basePlan, goal, weekInfo, oneRM), { place: isPplMode ? "gym" : place, goal: goal, level: level })
-        : annotateRestInDays(basePlan, { place: isPplMode ? "gym" : place, goal: goal, level: level });
+      let weekBasePlan = isBeginnerCircuitMode && weekInfo.week > 1
+        ? beginnerFullBodyPlan
+        : basePlan;
+      const prescription = window.VitalRiseSystem.trainingPrescription;
+      const protocol = isTabataCircuitMode || (isBeginnerCircuitMode && weekInfo.week === 1);
+      if (isPplMode) weekBasePlan = prescription.schedulePpl(weekBasePlan, days, weekInfo.week - 1);
+      weekBasePlan = weekBasePlan.map(function (day) {
+        return prescription.prepareDay(day, { goal: goal, level: level, duration: duration, days: days, protocol: protocol });
+      });
+      let weekDays = trainingProgression
+        ? annotateRestInDays(trainingProgression.applyWeekProgression(weekBasePlan, goal, weekInfo, oneRM), { place: isPplMode ? "gym" : place, goal: goal, level: level })
+        : annotateRestInDays(weekBasePlan, { place: isPplMode ? "gym" : place, goal: goal, level: level });
+
+      if (trainingAdaptation && weekInfo.week - 1 === activeWeekIndex) {
+        weekDays = trainingAdaptation.adaptWeek({ days: weekDays }, trainingHistory).days;
+      }
 
       return {
         title: weekInfo.label,
-        days: applyGymExerciseSequence(weekDays, useGymExerciseSequence)
+        days: weekDays
       };
     });
 
     let volumeNote = "";
 
-    if (isPplMode) {
+    if (isBeginnerCircuitMode) {
+      volumeNote =
+        "Перший тиждень новачка в залі — кругове Full Body: усі основні рухи виконуються послідовно по колу з легкою вагою і запасом повторів. Після цього періоду план переходить у звичайний Full Body.";
+    } else if (isPplMode) {
       volumeNote =
         "PPL 3+1 - це один із найкращих форматів для набору м'язів під великий калораж: 3 базові тренування поспіль (штовхай верх, тягни верх, ноги), 1 день відпочинку, потім 3 тренажерні дні з легко-середньою вагою. Тренажерні дні не мають добивати нервову систему: їх задача - об'єм, техніка, памп і відновлювана прогресія. Обов'язкова умова - сон від 8 годин і мінімум масаж як регулярна відновлювальна процедура.";
     } else if (isPrisonMode) {
       volumeNote =
-        "Вулична сила / драбинки - це режим без складного обладнання: драбинки, кола, власна вага і контроль об'єму. Він підходить для дисципліни, витривалості і жорсткого, але керованого навантаження.";
+        "Тренування на вулиці — вправи з власною вагою, підходи та повтори. Записуй виконання в журналі, щоб наступний тиждень враховував результат.";
     } else if (isTabataCircuitMode) {
       volumeNote =
         "Інтервали 1:1 / кругове тренування дають коротку інтенсивну роботу для пульсу, витрати енергії і щільності. Час відпочинку дорівнює часу роботи, тому навантаження залишається керованим.";
@@ -404,7 +497,7 @@
     } else if (place === "outdoor") {
       volumeNote =
         goal === "strength"
-          ? "Вулична сила: якщо робочий діапазон виконаний чисто, наступний тиждень уже прописує нижчий діапазон повторів і контрольовану вагу. Понад 20 повторів у сеті не женемо: спочатку тримаємо амплітуду й поступово скорочуємо відпочинок між підходами."
+          ? "Тренування на вулиці: якщо робочий діапазон виконаний чисто, наступний тиждень уже прописує нижчий діапазон повторів і контрольовану вагу. Понад 20 повторів у сеті не женемо: спочатку тримаємо амплітуду й поступово скорочуємо відпочинок між підходами."
           : goal === "fatloss"
             ? "Вуличне схуднення: додаткова вага не додається. Головна прогресія — прибрати резину, робити чисті повтори без знімання навантаження і додати просту ходьбу 40-60 хв."
             : "Вуличний план побудований навколо силової витривалості: турнік, бруси, резина, власна вага й рюкзак. Прогресія йде через більше чистих повторів, більше підходів, коротший відпочинок, меншу допомогу резини і тільки потім додаткову вагу.";
@@ -441,7 +534,7 @@
       volumeNote = "PPL 3+1 — фіксований 8-денний цикл для просунутого рівня: 3 важкі дні, повний відпочинок, 3 середні дні, повний відпочинок. Цикл не прив'язаний до понеділка-неділі й потребує дуже хорошого сну, харчування та відновлення.";
     }
 
-    const tips = [
+    let tips = [
       "План побудований одразу на весь цикл, а не на один день.",
       "Базові вправи відокремлені від допоміжних — допоміжні не прив’язані до 1ПМ.",
       "Для допоміжних вправ використовуй плавну прогресію: +1 повтор, або +1-2 кг, або +2.5-5% за тиждень.",
@@ -454,9 +547,17 @@
 
     if (isPrisonMode) {
       tips.unshift(
-        "У режимі вуличної сили прогрес - це більше чистих кіл або сходинок, а не постійна робота до відмови.",
-        "Драбинку зупиняй до зриву техніки: плечі, лікті і поперек важливіші за цифру.",
+        "Записуй чисті повтори кожного підходу та запас повторів у журналі.",
+        "Завершуй підхід до погіршення техніки.",
         "Якщо підтягування ще слабкі, використовуй австралійські підтягування або резину."
+      );
+    }
+
+    if (isBeginnerCircuitMode) {
+      tips.unshift(
+        "Перший тиждень — не тест сили: обери легку вагу і залишай 3-4 повтори в запасі.",
+        "Виконуй усі вправи по черзі, а після кола відпочивай 60-90 секунд.",
+        "Якщо техніка погіршується або з'являється гострий біль, зупини коло і спробуй легший варіант."
       );
     }
 
@@ -520,6 +621,26 @@
         warnings: []
       };
 
+    if (isBeginnerCircuitMode) {
+      guidance.format = "Кругове Full Body — адаптація новачка";
+      guidance.focus = "вивчення техніки, контроль темпу і запас повторів";
+      guidance.rirRules = [
+        "Працюй легко: залишай 3-4 повтори в запасі, без відмови.",
+        "Між вправами переходь спокійно, між колами відпочивай 60-90 секунд.",
+        "Якщо дихання або техніка не відновлюються, зменш вагу чи зупини коло."
+      ];
+      guidance.progressionRules = [
+        "Перший тиждень не додавай вагу: спочатку стабілізуй рухи.",
+        "Після переходу до Full Body додавай вагу тільки за чистої техніки.",
+        "Не перетворюй кругове тренування на тест витривалості."
+      ];
+      guidance.deloadRules = [
+        "При сильній втомі зроби 2 кола замість 3.",
+        "При болю заміни вправу на легший варіант або припини тренування.",
+        "Перший тиждень має залишати відчуття готовності повторити тренування."
+      ];
+    }
+
     if (isFemaleMode) {
       guidance.format = trainingTemplates.getFemaleProgramLabel(programMode);
       guidance.focus = trainingTemplates.getFemaleProgramLabel(programMode);
@@ -529,23 +650,8 @@
     }
 
     if (isPrisonMode) {
-      guidance.format = "Вулична сила / драбинки";
-      guidance.focus = "драбинки, кола і дисципліна власної ваги";
-      guidance.rirRules = [
-        "Не роби всі кола до відмови: залишай 1-2 повтори в запасі.",
-        "Якщо амплітуда скорочується, раунд зупиняється або спрощується.",
-        "Для підтягувань і брусів головний контроль - плечі й лікті без гострого болю."
-      ];
-      guidance.progressionRules = [
-        "Додай одну сходинку в драбинці або одне коло тільки після чистого тижня.",
-        "Скорочуй відпочинок поступово: 10-15 секунд за раз.",
-        "Якщо повторів вже багато, не гони хаотичний темп: тримай діапазон і скорочуй відпочинок поступово."
-      ];
-      guidance.deloadRules = [
-        "Якщо лікті або плечі забиті - мінус 30% кіл і без відмови.",
-        "Після контрольного дня наступне тренування зроби легшим.",
-        "При сильній втомі залиш мобільність, ходьбу і легку техніку."
-      ];
+      guidance.format = "Тренування на вулиці";
+      guidance.focus = "підходи, повтори та прогрес за виконанням";
     }
 
     if (isTabataCircuitMode) {
@@ -597,26 +703,74 @@
       ].concat(guidance.warnings || []);
     }
 
+    const prescription = window.VitalRiseSystem.trainingPrescription;
+    const isStandardResistance = !isTabataCircuitMode;
+    if (isStandardResistance) {
+      volumeNote = "Обсяг підібрано під рівень, кількість занять і доступний час. Допоміжна робота перед базою перерозподіляється з наявного плану, а не додається зверху. Для сили пріоритетна базова вправа залишається першою. Початковий круговий тиждень зберігає свій протокол.";
+      tips = [
+        "Після розминки виконуй вправи у показаному порядку; перед базовими рухами зроби підвідні підходи.",
+        "Допоміжний блок перед базою: RIR 3-4; основна робота: RIR 2-3. Менша вага після втоми не гарантує запасу повторів.",
+        "Відпочинок: базові рухи 2-3 хвилини (силові — за потреби довше), ізоляція 1-2 хвилини. Не скорочуй паузи заради кількості вправ.",
+        "План містить обрану кількість занять. Розподіли їх протягом тижня з днями відновлення; при втомі скороти обсяг.",
+        "У журналі вказуй лише технічно чисті повторення. Зміна порядку вправ потребує нового підбору ваги, а не перенесення старих рекордів."
+      ];
+      guidance.rirRules = [tips[1], tips[2]];
+      guidance.progressionRules = [prescription.progressionCue, "Змінюй лише один параметр за раз. Рекомендацію з журналу підтверджуй відповідно до техніки й доступного кроку обладнання."];
+      (guidance.coachBlocks || []).forEach(function (block) {
+        if (block.label === "Наступний крок") block.items = guidance.progressionRules.slice();
+      });
+      if (isPplMode) {
+        guidance.format = "PPL: штовхай / тягни / ноги";
+        guidance.focus = "Послідовне чергування базових і помірних занять за обраною кількістю днів на тиждень";
+        guidance.deloadRules = ["Якщо працездатність падає або накопичується втома, зменш допоміжний обсяг; не додавай вагу."];
+        guidance.warnings = ["Черга PPL продовжується наступного тижня. Дні відпочинку розподіляй відповідно до самопочуття; масаж не є обов'язковою умовою прогресу."];
+      }
+    }
+
     return {
+      prescriptionVersion: prescription.version,
+      outdoorPlanVersion: 2,
+      planId: "training-plan-" + Date.now() + "-" + Math.random().toString(36).slice(2),
       caloriesBurned: caloriesBurned,
       volumeNote: volumeNote,
       tips: tips,
       guidance: guidance,
       programRecommendation: programRecommendation,
+      initialPeriod: programRecommendation.beginnerInitialPeriodLocked
+        ? { type: "gym-beginner", weeks: programRecommendation.beginnerInitialPeriodWeeks }
+        : null,
+      activeWeekIndex: activeWeekIndex,
       weeks: weeks
     };
   }
 
   function renderTrainingResult(result) {
+    if (!trainingResult) return;
+    if (result && window.VitalRiseSystem && window.VitalRiseSystem.trainingAdaptation) {
+      result.activeWeekIndex = window.VitalRiseSystem.trainingAdaptation.getActiveWeekIndex(result);
+    }
+    window.VitalRiseTrainingPlan = result;
+    try {
+      window.localStorage.setItem("vitalrise:training:last-plan", JSON.stringify(result));
+    } catch (error) {
+      // The training result remains usable when browser storage is unavailable.
+    }
+
     trainingResult.innerHTML =
       window.VitalRiseSystem && window.VitalRiseSystem.trainingRender
         ? window.VitalRiseSystem.trainingRender.renderTrainingResult(result, { formatKcal: formatKcal })
         : '<div class="result-placeholder">Не вдалося сформувати план. Перевір параметри та спробуй ще раз.</div>';
+
+    document.dispatchEvent(new CustomEvent("vitalrise:training-plan-ready", { detail: result }));
   }
 
   if (trainingForm) {
     trainingForm.addEventListener("submit", function (event) {
       event.preventDefault();
+
+      if (window.VitalRiseSystem && window.VitalRiseSystem.trainingAdaptation) {
+        window.VitalRiseSystem.trainingAdaptation.resetActiveWeek();
+      }
 
       const formData = new FormData(trainingForm);
       const data = Object.fromEntries(formData.entries());
@@ -633,7 +787,42 @@
       if (trainingPlace) trainingPlace.dispatchEvent(new Event("change", { bubbles: true }));
       trainingResult.innerHTML =
         '<div class="result-placeholder">Обери параметри тренування та натисни «Сформувати план».</div>';
+
+      window.VitalRiseTrainingPlan = null;
+      try {
+        window.localStorage.removeItem("vitalrise:training:last-plan");
+      } catch (error) {
+        // Ignore storage failures.
+      }
+      if (window.VitalRiseSystem && window.VitalRiseSystem.trainingAdaptation) {
+        window.VitalRiseSystem.trainingAdaptation.resetActiveWeek();
+        if (typeof window.VitalRiseSystem.trainingAdaptation.resetInitialPeriod === "function") {
+          window.VitalRiseSystem.trainingAdaptation.resetInitialPeriod();
+        }
+      }
+      document.dispatchEvent(new CustomEvent("vitalrise:training-plan-reset"));
     });
+  }
+
+  document.addEventListener("vitalrise:training-week-advanced", function (event) {
+    if (event.detail && event.detail.plan) renderTrainingResult(event.detail.plan);
+  });
+
+  try {
+    const savedPlan = JSON.parse(window.localStorage.getItem("vitalrise:training:last-plan") || "null");
+    if (trainingResult && savedPlan && savedPlan.weeks && savedPlan.weeks.length) {
+      const hasLegacyLadders = savedPlan.weeks.some(function (week) {
+        return (week.days || []).some(function (day) {
+          return /Prison|драбин|сходин/i.test(day.title || "") || (day.basic || []).concat(day.accessory || []).some(function (exercise) {
+            return exercise.progressionType === "prison";
+          });
+        });
+      });
+      if (!hasLegacyLadders && savedPlan.prescriptionVersion === window.VitalRiseSystem.trainingPrescription.version) renderTrainingResult(savedPlan);
+      else trainingResult.innerHTML = '<div class="result-placeholder">Правила навантаження оновлено. Сформуй план заново; історія тренувань збережена.</div>';
+    }
+  } catch (error) {
+    // The user can still generate a fresh plan from the form.
   }
 
     system.trainingBuilder = {

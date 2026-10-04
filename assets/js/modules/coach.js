@@ -580,7 +580,7 @@
       return;
     }
 
-    navigator.serviceWorker.register("service-worker.js").catch(function () {});
+    navigator.serviceWorker.register("service-worker.js?v=sw-v314").catch(function () {});
   }
 
   system.coach = {
