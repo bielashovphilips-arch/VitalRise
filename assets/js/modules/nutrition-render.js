@@ -258,7 +258,8 @@
   function foodLineMarkup(item) {
     const workspace = system.nutritionWorkspace;
     const food = nutrition.getFoodById ? nutrition.getFoodById(item.id) : null;
-    return escapeHtml(food && workspace ? workspace.foodName(food) : translateText(item.name)) + " - " + item.amount + " " + unitLabel(item.unitLabel) + (food && workspace ? " · " + escapeHtml(workspace.foodState(food)) : "");
+    const foodState = food && workspace ? workspace.foodState(food) : "";
+    return escapeHtml(food && workspace ? workspace.foodName(food) : translateText(item.name)) + " - " + item.amount + " " + unitLabel(item.unitLabel) + (foodState ? " · " + escapeHtml(foodState) : "");
   }
 
   function mealSummaryMarkup(totals, formatKcal, formatGrams) {
@@ -350,12 +351,12 @@
           meal.items.map(function (item) {
             const food = system.nutrition && system.nutrition.getFoodById(item.id);
             const workspace = system.nutritionWorkspace;
-            const foodState = workspace && food ? workspace.foodState(food) : "";
+            const foodHint = workspace && food ? workspace.foodHint(food) : "";
             return (
               '<div class="auto-food-item">' +
                 '<strong>' + escapeHtml(translateText(item.name)) + '</strong> - ' +
                 item.amount + ' ' + unitLabel(item.unitLabel) +
-                (foodState ? '<small class="nw-ready-state">' + escapeHtml(foodState) + (food.note ? ' · ' + escapeHtml(translateText(food.note)) : '') + '</small>' : '') +
+                (foodHint ? '<small class="nw-ready-state">' + escapeHtml(foodHint) + '</small>' : '') +
               '</div>'
             );
           }).join("") +

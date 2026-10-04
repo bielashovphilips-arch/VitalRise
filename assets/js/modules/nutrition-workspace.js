@@ -45,7 +45,7 @@
     menu: ['Твій раціон', 'Your menu', 'Твой рацион'], ready: ['готовий', 'cooked', 'готовый'], raw: ['сирий / сухий', 'raw / dry', 'сырой / сухой'],
     foodState: ['стан продукту', 'food state', 'состояние продукта'],
     unchanged: ['альтернативний стан не задано', 'alternate state unavailable', 'альтернативное состояние не задано'],
-    packed: ['як на упаковці', 'as packaged', 'как на упаковке'], fresh: ['свіжий', 'fresh', 'свежий'],
+    perPiece: ['{calories} ккал за 1 шт', '{calories} kcal per piece', '{calories} ккал за 1 шт'],
     template: ['Зберегти або завантажити меню', 'Save or load menu', 'Сохранить или загрузить меню'],
     edit: ['Змінити продукти', 'Edit foods', 'Изменить продукты'],
     start: ['Перейти до раціону', 'Build your menu', 'Перейти к рациону'],
@@ -82,8 +82,14 @@
   function state(food) {
     if (food.weightModeLabel) return translate(food.weightModeLabel);
     if (food.weightState === 'cooked') return t('ready');
-    if (food.weightState === 'fresh') return t('fresh');
-    return t('packed');
+    if (food.weightState === 'raw') return t('raw');
+    return '';
+  }
+  function hint(food) {
+    const parts = [state(food)];
+    if (food.unitType === 'piece' && food.macrosPerUnit) parts.push(t('perPiece').replace('{calories}', format(food.macrosPerUnit.kcal)));
+    if (food.note) parts.push(translate(food.note));
+    return parts.filter(Boolean).join(' · ');
   }
   function attrs(day, meal, category, id) {
     return ' data-day="' + escape(day) + '" data-meal="' + escape(meal) + '" data-category="' + escape(category) + '"' + (id ? ' data-id="' + escape(id) + '"' : '');
@@ -141,11 +147,10 @@
       const favorite = (favorites || []).includes(food.id);
       const checked = (selectedIds || []).includes(food.id);
       const macros = food.macrosPer100 || food.macrosPerUnit;
+      const details = [state(food), food.unitType === 'piece' ? t('perPiece').replace('{calories}', format(macros.kcal)) : format(macros.kcal) + ' ' + (language() === 'en' ? 'kcal / 100 g' : 'ккал / 100 г'), food.note ? translate(food.note) : ''].filter(Boolean).join(' · ');
       return '<div class="nw-product-row"><label class="product-item' + (checked ? ' nw-selected' : '') + '">' +
         '<input type="checkbox" class="nutrition-product-checkbox" data-focus-key="product-' + escape(food.id) + '" data-group="' + food.category + '" data-id="' + escape(food.id) + '"' + (checked ? ' checked' : '') + '>' +
-        '<span class="product-item-copy"><span class="product-item-name">' + escape(name(food)) + '</span><small>' + escape(state(food)) +
-        ' · ' + format(macros.kcal) + ' ' + (language() === 'en' ? 'kcal' : 'ккал') + ' / ' + (food.unitType === 'piece' ? (language() === 'en' ? 'piece' : 'шт') : '100 ' + (language() === 'en' ? 'g' : 'г')) +
-        (food.note ? ' · ' + escape(translate(food.note)) : '') + '</small></span></label>' +
+        '<span class="product-item-copy"><span class="product-item-name">' + escape(name(food)) + '</span><small>' + escape(details) + '</small></span></label>' +
         '<button type="button" class="nw-favorite" data-action="toggle-food-favorite" data-id="' + escape(food.id) + '" data-focus-key="favorite-' + escape(food.id) + '" aria-pressed="' + favorite + '" aria-label="' + escape(t(favorite ? 'unstar' : 'star') + ': ' + name(food)) + '">' +
         '<svg width="20" height="20" viewBox="0 0 24 24" fill="' + (favorite ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m12 3 2.8 5.7 6.3.9-4.55 4.44 1.07 6.26L12 17.35l-5.62 2.95 1.07-6.26L2.9 9.6l6.3-.9Z"/></svg></button></div>';
     }).join('') + '</div>';
@@ -176,7 +181,8 @@
       const amount = amounts[id] || (row && row.amount) || food.defaultAmount;
       const a = attrs(dayType, mealKey, category, id);
       const unit = food.unitType === 'piece' ? (language() === 'en' ? 'pcs' : 'шт') : (language() === 'en' ? 'g' : 'г');
-      return '<div class="nw-meal-food"><div class="nw-meal-food-name"><strong>' + escape(name(food)) + '</strong><small>' + escape(state(food)) + (food.note ? ' · ' + escape(translate(food.note)) : '') + '</small></div>' +
+      const details = hint(food);
+      return '<div class="nw-meal-food"><div class="nw-meal-food-name"><strong>' + escape(name(food)) + '</strong>' + (details ? '<small>' + escape(details) + '</small>' : '') + '</div>' +
         '<div class="nw-portion"><button type="button" data-action="adjust-meal-choice" data-direction="decrease"' + a + ' data-focus-key="decrease-' + mealKey + '-' + id + '" aria-label="' + escape(t('decrease') + ': ' + name(food)) + '">−</button>' +
         '<label><span class="visually-hidden">' + escape(t('amount') + ': ' + name(food)) + '</span><input type="number" class="nutrition-portion-input"' + a + ' data-focus-key="amount-' + mealKey + '-' + id + '" min="' + (food.unitType === 'piece' ? 1 : 0.1) + '" max="' + (food.unitType === 'piece' ? 100 : 3000) + '" step="' + (food.unitType === 'piece' ? 1 : 0.1) + '" inputmode="decimal" value="' + amount + '"></label><span>' + unit + '</span>' +
         '<button type="button" data-action="adjust-meal-choice" data-direction="increase"' + a + ' data-focus-key="increase-' + mealKey + '-' + id + '" aria-label="' + escape(t('increase') + ': ' + name(food)) + '">+</button></div>' +
@@ -221,7 +227,8 @@
     if (!amounts.size) return '';
     return disclosure(t('shopping'), '<p class="nw-help">' + t('shoppingHint') + '</p><ul class="nw-shopping-list">' + Array.from(amounts).map(function (entry) {
       const food = nutrition.getFoodById(entry[0]);
-      return '<li><span>' + escape(name(food)) + '</span><strong>' + format(entry[1]) + ' ' + (food.unitType === 'piece' ? (language() === 'en' ? 'pcs' : 'шт') : (language() === 'en' ? 'g' : 'г')) + '</strong><small>' + escape(state(food)) + '</small></li>';
+      const foodState = state(food);
+      return '<li><span>' + escape(name(food)) + '</span><strong>' + format(entry[1]) + ' ' + (food.unitType === 'piece' ? (language() === 'en' ? 'pcs' : 'шт') : (language() === 'en' ? 'g' : 'г')) + '</strong>' + (foodState ? '<small>' + escape(foodState) + '</small>' : '') + '</li>';
     }).join('') + '</ul>', 'shopping');
   };
   render.buildFinalNutritionMarkup = function (title, targets, plan, formatters) {
@@ -235,6 +242,8 @@
   const initialTranslateText = window.VitalRiseI18n && window.VitalRiseI18n.translateText;
   function translateForLanguage(value, lang) {
     const index = {uk:0,en:1,ru:2}[lang] || 0;
+    const perPiece = /^(.+) (?:ккал за 1 шт|kcal per piece)$/.exec(value);
+    if (perPiece) return copy.perPiece[index].replace('{calories}', perPiece[1]);
     const match = Object.values(copy).find(function (row) { return row.includes(value); });
     if (match) return match[index];
     const food = (system.nutritionCatalog || []).find(function (item) { return item.names && Object.values(item.names).includes(value); });
@@ -243,7 +252,7 @@
   if (initialTranslateText) window.VitalRiseI18n.translateText = function (value) {
     return translateForLanguage(value, language()) || initialTranslateText(value);
   };
-  system.nutritionWorkspace = {t:t, foodName:name, foodState:state, translateForLanguage:translateForLanguage, dayKey:dayKey, getAdherence:getAdherence, saveAdherence:saveAdherence};
+  system.nutritionWorkspace = {t:t, foodName:name, foodState:state, foodHint:hint, translateForLanguage:translateForLanguage, dayKey:dayKey, getAdherence:getAdherence, saveAdherence:saveAdherence};
   document.addEventListener('DOMContentLoaded', function () {
     const panel = document.getElementById('nutrition-panel');
     if (!panel) return;
