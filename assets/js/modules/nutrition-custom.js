@@ -31,6 +31,13 @@
     const category = categories.includes(input.category) ? input.category : "protein";
     const name = String(input.name || "").trim();
     if (!name) return null;
+    const savedMacros = input.macrosPer100 || input.macrosPerUnit || {};
+    const macroValue = function (key) {
+      const value = input[key] === undefined ? input[{p:"protein",f:"fat",c:"carbs",kcal:"kcal"}[key]] : input[key];
+      return value === undefined ? number(savedMacros[key], 0) : Number(value);
+    };
+    const macros = ["p", "f", "c", "kcal"].map(macroValue);
+    if (macros.some(function (value) { return !Number.isFinite(value) || value < 0; }) || macros[0] + macros[1] + macros[2] > 100.5 || macros[3] > 900) return null;
 
     const unitType = input.unitType === "piece" ? "piece" : "grams";
     const unitLabel = unitType === "piece" ? "шт" : "г";
@@ -45,6 +52,10 @@
       min: unitType === "piece" ? Math.max(1, number(input.min, 1)) : Math.max(1, number(input.min, 50)),
       max: unitType === "piece" ? Math.max(1, number(input.max, 10)) : Math.max(1, number(input.max, 300)),
       defaultAmount: unitType === "piece" ? Math.max(1, number(input.defaultAmount, 1)) : Math.max(1, number(input.defaultAmount, 100)),
+      animal: input.animal === true || input.animal === "true",
+      highCarb: input.highCarb === true || input.highCarb === "true" || Number(input.c) >= 15,
+      recipe: input.recipe && Array.isArray(input.recipe.ingredients) && Number(input.recipe.yieldGrams) > 0 ? input.recipe : null,
+      weightState: ["cooked","fresh","packaged"].includes(input.weightState) ? input.weightState : "packaged",
       allowedMeals: Array.isArray(input.allowedMeals) && input.allowedMeals.length
         ? input.allowedMeals
         : ["breakfast", "second_breakfast", "lunch", "snack", "dinner"]
@@ -52,17 +63,17 @@
 
     if (unitType === "piece") {
       base.macrosPerUnit = {
-        p: number(input.p, number(input.protein, 0)),
-        f: number(input.f, number(input.fat, 0)),
-        c: number(input.c, number(input.carbs, 0)),
-        kcal: number(input.kcal, 0)
+        p: macroValue("p"),
+        f: macroValue("f"),
+        c: macroValue("c"),
+        kcal: macroValue("kcal")
       };
     } else {
       base.macrosPer100 = {
-        p: number(input.p, number(input.protein, 0)),
-        f: number(input.f, number(input.fat, 0)),
-        c: number(input.c, number(input.carbs, 0)),
-        kcal: number(input.kcal, 0)
+        p: macroValue("p"),
+        f: macroValue("f"),
+        c: macroValue("c"),
+        kcal: macroValue("kcal")
       };
     }
 
@@ -86,8 +97,7 @@
     });
 
     products.push(product);
-    saveProducts(products);
-    return product;
+    return saveProducts(products) ? product : null;
   }
 
   function importProducts(payload) {
@@ -130,8 +140,7 @@
       savedAt: new Date().toISOString()
     });
 
-    setJson(templateKey, templates.slice(-12));
-    return label;
+    return setJson(templateKey, templates.slice(-12)) ? label : null;
   }
 
   function getMenuTemplates() {
@@ -149,16 +158,27 @@
       selected: data.selected,
       mealSelections: data.mealSelections,
       activeDayView: data.activeDayView,
+      weightMode: data.weightMode,
       savedAt: new Date().toISOString()
     });
 
-    setJson(menuTemplateKey, templates.slice(-12));
-    return label;
+    return setJson(menuTemplateKey, templates.slice(-12)) ? label : null;
   }
 
   system.nutritionCustom = {
     categories: categories,
     getProducts: getProducts,
+    addRecipe: function (name, yieldGrams, category, meal) {
+      const weight = Number(yieldGrams);
+      if (!meal || !meal.items.length || !Number.isFinite(weight) || weight < 1 || weight > 20000) return null;
+      const factor = 100 / weight;
+      const product = {name:name, category:category, p:meal.totals.p * factor, f:meal.totals.f * factor, c:meal.totals.c * factor, kcal:meal.totals.kcal * factor, weightState:"cooked", min:1, max:3000, portionStep:10, defaultAmount:100,
+        animal:meal.items.some(function (item) { const food = system.nutrition.getFoodById(item.id); return !system.nutrition.isFoodAllowedForDiet(food, "vegan"); }),
+        recipe:{yieldGrams:weight,ingredients:meal.items.map(function (item) { return {id:item.id,name:item.name,amount:item.amount,unitLabel:item.unitLabel,weightState:item.weightState,weightModeLabel:item.weightModeLabel}; })}};
+      return addProduct(product);
+    },
+    getFavorites: function () { const saved = getJson("vitalrise:nutrition:favorites", []); return Array.isArray(saved) ? saved.filter(function (id) { return typeof id === "string"; }) : []; },
+    saveFavorites: function (ids) { return setJson("vitalrise:nutrition:favorites", ids); },
     addProduct: addProduct,
     deleteProduct: deleteProduct,
     importProducts: importProducts,

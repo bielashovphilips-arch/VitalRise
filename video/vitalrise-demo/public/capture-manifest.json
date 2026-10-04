@@ -1,0 +1,14 @@
+{
+  "capturedAt": "2026-09-07T05:56:37.287Z",
+  "source": "local VitalRise, existing design",
+  "sample": {
+    "sex": "male",
+    "age": 30,
+    "weight": 80,
+    "height": 180,
+    "activity": 1.2,
+    "goal": 1,
+    "calories": 2140
+  },
+  "notice": "Fictional demonstration inputs, not client data. No order or lead created."
+}

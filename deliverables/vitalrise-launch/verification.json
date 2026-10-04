@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-09-07T10:49:53.917Z",
+  "videos": [
+    {
+      "file": "vitalrise-demo-30s.mp4",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920,
+          "pix_fmt": "yuv420p",
+          "r_frame_rate": "30/1",
+          "nb_frames": "900",
+          "side_data_list": [
+            {}
+          ]
+        }
+      ],
+      "format": {
+        "duration": "30.000000",
+        "size": "4144551"
+      }
+    },
+    {
+      "file": "vitalrise-teaser-15s.mp4",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1080,
+          "height": 1920,
+          "pix_fmt": "yuv420p",
+          "r_frame_rate": "30/1",
+          "nb_frames": "450",
+          "side_data_list": [
+            {}
+          ]
+        }
+      ],
+      "format": {
+        "duration": "15.000000",
+        "size": "2515037"
+      }
+    }
+  ],
+  "protectedDesignFiles": 11,
+  "browserPlayback": "passed"
+}

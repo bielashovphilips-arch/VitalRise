@@ -751,10 +751,8 @@
     tabataCircuit: { uk: "Інтервали 1:1 / кругове", en: "1:1 intervals / circuit", ru: "Интервалы 1:1 / круговая" },
     prisonModeNote: { uk: "Тренування на вулиці - це режим без складного обладнання: драбинки, кола, власна вага і контроль об'єму. Він підходить для дисципліни, витривалості і жорсткого, але керованого навантаження.", en: "Outdoor training uses no complex equipment: ladders, circuits, bodyweight, and volume control. It fits discipline, endurance, and hard but controlled loading.", ru: "Тренировки на улице — это режим без сложного оборудования: лесенки, круги, собственный вес и контроль объема. Он подходит для дисциплины, выносливости и жесткой, но управляемой нагрузки." },
     tabataModeNote: { uk: "Інтервали 1:1 / кругове тренування дають коротку інтенсивну роботу для пульсу, витрати енергії і щільності. Час відпочинку дорівнює часу роботи, тому навантаження залишається керованим.", en: "1:1 intervals / circuit training gives short intense work for heart rate, energy burn, and density. Rest time equals work time, so the load stays manageable.", ru: "Интервалы 1:1 / круговая тренировка дают короткую интенсивную работу для пульса, расхода энергии и плотности. Время отдыха равно времени работы, поэтому нагрузка остается управляемой." },
-    prisonFocus: { uk: "драбинки, кола і дисципліна власної ваги", en: "ladders, circuits, and bodyweight discipline", ru: "лесенки, круги и дисциплина собственного веса" },
+    prisonFocus: { uk: "підходи, повтори та прогрес за виконанням", en: "sets, reps, and performance-based progress", ru: "подходы, повторы и прогресс по выполнению" },
     tabataFocus: { uk: "пульс, щільність і чиста техніка", en: "heart rate, density, and clean technique", ru: "пульс, плотность и чистая техника" },
-    prisonTip1: { uk: "У режимі вуличної сили прогрес - це більше чистих кіл або сходинок, а не постійна робота до відмови.", en: "In street strength mode, progress means more clean rounds or ladder steps, not constant failure work.", ru: "В режиме уличной силы прогресс — это больше чистых кругов или ступенек, а не постоянная работа до отказа." },
-    prisonTip2: { uk: "Драбинку зупиняй до зриву техніки: плечі, лікті і поперек важливіші за цифру.", en: "Stop the ladder before technique breaks: shoulders, elbows, and lower back matter more than the number.", ru: "Останавливай лесенку до срыва техники: плечи, локти и поясница важнее цифры." },
     prisonTip3: { uk: "Якщо підтягування ще слабкі, використовуй австралійські підтягування або резину.", en: "If pull-ups are still weak, use inverted rows or a band.", ru: "Если подтягивания пока слабые, используй австралийские подтягивания или резину." },
     tabataTip1: { uk: "Інтервали 1:1 мають бути короткими і чистими: якщо техніка сиплеться, зменш темп або обери легшу вправу.", en: "1:1 intervals should be short and clean: if technique breaks, slow down or choose an easier movement.", ru: "Интервалы 1:1 должны быть короткими и чистыми: если техника сыпется, снизь темп или выбери упражнение легче." },
     tabataTip2: { uk: "Кругові тренування не замінюють усю силову базу, але добре додають витрату енергії і витривалість.", en: "Circuit training does not replace the whole strength base, but it adds energy burn and endurance well.", ru: "Круговые тренировки не заменяют всю силовую базу, но хорошо добавляют расход энергии и выносливость." },
@@ -767,7 +765,7 @@
     circuitTrainingDay: { uk: "День 2 - Кругове тренування", en: "Day 2 - Circuit training", ru: "День 2 - Круговая тренировка" },
     tabataUpperCoreDay: { uk: "День 3 - Інтервали 1:1: верх + корпус", en: "Day 3 - 1:1 intervals: upper body + core", ru: "День 3 - Интервалы 1:1: верх + корпус" },
     circuitLegsDay: { uk: "День 4 - Кругове тренування: ноги + витривалість", en: "Day 4 - Circuit training: legs + endurance", ru: "День 4 - Круговая тренировка: ноги + выносливость" },
-    laddersRounds: { uk: "драбинки, кола і дисципліна власної ваги", en: "ladders, circuits, and bodyweight discipline", ru: "лесенки, круги и дисциплина собственного веса" },
+    laddersRounds: { uk: "підходи, повтори та прогрес за виконанням", en: "sets, reps, and performance-based progress", ru: "подходы, повторы и прогресс по выполнению" },
     shortIntensity: { uk: "коротка інтенсивність", en: "short intensity", ru: "короткая интенсивность" },
     density: { uk: "щільність", en: "density", ru: "плотность" },
     bodyweightControl: { uk: "власна вага і контроль", en: "bodyweight and control", ru: "собственный вес и контроль" },
@@ -802,7 +800,6 @@
     workRest4040: { uk: "40 сек робота / 40 сек відпочинок", en: "40 sec work / 40 sec rest", ru: "40 сек работа / 40 сек отдых" },
     workRest4545: { uk: "45 сек робота / 45 сек відпочинок", en: "45 sec work / 45 sec rest", ru: "45 сек работа / 45 сек отдых" },
     cleanOverFast: { uk: "Контроль: краще чисто, ніж швидко.", en: "Control: clean beats fast.", ru: "Контроль: лучше чисто, чем быстро." },
-    stopBeforeBreak: { uk: "Зупинись за 1-2 сходинки до зриву техніки.", en: "Stop 1-2 ladder steps before technique breaks.", ru: "Остановись за 1-2 ступеньки до срыва техники." },
 
     // Nutrition builder internals
     protein: { uk: "Білок", en: "Protein", ru: "Белок" },
@@ -2142,6 +2139,9 @@
   }
 
   function translateAutomaticText(value, language) {
+    const workspace = window.VitalRiseSystem && window.VitalRiseSystem.nutritionWorkspace;
+    const nutritionText = workspace && workspace.translateForLanguage(value, language);
+    if (nutritionText) return nutritionText;
     const key = getScopedTextKey(value, automaticTextTranslations, automaticTextIndex);
     if (key && automaticTextTranslations[key] && automaticTextTranslations[key][language]) {
       return automaticTextTranslations[key][language];

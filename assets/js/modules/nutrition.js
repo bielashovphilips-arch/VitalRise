@@ -1,12 +1,31 @@
 ﻿(function () {
   const system = window.VitalRiseSystem || {};
+  let activeWeightMode = "ready";
+
+  function normalizeWeightMode(value) {
+    return String(value || "ready").toLowerCase() === "raw" ? "raw" : "ready";
+  }
+
+  function applyWeightMode(food) {
+    if (!food) return food;
+    const cookedIds = ["chicken", "turkey", "beef", "tuna", "white_fish", "mackerel", "salmon", "chicken_thigh", "shrimp", "pork_tenderloin", "oatmeal", "rice", "buckwheat", "potato", "pasta", "sweet_potato", "bulgur", "couscous", "quinoa", "lentils", "beans", "chickpeas", "mung_beans", "split_peas", "red_beans", "soy_mince", "beetroot"];
+    const freshIds = ["banana", "berries", "apple", "avocado", "spinach", "cucumber", "tomato", "bell_pepper", "cabbage", "carrot", "onion"];
+    food.weightState = food.weightState || (cookedIds.includes(food.id) ? "cooked" : freshIds.includes(food.id) ? "fresh" : "packaged");
+    if (activeWeightMode === "raw" && food.weightState === "cooked" && !food.rawMacrosPer100) food.note = "Сирі / сухі значення не задано: використай вагу вказаного стану.";
+    if (activeWeightMode !== "raw" || !food.rawMacrosPer100) return food;
+
+    food.macrosPer100 = clone(food.rawMacrosPer100);
+    food.weightModeLabel = food.rawWeightModeLabel || "Сирий / сухий";
+    food.weightState = "raw";
+    return food;
+  }
 
   const defaultSelection = {
-    protein: ["eggs", "cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "chicken", "turkey", "white_fish", "mackerel", "salmon", "tuna", "greek_yogurt", "whey_protein", "skyr", "shrimp", "tofu"],
-    carb: ["oatmeal", "banana", "rice", "buckwheat", "potato", "sweet_potato", "bulgur", "quinoa", "berries", "apple", "lentils", "beans"],
-    extra_carb: ["whole_bread", "rice_cakes"],
-    fat: ["olive_oil", "avocado", "nuts", "peanut_butter", "pumpkin_seeds", "dark_chocolate"],
-    vegetable: ["spinach", "broccoli", "cucumber", "tomato", "zucchini", "bell_pepper", "asparagus"]
+    protein: ["eggs", "cottage_cheese", "chicken", "turkey", "white_fish", "greek_yogurt", "tofu"],
+    carb: ["oatmeal", "banana", "rice", "buckwheat", "potato", "apple"],
+    extra_carb: ["whole_bread"],
+    fat: ["olive_oil", "avocado", "nuts"],
+    vegetable: ["cucumber", "tomato", "broccoli", "carrot", "cabbage"]
   };
 
   const foods = [
@@ -73,7 +92,9 @@
       max: 250,
       defaultAmount: 175,
       allowedMeals: ["lunch", "dinner"],
-      macrosPer100: { p: 23, f: 2, c: 0, kcal: 110 }
+      macrosPer100: { p: 23, f: 2, c: 0, kcal: 110 },
+      rawMacrosPer100: { p: 23.1, f: 2.6, c: 0, kcal: 120 },
+      rawWeightModeLabel: "Сире"
     },
     {
       id: "turkey",
@@ -86,7 +107,9 @@
       max: 250,
       defaultAmount: 175,
       allowedMeals: ["lunch", "dinner"],
-      macrosPer100: { p: 21, f: 4, c: 0, kcal: 125 }
+      macrosPer100: { p: 21, f: 4, c: 0, kcal: 125 },
+      rawMacrosPer100: { p: 23.5, f: 1.5, c: 0, kcal: 114 },
+      rawWeightModeLabel: "Сира"
     },
     {
       id: "beef",
@@ -99,7 +122,9 @@
       max: 225,
       defaultAmount: 150,
       allowedMeals: ["lunch", "dinner"],
-      macrosPer100: { p: 20, f: 10, c: 0, kcal: 170 }
+      macrosPer100: { p: 20, f: 10, c: 0, kcal: 170 },
+      rawMacrosPer100: { p: 19, f: 12, c: 0, kcal: 190 },
+      rawWeightModeLabel: "Сира"
     },
     {
       id: "tuna",
@@ -112,7 +137,9 @@
       max: 250,
       defaultAmount: 150,
       allowedMeals: ["lunch", "dinner"],
-      macrosPer100: { p: 24, f: 1, c: 0, kcal: 109 }
+      macrosPer100: { p: 24, f: 1, c: 0, kcal: 109 },
+      rawMacrosPer100: { p: 23.3, f: 0.5, c: 0, kcal: 110 },
+      rawWeightModeLabel: "Сирий"
     },
     {
       id: "white_fish",
@@ -125,7 +152,9 @@
       max: 250,
       defaultAmount: 175,
       allowedMeals: ["lunch", "dinner"],
-      macrosPer100: { p: 20, f: 2, c: 0, kcal: 98 }
+      macrosPer100: { p: 20, f: 2, c: 0, kcal: 98 },
+      rawMacrosPer100: { p: 18, f: 1, c: 0, kcal: 85 },
+      rawWeightModeLabel: "Сира"
     },
     {
       id: "mackerel",
@@ -160,12 +189,14 @@
       category: "carb",
       unitType: "grams",
       unitLabel: "г",
-      portionStep: 10,
-      min: 50,
-      max: 100,
-      defaultAmount: 70,
+      portionStep: 25,
+      min: 150,
+      max: 500,
+      defaultAmount: 250,
       allowedMeals: ["breakfast", "second_breakfast"],
-      macrosPer100: { p: 12, f: 6, c: 60, kcal: 366 }
+      macrosPer100: { p: 2.4, f: 1.4, c: 12, kcal: 71 },
+      rawMacrosPer100: { p: 13, f: 7, c: 68, kcal: 379 },
+      rawWeightModeLabel: "Суха"
     },
     {
       id: "banana",
@@ -191,7 +222,9 @@
       max: 250,
       defaultAmount: 150,
       allowedMeals: ["lunch", "dinner"],
-      macrosPer100: { p: 2.7, f: 0.3, c: 28, kcal: 130 }
+      macrosPer100: { p: 2.7, f: 0.3, c: 28, kcal: 130 },
+      rawMacrosPer100: { p: 7, f: 0.7, c: 78, kcal: 350 },
+      rawWeightModeLabel: "Сухий"
     },
     {
       id: "buckwheat",
@@ -204,7 +237,9 @@
       max: 250,
       defaultAmount: 150,
       allowedMeals: ["lunch", "dinner"],
-      macrosPer100: { p: 4.5, f: 1.6, c: 21, kcal: 110 }
+      macrosPer100: { p: 4.5, f: 1.6, c: 21, kcal: 110 },
+      rawMacrosPer100: { p: 13, f: 3.4, c: 71.5, kcal: 343 },
+      rawWeightModeLabel: "Суха"
     },
     {
       id: "potato",
@@ -230,7 +265,9 @@
       max: 250,
       defaultAmount: 150,
       allowedMeals: ["lunch"],
-      macrosPer100: { p: 5.8, f: 1.1, c: 30, kcal: 158 }
+      macrosPer100: { p: 5.8, f: 1.1, c: 30, kcal: 158 },
+      rawMacrosPer100: { p: 12, f: 1.5, c: 72, kcal: 350 },
+      rawWeightModeLabel: "Сухі"
     },
 
     {
@@ -465,7 +502,9 @@
   max: 250,
   defaultAmount: 150,
   allowedMeals: ["lunch", "dinner"],
-  macrosPer100: { p: 4.4, f: 1.9, c: 21.3, kcal: 120 }
+      macrosPer100: { p: 4.4, f: 1.9, c: 21.3, kcal: 120 },
+      rawMacrosPer100: { p: 14, f: 6, c: 64, kcal: 368 },
+      rawWeightModeLabel: "Суха"
 },
 {
   id: "lentils",
@@ -478,7 +517,9 @@
   max: 250,
   defaultAmount: 150,
   allowedMeals: ["lunch", "dinner"],
-  macrosPer100: { p: 9, f: 0.4, c: 20, kcal: 116 }
+      macrosPer100: { p: 9, f: 0.4, c: 20, kcal: 116 },
+      rawMacrosPer100: { p: 25, f: 1.1, c: 63, kcal: 352 },
+      rawWeightModeLabel: "Суха"
 },
 {
   id: "beans",
@@ -491,7 +532,9 @@
   max: 250,
   defaultAmount: 150,
   allowedMeals: ["lunch", "dinner"],
-  macrosPer100: { p: 8.7, f: 0.5, c: 22.8, kcal: 127 }
+      macrosPer100: { p: 8.7, f: 0.5, c: 22.8, kcal: 127 },
+      rawMacrosPer100: { p: 21, f: 1.4, c: 63, kcal: 333 },
+      rawWeightModeLabel: "Суха"
 },
 {
   id: "berries",
@@ -649,6 +692,146 @@
   macrosPer100: { p: 11, f: 46, c: 30, kcal: 600 }
 },
 
+// Рослинні та доступні джерела білка. Вага для цих позицій — готового продукту.
+{
+  id: "chickpeas",
+  name: "Нут готовий",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 100,
+  max: 300,
+  defaultAmount: 150,
+  allowedMeals: ["lunch", "dinner", "snack"],
+      macrosPer100: { p: 8.9, f: 2.6, c: 27.4, kcal: 164 },
+      rawMacrosPer100: { p: 20, f: 6, c: 63, kcal: 364 },
+      rawWeightModeLabel: "Сухий"
+},
+{
+  id: "green_peas",
+  name: "Зелений горошок готовий",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 100,
+  max: 300,
+  defaultAmount: 150,
+  allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 5.4, f: 0.4, c: 14.5, kcal: 84 }
+},
+{
+  id: "edamame",
+  name: "Едамаме готові",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 100,
+  max: 250,
+  defaultAmount: 150,
+  allowedMeals: ["lunch", "dinner", "snack"],
+  macrosPer100: { p: 11.9, f: 5.2, c: 8.9, kcal: 121 }
+},
+{
+  id: "tempeh",
+  name: "Темпе",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 75,
+  max: 200,
+  defaultAmount: 125,
+  allowedMeals: ["lunch", "dinner"],
+  macrosPer100: { p: 19, f: 11, c: 9, kcal: 195 }
+},
+{
+  id: "seitan",
+  name: "Сейтан",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 100,
+  max: 250,
+  defaultAmount: 150,
+  allowedMeals: ["lunch", "dinner", "snack"],
+  macrosPer100: { p: 24, f: 2, c: 14, kcal: 141 }
+},
+{
+  id: "soy_mince",
+  name: "Соєвий фарш готовий",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 100,
+  max: 300,
+  defaultAmount: 175,
+  allowedMeals: ["lunch", "dinner"],
+  macrosPer100: { p: 16, f: 6, c: 8, kcal: 145 }
+},
+{
+  id: "mung_beans",
+  name: "Маш готовий",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 100,
+  max: 300,
+  defaultAmount: 150,
+  allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 7, f: 0.4, c: 19, kcal: 105 },
+      rawMacrosPer100: { p: 24, f: 1.2, c: 63, kcal: 347 },
+      rawWeightModeLabel: "Сухий"
+},
+{
+  id: "split_peas",
+  name: "Горох колотий готовий",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 100,
+  max: 300,
+  defaultAmount: 150,
+  allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 8.3, f: 0.4, c: 21.1, kcal: 118 },
+      rawMacrosPer100: { p: 24, f: 1.2, c: 63, kcal: 347 },
+      rawWeightModeLabel: "Сухий"
+},
+{
+  id: "red_beans",
+  name: "Червона квасоля готова",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 25,
+  min: 100,
+  max: 300,
+  defaultAmount: 150,
+  allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 8.7, f: 0.5, c: 22.8, kcal: 127 },
+      rawMacrosPer100: { p: 21, f: 1.4, c: 63, kcal: 333 },
+      rawWeightModeLabel: "Суха"
+},
+{
+  id: "peanuts",
+  name: "Арахіс",
+  category: "protein",
+  unitType: "grams",
+  unitLabel: "г",
+  portionStep: 10,
+  min: 15,
+  max: 50,
+  defaultAmount: 25,
+  allowedMeals: ["breakfast", "second_breakfast", "snack"],
+  macrosPer100: { p: 25.8, f: 49.2, c: 16.1, kcal: 567 }
+},
+
 
     {
       id: "vegetables",
@@ -753,6 +936,110 @@
       defaultAmount: 200,
       allowedMeals: ["lunch", "dinner"],
       macrosPer100: { p: 2.2, f: 0.1, c: 3.9, kcal: 20 }
+    },
+    {
+      id: "cabbage",
+      name: "Капуста",
+      category: "vegetable",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 50,
+      min: 100,
+      max: 400,
+      defaultAmount: 200,
+      allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 1.3, f: 0.1, c: 5.8, kcal: 25 }
+    },
+    {
+      id: "carrot",
+      name: "Морква",
+      category: "vegetable",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 25,
+      min: 75,
+      max: 300,
+      defaultAmount: 150,
+      allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 0.9, f: 0.2, c: 9.6, kcal: 41 }
+    },
+    {
+      id: "beetroot",
+      name: "Буряк готовий",
+      category: "vegetable",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 25,
+      min: 75,
+      max: 300,
+      defaultAmount: 150,
+      allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 1.6, f: 0.2, c: 9.6, kcal: 44 }
+    },
+    {
+      id: "onion",
+      name: "Цибуля",
+      category: "vegetable",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 25,
+      min: 25,
+      max: 150,
+      defaultAmount: 75,
+      allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 1.1, f: 0.1, c: 9.3, kcal: 40 }
+    },
+    {
+      id: "mushrooms",
+      name: "Печериці",
+      category: "vegetable",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 25,
+      min: 100,
+      max: 350,
+      defaultAmount: 200,
+      allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 3.1, f: 0.3, c: 3.3, kcal: 22 }
+    },
+    {
+      id: "cauliflower",
+      name: "Цвітна капуста",
+      category: "vegetable",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 25,
+      min: 100,
+      max: 350,
+      defaultAmount: 200,
+      allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 1.9, f: 0.3, c: 5, kcal: 25 }
+    },
+    {
+      id: "green_beans",
+      name: "Стручкова квасоля",
+      category: "vegetable",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 25,
+      min: 100,
+      max: 350,
+      defaultAmount: 200,
+      allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 1.8, f: 0.2, c: 7, kcal: 31 }
+    },
+    {
+      id: "frozen_vegetables",
+      name: "Заморожена овочева суміш",
+      category: "vegetable",
+      unitType: "grams",
+      unitLabel: "г",
+      portionStep: 50,
+      min: 150,
+      max: 400,
+      defaultAmount: 250,
+      allowedMeals: ["lunch", "dinner"],
+      macrosPer100: { p: 2.5, f: 0.4, c: 8, kcal: 45 }
     }
   ];
 
@@ -1030,14 +1317,14 @@ const autoMealTemplates = {
   }
 
   function getAllFoods() {
-    return foods.concat(getCustomFoods());
+    return foods.concat(system.nutritionCatalog || [], getCustomFoods());
   }
 
   function getFoodById(id) {
     const allFoods = getAllFoods();
 
     for (let i = 0; i < allFoods.length; i += 1) {
-      if (allFoods[i].id === id) return clone(allFoods[i]);
+      if (allFoods[i].id === id) return applyWeightMode(clone(allFoods[i]));
     }
 
     return null;
@@ -1049,13 +1336,34 @@ const autoMealTemplates = {
         return food.category === category;
       })
       .map(function (food) {
-        return clone(food);
+        return applyWeightMode(clone(food));
       });
+  }
+
+  function filterSelectionForDiet(selected, dietStyle) {
+    const source = selected || {};
+    const result = {};
+
+    Object.keys(source).forEach(function (category) {
+      result[category] = (source[category] || []).filter(function (id) {
+        return isFoodAllowedForDiet(getFoodById(id), dietStyle);
+      });
+    });
+
+    return result;
   }
 
   function normalizePortion(food, amount) {
     const stepped = Math.round(amount / food.portionStep) * food.portionStep;
     return Math.max(food.min, Math.min(food.max, stepped));
+  }
+
+  function normalizeManualPortion(food, value) {
+    const amount = Number(value);
+    if (!food || !Number.isFinite(amount) || amount <= 0) return null;
+    return food.unitType === "piece"
+      ? Math.min(100, Math.max(1, Math.round(amount)))
+      : Math.min(3000, Math.max(0.1, Math.round(amount * 10) / 10));
   }
 
   function getFoodMacros(food, amount) {
@@ -1589,7 +1897,9 @@ const autoMealTemplates = {
         return allowedTemplateIds.includes(id);
       })
       .map(getFoodById)
-      .filter(Boolean);
+      .filter(function (food) {
+        return food && isFoodAllowedForDiet(food, context && context.dietStyle);
+      });
 
     if (selectedAllowed.length) {
       return selectedAllowed[0];
@@ -1597,13 +1907,21 @@ const autoMealTemplates = {
 
     const fallback = allowedTemplateIds
       .map(getFoodById)
-      .filter(Boolean);
+      .filter(function (food) {
+        return food && isFoodAllowedForDiet(food, context && context.dietStyle);
+      });
 
-    return fallback[0] || null;
+    if (fallback.length) return fallback[0];
+
+    return getFoodsByCategory(category).find(function (food) {
+      return isFoodAllowedForDiet(food, context && context.dietStyle) &&
+        (!food.allowedMeals || !food.allowedMeals.length || food.allowedMeals.includes(mealKey));
+    }) || null;
   }
 
-  function isFoodAvailableForPreset(food, mealKey, selected) {
+  function isFoodAvailableForPreset(food, mealKey, selected, dietStyle) {
     if (!food) return false;
+    if (!isFoodAllowedForDiet(food, dietStyle)) return false;
 
     const selectedIds = (selected && selected[food.category]) || [];
     if (selectedIds.length && !selectedIds.includes(food.id)) return false;
@@ -1619,13 +1937,13 @@ const autoMealTemplates = {
     return entry.amount || getDefaultAmountForMeal(food, mealKey, goal);
   }
 
-  function getPresetScore(preset, mealKey, selected) {
+  function getPresetScore(preset, mealKey, selected, dietStyle) {
     let score = 0;
 
     for (let i = 0; i < preset.items.length; i += 1) {
       const entry = preset.items[i];
       const food = getFoodById(entry.foodId);
-      const available = isFoodAvailableForPreset(food, mealKey, selected);
+      const available = isFoodAvailableForPreset(food, mealKey, selected, dietStyle);
 
       if (!available && !entry.optional) return -1;
       if (available) score += entry.optional ? 1 : 3;
@@ -1643,7 +1961,7 @@ const autoMealTemplates = {
         return {
           preset,
           index,
-          score: getPresetScore(preset, mealKey, selected)
+          score: getPresetScore(preset, mealKey, selected, targets.dietStyle)
         };
       })
       .filter(function (item) {
@@ -1666,7 +1984,7 @@ const autoMealTemplates = {
 
     preset.items.forEach(function (entry) {
       const food = getFoodById(entry.foodId);
-      if (!isFoodAvailableForPreset(food, meal.mealKey, selected)) return;
+      if (!isFoodAvailableForPreset(food, meal.mealKey, selected, targets.dietStyle)) return;
       if (mealHas(meal, food.id)) return;
 
       addMealItem(meal, food.id, getPresetAmount(entry, food, meal.mealKey, targets.goal));
@@ -1752,7 +2070,7 @@ const autoMealTemplates = {
     }
 
     if (template.vegetables) {
-      const vegetableFood = pickSelectedVegetable(mealKey, selected);
+      const vegetableFood = pickSelectedVegetable(mealKey, selected, targets.dietStyle);
       if (vegetableFood) addMealItem(meal, vegetableFood.id, getDefaultAmountForMeal(vegetableFood, mealKey, targets.goal));
     }
 
@@ -1767,18 +2085,48 @@ const autoMealTemplates = {
   }
 
   function buildAutoMealPlan(targets, selected) {
+    activeWeightMode = normalizeWeightMode(targets && targets.weightMode);
     const distribution = getMealDistribution(targets.mealsCount);
-    const context = { fermentedDairyUsed: false };
+    const context = { fermentedDairyUsed: false, dietStyle: targets.dietStyle };
 
     const meals = distribution.map(function (part) {
       const targetKcal = Math.round(targets.calories * part.ratio);
       return buildAutoMealFromTemplate(part.key, targetKcal, targets, selected, context);
     });
 
+    if (targets.dietStyle !== 'carnivore') {
+      const vegetableGrams = meals.reduce(function (sum, meal) { return sum + meal.items.reduce(function (grams,item) { return grams + (item.category === 'vegetable' ? item.amount : 0); },0); },0);
+      let missing = Math.max(0, 400 - vegetableGrams);
+      const vegetables = ((selected && selected.vegetable) || []).map(getFoodById).filter(function (food) {
+        return food && isFoodAllowedForDiet(food, targets.dietStyle);
+      });
+      meals.forEach(function (meal, index) {
+        if (!missing || !vegetables.length) return;
+        const food = vegetables[index % vegetables.length];
+        const existing = meal.items.find(function (item) { return item.id === food.id; });
+        const amount = Math.min(missing, Math.max(0, food.max - (existing ? existing.amount : 0)), 200);
+        if (amount > 0) {
+          if (existing) { existing.amount = normalizePortion(food, existing.amount + amount); existing.macros = getFoodMacros(food,existing.amount); }
+          else addMealItem(meal, food.id, amount);
+          missing = Math.max(0, 400 - meals.reduce(function (sum, part) { return sum + part.items.reduce(function (grams,item) { return grams + (item.category === 'vegetable' ? item.amount : 0); },0); },0));
+        }
+      });
+    }
+
     return {
       meals: meals,
       totals: rebalancePlan(meals, targets)
     };
+  }
+
+  function getProduceAmount(meals) {
+    const fruitIds = new Set(['apple','banana','pear','orange','mandarin','peach','plum','grapes','strawberry','blueberry','cherry','apricot','kiwi','avocado']);
+    return (meals || []).reduce(function (sum, meal) {
+      return sum + (meal.items || []).reduce(function (grams, item) {
+        const food = getFoodById(item.id);
+        return grams + (food && food.unitType !== 'piece' && (food.category === 'vegetable' || fruitIds.has(food.id)) ? Number(item.amount) || 0 : 0);
+      }, 0);
+    }, 0);
   }
 
   function addUniqueMealItem(meal, foodId, amount) {
@@ -1793,7 +2141,7 @@ const autoMealTemplates = {
     }
   }
 
-  function getSelectedAllowedFoods(category, allowedIds, selected) {
+  function getSelectedAllowedFoods(category, allowedIds, selected, dietStyle) {
     const selectedIds = (selected && selected[category]) || [];
 
     return selectedIds
@@ -1801,13 +2149,20 @@ const autoMealTemplates = {
         return !allowedIds || !allowedIds.length || allowedIds.includes(id);
       })
       .map(getFoodById)
-      .filter(Boolean);
+      .filter(function (food) {
+        return food && isFoodAllowedForDiet(food, dietStyle);
+      });
   }
 
-  function pickSelectedVegetable(mealKey, selected) {
+  function pickSelectedVegetable(mealKey, selected, dietStyle) {
+    if (normalizeDietStyle(dietStyle) === "carnivore") return null;
+
     const selectedVegetables = ((selected && selected.vegetable) || [])
       .map(getFoodById)
       .filter(Boolean)
+      .filter(function (food) {
+        return isFoodAllowedForDiet(food, dietStyle);
+      })
       .filter(function (food) {
         return !food.allowedMeals || !food.allowedMeals.length || food.allowedMeals.includes(mealKey);
       });
@@ -1819,15 +2174,15 @@ const autoMealTemplates = {
     return preferred || selectedVegetables[0] || getFoodById("vegetables");
   }
 
-  function addSelectedVegetableToMeal(meal, mealKey, selected, goal, used) {
-    const vegetable = pickSelectedVegetable(mealKey, selected);
+  function addSelectedVegetableToMeal(meal, mealKey, selected, goal, used, dietStyle) {
+    const vegetable = pickSelectedVegetable(mealKey, selected, dietStyle);
     if (!vegetable) return;
 
     addUniqueMealItem(meal, vegetable.id, getDefaultAmountForMeal(vegetable, mealKey, goal));
     if (used) used.add(vegetable.id);
   }
 
-  function buildFallbackMeal(mealKey, targetKcal, goal, selected) {
+  function buildFallbackMeal(mealKey, targetKcal, goal, selected, dietStyle) {
     const meal = {
       mealKey: mealKey,
       mealName: mealNames[mealKey],
@@ -1836,13 +2191,19 @@ const autoMealTemplates = {
     };
 
     const allowed = getAllowedIdsForMeal(mealKey);
-    const protein = (allowed.protein || []).map(getFoodById).filter(Boolean)[0];
-    const carb = (allowed.carb || []).map(getFoodById).filter(Boolean)[0];
-    const fat = (allowed.fat || []).map(getFoodById).filter(Boolean)[0];
+    const protein = (allowed.protein || []).map(getFoodById).filter(function (food) {
+      return food && isFoodAllowedForDiet(food, dietStyle);
+    })[0];
+    const carb = (allowed.carb || []).map(getFoodById).filter(function (food) {
+      return food && isFoodAllowedForDiet(food, dietStyle);
+    })[0];
+    const fat = (allowed.fat || []).map(getFoodById).filter(function (food) {
+      return food && isFoodAllowedForDiet(food, dietStyle);
+    })[0];
 
     if (protein) addUniqueMealItem(meal, protein.id, getDefaultAmountForMeal(protein, mealKey, goal));
     if (carb && goal !== "cut") addUniqueMealItem(meal, carb.id, getDefaultAmountForMeal(carb, mealKey, goal));
-    if (mealKey === "lunch" || mealKey === "dinner") addSelectedVegetableToMeal(meal, mealKey, selected, goal);
+    if (mealKey === "lunch" || mealKey === "dinner") addSelectedVegetableToMeal(meal, mealKey, selected, goal, null, dietStyle);
     if (fat && targetKcal > 300) addUniqueMealItem(meal, fat.id, getDefaultAmountForMeal(fat, mealKey, goal));
 
     optimizeMealToCalories(meal, targetKcal);
@@ -1866,24 +2227,24 @@ const autoMealTemplates = {
 
     const allowed = getAllowedIdsForMeal(mealKey);
 
-    const selectedProteins = getSelectedAllowedFoods("protein", allowed.protein, selected).filter(function (food) {
+    const selectedProteins = getSelectedAllowedFoods("protein", allowed.protein, selected, targets.dietStyle).filter(function (food) {
       return !used.has(food.id);
     });
-    const selectedCarbs = getSelectedAllowedFoods("carb", allowed.carb, selected).filter(function (food) {
+    const selectedCarbs = getSelectedAllowedFoods("carb", allowed.carb, selected, targets.dietStyle).filter(function (food) {
       return !used.has(food.id);
     });
-    const selectedFats = getSelectedAllowedFoods("fat", allowed.fat, selected).filter(function (food) {
+    const selectedFats = getSelectedAllowedFoods("fat", allowed.fat, selected, targets.dietStyle).filter(function (food) {
       return !used.has(food.id);
     });
 
-    const fallbackProteins = getSelectedAllowedFoods("protein", allowed.protein, selected);
-    const fallbackCarbs = getSelectedAllowedFoods("carb", allowed.carb, selected);
-    const fallbackFats = getSelectedAllowedFoods("fat", allowed.fat, selected);
+    const fallbackProteins = getSelectedAllowedFoods("protein", allowed.protein, selected, targets.dietStyle);
+    const fallbackCarbs = getSelectedAllowedFoods("carb", allowed.carb, selected, targets.dietStyle);
+    const fallbackFats = getSelectedAllowedFoods("fat", allowed.fat, selected, targets.dietStyle);
 
     const protein = selectedProteins[0] || fallbackProteins[0] || null;
     const carb = selectedCarbs[0] || fallbackCarbs[0] || null;
     const fat = selectedFats[0] || fallbackFats[0] || null;
-    const extraCarb = getSelectedAllowedFoods("extra_carb", allowed.extra_carb || [], selected)
+    const extraCarb = getSelectedAllowedFoods("extra_carb", allowed.extra_carb || [], selected, targets.dietStyle)
       .find(function (food) {
         return !used.has(food.id);
       });
@@ -1904,7 +2265,7 @@ const autoMealTemplates = {
         used.add(carb.id);
       }
 
-      const extraBanana = getSelectedAllowedFoods("carb", ["banana"], selected).find(function (food) {
+      const extraBanana = getSelectedAllowedFoods("carb", ["banana"], selected, targets.dietStyle).find(function (food) {
         return !meal.items.some(function (item) { return item.id === food.id; });
       });
 
@@ -1951,7 +2312,7 @@ const autoMealTemplates = {
         used.add(carbFood.id);
       }
 
-      addSelectedVegetableToMeal(meal, mealKey, selected, targets.goal, used);
+      addSelectedVegetableToMeal(meal, mealKey, selected, targets.goal, used, targets.dietStyle);
 
       if (fat && meal.items.length < 4 && proteinFood && !["mackerel", "salmon"].includes(proteinFood.id)) {
         addUniqueMealItem(meal, fat.id, getDefaultAmountForMeal(fat, mealKey, targets.goal));
@@ -1986,7 +2347,7 @@ const autoMealTemplates = {
         used.add(proteinFood.id);
       }
 
-      addSelectedVegetableToMeal(meal, mealKey, selected, targets.goal, used);
+      addSelectedVegetableToMeal(meal, mealKey, selected, targets.goal, used, targets.dietStyle);
 
       if (carb && targets.goal !== "cut" && meal.items.length < 4) {
         addUniqueMealItem(meal, carb.id, getDefaultAmountForMeal(carb, mealKey, targets.goal));
@@ -2010,7 +2371,7 @@ const autoMealTemplates = {
     optimizeMealToCalories(meal, targetKcal);
 
     if (!validateMeal(meal)) {
-      return buildFallbackMeal(mealKey, targetKcal, targets.goal, selected);
+      return buildFallbackMeal(mealKey, targetKcal, targets.goal, selected, targets.dietStyle);
     }
 
     calculateMealTotals(meal);
@@ -2064,7 +2425,7 @@ const autoMealTemplates = {
   function getAllowedIdsForMeal(mealKey) {
     if (mealKey === "breakfast") {
       return {
-        protein: ["eggs", "cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+        protein: ["eggs", "cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein", "edamame", "peanuts"],
         carb: ["oatmeal", "banana", "berries", "apple"],
         fat: ["avocado", "butter", "peanut_butter", "pumpkin_seeds"],
         vegetable: [],
@@ -2074,7 +2435,7 @@ const autoMealTemplates = {
 
     if (mealKey === "second_breakfast") {
       return {
-        protein: ["cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+        protein: ["cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein", "edamame", "peanuts"],
         carb: ["banana", "oatmeal", "berries", "apple"],
         fat: ["nuts", "peanut_butter", "seeds", "pumpkin_seeds"],
         vegetable: [],
@@ -2084,17 +2445,17 @@ const autoMealTemplates = {
 
     if (mealKey === "lunch") {
       return {
-        protein: ["chicken", "turkey", "beef", "tuna", "white_fish", "mackerel", "salmon", "chicken_thigh", "shrimp", "tofu", "pork_tenderloin", "cottage_cheese", "cottage_cheese_lowfat"],
+        protein: ["chicken", "turkey", "beef", "tuna", "white_fish", "mackerel", "salmon", "chicken_thigh", "shrimp", "tofu", "pork_tenderloin", "cottage_cheese", "cottage_cheese_lowfat", "chickpeas", "green_peas", "edamame", "tempeh", "seitan", "soy_mince", "mung_beans", "split_peas", "red_beans"],
         carb: ["rice", "buckwheat", "potato", "pasta", "sweet_potato", "bulgur", "couscous", "quinoa", "lentils", "beans"],
         fat: ["olive_oil", "avocado", "butter"],
-        vegetable: ["spinach", "broccoli", "cucumber", "tomato", "zucchini", "bell_pepper", "asparagus"],
+        vegetable: ["spinach", "broccoli", "cucumber", "tomato", "zucchini", "bell_pepper", "asparagus", "cabbage", "carrot", "beetroot", "onion", "mushrooms", "cauliflower", "green_beans", "frozen_vegetables"],
         extra_carb: ["whole_bread"]
       };
     }
 
     if (mealKey === "snack") {
       return {
-        protein: ["cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein"],
+        protein: ["cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "greek_yogurt", "skyr", "whey_protein", "edamame", "peanuts"],
         carb: ["banana", "berries", "apple"],
         fat: ["nuts", "peanut_butter", "seeds", "pumpkin_seeds", "dark_chocolate"],
         vegetable: [],
@@ -2104,7 +2465,7 @@ const autoMealTemplates = {
 
     if (mealKey === "evening_snack") {
       return {
-        protein: ["cottage_cheese", "cottage_cheese_lowfat", "greek_yogurt", "skyr", "whey_protein"],
+        protein: ["cottage_cheese", "cottage_cheese_lowfat", "greek_yogurt", "skyr", "whey_protein", "edamame"],
         carb: ["berries", "apple"],
         fat: ["nuts", "pumpkin_seeds", "dark_chocolate"],
         vegetable: [],
@@ -2113,10 +2474,10 @@ const autoMealTemplates = {
     }
 
     return {
-      protein: ["chicken", "turkey", "beef", "tuna", "white_fish", "mackerel", "salmon", "eggs", "hard_cheese", "chicken_thigh", "shrimp", "tofu", "pork_tenderloin", "cottage_cheese", "cottage_cheese_lowfat"],
+      protein: ["chicken", "turkey", "beef", "tuna", "white_fish", "mackerel", "salmon", "eggs", "hard_cheese", "chicken_thigh", "shrimp", "tofu", "pork_tenderloin", "cottage_cheese", "cottage_cheese_lowfat", "chickpeas", "green_peas", "edamame", "tempeh", "seitan", "soy_mince", "mung_beans", "split_peas", "red_beans"],
       carb: ["rice", "buckwheat", "potato", "sweet_potato", "bulgur", "quinoa", "lentils", "beans"],
       fat: ["olive_oil", "avocado", "pumpkin_seeds"],
-      vegetable: ["spinach", "broccoli", "cucumber", "tomato", "zucchini", "bell_pepper", "asparagus"],
+      vegetable: ["spinach", "broccoli", "cucumber", "tomato", "zucchini", "bell_pepper", "asparagus", "cabbage", "carrot", "beetroot", "onion", "mushrooms", "cauliflower", "green_beans", "frozen_vegetables"],
       extra_carb: ["whole_bread"]
     };
   }
@@ -2134,7 +2495,7 @@ const autoMealTemplates = {
 
     if (food.id === "banana") return 100;
 
-    if (food.id === "oatmeal") return mealKey === "breakfast" ? 70 : 60;
+    if (food.id === "oatmeal") return mealKey === "breakfast" ? 250 : 200;
 
     if (food.id === "rice" || food.id === "buckwheat") {
       if (mealKey === "dinner") return goal === "gain" ? 100 : 75;
@@ -2154,7 +2515,7 @@ const autoMealTemplates = {
 
     if (food.id === "nuts") return 20;
 
-    if (["vegetables", "broccoli", "cucumber", "tomato", "zucchini", "asparagus"].includes(food.id)) return 200;
+    if (["vegetables", "broccoli", "cucumber", "tomato", "zucchini", "asparagus", "cabbage", "carrot", "beetroot", "onion", "mushrooms", "cauliflower", "green_beans", "frozen_vegetables"].includes(food.id)) return 200;
 
     if (food.id === "spinach") return 100;
 
@@ -2236,7 +2597,7 @@ const autoMealTemplates = {
     return food.goalUse.includes(goal || "maintain");
   }
 
-  function getBuilderRowsForMeal(category, mealKey, targetValue, selected, goal) {
+  function getBuilderRowsForMeal(category, mealKey, targetValue, selected, goal, dietStyle) {
     const allowed = getAllowedIdsForMeal(mealKey);
     const allowedIds = allowed[category] || [];
     const selectedIds = (selected && selected[category]) || [];
@@ -2248,14 +2609,9 @@ const autoMealTemplates = {
         return isFoodAllowedForGoal(food, goal);
       })
       .filter(function (food) {
-        if (["protein", "carb", "extra_carb", "fat"].includes(category)) return true;
-        if (!food.allowedMeals || !food.allowedMeals.length) return true;
-        return food.allowedMeals.includes(mealKey);
+        return isFoodAllowedForDiet(food, dietStyle);
       })
-      .filter(function (food) {
-        if (!allowedIds.length) return true;
-        return allowedIds.includes(food.id) || category === "protein" || category === "carb" || category === "extra_carb" || category === "fat";
-      });
+      ;
 
     if (!foodsForMeal.length) return [];
 
@@ -2277,15 +2633,15 @@ const autoMealTemplates = {
           getMacroKeyByCategory(category)
         );
 
-        if (!calculated) return null;
+        const suggestion = calculated || { amount: food.defaultAmount, label: food.defaultAmount + " " + food.unitLabel, macros: getFoodMacros(food, food.defaultAmount) };
 
         return {
           id: food.id,
           name: food.name,
-          amount: calculated.amount,
+          amount: category === "vegetable" ? food.defaultAmount : suggestion.amount,
           unitLabel: food.unitLabel,
-          label: calculated.label,
-          macros: calculated.macros
+          label: suggestion.label,
+          macros: suggestion.macros
         };
       })
       .filter(Boolean);
@@ -2306,7 +2662,8 @@ const autoMealTemplates = {
         protein: {},
         carb: {},
         extra_carb: {},
-        fat: {}
+        fat: {},
+        vegetable: {}
       };
     });
 
@@ -2360,6 +2717,7 @@ const autoMealTemplates = {
   }
 
   function buildSelectedDaySummary(targets, selections, selected) {
+    activeWeightMode = normalizeWeightMode(targets && targets.weightMode);
     const daySelections = selections || {};
     const mealKeys = getMealKeysForTargets(targets);
 
@@ -2372,13 +2730,14 @@ const autoMealTemplates = {
         totals: { kcal: 0, p: 0, f: 0, c: 0 }
       };
 
-      ["protein", "carb", "extra_carb", "fat"].forEach(function (category) {
-        const entries = getSelectionEntries(mealSelection[category]).slice(0, 1);
+      ["protein", "carb", "extra_carb", "fat", "vegetable"].forEach(function (category) {
+        const entries = getSelectionEntries(mealSelection[category]);
 
         entries.forEach(function (entry) {
           const food = getFoodById(entry.id);
           if (!food) return;
           if (!isFoodAllowedForGoal(food, targets.goal)) return;
+          if (!isFoodAllowedForDiet(food, targets.dietStyle)) return;
 
           const macroTargets = getMealMacroTargets(targets, mealKey);
           const targetValue = macroTargets[getMacroKeyByCategory(category)];
@@ -2395,7 +2754,8 @@ const autoMealTemplates = {
             amount = calculated.amount;
           }
 
-          amount = normalizePortion(food, amount);
+          amount = normalizeManualPortion(food, amount);
+          if (!amount) return;
 
           meal.items.push({
             id: food.id,
@@ -2403,31 +2763,17 @@ const autoMealTemplates = {
             category: category,
             amount: amount,
             unitLabel: food.unitLabel,
+            weightState: food.weightState,
+            weightModeLabel: food.weightModeLabel,
             macros: getFoodMacros(food, amount)
           });
         });
       });
 
-      if (mealKey === "lunch" || mealKey === "dinner") {
-        const veg = pickSelectedVegetable(mealKey, selected);
-        if (veg) {
-          const amount = getDefaultAmountForMeal(veg, mealKey, targets.goal);
-          meal.items.push({
-            id: veg.id,
-            name: veg.name,
-            category: veg.category,
-            amount: amount,
-            unitLabel: veg.unitLabel,
-            macros: getFoodMacros(veg, amount)
-          });
-        }
-      }
 
       calculateMealTotals(meal);
       return meal;
     });
-
-    rebalanceSelectedMealsToTargets(selectedMeals, targets);
 
     return {
       meals: selectedMeals,
@@ -2493,6 +2839,35 @@ const autoMealTemplates = {
     return "male";
   }
 
+  const animalFoodIds = new Set([
+    "eggs", "cottage_cheese", "cottage_cheese_lowfat", "hard_cheese", "chicken", "turkey", "beef",
+    "tuna", "white_fish", "mackerel", "salmon", "chicken_thigh", "greek_yogurt", "whey_protein",
+    "skyr", "shrimp", "pork_tenderloin", "butter"
+  ]);
+
+  const highCarbDietIds = new Set([
+    "chickpeas", "green_peas", "mung_beans", "split_peas", "red_beans", "lentils", "beans",
+    "oatmeal", "banana", "rice", "buckwheat", "potato", "pasta", "sweet_potato", "bulgur",
+    "couscous", "quinoa", "whole_bread", "rice_cakes", "honey", "jam", "dates", "raisins",
+    "tortilla", "fruit_juice", "apple"
+  ]);
+
+  function normalizeDietStyle(value) {
+    const style = String(value || "standard").toLowerCase();
+    if (["carnivore", "keto", "vegan", "sport"].includes(style)) return style;
+    return "standard";
+  }
+
+  function isFoodAllowedForDiet(food, dietStyle) {
+    if (!food) return false;
+    const style = normalizeDietStyle(dietStyle);
+
+    if (style === "vegan") return !animalFoodIds.has(food.id) && food.animal !== true;
+    if (style === "carnivore") return animalFoodIds.has(food.id) || food.animal === true || food.id === "butter";
+    if (style === "keto") return !highCarbDietIds.has(food.id) && food.highCarb !== true;
+    return true;
+  }
+
   function normalizeLoadContext(value) {
     const context = String(value || "standard").toLowerCase();
     if (context === "heavy") return "heavy";
@@ -2540,6 +2915,7 @@ const autoMealTemplates = {
   }
 
  function calculateNutrition(data) {
+  activeWeightMode = normalizeWeightMode(data["weight-mode"]);
   const gender = normalizeNutritionSex(data.gender);
   const age = Number(data.age);
   const height = Number(data.height);
@@ -2547,11 +2923,11 @@ const autoMealTemplates = {
   const activity = Number(data.activity);
   const goal = normalizeNutritionGoal(data.goal);
   const profile = normalizeNutritionProfile(data["nutrition-profile"]);
+  const dietStyle = normalizeDietStyle(data["diet-style"]);
   const loadContext = normalizeLoadContext(data["load-context"]);
   const manualMealsCount = Number(data["meals-count"]) || 4;
   const programPhase = data["program-phase"] || "adaptation";
   const progressWeek = Math.max(1, Math.min(4, Number(data["progress-week"]) || 1));
-
   if (!age || !height || !weight || !activity) return null;
 
   let bmr = 0;
@@ -2609,12 +2985,30 @@ const autoMealTemplates = {
     fatPerKg = Math.max(0.75, fatPerKg - 0.05);
   }
 
-  const protein = +(weight * proteinPerKg).toFixed(1);
-  const fat = +(weight * fatPerKg).toFixed(1);
+  let protein = +(weight * proteinPerKg).toFixed(1);
+  let fat = +(weight * fatPerKg).toFixed(1);
   let carbs = +Math.max(0, (calories - protein * 4 - fat * 9) / 4).toFixed(1);
 
+  if (dietStyle === "keto") {
+    carbs = +Math.min(50, Math.max(20, weight * 0.5)).toFixed(1);
+    fat = +Math.max(0, (calories - protein * 4 - carbs * 4) / 9).toFixed(1);
+  }
+
+  if (dietStyle === "carnivore") {
+    carbs = 0;
+    fat = +Math.max(0, (calories - protein * 4) / 9).toFixed(1);
+  }
+
+  if (dietStyle === "vegan") {
+    const veganProtein = Math.max(protein, +(weight * (goal === "cut" ? 1.9 : 1.8)).toFixed(1));
+    const veganFat = Math.max(fat, +(weight * 0.8).toFixed(1));
+    protein = veganProtein;
+    fat = veganFat;
+    carbs = +Math.max(0, (calories - veganProtein * 4 - veganFat * 9) / 4).toFixed(1);
+  }
+
   // ✅ Прогресія для набору після адаптації
-  if (programPhase === "progression" && goal === "gain") {
+  if (programPhase === "progression" && goal === "gain" && !["keto", "carnivore"].includes(dietStyle)) {
     carbs = +(carbs + progressWeek * 30).toFixed(1);
     calories = Math.round(protein * 4 + fat * 9 + carbs * 4);
   }
@@ -2651,6 +3045,8 @@ const autoMealTemplates = {
     saltGrams,
     goal,
     profile,
+    dietStyle,
+    weightMode: activeWeightMode,
     dayType: "stable",
     loadContext,
     loadContextLabel: getLoadContextLabel(loadContext),
@@ -2686,6 +3082,10 @@ const autoMealTemplates = {
     getAutoMealTemplates: getAutoMealTemplates,
     getFoodById: getFoodById,
     getFoodMacros: getFoodMacros,
+    normalizeWeightMode: normalizeWeightMode,
+    normalizeManualPortion: normalizeManualPortion,
+    filterSelectionForDiet: filterSelectionForDiet,
+    isFoodAllowedForDiet: isFoodAllowedForDiet,
     normalizePortion: normalizePortion,
     getFoodsByCategory: getFoodsByCategory,
     normalizePortion: normalizePortion,
@@ -2701,6 +3101,7 @@ const autoMealTemplates = {
     pickAutoTemplateFood: pickAutoTemplateFood,
     buildAutoMealFromTemplate: buildAutoMealFromTemplate,
     buildAutoMealPlan: buildAutoMealPlan,
+    getProduceAmount: getProduceAmount,
     buildManualMealByKey: buildManualMealByKey,
     buildManualMealPlan: buildManualMealPlan,
     getMealDistribution: getMealDistribution,

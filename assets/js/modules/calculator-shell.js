@@ -204,6 +204,8 @@
     "weight",
     "goal",
     "load-context",
+    "diet-style",
+    "weight-mode",
     "meals-count",
     "training-place",
     "training-goal",

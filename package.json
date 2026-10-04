@@ -12,10 +12,13 @@
     "dev": "powershell -ExecutionPolicy Bypass -File tools/dev-server.ps1",
     "dev:access": "node tools/access-server.js",
     "dev:access:mock": "set ACCESS_MOCK_PAYMENTS=1&& node tools/access-server.js",
-    "check": "powershell -ExecutionPolicy Bypass -File tools/check-project.ps1"
+    "check": "powershell -ExecutionPolicy Bypass -File tools/check-project.ps1",
+    "preview:growth": "node tools/preview-growth.mjs",
+    "test:nutrition": "node --test tests/nutrition-workspace.test.mjs tests/nutrition-browser.test.mjs"
   },
   "devDependencies": {
     "playwright": "1.63.0",
-    "miniflare": "4.20260721.0"
+    "miniflare": "4.20260721.0",
+    "wrangler": "4.113.0"
   }
 }

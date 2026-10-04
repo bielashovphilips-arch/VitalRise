@@ -164,7 +164,7 @@
   </select>
 </div>
 
-<div class="form-group" id="progress-week-group" style="display: none;">
+<div class="form-group initially-hidden" id="progress-week-group">
   <label for="progress-week">Тиждень прогресії</label>
   <select id="progress-week" name="progress-week">
     <option value="1" selected>1 тиждень</option>
@@ -184,6 +184,17 @@
   </div>
 
   <div class="form-group">
+    <label for="weight-mode-toggle">Як рахувати вагу продуктів</label>
+    <label class="nutrition-weight-toggle">
+      <input type="checkbox" id="weight-mode-toggle" aria-describedby="weight-mode-hint" />
+      <span id="weight-mode-label">Готовий продукт</span>
+    </label>
+    <label for="weight-mode" hidden>Режим ваги</label>
+    <input type="hidden" id="weight-mode" name="weight-mode" value="ready" />
+    <small class="field-hint" id="weight-mode-hint">За замовчуванням рахуємо готову їжу. Перемкни, якщо зважуєш крупи або макарони сухими.</small>
+  </div>
+
+  <div class="form-group">
     <label for="meals-count">Прийомів їжі</label>
     <select id="meals-count" name="meals-count">
       <option value="3">3 прийоми</option>
@@ -196,9 +207,11 @@
   <div class="form-group">
     <label for="diet-style">Стиль харчування</label>
     <select id="diet-style" name="diet-style">
-      <option value="standard" selected>Звичайний</option>
-      <option value="simple">Простий</option>
+      <option value="standard" selected>Збалансований</option>
       <option value="sport">Спортивний</option>
+      <option value="carnivore">Карнівор</option>
+      <option value="keto">Кето</option>
+      <option value="vegan">Веганський</option>
     </select>
   </div>
 
@@ -250,7 +263,7 @@
                 <div class="form-group">
                   <label for="training-level">Рівень</label>
                   <select id="training-level" name="training-level">
-                    <option value="beginner">Новачок</option>
+                    <option value="beginner">Новачок — до 1 місяця тренувань</option>
                     <option value="intermediate">Середній</option>
                     <option value="advanced">Просунутий</option>
                   </select>
@@ -300,7 +313,9 @@
                     <option value="4">4 дні</option>
                     <option value="5">5 днів</option>
                     <option value="6">6 днів</option>
+                    <option id="ppl-fixed-days-option" value="8" hidden>PPL: 8-денний цикл</option>
                   </select>
+                  <small class="field-hint" id="training-days-hint">Обери кількість тренувань на тиждень; дні відпочинку плануй між заняттями.</small>
                 </div>
 
                 <div class="form-group">

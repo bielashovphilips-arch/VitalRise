@@ -256,7 +256,9 @@
   }
 
   function foodLineMarkup(item) {
-    return escapeHtml(translateText(item.name)) + " - " + item.amount + " " + unitLabel(item.unitLabel);
+    const workspace = system.nutritionWorkspace;
+    const food = nutrition.getFoodById ? nutrition.getFoodById(item.id) : null;
+    return escapeHtml(food && workspace ? workspace.foodName(food) : translateText(item.name)) + " - " + item.amount + " " + unitLabel(item.unitLabel) + (food && workspace ? " · " + escapeHtml(workspace.foodState(food)) : "");
   }
 
   function mealSummaryMarkup(totals, formatKcal, formatGrams) {
@@ -276,10 +278,27 @@
     );
   }
 
-  function buildFoodWeightNoteMarkup() {
+  function buildFoodWeightNoteMarkup(targets) {
+    const language = getLanguage();
+    const rawMode = targets && targets.weightMode === "raw";
+    const modeLabel = language === "en"
+      ? (rawMode ? "Weight mode: raw / dry." : "Weight mode: ready product.")
+      : (rawMode ? "Режим ваги: сирий / сухий продукт." : "Режим ваги: готовий продукт.");
+    const note = rawMode
+      ? language === "en"
+        ? "Grains, legumes, pasta, and oatmeal use dry weight where a dry value is available. Oils, seeds, nuts, fruit, and vegetables use the shown portion."
+        : language === "ru"
+          ? "Крупы, бобовые, макароны и овсянка считаются в сухом виде, где есть сухое значение. Масла, семена, орехи, фрукты и овощи считаются по указанной порции."
+          : "Крупи, бобові, макарони та вівсянка рахуються у сухому вигляді, де є сухе значення. Олія, насіння, горіхи, фрукти та овочі рахуються за вказаною порцією."
+      : language === "en"
+        ? "Meat, fish, grains, legumes, potatoes, and pasta are counted after cooking; oatmeal means cooked porridge. Protein powder, oils, seeds, and nuts use the amount shown on the product or in the portion."
+        : language === "ru"
+          ? "Мясо, рыба, крупы, бобовые, картофель и макароны считаются после приготовления; овсянка — готовая каша. Протеин, масла, семена и орехи считаются по указанной порции."
+          : "М’ясо, риба, крупи, бобові, картопля та макарони рахуються після приготування; вівсянка — готова каша. Протеїн, олія, насіння та горіхи рахуються за вказаною порцією.";
+
     return (
       '<div class="builder-note">' +
-        uiText("foodWeightNote") +
+        '<strong>' + modeLabel + '</strong> ' + note +
       '</div>'
     );
   }
@@ -329,10 +348,14 @@
         '<h4 class="auto-meal-title">' + escapeHtml(translateText(meal.mealName)) + '</h4>' +
         '<div class="auto-meal-foods">' +
           meal.items.map(function (item) {
+            const food = system.nutrition && system.nutrition.getFoodById(item.id);
+            const workspace = system.nutritionWorkspace;
+            const foodState = workspace && food ? workspace.foodState(food) : "";
             return (
               '<div class="auto-food-item">' +
                 '<strong>' + escapeHtml(translateText(item.name)) + '</strong> - ' +
                 item.amount + ' ' + unitLabel(item.unitLabel) +
+                (foodState ? '<small class="nw-ready-state">' + escapeHtml(foodState) + (food.note ? ' · ' + escapeHtml(translateText(food.note)) : '') + '</small>' : '') +
               '</div>'
             );
           }).join("") +
@@ -410,27 +433,29 @@
         '</summary>' +
         '<div class="nutrition-custom-tools-body">' +
         '<form id="nutrition-custom-product-form" class="custom-product-form">' +
-          '<input name="name" maxlength="64" placeholder="Назва продукту">' +
-          '<select name="category">' +
+          '<label class="nw-field">Назва продукту<input name="name" maxlength="64" placeholder="Назва продукту" required></label>' +
+          '<label class="nw-field">Категорія<select name="category">' +
             '<option value="protein">Білок</option>' +
             '<option value="carb">Вуглеводи</option>' +
             '<option value="extra_carb">Дод. вуглеводи</option>' +
             '<option value="fat">Жири</option>' +
             '<option value="vegetable">Овочі</option>' +
-          '</select>' +
-          '<input type="number" name="p" min="0" max="100" step="0.1" placeholder="Б/100">' +
-          '<input type="number" name="f" min="0" max="100" step="0.1" placeholder="Ж/100">' +
-          '<input type="number" name="c" min="0" max="100" step="0.1" placeholder="В/100">' +
-          '<input type="number" name="kcal" min="0" max="900" step="1" placeholder="ккал/100">' +
+          '</select></label>' +
+          '<label class="nw-field">Білки / 100 г<input type="number" name="p" min="0" max="100" step="0.1" placeholder="Б/100" required></label>' +
+          '<label class="nw-field">Жири / 100 г<input type="number" name="f" min="0" max="100" step="0.1" placeholder="Ж/100" required></label>' +
+          '<label class="nw-field">Вуглеводи / 100 г<input type="number" name="c" min="0" max="100" step="0.1" placeholder="В/100" required></label>' +
+          '<label class="nw-field">Калорії / 100 г<input type="number" name="kcal" min="0" max="900" step="1" placeholder="ккал/100" required></label>' +
+          '<label class="nw-field">Стан продукту<select name="weightState"><option value="packaged">Як на упаковці</option><option value="cooked">Готовий</option><option value="fresh">Свіжий</option></select></label>' +
+          '<label class="nw-field">Походження<select name="animal"><option value="false">Рослинний</option><option value="true">Тваринний / змішаний</option></select></label>' +
           '<button type="submit" class="builder-main-btn secondary">Додати</button>' +
         '</form>' +
         '<div class="custom-product-list">' +
           (productList || '<div class="builder-note">Власних продуктів ще немає.</div>') +
         '</div>' +
         '<div class="nutrition-template-row">' +
-          '<input id="nutrition-template-name" maxlength="48" placeholder="Назва шаблону меню">' +
+          '<input id="nutrition-template-name" maxlength="48" placeholder="Назва шаблону меню" aria-label="Назва шаблону меню">' +
           '<button type="button" class="builder-main-btn secondary" data-action="save-nutrition-template">Зберегти вибір</button>' +
-          '<select id="nutrition-template-select">' +
+          '<select id="nutrition-template-select" aria-label="Обрати шаблон">' +
             '<option value="">Обрати шаблон</option>' +
             templates.map(function (template) {
               return '<option value="' + escapeHtml(template.name) + '">' + escapeHtml(template.name) + '</option>';
@@ -440,7 +465,7 @@
         '</div>' +
         '<details class="nutrition-import-box">' +
           '<summary>Імпорт / експорт продуктів JSON</summary>' +
-          '<textarea id="nutrition-products-json" rows="5">' + exportValue + '</textarea>' +
+          '<textarea id="nutrition-products-json" rows="5" aria-label="Імпорт / експорт продуктів JSON">' + exportValue + '</textarea>' +
           '<button type="button" class="builder-main-btn secondary" data-action="import-nutrition-products">Імпорт продуктів</button>' +
         '</details>' +
         (view.message ? '<div class="builder-note">' + escapeHtml(view.message) + '</div>' : '') +
@@ -459,9 +484,9 @@
           '<span>' + templates.length + ' шаблонів</span>' +
         '</div>' +
         '<div class="nutrition-template-row">' +
-          '<input id="nutrition-menu-template-name" maxlength="48" placeholder="Назва готового меню">' +
+          '<input id="nutrition-menu-template-name" maxlength="48" placeholder="Назва готового меню" aria-label="Назва готового меню">' +
           '<button type="button" class="builder-main-btn secondary" data-action="save-nutrition-menu-template">Зберегти меню</button>' +
-          '<select id="nutrition-menu-template-select">' +
+          '<select id="nutrition-menu-template-select" aria-label="Обрати меню">' +
             '<option value="">Обрати меню</option>' +
             templates.map(function (template) {
               return '<option value="' + escapeHtml(template.name) + '">' + escapeHtml(template.name) + '</option>';
@@ -717,7 +742,7 @@
           '<div class="result-item"><span class="result-item-label">' + uiText("context") + '</span><span class="result-item-value">' + escapeHtml(translateText(activeTargets.loadContextLabel || "Стабільний день")) + '</span></div>' +
         '</div>' +
         buildNutritionLogicLineMarkup() +
-        buildFoodWeightNoteMarkup() +
+        buildFoodWeightNoteMarkup(activeTargets) +
         buildMealVolumeNoteMarkup(activeTargets) +
         buildActiveCorrectionMarkup(activeTargets) +
         (view.accuracyMarkup || "") +
@@ -830,7 +855,7 @@
           '<div class="result-item"><span class="result-item-label">' + uiText("carbs") + '</span><span class="result-item-value">' + formatGrams(plan.totals.c) + ' / ' + formatGrams(targets.carbs) + '</span></div>' +
         '</div>' +
         buildNutritionLogicLineMarkup() +
-        buildFoodWeightNoteMarkup() +
+        buildFoodWeightNoteMarkup(targets) +
         buildMealVolumeNoteMarkup(targets) +
         buildActiveCorrectionMarkup(targets) +
         '<div class="result-grid">' +

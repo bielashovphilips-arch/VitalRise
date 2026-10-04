@@ -21,6 +21,9 @@ powershell -ExecutionPolicy Bypass -File tools\build-index.ps1
 - `begin_checkout` - старт оформлення;
 - `purchase` - підтвердження покупки;
 - `redeem_code` - активація коду;
-- `newsletter_signup` - підписка email.
+- `newsletter_signup` - успішна підписка email;
+- `generate_lead` - успішний newsletter signup або успішне отримання результату безкоштовного калькулятора. Подія містить `lead_source` і `form_name`.
+
+Події відправляються тільки після згоди користувача на маркетингову аналітику. Для Google Ads як основну конверсію варто позначити `generate_lead` для newsletter, а безкоштовний калькулятор аналізувати окремо за параметром `lead_source=free_calculator`.
 
 Email у Google Analytics не передається.

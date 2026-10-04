@@ -1,9 +1,9 @@
 {
-  "name": "VitalRise Athlete Command Center",
+  "name": "VitalRise Athlete",
   "short_name": "VitalRise",
   "description": "Offline-ready athlete dashboard for nutrition, training, labs, progress, and check-ins.",
-  "id": "./index.html",
-  "start_url": "./index.html",
+  "id": "/",
+  "start_url": "/",
   "scope": "./",
   "lang": "uk",
   "dir": "ltr",
