@@ -4,6 +4,73 @@ import {mkdir} from 'node:fs/promises';
 import {launchBrowser} from '../tools/browser.mjs';
 import {startPreview} from '../tools/preview-growth.mjs';
 
+test('replacement preview changes only the confirmed food; quality coverage, saved amounts and export stay truthful', async () => {
+  const preview=await startPreview(0),browser=await launchBrowser();
+  try {
+    const context=await browser.newContext({viewport:{width:1440,height:1000}});
+    context.setDefaultTimeout(7000);
+    await context.route('**/*',route=>new URL(route.request().url()).origin===preview.url?route.continue():route.abort());
+    const page=await context.newPage(),errors=[];
+    page.on('pageerror',error=>errors.push(error.message));
+    await page.goto(preview.url+'/nutrition.html?access=admin',{waitUntil:'networkidle'});
+    if(await page.locator('[data-marketing-consent="essential"]').count())await page.locator('[data-marketing-consent="essential"]').click();
+    for(const [id,value] of Object.entries({age:'28',height:'178',weight:'80'}))await page.locator('#'+id).fill(value);
+    await page.locator('#nutrition-form button[type=submit]').click();
+    const quality=page.locator('#nutrition-result [data-nutrition-disclosure="quality"]');
+    await quality.locator('summary').first().click();
+    assert.equal(await quality.locator('[data-quality]').count(),3);
+    assert.ok(await quality.locator('[data-quality-status="incomplete"]').count()>0);
+    const swap=page.locator('#nutrition-result [data-nutrition-disclosure="swap-lunch-chicken"]');
+    const before=await page.locator('#nutrition-result .auto-meal-card').nth(1).locator('.nw-auto-food-label').allTextContents();
+    await swap.locator('summary').first().click();
+    assert.deepEqual(await page.locator('#nutrition-result .auto-meal-card').nth(1).locator('.nw-auto-food-label').allTextContents(),before,'Opening a preview must not change portions');
+    const apply=swap.locator('[data-action="apply-food-swap"]').first();
+    assert.ok(await apply.count());
+    const id=await apply.getAttribute('data-id');
+    assert.equal(id,'turkey');
+    for(const key of ['breakfast','lunch'])await page.locator('#nutrition-result [data-nutrition-eaten="'+key+'"]').check();
+    if(process.env.NUTRITION_CAPTURE){
+      await mkdir('.tmp/nutrition-swaps-quality',{recursive:true});
+      for(const width of [1440,390]){
+        await page.setViewportSize({width,height:width===1440?1000:844});
+        await quality.scrollIntoViewIfNeeded();
+        await page.screenshot({path:'.tmp/nutrition-swaps-quality/preview-'+width+'.png'});
+        await swap.scrollIntoViewIfNeeded();
+        await page.screenshot({path:'.tmp/nutrition-swaps-quality/swap-'+width+'.png'});
+        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+      }
+    }
+    await apply.click();
+    assert.equal(await page.locator('#nutrition-result .auto-meal-card').count(),4,'Ready menu remains the main view');
+    assert.equal(await page.locator('#nutrition-result [data-nutrition-eaten="breakfast"]').isChecked(),true);
+    assert.equal(await page.locator('#nutrition-result [data-nutrition-eaten="lunch"]').isChecked(),false);
+    const after=await page.locator('#nutrition-result .auto-meal-card').nth(1).locator('.nw-auto-food-label').allTextContents();
+    assert.deepEqual(after.slice(1),before.slice(1),'Other lunch foods stay unchanged');
+    await page.locator('#nutrition-result [data-action="use-generated-menu"]').click();
+    const portion=page.locator('#nutrition-result .nutrition-portion-input[data-meal="lunch"][data-id="turkey"]');
+    const amount=await portion.inputValue();assert.ok(Number(amount)>0);
+    assert.equal(await page.locator('#nutrition-result .nutrition-portion-input[data-meal="lunch"][data-id="chicken"]').count(),0);
+    const template=page.locator('#nutrition-result [data-nutrition-disclosure="menu-template"]');
+    await template.locator('summary').first().click();
+    await page.locator('#nutrition-menu-template-name').fill('Swapped plan');
+    await page.locator('[data-action="save-nutrition-menu-template"]').click();
+    await portion.fill('100');await portion.press('Tab');
+    await page.locator('#nutrition-menu-template-select').selectOption('Swapped plan');
+    await page.locator('[data-action="load-nutrition-menu-template"]').click();
+    assert.equal(await portion.inputValue(),amount);
+    await page.setViewportSize({width:1440,height:1000});
+    for(const [lang,title] of [['en','Nutritional quality'],['ru','Пищевая ценность'],['uk','Поживна якість']]) {
+      await page.locator('[data-lang-switch="'+lang+'"]').first().click();
+      assert.match(await page.locator('#nutrition-result [data-nutrition-disclosure="quality"] > summary').innerText(),new RegExp(title));
+    }
+    await page.locator('[data-print-target="nutrition-result"]').click();
+    assert.equal(await page.locator('#mobile-report-phone [data-nutrition-disclosure^="swap-"]').count(),0);
+    assert.equal(await page.locator('#mobile-report-phone [data-quality]').count(),3);
+    assert.deepEqual(errors,[]);
+    await context.close();
+  }finally{await browser.close();preview.server.closeAllConnections();await new Promise(resolve=>preview.server.close(resolve));}
+});
+
 test('nutrition page: search, exact portions, multiple foods, favorites, recipes, saved menu and report on desktop and mobile', async () => {
   const preview = await startPreview(0), browser = await launchBrowser();
   try {

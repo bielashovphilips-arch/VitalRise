@@ -10,13 +10,63 @@ function setup(language = 'uk') {
       localStorage: {getItem:key=>storage.get(key) || null,setItem:(key,value)=>storage.set(key,value)}},
     document: {addEventListener() {}, documentElement:{lang:language}},
   });
-  for (const module of ['storage','nutrition-custom','nutrition-catalog','nutrition','nutrition-render','nutrition-workspace']) {
+  for (const module of ['storage','nutrition-custom','nutrition-catalog','nutrition-quality-data','nutrition','nutrition-quality','nutrition-swaps','nutrition-render','nutrition-workspace']) {
     vm.runInContext(readFileSync('assets/js/modules/' + module + '.js','utf8'),context);
   }
   return context.window.VitalRiseSystem;
 }
 const targets = {calories:2500,protein:160,fat:70,carbs:307,weightMode:'ready',mealsCount:4,goal:'maintain',dietStyle:'standard',waterLiters:2.5,saltGrams:5};
 const plain = value => JSON.parse(JSON.stringify(value));
+
+test('quality keeps missing values unknown, scales eggs by edible weight, and uses raw data only for raw portions', () => {
+  const {nutrition:n,nutritionQuality:q,nutritionQualityData:data,nutritionCustom:custom}=setup();
+  const eggs=q.getValues(n.getFoodById('eggs'),3);
+  assert.equal(eggs.sodiumMg,data.eggs.ready.per100.sodiumMg*1.5);
+  const incomplete=q.summarize([{items:[{id:'eggs',amount:3},{id:'white_fish',amount:100}]}]);
+  assert.equal(incomplete.sodiumMg.complete,false);
+  assert.equal(incomplete.sodiumMg.knownTotal,eggs.sodiumMg);
+  assert.deepEqual(plain(incomplete.sodiumMg.missingFoods.map(food=>food.id)),['white_fish']);
+  const selections=n.buildEmptyMealSelections(targets);selections.lunch.carb={rice:75};
+  n.buildSelectedDaySummary({...targets,weightMode:'raw'},selections,n.getDefaultSelection());
+  assert.equal(q.getValues(n.getFoodById('rice'),75).fibreG,data.rice.raw.per100.fibreG*0.75);
+  const product=custom.addProduct({name:'Quality label',p:10,f:5,c:15,kcal:145,fibreG:'',saturatedFatG:'0',sodiumMg:'100'});
+  assert.equal(product.qualityPer100.fibreG,null);
+  assert.equal(product.qualityPer100.saturatedFatG,0);
+  assert.equal(q.getValues(product,200).sodiumMg,200);
+  assert.equal(custom.addProduct({name:'Invalid quality',p:10,f:5,c:15,kcal:145,sodiumMg:-1}),null);
+  assert.equal(custom.addProduct({name:'Invalid saturated fat',p:10,f:5,c:15,kcal:145,saturatedFatG:6}),null);
+});
+
+test('replacement previews respect selected foods, diets, meal occupancy, portion units and actual macro deltas', () => {
+  const {nutrition:n,nutritionSwaps:swaps}=setup();
+  const selected=n.getDefaultSelection();
+  const options=swaps.getOptions('chicken',200,targets,'lunch',[{id:'chicken',amount:200},{id:'rice',amount:150}],selected);
+  assert.ok(options.some(option=>option.food.id==='turkey'));
+  for(const option of options) {
+    assert.ok(selected.protein.includes(option.food.id));
+    assert.equal(option.deltas.kcal,Math.round((n.getFoodMacros(option.food,option.amount).kcal-n.getFoodMacros(n.getFoodById('chicken'),200).kcal)*10)/10);
+    assert.ok(Math.abs(option.deltas.kcal)<=option.before.kcal*0.2);
+  }
+  assert.equal(swaps.getOptions('chicken',200,{...targets,dietStyle:'vegan'},'lunch',[],{protein:['chicken','turkey']}).length,0);
+  assert.equal(swaps.getOptions('chicken',200,targets,'lunch',[{id:'turkey',amount:100}],{protein:['chicken','turkey']}).length,0);
+  assert.equal(swaps.getOptions('chicken',-1,targets,'lunch',[],selected).length,0);
+});
+
+test('quality references carry matching FDC records and recipe nutrients preserve incomplete coverage', () => {
+  const {nutrition:n,nutritionQualityData:data,nutritionQuality:q,nutritionCustom:custom,nutritionRender:r}=setup();
+  assert.equal(Object.keys(data).length,76);
+  for(const item of Object.values(data))for(const reference of Object.values(item)) {
+    assert.match(reference.sourceUrl,/^https:\/\/fdc\.nal\.usda\.gov\/food-details\/\d+\/nutrients$/);
+    for(const key of q.keys)assert.ok(reference.per100[key]===null || Number.isFinite(reference.per100[key])&&reference.per100[key]>=0);
+  }
+  const selections=n.buildEmptyMealSelections(targets);selections.lunch.carb={rice:150};selections.lunch.protein={white_fish:100};
+  const meal=n.buildSelectedDaySummary(targets,selections,n.getDefaultSelection()).meals.find(item=>item.mealKey==='lunch');
+  const recipe=custom.addRecipe('Unknown recipe quality',250,'protein',meal);
+  assert.equal(recipe.qualityPer100.sodiumMg,null);
+  const markup=r.buildQualityMarkup(targets,{meals:[meal],totals:meal.totals});
+  assert.match(markup,/data-quality-status="incomplete"/);
+  assert.match(markup,/white_fish|Біла риба/);
+});
 
 test('adherence is per local day and exact meal: changed amounts, weight states and next day require a new check', () => {
   const {nutritionWorkspace:w}=setup();

@@ -3085,6 +3085,7 @@ const autoMealTemplates = {
     normalizeWeightMode: normalizeWeightMode,
     normalizeManualPortion: normalizeManualPortion,
     filterSelectionForDiet: filterSelectionForDiet,
+    isFoodAllowedForGoal: isFoodAllowedForGoal,
     isFoodAllowedForDiet: isFoodAllowedForDiet,
     normalizePortion: normalizePortion,
     getFoodsByCategory: getFoodsByCategory,

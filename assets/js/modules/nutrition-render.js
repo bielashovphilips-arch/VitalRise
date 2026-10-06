@@ -340,7 +340,7 @@
     );
   }
 
-  function buildMealCardMarkup(meal, formatters) {
+  function buildMealCardMarkup(meal, formatters, swapContext) {
     const formatKcal = getFormatter(formatters, "formatKcal");
     const formatGrams = getFormatter(formatters, "formatGrams");
 
@@ -353,10 +353,12 @@
             const workspace = system.nutritionWorkspace;
             const foodHint = workspace && food ? workspace.foodHint(food) : "";
             return (
-              '<div class="auto-food-item">' +
+              '<div class="auto-food-item nw-auto-food"><div class="nw-auto-food-label">' +
                 '<strong>' + escapeHtml(translateText(item.name)) + '</strong> - ' +
                 item.amount + ' ' + unitLabel(item.unitLabel) +
                 (foodHint ? '<small class="nw-ready-state">' + escapeHtml(foodHint) + '</small>' : '') +
+                '</div>' +
+                (food && workspace && system.nutritionRender.buildFoodSwapMarkup ? system.nutritionRender.buildFoodSwapMarkup(food, item.amount, meal.mealKey, swapContext) : '') +
               '</div>'
             );
           }).join("") +
@@ -448,6 +450,7 @@
           '<label class="nw-field">Калорії / 100 г<input type="number" name="kcal" min="0" max="900" step="1" placeholder="ккал/100" required></label>' +
           '<label class="nw-field">Стан продукту<select name="weightState"><option value="packaged">Як на упаковці</option><option value="cooked">Готовий</option><option value="fresh">Свіжий</option></select></label>' +
           '<label class="nw-field">Походження<select name="animal"><option value="false">Рослинний</option><option value="true">Тваринний / змішаний</option></select></label>' +
+          (system.nutritionRender.buildCustomQualityFieldsMarkup ? system.nutritionRender.buildCustomQualityFieldsMarkup() : '') +
           '<button type="submit" class="builder-main-btn secondary">Додати</button>' +
         '</form>' +
         '<div class="custom-product-list">' +

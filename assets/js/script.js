@@ -499,6 +499,7 @@
   foodSearch: "",
   foodFilter: "all",
   favorites: (nutritionCustom && nutritionCustom.getFavorites ? nutritionCustom.getFavorites() : []),
+  readySelections: null,
   selected: getDefaultNutritionSelection()
 };
 
@@ -539,6 +540,7 @@
   }
 
  function resetNutritionState() {
+  nutritionState.readySelections = null;
   nutritionState.targets = null;
   nutritionState.mode = "auto";
   nutritionState.activeGroup = "protein";
@@ -566,7 +568,7 @@
 
   function buildAutoMealPlan(targets) {
   return nutritionModule
-    ? nutritionModule.buildAutoMealPlan(targets, nutritionState.selected)
+    ? (nutritionState.readySelections ? nutritionModule.buildSelectedDaySummary(targets, nutritionState.readySelections, nutritionState.selected) : nutritionModule.buildAutoMealPlan(targets, nutritionState.selected))
     : { meals: [], totals: { kcal: 0, p: 0, f: 0, c: 0 } };
 }
 
@@ -636,7 +638,7 @@
 
   function buildFinalNutritionMarkup(title, targets, plan) {
     return nutritionRender
-      ? nutritionRender.buildFinalNutritionMarkup(title, targets, plan, getNutritionFormatters())
+      ? nutritionRender.buildFinalNutritionMarkup(title, targets, plan, getNutritionFormatters(), nutritionState.selected)
       : "";
   }
 
@@ -706,6 +708,7 @@ const tabs = [
   }
 
   function renderNutritionConstructor(targets, baseFormData) {
+  nutritionState.readySelections = null;
   nutritionState.targets = cloneNutrition(targets);
   nutritionState.baseFormData = cloneNutrition(baseFormData || {});
   if (nutritionModule && typeof nutritionModule.filterSelectionForDiet === "function") {
@@ -739,6 +742,7 @@ const tabs = [
 
   function toggleNutritionProduct(groupName, productId, checked) {
     if (!nutritionState.selected[groupName]) return;
+    nutritionState.readySelections = null;
 
     let list = nutritionState.selected[groupName];
 
@@ -867,8 +871,10 @@ function adjustMealSelectionAmount(dayType, mealKey, category, foodId, direction
 
 function buildChoiceSectionMarkup(title, category, rows, mealKey, dayType) {
   const selectedAmounts = getMealSelectionValue(dayType, mealKey, category);
+  const targets = getCurrentDayTargets();
+  const meal = buildSelectedDaySummary(targets, dayType).meals.find(function (item) { return item.mealKey === mealKey; });
   return nutritionRender
-    ? nutritionRender.buildChoiceSectionMarkup(title, category, rows, mealKey, dayType, selectedAmounts)
+    ? nutritionRender.buildChoiceSectionMarkup(title, category, rows, mealKey, dayType, selectedAmounts, {targets:targets, selected:nutritionState.selected, items:meal ? meal.items : [], day:dayType})
     : "";
 }
 
@@ -1100,6 +1106,7 @@ function buildMealConstructorMarkup(targets) {
     }
 
     nutritionState.selected = cloneNutrition(template.selected);
+    nutritionState.readySelections = null;
     nutritionState.customMessage = "Завантажено шаблон: " + template.name;
     rerenderNutritionConstructor();
   }
@@ -1218,6 +1225,32 @@ function buildMealConstructorMarkup(targets) {
     if (!target) return;
 
     const action = target.dataset.action;
+
+    if (action === 'apply-food-swap') {
+      const targets = getCurrentDayTargets();
+      const editing = !!nutritionResult.querySelector('.meal-constructor-grid');
+      const plan = editing ? buildSelectedDaySummary(targets, nutritionState.activeDayView) : buildAutoMealPlan(targets);
+      const meal = plan.meals.find(function (item) { return item.mealKey === target.dataset.meal; });
+      const original = meal && meal.items.find(function (item) { return item.id === target.dataset.oldId; });
+      if (!original) return;
+      const option = window.VitalRiseSystem.nutritionSwaps.getOptions(original.id, original.amount, targets, meal.mealKey, meal.items, nutritionState.selected).find(function (item) { return item.food.id === target.dataset.id; });
+      if (!option) return;
+      if (!editing) {
+        nutritionState.readySelections = buildEmptyMealSelections(targets);
+        plan.meals.forEach(function (entry) {
+          entry.items.forEach(function (item) { nutritionState.readySelections[entry.mealKey][getNutritionFoodById(item.id).category][item.id] = item.amount; });
+        });
+      }
+      const category = option.food.category;
+      const selections = editing ? ensureMealSelectionCategory(nutritionState.activeDayView, meal.mealKey, category) : nutritionState.readySelections[meal.mealKey][category];
+      delete selections[original.id];
+      selections[option.food.id] = option.amount;
+      updateNutritionMarkup(editing ? buildMealConstructorMarkup(targets) : buildNutritionConstructorMarkup());
+      const workspace = window.VitalRiseSystem.nutritionWorkspace;
+      nutritionResult.querySelector('.nw-swap-status').textContent = workspace.t('swapApplied') + ': ' + workspace.foodName(getNutritionFoodById(original.id)) + ' → ' + workspace.foodName(option.food);
+      nutritionResult.querySelector('[data-nutrition-disclosure="swap-' + meal.mealKey + '-' + option.food.id + '"] > summary')?.focus();
+      return;
+    }
 
     if (action === 'use-generated-menu') {
       const targets = getCurrentDayTargets();

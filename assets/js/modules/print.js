@@ -488,7 +488,7 @@
     content.querySelectorAll('.nw-meal-card').forEach(function (card) { card.classList.add('selected-day-card'); });
     content.querySelectorAll('.nw-day-summary').forEach(function (node) { node.classList.add('nutrition-summary'); node.style.position = 'static'; });
     content.querySelectorAll('button,.nw-add-food,.nw-source,.nw-eaten,.nw-adherence-summary,[data-nutrition-disclosure="menu-template"],[data-nutrition-disclosure="summary"],.nutrition-custom-tools').forEach(function (node) { node.remove(); });
-    content.querySelectorAll('[data-nutrition-disclosure^="recipe-"]').forEach(function (node) { node.remove(); });
+    content.querySelectorAll('[data-nutrition-disclosure^="recipe-"],[data-nutrition-disclosure^="swap-"],.nw-swap-status').forEach(function (node) { node.remove(); });
     content.querySelectorAll('.nw-choice-section').forEach(function (node) { if (!node.querySelector('.nw-meal-food')) node.remove(); });
     content.querySelectorAll('details').forEach(function (node) { node.open = true; });
     return content;

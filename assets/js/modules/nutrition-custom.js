@@ -40,6 +40,14 @@
     if (macros.some(function (value) { return !Number.isFinite(value) || value < 0; }) || macros[0] + macros[1] + macros[2] > 100.5 || macros[3] > 900) return null;
 
     const unitType = input.unitType === "piece" ? "piece" : "grams";
+    const savedQuality = (unitType === "piece" ? input.qualityPerUnit : input.qualityPer100) || {};
+    const quality = {};
+    for (const key of ["fibreG", "saturatedFatG", "sodiumMg"]) {
+      const value = input[key] === undefined ? savedQuality[key] : input[key];
+      quality[key] = value === undefined || value === null || String(value).trim() === "" ? null : Number(value);
+      if (quality[key] !== null && (!Number.isFinite(quality[key]) || quality[key] < 0 || quality[key] > (key === "sodiumMg" ? 100000 : 100))) return null;
+    }
+    if (quality.saturatedFatG !== null && quality.saturatedFatG > macros[1] + 0.1) return null;
     const unitLabel = unitType === "piece" ? "шт" : "г";
     const id = String(input.id || ("custom_" + slugify(name))).trim();
     const base = {
@@ -62,6 +70,7 @@
     };
 
     if (unitType === "piece") {
+      base.qualityPerUnit = quality;
       base.macrosPerUnit = {
         p: macroValue("p"),
         f: macroValue("f"),
@@ -69,6 +78,7 @@
         kcal: macroValue("kcal")
       };
     } else {
+      base.qualityPer100 = quality;
       base.macrosPer100 = {
         p: macroValue("p"),
         f: macroValue("f"),
@@ -175,6 +185,11 @@
       const product = {name:name, category:category, p:meal.totals.p * factor, f:meal.totals.f * factor, c:meal.totals.c * factor, kcal:meal.totals.kcal * factor, weightState:"cooked", min:1, max:3000, portionStep:10, defaultAmount:100,
         animal:meal.items.some(function (item) { const food = system.nutrition.getFoodById(item.id); return !system.nutrition.isFoodAllowedForDiet(food, "vegan"); }),
         recipe:{yieldGrams:weight,ingredients:meal.items.map(function (item) { return {id:item.id,name:item.name,amount:item.amount,unitLabel:item.unitLabel,weightState:item.weightState,weightModeLabel:item.weightModeLabel}; })}};
+      if (system.nutritionQuality) {
+        const quality = system.nutritionQuality.summarize([meal]);
+        product.qualityPer100 = {};
+        system.nutritionQuality.keys.forEach(function (key) { product.qualityPer100[key] = quality[key].complete ? quality[key].knownTotal * factor : null; });
+      }
       return addProduct(product);
     },
     getFavorites: function () { const saved = getJson("vitalrise:nutrition:favorites", []); return Array.isArray(saved) ? saved.filter(function (id) { return typeof id === "string"; }) : []; },
