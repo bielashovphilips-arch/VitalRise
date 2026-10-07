@@ -160,3 +160,26 @@
   .nutrition-workspace :is(.nw-remove,.nw-source,.nw-add-food,.nw-menu-head button,.nw-portion button,.nw-filter,.nw-search,.nw-swap-status,[data-nutrition-disclosure^="swap-"]) { display: none !important; }
   .nutrition-workspace .nw-disclosure-body { display: block !important; }
 }
+.nutrition-workspace .nw-micro-heading { margin:24px 0 8px; font-size:16px; color:#eee5cc; }
+.nutrition-workspace .nw-micro-overview { color:#d8c391; line-height:1.6; }
+.nutrition-workspace .nw-micro-row { border-bottom:1px solid #343638; }
+.nutrition-workspace .nw-micro-row > summary { display:grid; grid-template-columns:minmax(140px,1fr) minmax(120px,.8fr) minmax(190px,1fr); gap:12px; padding:13px 0; cursor:pointer; color:#eee; font-size:14px; line-height:1.5; }
+.nutrition-workspace .nw-micro-row > summary:hover { color:#ead49e; }
+.nutrition-workspace .nw-micro-row > summary:focus-visible { outline:2px solid #d8c391; outline-offset:4px; }
+.nutrition-workspace .nw-micro-row > summary::marker { content:''; }
+.nutrition-workspace .nw-micro-row strong::after { content:' +'; color:#d8c391; }
+.nutrition-workspace .nw-micro-row[open] strong::after { content:' −'; }
+.nutrition-workspace .nw-micro-row > summary > * { min-width:0; overflow-wrap:anywhere; }
+.nutrition-workspace .nw-micro-amount { font-variant-numeric:tabular-nums; }
+.nutrition-workspace .nw-micro-status { color:#c0c5cf; }
+.nutrition-workspace [data-micro-status="below"] .nw-micro-status,
+.nutrition-workspace [data-micro-status="over"] .nw-micro-status { color:#edd198; }
+.nutrition-workspace .nw-micro-detail { padding:0 0 14px; color:#c0c5cf; font-size:14px; line-height:1.65; max-width:75ch; }
+.nutrition-workspace .nw-micro-detail p { margin:6px 0; }
+.nutrition-workspace .nw-micro-detail ul { padding-left:20px; }
+.nutrition-workspace .nw-micro-inputs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+@media (max-width:600px) {
+  .nutrition-workspace .nw-micro-row > summary { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:4px 12px; }
+  .nutrition-workspace .nw-micro-status { grid-column:1 / -1; }
+  .nutrition-workspace .nw-micro-inputs { grid-template-columns:minmax(0,1fr); }
+}

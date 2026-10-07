@@ -25,6 +25,9 @@
     yogurtName: ['Грецький йогурт натуральний 5%', 'Plain Greek yogurt 5%', 'Греческий йогурт натуральный 5%'],
     tofuName: ['Тофу твердий (сульфат кальцію)', 'Firm tofu (calcium sulfate)', 'Тофу твёрдый (сульфат кальция)'],
     bakedOilFree: ['Запечене без доданої олії', 'Baked without added oil', 'Запечённое без добавленного масла'],
+    mackerelReference: ['Скумбрія атлантична','Atlantic mackerel','Скумбрия атлантическая'],
+    salmonReference: ['Лосось атлантичний, вирощений','Atlantic salmon, farmed','Лосось атлантический, выращенный'],
+    invalidProduct: ['Перевір назву, калорії, БЖВ і введені поживні речовини. Значення мають бути невід’ємними; окрема форма вітаміну не може перевищувати його загальну кількість.','Check the name, calories, macros and entered nutrients. Values must be nonnegative; a vitamin component cannot exceed its total.','Проверь название, калории, БЖУ и введённые питательные вещества. Значения должны быть неотрицательными; отдельная форма витамина не может превышать его общее количество.'],
     waterCooked: ['Варена на воді', 'Cooked with water', 'Варёная на воде'],
     category: ['Категорія', 'Category', 'Категория'],
     origin: ['Походження', 'Origin', 'Происхождение'],
@@ -163,6 +166,12 @@
   render.buildCustomQualityFieldsMarkup = function () {
     return disclosure(t('optionalQuality'), '<p class="nw-help">' + t('qualityInputHint') + '</p>' + [{name:'fibreG',label:'fibre',max:100},{name:'saturatedFatG',label:'saturatedFat',max:100},{name:'sodiumMg',label:'sodium',max:100000}].map(function (field) { return '<label class="nw-field">' + t(field.label) + ' (' + (field.name === 'sodiumMg' ? (language() === 'en' ? 'mg' : 'мг') : (language() === 'en' ? 'g' : 'г')) + ')<input type="number" name="' + field.name + '" min="0" max="' + field.max + '" step="0.1" inputmode="decimal"></label>'; }).join(''), 'custom-quality');
   };
+  render.buildMicronutrientMarkup = function (targets, plan) {
+    return system.nutritionMicronutrients ? system.nutritionMicronutrients.renderAudit(targets,plan) : '';
+  };
+  render.buildCustomMicronutrientFieldsMarkup = function () {
+    return system.nutritionMicronutrients ? system.nutritionMicronutrients.renderInputs() : '';
+  };
   function dayKey(date) {
     const now = date || new Date();
     return now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
@@ -197,7 +206,7 @@
     const differences = checks.filter(function (item) { return Math.abs((totals[item.key] || 0) - targets[item.target]) > Math.max(item.key === 'kcal' ? 0 : 5, targets[item.target] * item.tolerance); });
     const complete = plan.meals.length === Number(targets.mealsCount) && plan.meals.every(function (meal) { return meal.items.length; });
     const produce = nutrition.getProduceAmount(plan.meals);
-    return '<section class="nw-plan-review" aria-label="' + t('goalCheck') + '"><strong>' + t(complete && !differences.length && produce >= 400 ? 'matches' : 'needsReview') + '</strong>' + (differences.length ? '<p>' + differences.map(function (item) { return t(item.label); }).join(', ') + '</p>' : '') + '<p>' + t('produce') + ': ' + format(produce) + ' / 400 ' + (language()==='en' ? 'g' : 'г') + ' · <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" rel="noopener noreferrer">WHO</a></p>' + disclosure(t('goalCheck'), '<p class="nw-help">' + t('reviewHint') + '</p>', 'review') + render.buildQualityMarkup(targets, plan) + '</section>';
+    return '<section class="nw-plan-review" aria-label="' + t('goalCheck') + '"><strong>' + t(complete && !differences.length && produce >= 400 ? 'matches' : 'needsReview') + '</strong>' + (differences.length ? '<p>' + differences.map(function (item) { return t(item.label); }).join(', ') + '</p>' : '') + '<p>' + t('produce') + ': ' + format(produce) + ' / 400 ' + (language()==='en' ? 'g' : 'г') + ' · <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" rel="noopener noreferrer">WHO</a></p>' + disclosure(t('goalCheck'), '<p class="nw-help">' + t('reviewHint') + '</p>', 'review') + render.buildQualityMarkup(targets, plan) + render.buildMicronutrientMarkup(targets, plan) + '</section>';
   };
   render.buildNutritionConstructorMarkup = function (view) {
     return '<div class="nutrition-builder"><div class="mode-switch"><button type="button" class="mode-btn ' + (view.mode==='auto' ? 'active' : '') + '" data-action="set-mode" data-mode="auto">' + t('readyPlan') + '</button><button type="button" class="mode-btn ' + (view.mode==='manual' ? 'active' : '') + '" data-action="set-mode" data-mode="manual">' + t('chooseFoods') + '</button></div>' + (view.mode==='manual' ? view.manualMarkup : view.autoMarkup) + '</div>';
@@ -304,6 +313,8 @@
   };
   const initialTranslateText = window.VitalRiseI18n && window.VitalRiseI18n.translateText;
   function translateForLanguage(value, lang) {
+    const micronutrientText = system.nutritionMicronutrients && system.nutritionMicronutrients.translate(value,lang);
+    if (micronutrientText) return micronutrientText;
     const index = {uk:0,en:1,ru:2}[lang] || 0;
     const perPiece = /^(.+) (?:ккал за 1 шт|kcal per piece)$/.exec(value);
     if (perPiece) return copy.perPiece[index].replace('{calories}', perPiece[1]);
@@ -336,7 +347,7 @@
     if (!form || !form.querySelector('#age') || !form.querySelector('#weight-mode-toggle')) return;
     panel.classList.add('nutrition-workspace');
     const css = document.createElement('link');
-    css.rel = 'stylesheet'; css.href = 'assets/css/nutrition-workspace.css?v=nutrition-20261007-1';
+    css.rel = 'stylesheet'; css.href = 'assets/css/nutrition-workspace.css?v=nutrition-20261007-2';
     document.head.appendChild(css);
     const parameterDetails = document.createElement('details');
     parameterDetails.className = 'nw-parameters'; parameterDetails.open = true;

@@ -20,7 +20,7 @@
         food.macrosPer100 = clone(ready.macrosPer100);
       }
       food.sourceUrl = ready.sourceUrl;
-      if (['chicken','turkey','white_fish'].includes(food.id)) food.weightModeLabel = 'Запечене без доданої олії';
+      if (['chicken','turkey','white_fish','salmon','mackerel'].includes(food.id)) food.weightModeLabel = 'Запечене без доданої олії';
       if (food.id === 'oatmeal') food.weightModeLabel = 'Варена на воді';
       if (references.raw) food.rawMacrosPer100 = clone(references.raw.macrosPer100);
     }
@@ -187,7 +187,9 @@
     },
     {
       id: "mackerel",
-      name: "Скумбрія / жирна риба",
+      name: "Скумбрія атлантична",
+      nameEn: "Atlantic mackerel",
+      nameRu: "Скумбрия атлантическая",
       category: "protein",
       unitType: "grams",
       unitLabel: "г",
@@ -200,7 +202,9 @@
     },
     {
       id: "salmon",
-      name: "Лосось",
+      name: "Лосось атлантичний, вирощений",
+      nameEn: "Atlantic salmon, farmed",
+      nameRu: "Лосось атлантический, выращенный",
       category: "protein",
       unitType: "grams",
       unitLabel: "г",
@@ -3171,6 +3175,7 @@ const autoMealTemplates = {
     waterLiters,
     saltGrams,
     saltLimitExclusive: true,
+    referenceProfile: {age:age, sex:gender, lifeStage:'standard'},
     goal,
     profile,
     dietStyle,

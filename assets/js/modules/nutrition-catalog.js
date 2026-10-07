@@ -26,17 +26,17 @@
       "evening_snack"
     ],
     "macrosPer100": {
-      "f": 3.25,
-      "c": 4.8,
+      "c": 4.78,
       "kcal": 61.0,
+      "f": 3.27,
       "p": 3.15
     },
     "weightState": "packaged",
     "animal": true,
     "highCarb": false,
     "sourceLabel": "USDA FoodData Central · SR Legacy",
-    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171265/nutrients",
-    "sourceDescription": "Milk, whole, 3.25% milkfat, with added vitamin D"
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172217/nutrients",
+    "sourceDescription": "Milk, whole, 3.25% milkfat, without added vitamin A and vitamin D"
   },
   {
     "id": "milk_2",
@@ -62,17 +62,17 @@
       "evening_snack"
     ],
     "macrosPer100": {
-      "p": 3.3,
       "c": 4.8,
       "kcal": 50.0,
-      "f": 1.98
+      "f": 1.98,
+      "p": 3.3
     },
     "weightState": "packaged",
     "animal": true,
     "highCarb": false,
     "sourceLabel": "USDA FoodData Central · SR Legacy",
-    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171267/nutrients",
-    "sourceDescription": "Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D"
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172205/nutrients",
+    "sourceDescription": "Milk, reduced fat, fluid, 2% milkfat, without added vitamin A and vitamin D"
   },
   {
     "id": "milk_1",
@@ -98,17 +98,17 @@
       "evening_snack"
     ],
     "macrosPer100": {
-      "p": 3.37,
-      "f": 0.97,
       "c": 4.99,
-      "kcal": 42.0
+      "kcal": 42.0,
+      "p": 3.37,
+      "f": 0.97
     },
     "weightState": "packaged",
     "animal": true,
     "highCarb": false,
     "sourceLabel": "USDA FoodData Central · SR Legacy",
-    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170872/nutrients",
-    "sourceDescription": "Milk, lowfat, fluid, 1% milkfat, with added vitamin A and vitamin D"
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173441/nutrients",
+    "sourceDescription": "Milk, fluid, 1% fat, without added vitamin A and vitamin D"
   },
   {
     "id": "yogurt_whole",

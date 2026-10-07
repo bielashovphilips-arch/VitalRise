@@ -4,6 +4,35 @@ import {mkdir} from 'node:fs/promises';
 import {launchBrowser} from '../tools/browser.mjs';
 import {startPreview} from '../tools/preview-growth.mjs';
 
+test('optional label micronutrients save through the real form and remain unknown when blank', async () => {
+  const preview=await startPreview(0),browser=await launchBrowser();
+  try {
+    const context=await browser.newContext({viewport:{width:390,height:844}});
+    context.setDefaultTimeout(7000);
+    await context.route('**/*',route=>new URL(route.request().url()).origin===preview.url?route.continue():route.abort());
+    const page=await context.newPage();
+    await page.goto(preview.url+'/nutrition.html?access=admin',{waitUntil:'networkidle'});
+    if(await page.locator('[data-marketing-consent="essential"]').count())await page.locator('[data-marketing-consent="essential"]').click();
+    for(const [id,value] of Object.entries({age:'28',height:'178',weight:'80'}))await page.locator('#'+id).fill(value);
+    await page.locator('#nutrition-form button[type=submit]').click();
+    await page.locator('#nutrition-result [data-mode="manual"]').click();
+    await page.locator('#nutrition-result .nutrition-custom-tools > summary').click();
+    const form=page.locator('#nutrition-custom-product-form');
+    for(const [name,value] of Object.entries({name:'Label calcium',p:'10',f:'5',c:'15',kcal:'145'}))await form.locator('[name="'+name+'"]').fill(value);
+    await form.locator('[data-nutrition-disclosure="custom-micronutrients"] > summary').click();
+    await form.locator('[name="micro-calcium"]').fill('120');
+    await form.locator('[name="micro-b12"]').fill('0');
+    await form.locator('button[type=submit]').click();
+    const product=await page.evaluate(()=>window.VitalRiseSystem.nutritionCustom.getProducts().find(p=>p.name==='Label calcium'));
+    assert.equal(product.micronutrientsPer100.calcium,120);
+    assert.equal(product.micronutrientsPer100.b12,0);
+    assert.equal(product.micronutrientsPer100.iodine,null);
+    await page.goto(preview.url+'/nutrition.html?access=admin',{waitUntil:'networkidle'});
+    assert.equal(await page.evaluate(()=>window.VitalRiseSystem.nutritionCustom.getProducts().find(p=>p.name==='Label calcium').micronutrientsPer100.calcium),120);
+    await context.close();
+  } finally {await browser.close();preview.server.closeAllConnections();await new Promise(resolve=>preview.server.close(resolve));}
+});
+
 test('replacement preview changes only the confirmed food; quality coverage, saved amounts and export stay truthful', async () => {
   const preview=await startPreview(0),browser=await launchBrowser();
   try {
@@ -16,6 +45,26 @@ test('replacement preview changes only the confirmed food; quality coverage, sav
     if(await page.locator('[data-marketing-consent="essential"]').count())await page.locator('[data-marketing-consent="essential"]').click();
     for(const [id,value] of Object.entries({age:'28',height:'178',weight:'80'}))await page.locator('#'+id).fill(value);
     await page.locator('#nutrition-form button[type=submit]').click();
+    const audit=page.locator('#nutrition-result [data-nutrition-disclosure="micronutrients"]');
+    await audit.locator('summary').first().click();
+    assert.equal(await audit.locator('[data-micronutrient]').count(),29);
+    assert.equal(await audit.locator('[data-micronutrient="chloride"]').getAttribute('data-micro-status'),'unknown');
+    assert.match(await audit.locator('[data-micronutrient="chloride"] > summary').innerText(),/—/);
+    const d=page.locator('#nutrition-result [data-micronutrient="vitaminD"]');
+    assert.equal(await d.getAttribute('data-micro-status'),'below');
+    await d.locator('summary').click();
+    assert.match(await d.innerText(),/Лосось атлантичний/);
+    if(process.env.NUTRITION_CAPTURE){
+      await mkdir('.tmp/nutrition-micronutrients',{recursive:true});
+      for(const width of [1440,390]){
+        await page.setViewportSize({width,height:width===1440?1000:844});
+        await audit.locator('summary').first().evaluate(el=>el.scrollIntoView({block:'start'}));
+        await page.evaluate(()=>scrollBy(0,-100));
+        await page.screenshot({path:'.tmp/nutrition-micronutrients/audit-'+width+'.png'});
+        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+      }
+      await page.setViewportSize({width:1440,height:1000});
+    }
     const quality=page.locator('#nutrition-result [data-nutrition-disclosure="quality"]');
     await quality.locator('summary').first().click();
     assert.equal(await quality.locator('[data-quality]').count(),3);
@@ -46,9 +95,15 @@ test('replacement preview changes only the confirmed food; quality coverage, sav
     assert.equal(await page.locator('#nutrition-result [data-nutrition-eaten="lunch"]').isChecked(),false);
     const after=await page.locator('#nutrition-result .auto-meal-card').nth(1).locator('.nw-auto-food-label').allTextContents();
     assert.deepEqual(after.slice(1),before.slice(1),'Other lunch foods stay unchanged');
+    await page.evaluate(()=>{
+      const key='vitalrise:nutrition:active-menu',menu=JSON.parse(localStorage.getItem(key));
+      delete menu.targets.referenceProfile;
+      localStorage.setItem(key,JSON.stringify(menu));
+    });
     await page.goto(preview.url+'/nutrition.html?access=admin',{waitUntil:'networkidle'});
     assert.equal(await page.locator('#nutrition-result .auto-meal-card').count(),4);
     assert.deepEqual(await page.locator('#nutrition-result .auto-meal-card').nth(1).locator('.nw-auto-food-label').allTextContents(),after,'Reload preserves the exact swapped menu');
+    assert.match(await audit.textContent(),/28.*Чоловік/s,'Old saved menus recover the reference profile without regenerating portions');
     assert.equal(await page.locator('#nutrition-result [data-nutrition-eaten="breakfast"]').isChecked(),true);
     await page.locator('#nutrition-result [data-action="use-generated-menu"]').click();
     const portion=page.locator('#nutrition-result .nutrition-portion-input[data-meal="lunch"][data-id="turkey"]');
@@ -69,10 +124,13 @@ test('replacement preview changes only the confirmed food; quality coverage, sav
       await page.locator('[data-lang-switch="'+lang+'"]').first().click();
       assert.match(await page.locator('#nutrition-result [data-nutrition-disclosure="quality"] > summary').innerText(),new RegExp(title));
       assert.ok((await page.locator('#nutrition-result .nw-meal-food-name').allTextContents()).some(text=>text.includes({en:'Atlantic cod',ru:'Треска атлантическая',uk:'Тріска атлантична'}[lang])));
+      assert.match(await audit.locator('summary').first().innerText(),new RegExp({en:'Vitamins and minerals',ru:'Витамины и минералы',uk:'Вітаміни та мінерали'}[lang]));
+      assert.match(await audit.locator('[data-micronutrient="calcium"] > summary').textContent(),new RegExp({en:'Calcium',ru:'Кальций',uk:'Кальцій'}[lang]));
     }
     await page.locator('[data-print-target="nutrition-result"]').click();
     assert.equal(await page.locator('#mobile-report-phone [data-nutrition-disclosure^="swap-"]').count(),0);
     assert.equal(await page.locator('#mobile-report-phone [data-quality]').count(),3);
+    assert.equal(await page.locator('#mobile-report-phone [data-micronutrient]').count(),29);
     assert.deepEqual(errors,[]);
     await context.close();
   }finally{await browser.close();preview.server.closeAllConnections();await new Promise(resolve=>preview.server.close(resolve));}

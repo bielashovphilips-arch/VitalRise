@@ -48,6 +48,24 @@
       if (quality[key] !== null && (!Number.isFinite(quality[key]) || quality[key] < 0 || quality[key] > (key === "sodiumMg" ? 100000 : 100))) return null;
     }
     if (quality.saturatedFatG !== null && quality.saturatedFatG > macros[1] + 0.1) return null;
+    const micro = system.nutritionMicronutrients;
+    const micronutrients = {}, micronutrientUpper = {};
+    if (micro) {
+      const savedMicro = (unitType === 'piece' ? input.micronutrientsPerUnit : input.micronutrientsPer100) || {};
+      const savedUpper = (unitType === 'piece' ? input.micronutrientUpperPerUnit : input.micronutrientUpperPer100) || {};
+      for (const key of micro.keys.concat(micro.upperKeys)) {
+        const isUpper = micro.upperKeys.includes(key);
+        const field = 'micro-' + (isUpper ? 'upper-' : '') + key;
+        const raw = input[field] === undefined ? (isUpper ? savedUpper : savedMicro)[key] : input[field];
+        const value = raw === undefined || raw === null || String(raw).trim() === '' ? null : Number(raw);
+        if (value !== null && (!Number.isFinite(value) || value < 0 || value > 1000000)) return null;
+        (isUpper ? micronutrientUpper : micronutrients)[key] = value;
+      }
+      for (const pair of [['retinol','vitaminA',1],['folicAcid','b9',1.7],['addedVitaminE','vitaminE',1],['addedNiacin','b3',1]]) {
+        const component = micronutrientUpper[pair[0]], total = micronutrients[pair[1]];
+        if (component !== null && total !== null && component*pair[2] > total + 0.1) return null;
+      }
+    }
     const unitLabel = unitType === "piece" ? "шт" : "г";
     const id = String(input.id || ("custom_" + slugify(name))).trim();
     const base = {
@@ -71,6 +89,8 @@
 
     if (unitType === "piece") {
       base.qualityPerUnit = quality;
+      base.micronutrientsPerUnit = micronutrients;
+      base.micronutrientUpperPerUnit = micronutrientUpper;
       base.macrosPerUnit = {
         p: macroValue("p"),
         f: macroValue("f"),
@@ -79,6 +99,8 @@
       };
     } else {
       base.qualityPer100 = quality;
+      base.micronutrientsPer100 = micronutrients;
+      base.micronutrientUpperPer100 = micronutrientUpper;
       base.macrosPer100 = {
         p: macroValue("p"),
         f: macroValue("f"),
@@ -189,6 +211,12 @@
         const quality = system.nutritionQuality.summarize([meal]);
         product.qualityPer100 = {};
         system.nutritionQuality.keys.forEach(function (key) { product.qualityPer100[key] = quality[key].complete ? quality[key].knownTotal * factor : null; });
+      }
+      if (system.nutritionMicronutrients) {
+        // Ingredient reference totals, not a measured cooked-recipe composition.
+        // Heat and discarded liquid losses are not known: leave final recipe values unknown.
+        product.micronutrientsPer100 = {};
+        product.micronutrientUpperPer100 = {};
       }
       return addProduct(product);
     },

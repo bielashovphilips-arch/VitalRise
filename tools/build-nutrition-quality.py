@@ -18,9 +18,10 @@ REFERENCES = {
     'eggs': (171287, None),  # 50 g edible portion per egg, matching the existing 72 kcal basis.
     'chicken': (171477, 171077), 'turkey': (171496, 171098),
     'white_fish': (171956, 171955), 'greek_yogurt': (171304, None),
+    'salmon': (175168, 175167), 'mackerel': (175120, 175119),
     'tofu': (172475, None),
-    'oatmeal': (173905, 173904), 'rice': (168878, 168877),
-    'buckwheat': (170686, 170685), 'pasta': (169737, 169736),
+    'oatmeal': (173905, 173904), 'rice': (169757, 169756),
+    'buckwheat': (170686, 170685), 'pasta': (168928, 168927),
     'potato': (170440, None), 'sweet_potato': (168484, None),
     'bulgur': (170287, 170688), 'couscous': (169700, 169699),
     'quinoa': (168917, 168874), 'lentils': (172421, 172420),

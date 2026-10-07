@@ -253,6 +253,8 @@ $expectedModules = @(
   @{ Path = "assets/js/modules/dashboard.js"; Export = "system.initDashboard" },
   @{ Path = "assets/js/modules/nutrition-custom.js"; Export = "system.nutritionCustom" },
   @{ Path = "assets/js/modules/nutrition.js"; Export = "system.nutrition" },
+  @{ Path = "assets/js/modules/nutrition-micronutrient-data.js"; Export = "system.nutritionMicronutrientData" },
+  @{ Path = "assets/js/modules/nutrition-micronutrients.js"; Export = "system.nutritionMicronutrients" },
   @{ Path = "assets/js/modules/nutrition-render.js"; Export = "system.nutritionRender" },
   @{ Path = "assets/js/modules/training.js"; Export = "system.training" },
   @{ Path = "assets/js/modules/training-templates.js"; Export = "system.trainingTemplates" },

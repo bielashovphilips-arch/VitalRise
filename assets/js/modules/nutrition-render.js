@@ -451,6 +451,7 @@
           '<label class="nw-field">Стан продукту<select name="weightState"><option value="packaged">Як на упаковці</option><option value="cooked">Готовий</option><option value="fresh">Свіжий</option></select></label>' +
           '<label class="nw-field">Походження<select name="animal"><option value="false">Рослинний</option><option value="true">Тваринний / змішаний</option></select></label>' +
           (system.nutritionRender.buildCustomQualityFieldsMarkup ? system.nutritionRender.buildCustomQualityFieldsMarkup() : '') +
+          (system.nutritionRender.buildCustomMicronutrientFieldsMarkup ? system.nutritionRender.buildCustomMicronutrientFieldsMarkup() : '') +
           '<button type="submit" class="builder-main-btn secondary">Додати</button>' +
         '</form>' +
         '<div class="custom-product-list">' +

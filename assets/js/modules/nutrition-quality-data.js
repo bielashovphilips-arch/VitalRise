@@ -148,6 +148,78 @@
       "reference": true
     }
   },
+  "salmon": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 2.397,
+        "sodiumMg": 61.0
+      },
+      "macrosPer100": {
+        "f": 12.35,
+        "c": 0.0,
+        "p": 22.1,
+        "kcal": 206.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/175168/nutrients",
+      "description": "Fish, salmon, Atlantic, farmed, cooked, dry heat",
+      "unitGrams": null,
+      "reference": true
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 3.05,
+        "sodiumMg": 59.0
+      },
+      "macrosPer100": {
+        "kcal": 208.0,
+        "f": 13.42,
+        "p": 20.42,
+        "c": 0.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/175167/nutrients",
+      "description": "Fish, salmon, Atlantic, farmed, raw",
+      "unitGrams": null,
+      "reference": true
+    }
+  },
+  "mackerel": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 4.176,
+        "sodiumMg": 83.0
+      },
+      "macrosPer100": {
+        "p": 23.85,
+        "f": 17.81,
+        "c": 0.0,
+        "kcal": 262.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/175120/nutrients",
+      "description": "Fish, mackerel, Atlantic, cooked, dry heat",
+      "unitGrams": null,
+      "reference": true
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 3.257,
+        "sodiumMg": 90.0
+      },
+      "macrosPer100": {
+        "f": 13.89,
+        "c": 0.0,
+        "kcal": 205.0,
+        "p": 18.6
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/175119/nutrients",
+      "description": "Fish, mackerel, Atlantic, raw",
+      "unitGrams": null,
+      "reference": true
+    }
+  },
   "tofu": {
     "ready": {
       "per100": {
@@ -211,13 +283,13 @@
         "sodiumMg": 1.0
       },
       "macrosPer100": {
-        "p": 2.69,
         "f": 0.28,
         "c": 28.17,
-        "kcal": 130.0
+        "kcal": 130.0,
+        "p": 2.69
       },
-      "sourceUrl": "https://fdc.nal.usda.gov/food-details/168878/nutrients",
-      "description": "Rice, white, long-grain, regular, enriched, cooked",
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169757/nutrients",
+      "description": "Rice, white, long-grain, regular, unenriched, cooked without salt",
       "unitGrams": null,
       "reference": true
     },
@@ -228,13 +300,13 @@
         "sodiumMg": 5.0
       },
       "macrosPer100": {
+        "p": 7.13,
         "f": 0.66,
         "c": 79.95,
-        "kcal": 365.0,
-        "p": 7.13
+        "kcal": 365.0
       },
-      "sourceUrl": "https://fdc.nal.usda.gov/food-details/168877/nutrients",
-      "description": "Rice, white, long-grain, regular, raw, enriched",
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169756/nutrients",
+      "description": "Rice, white, long-grain, regular, raw, unenriched",
       "unitGrams": null,
       "reference": true
     }
@@ -288,8 +360,8 @@
         "c": 30.86,
         "kcal": 158.0
       },
-      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169737/nutrients",
-      "description": "Pasta, cooked, enriched, without added salt",
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/168928/nutrients",
+      "description": "Pasta, cooked, unenriched, without added salt",
       "unitGrams": null,
       "reference": true
     },
@@ -300,13 +372,13 @@
         "sodiumMg": 6.0
       },
       "macrosPer100": {
-        "c": 74.67,
-        "kcal": 371.0,
+        "p": 13.04,
         "f": 1.51,
-        "p": 13.04
+        "c": 74.67,
+        "kcal": 371.0
       },
-      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169736/nutrients",
-      "description": "Pasta, dry, enriched",
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/168927/nutrients",
+      "description": "Pasta, dry, unenriched",
       "unitGrams": null,
       "reference": true
     }
@@ -1042,13 +1114,13 @@
         "sodiumMg": 43.0
       },
       "macrosPer100": {
-        "f": 3.25,
-        "c": 4.8,
+        "c": 4.78,
         "kcal": 61.0,
+        "f": 3.27,
         "p": 3.15
       },
-      "sourceUrl": "https://fdc.nal.usda.gov/food-details/171265/nutrients",
-      "description": "Milk, whole, 3.25% milkfat, with added vitamin D",
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/172217/nutrients",
+      "description": "Milk, whole, 3.25% milkfat, without added vitamin A and vitamin D",
       "unitGrams": null,
       "reference": false
     }
@@ -1061,13 +1133,13 @@
         "sodiumMg": 47.0
       },
       "macrosPer100": {
-        "p": 3.3,
         "c": 4.8,
         "kcal": 50.0,
-        "f": 1.98
+        "f": 1.98,
+        "p": 3.3
       },
-      "sourceUrl": "https://fdc.nal.usda.gov/food-details/171267/nutrients",
-      "description": "Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D",
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/172205/nutrients",
+      "description": "Milk, reduced fat, fluid, 2% milkfat, without added vitamin A and vitamin D",
       "unitGrams": null,
       "reference": false
     }
@@ -1080,13 +1152,13 @@
         "sodiumMg": 44.0
       },
       "macrosPer100": {
-        "p": 3.37,
-        "f": 0.97,
         "c": 4.99,
-        "kcal": 42.0
+        "kcal": 42.0,
+        "p": 3.37,
+        "f": 0.97
       },
-      "sourceUrl": "https://fdc.nal.usda.gov/food-details/170872/nutrients",
-      "description": "Milk, lowfat, fluid, 1% milkfat, with added vitamin A and vitamin D",
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/173441/nutrients",
+      "description": "Milk, fluid, 1% fat, without added vitamin A and vitamin D",
       "unitGrams": null,
       "reference": false
     }

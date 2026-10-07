@@ -12,9 +12,9 @@ from pathlib import Path
 
 # Identifier, FDC identifier, category, Ukrainian, English, Russian, weight state.
 FOODS = [
-    ('milk_whole',171265,'protein','Молоко 3,25%','Milk 3.25%','Молоко 3,25%','packaged'),
-    ('milk_2',171267,'protein','Молоко 2%','Milk 2%','Молоко 2%','packaged'),
-    ('milk_1',170872,'protein','Молоко 1%','Milk 1%','Молоко 1%','packaged'),
+    ('milk_whole',172217,'protein','Молоко 3,25%','Milk 3.25%','Молоко 3,25%','packaged'),
+    ('milk_2',172205,'protein','Молоко 2%','Milk 2%','Молоко 2%','packaged'),
+    ('milk_1',173441,'protein','Молоко 1%','Milk 1%','Молоко 1%','packaged'),
     ('yogurt_whole',171284,'protein','Йогурт натуральний, цільномолочний','Plain whole-milk yogurt','Йогурт натуральный, цельномолочный','packaged'),
     ('yogurt_lowfat',170886,'protein','Йогурт натуральний, нежирний','Plain low-fat yogurt','Йогурт натуральный, нежирный','packaged'),
     ('yogurt_nonfat',170887,'protein','Йогурт натуральний, знежирений','Plain nonfat yogurt','Йогурт натуральный, обезжиренный','packaged'),

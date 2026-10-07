@@ -10,13 +10,111 @@ function setup(language = 'uk') {
       localStorage: {getItem:key=>storage.get(key) || null,setItem:(key,value)=>storage.set(key,value)}},
     document: {addEventListener() {}, documentElement:{lang:language}},
   });
-  for (const module of ['storage','nutrition-custom','nutrition-catalog','nutrition-quality-data','nutrition','nutrition-quality','nutrition-swaps','nutrition-render','nutrition-workspace']) {
+  for (const module of ['storage','nutrition-custom','nutrition-catalog','nutrition-quality-data','nutrition','nutrition-quality','nutrition-swaps','nutrition-render','nutrition-micronutrient-data','nutrition-micronutrients','nutrition-workspace']) {
     vm.runInContext(readFileSync('assets/js/modules/' + module + '.js','utf8'),context);
   }
   return context.window.VitalRiseSystem;
 }
 const targets = {calories:2500,protein:160,fat:70,carbs:307,weightMode:'ready',mealsCount:4,goal:'maintain',dietStyle:'standard',waterLiters:2.5,saltGrams:5};
 const plain = value => JSON.parse(JSON.stringify(value));
+
+test('all 29 micronutrients use age/sex DRI references, separate RDA/AI and correct upper-limit scopes', () => {
+  const {nutritionMicronutrients:m}=setup();
+  assert.equal(m.definitions.filter(d=>d.group==='vitamins').length,13);
+  assert.equal(m.definitions.filter(d=>d.group==='minerals').length,15);
+  assert.equal(new Set(m.keys).size,29);
+  const ref=(age,sex='male')=>m.getReference({age,sex,lifeStage:'standard'});
+  for(const age of [12,13,14,18,19,30,31,50,51,70,71,90]) for(const sex of ['male','female']){
+    assert.equal(Object.keys(ref(age,sex).references).length,29);
+    assert.ok(m.keys.every(k=>ref(age,sex).references[k].value>0));
+  }
+  assert.equal(ref(28).references.vitaminA.value,900);
+  assert.equal(ref(28,'female').references.vitaminA.value,700);
+  assert.equal(ref(50,'female').references.iron.value,18);
+  assert.equal(ref(51,'female').references.iron.value,8);
+  assert.equal(ref(70).references.vitaminD.value,15);
+  assert.equal(ref(71).references.vitaminD.value,20);
+  assert.equal(ref(13).upper.retinol,1700);
+  assert.equal(ref(14).upper.retinol,2800);
+  assert.equal(ref(19).upper.retinol,3000);
+  assert.equal(ref(28).references.copper.value,900);
+  assert.equal(ref(28).references.chloride.value,2300);
+  assert.equal(ref(28).references.potassium.type,'AI');
+  assert.equal(ref(28).references.b9.type,'RDA');
+  assert.equal(ref(28).upper.choline,3500);
+  assert.equal(ref(71).upper.phosphorus,3000);
+  assert.equal(ref(28).upper.magnesium,undefined);
+  assert.equal(ref(28).upper.supplementMagnesium,350);
+  assert.equal(ref(28).upper.b3,undefined);
+  assert.equal(ref(28).upper.addedNiacin,35);
+  assert.equal(m.getReference({age:28,sex:'female',lifeStage:'pregnancy'}),null);
+  assert.equal(m.getReference({age:8,sex:'male'}),null);
+  assert.equal(m.getReference({age:28}),null);
+});
+
+test('micronutrients use real gram/piece states, DFE/NE units, supplemental sources and preserve unknowns', () => {
+  const {nutrition:n,nutritionMicronutrients:m,nutritionMicronutrientData:d}=setup();
+  const egg=m.getValues(n.getFoodById('eggs'),2);
+  assert.equal(egg.values.b12,d.foods.eggs.ready.per100.b12);
+  assert.equal(egg.values.b7,null,'Cooked biotin must not be grafted onto a raw egg reference');
+  assert.equal(egg.values.iodine,49.2);
+  const broccoli=m.getValues(n.getFoodById('broccoli'),200);
+  assert.equal(broccoli.values.b7,1.886);
+  assert.ok(broccoli.sources.some(s=>s.url.includes('PMC1450323')));
+  assert.equal(m.getValues(n.getFoodById('apple'),182).values.chromium,1.4);
+  assert.ok(Math.abs(m.getValues(n.getFoodById('banana'),118).values.molybdenum-15)<1e-12);
+  const profile={age:28,sex:'male'};
+  const partial=m.summarize([{items:[{id:'broccoli',amount:200},{id:'cottage_cheese',amount:100}]}],profile);
+  assert.equal(partial.rows.vitaminC.status,'incomplete');
+  assert.equal(partial.rows.vitaminC.complete,false);
+  assert.ok(partial.rows.vitaminC.knownTotal>100);
+  assert.equal(partial.rows.chloride.status,'unknown');
+  assert.equal(partial.rows.chloride.knownCount,0);
+  const selection=n.buildEmptyMealSelections(targets);selection.lunch.carb={rice:75};
+  n.buildSelectedDaySummary({...targets,weightMode:'raw'},selection,n.getDefaultSelection());
+  const raw=m.getValues(n.getFoodById('rice'),75);
+  assert.equal(raw.values.b9,d.foods.rice.raw.per100.b9*0.75);
+  assert.equal(raw.values.molybdenum,null,'Cooked portion estimates cannot follow a raw weighing switch');
+  assert.equal(d.foods.rice.raw.upperPer100.folicAcid,0);
+  assert.equal(d.foods.milk_2.ready.per100.vitaminD,0,'Plain milk must not inherit US vitamin D fortification');
+  assert.ok(m.getFoodIdeas('vitaminD',{dietStyle:'standard'}).some(idea=>['salmon','mackerel'].includes(idea.food.id)));
+  assert.ok(m.getFoodIdeas('vitaminD',{dietStyle:'vegan'}).every(idea=>n.isFoodAllowedForDiet(idea.food,'vegan')));
+  assert.equal(m.getFoodIdeas('sodium',{dietStyle:'standard'}).length,0);
+});
+
+test('upper-limit audit never mistakes natural carotenoids, food magnesium or niacin equivalents for restricted forms', () => {
+  const {nutrition:n,nutritionMicronutrients:m,nutritionCustom:c}=setup();
+  const profile={age:28,sex:'male'};
+  const carrot=m.summarize([{items:[{id:'carrot',amount:500}]}],profile);
+  assert.ok(carrot.rows.vitaminA.knownTotal>3000);
+  assert.equal(carrot.rows.vitaminA.over,false);
+  const almond=m.summarize([{items:[{id:'almonds',amount:200}]}],profile);
+  assert.ok(almond.rows.magnesium.knownTotal>350);
+  assert.equal(almond.rows.magnesium.over,false);
+  const niacin=c.addProduct({name:'NE test',p:0,f:0,c:0,kcal:0,'micro-b3':50,'micro-upper-addedNiacin':0});
+  assert.equal(m.summarize([{items:[{id:niacin.id,amount:100}]}],profile).rows.b3.over,false);
+  const retinol=c.addProduct({name:'Retinol test',p:0,f:0,c:0,kcal:0,'micro-vitaminA':3100,'micro-upper-retinol':3100});
+  const over=m.summarize([{items:[{id:retinol.id,amount:100},{id:'cottage_cheese',amount:100}]}],profile);
+  assert.equal(over.rows.vitaminA.status,'over','A known subtotal above the UL remains a warning even with missing foods');
+  assert.equal(over.rows.vitaminA.upperValue.complete,false);
+  assert.equal(c.addProduct({name:'Invalid component',p:0,f:0,c:0,kcal:0,'micro-vitaminA':0,'micro-upper-retinol':1}),null);
+});
+
+test('label micronutrients survive import/export and unknown final recipe composition is never invented', () => {
+  const {nutrition:n,nutritionMicronutrients:m,nutritionCustom:c}=setup();
+  const food=c.addProduct({name:'Label micro',p:10,f:5,c:15,kcal:145,'micro-calcium':'120','micro-b12':'0','micro-iodine':''});
+  assert.equal(m.getValues(food,200).values.calcium,240);
+  assert.equal(m.getValues(food,200).values.b12,0);
+  assert.equal(m.getValues(food,200).values.iodine,null);
+  const concentrated=c.addProduct({name:'Unverified concentrate',p:0,f:0,c:0,kcal:0,'micro-vitaminD':1000});
+  assert.ok(m.getFoodIdeas('vitaminD',{dietStyle:'standard'}).every(idea=>idea.food.id!==concentrated.id),'Replacement ideas use sourced catalogue foods, not unverified concentrates');
+  assert.equal(c.addProduct({name:'Bad',p:0,f:0,c:0,kcal:0,'micro-vitaminD':-1}),null);
+  const exported=plain(c.getProducts()); c.deleteProduct(food.id); c.importProducts(exported);
+  assert.deepEqual(plain(c.getProducts().find(p=>p.id===food.id).micronutrientsPer100),plain(food.micronutrientsPer100));
+  const item=n.createMealItem('broccoli',200);
+  const recipe=c.addRecipe('Broccoli recipe',150,'vegetable',{items:[item],totals:n.calculateMealTotals({items:[item]})});
+  assert.equal(m.getValues(recipe,100).values.vitaminC,null,'No retention factor is assumed for an unmeasured cooked recipe');
+});
 
 test('quality keeps missing values unknown, scales eggs by edible weight, and uses raw data only for raw portions', () => {
   const {nutrition:n,nutritionQuality:q,nutritionQualityData:data,nutritionCustom:custom}=setup();
@@ -115,7 +213,7 @@ test('restricted auto menus never add unselected or diet-excluded foods or claim
 
 test('quality references carry matching FDC records and recipe nutrients preserve incomplete coverage', () => {
   const {nutrition:n,nutritionQualityData:data,nutritionQuality:q,nutritionCustom:custom,nutritionRender:r}=setup();
-  assert.equal(Object.keys(data).length,79);
+  assert.equal(Object.keys(data).length,81);
   for(const item of Object.values(data))for(const reference of Object.values(item)) {
     assert.match(reference.sourceUrl,/^https:\/\/fdc\.nal\.usda\.gov\/food-details\/\d+\/nutrients$/);
     for(const key of q.keys)assert.ok(reference.per100[key]===null || Number.isFinite(reference.per100[key])&&reference.per100[key]>=0);

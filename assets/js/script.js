@@ -539,6 +539,10 @@
     if (!saved || saved.version !== 1 || !saved.targets || !saved.baseFormData || !saved.selected || !saved.readySelections || !saved.mealSelections) return;
     if (!['calories','protein','fat','carbs','mealsCount'].every(function (key) { return typeof saved.targets[key] === 'number' && Number.isFinite(saved.targets[key]) && saved.targets[key] >= 0; })) return;
     try {
+      // Older saved menus retain exact portions; only add the reference profile.
+      if (!saved.targets.referenceProfile) saved.targets.referenceProfile = {
+        age:Number(saved.baseFormData.age), sex:saved.baseFormData.gender, lifeStage:'standard'
+      };
       nutritionState.targets = saved.targets;
       nutritionState.baseFormData = saved.baseFormData;
       nutritionState.selected = nutritionModule.filterSelectionForDiet(saved.selected,saved.targets.dietStyle);
@@ -1087,7 +1091,7 @@ function buildMealConstructorMarkup(targets) {
     const product = nutritionCustom.addProduct(data);
 
     if (!product) {
-      nutritionState.customMessage = "Вкажи назву продукту та макроси на 100 г.";
+      nutritionState.customMessage = window.VitalRiseSystem.nutritionWorkspace.t('invalidProduct');
       rerenderNutritionConstructor();
       return;
     }
