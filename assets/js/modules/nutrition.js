@@ -12,6 +12,8 @@
     const references = (system.nutritionQualityData || {})[food.id];
     if (references && references.ready) {
       const ready = references.ready;
+      if (ready.names) { food.names = clone(ready.names); food.name = ready.names.uk; }
+      if (ready.weightState) food.weightState = ready.weightState;
       if (food.unitType === 'piece') {
         food.macrosPerUnit = Object.fromEntries(Object.entries(ready.macrosPer100).map(function (entry) { return [entry[0], +(entry[1] * ready.unitGrams / 100).toFixed(1)]; }));
         // Display the conventional rounded energy for a 50 g edible egg.
@@ -40,6 +42,7 @@
       food.defaultAmount = Math.max(food.min, Math.round(food.defaultAmount * ratio / 5) * 5);
       food.portionStep = 5;
       food.sourceUrl = references.raw.sourceUrl;
+      if (references.raw.names) { food.names = clone(references.raw.names); food.name = references.raw.names.uk; }
     }
     food.weightModeLabel = food.rawWeightModeLabel || "Сирий / сухий";
     food.weightState = "raw";

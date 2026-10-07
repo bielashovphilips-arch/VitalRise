@@ -18,6 +18,58 @@ function setup(language = 'uk') {
 const targets = {calories:2500,protein:160,fat:70,carbs:307,weightMode:'ready',mealsCount:4,goal:'maintain',dietStyle:'standard',waterLiters:2.5,saltGrams:5};
 const plain = value => JSON.parse(JSON.stringify(value));
 
+test('every catalogue food has a reference; additional nutrients retain units, preparation and uncertainty', () => {
+  const {nutrition:n,nutritionMicronutrients:m,nutritionMicronutrientData:d,nutritionQualityData:q}=setup();
+  const facts=JSON.parse(readFileSync('tools/data/nutrition-reference-supplements.json','utf8'));
+  for(const food of n.getFoods()) {
+    assert.ok(d.foods[food.id],food.id);
+    assert.ok(q[food.id],food.id);
+    assert.equal(Object.keys(d.foods[food.id].ready.per100).length,29);
+    for(const record of Object.values(d.foods[food.id])) {
+      for(const value of Object.values(record.per100))assert.ok(value===null||Number.isFinite(value)&&value>=0);
+      for(const source of Object.values(record.extraSources))assert.ok(source.url.startsWith('https://')&&source.description);
+    }
+  }
+  const quark=d.foods.cottage_cheese.ready, published=facts.bls.M713300;
+  assert.equal(quark.per100.b6,published.per100.b6);
+  assert.equal(quark.per100.b6,Number(published.provenance.b6.published)/1000,'BLS B6 is µg, DRI B6 is mg');
+  assert.equal(quark.per100.manganese,Number(published.provenance.manganese.published)/1000);
+  assert.equal(quark.per100.copper,Number(published.provenance.copper.published),'BLS copper is already µg');
+  assert.equal(quark.per100.fluoride,Number(published.provenance.fluoride.published)/1000);
+  assert.ok(quark.extraSources.vitaminA.estimate);
+  assert.equal(quark.extraSources.vitaminA.license,'CC BY 4.0');
+  assert.match(quark.extraSources.vitaminA.doi,/10\.25826/);
+  assert.equal(d.foods.greek_yogurt.ready.per100.b7,null,'A 10% Greek-style yoghurt cannot fill the 5% yoghurt reference');
+  assert.equal(d.foods.olive_oil.ready.per100.chromium,null,'MEXT trace is not a measured numerical zero');
+  assert.equal(d.foods.olive_oil.ready.per100.b7,0,'A published numerical zero is preserved');
+  assert.match(d.foods.sweet_potato.ready.extraSources.b7.description,/boiled|13-646/i);
+  const egg=m.getValues(n.getFoodById('eggs'),2);
+  assert.equal(egg.values.b7,19.5);
+  assert.equal(egg.values.molybdenum,4,'MEXT raw whole egg has a separate measured reference');
+  assert.equal(m.getValues(n.getFoodById('olive_oil'),100).values.molybdenum,0,'MEXT publishes a numerical zero for olive oil molybdenum');
+});
+
+test('fixed blends and volume foods use the same quantities for energy, quality and micronutrients', () => {
+  const {nutrition:n,nutritionMicronutrients:m,nutritionMicronutrientData:d,nutritionQuality:q,nutritionQualityData:qd}=setup('en');
+  const mix=m.getValues(n.getFoodById('vegetables'),200),part=id=>m.getValues(n.getFoodById(id),100).values;
+  assert.ok(Math.abs(mix.values.vitaminC-(part('cucumber').vitaminC*.45+part('tomato').vitaminC*.45+part('spinach').vitaminC*.1)*2)<1e-7);
+  assert.match(n.getFoodById('vegetables').names.en,/45%.*45%.*10%/);
+  const nuts=m.getValues(n.getFoodById('nuts'),100);
+  assert.ok(Math.abs(nuts.values.calcium-(part('almonds').calcium+part('walnuts').calcium)/2)<1e-7);
+  assert.ok(nuts.estimatedKeys.includes('calcium'));
+  const juice=n.getFoodById('fruit_juice'),density=31/29.5735295625;
+  assert.equal(juice.unitLabel,'мл');
+  assert.ok(Math.abs(n.getFoodMacros(juice,100).kcal-45*density)<.051,'Energy display rounds to one decimal');
+  assert.ok(Math.abs(m.getValues(juice,100).values.vitaminC-50*density)<1e-7);
+  assert.equal(q.getValues(juice,100).sodiumMg,qd.fruit_juice.ready.per100.sodiumMg);
+  for(const id of ['cottage_cheese','cottage_cheese_lowfat','skyr','green_peas','asparagus'])assert.ok(q.getValues(n.getFoodById(id),100).sodiumMg!==null);
+  const selections=n.buildEmptyMealSelections(targets);selections.lunch.protein={soy_mince:37.2};
+  const plan=n.buildSelectedDaySummary({...targets,weightMode:'raw'},selections,n.getDefaultSelection());
+  assert.equal(plan.meals.find(meal=>meal.mealKey==='lunch').items[0].amount,37.2);
+  assert.match(n.getFoodById('soy_mince').names.en,/Dry/);
+  assert.equal(m.getValues(n.getFoodById('soy_mince'),100).values.b7,d.foods.soy_mince.raw.per100.b7);
+});
+
 test('all 29 micronutrients use age/sex DRI references, separate RDA/AI and correct upper-limit scopes', () => {
   const {nutritionMicronutrients:m}=setup();
   assert.equal(m.definitions.filter(d=>d.group==='vitamins').length,13);
@@ -53,10 +105,11 @@ test('all 29 micronutrients use age/sex DRI references, separate RDA/AI and corr
 });
 
 test('micronutrients use real gram/piece states, DFE/NE units, supplemental sources and preserve unknowns', () => {
-  const {nutrition:n,nutritionMicronutrients:m,nutritionMicronutrientData:d}=setup();
+  const {nutrition:n,nutritionMicronutrients:m,nutritionMicronutrientData:d,nutritionCustom:c}=setup();
   const egg=m.getValues(n.getFoodById('eggs'),2);
   assert.equal(egg.values.b12,d.foods.eggs.ready.per100.b12);
-  assert.equal(egg.values.b7,null,'Cooked biotin must not be grafted onto a raw egg reference');
+  assert.equal(egg.values.b7,19.5,'Raw egg biotin now has a separate raw BLS reference');
+  assert.match(d.foods.eggs.ready.extraSources.b7.description,/E111100: Chicken egg raw/);
   assert.equal(egg.values.iodine,49.2);
   const broccoli=m.getValues(n.getFoodById('broccoli'),200);
   assert.equal(broccoli.values.b7,1.886);
@@ -64,17 +117,20 @@ test('micronutrients use real gram/piece states, DFE/NE units, supplemental sour
   assert.equal(m.getValues(n.getFoodById('apple'),182).values.chromium,1.4);
   assert.ok(Math.abs(m.getValues(n.getFoodById('banana'),118).values.molybdenum-15)<1e-12);
   const profile={age:28,sex:'male'};
-  const partial=m.summarize([{items:[{id:'broccoli',amount:200},{id:'cottage_cheese',amount:100}]}],profile);
+  const blank=c.addProduct({name:'Unknown label',p:10,f:5,c:15,kcal:145});
+  const partial=m.summarize([{items:[{id:'broccoli',amount:200},{id:blank.id,amount:100}]}],profile);
   assert.equal(partial.rows.vitaminC.status,'incomplete');
   assert.equal(partial.rows.vitaminC.complete,false);
   assert.ok(partial.rows.vitaminC.knownTotal>100);
-  assert.equal(partial.rows.chloride.status,'unknown');
-  assert.equal(partial.rows.chloride.knownCount,0);
+  assert.equal(partial.rows.chloride.status,'incomplete');
+  assert.equal(partial.rows.chloride.knownCount,1);
+  assert.equal(m.summarize([{items:[{id:blank.id,amount:100}]}],profile).rows.chloride.status,'unknown');
   const selection=n.buildEmptyMealSelections(targets);selection.lunch.carb={rice:75};
   n.buildSelectedDaySummary({...targets,weightMode:'raw'},selection,n.getDefaultSelection());
   const raw=m.getValues(n.getFoodById('rice'),75);
   assert.equal(raw.values.b9,d.foods.rice.raw.per100.b9*0.75);
-  assert.equal(raw.values.molybdenum,null,'Cooked portion estimates cannot follow a raw weighing switch');
+  assert.equal(raw.values.molybdenum,22.5,'Raw rice uses BLS dry rice 30 µg/100g, not the cooked NIH portion');
+  assert.match(d.foods.rice.raw.extraSources.molybdenum.description,/C352000: White rice raw/);
   assert.equal(d.foods.rice.raw.upperPer100.folicAcid,0);
   assert.equal(d.foods.milk_2.ready.per100.vitaminD,0,'Plain milk must not inherit US vitamin D fortification');
   assert.ok(m.getFoodIdeas('vitaminD',{dietStyle:'standard'}).some(idea=>['salmon','mackerel'].includes(idea.food.id)));
@@ -94,7 +150,8 @@ test('upper-limit audit never mistakes natural carotenoids, food magnesium or ni
   const niacin=c.addProduct({name:'NE test',p:0,f:0,c:0,kcal:0,'micro-b3':50,'micro-upper-addedNiacin':0});
   assert.equal(m.summarize([{items:[{id:niacin.id,amount:100}]}],profile).rows.b3.over,false);
   const retinol=c.addProduct({name:'Retinol test',p:0,f:0,c:0,kcal:0,'micro-vitaminA':3100,'micro-upper-retinol':3100});
-  const over=m.summarize([{items:[{id:retinol.id,amount:100},{id:'cottage_cheese',amount:100}]}],profile);
+  const blank=c.addProduct({name:'Unknown upper label',p:0,f:0,c:0,kcal:0});
+  const over=m.summarize([{items:[{id:retinol.id,amount:100},{id:blank.id,amount:100}]}],profile);
   assert.equal(over.rows.vitaminA.status,'over','A known subtotal above the UL remains a warning even with missing foods');
   assert.equal(over.rows.vitaminA.upperValue.complete,false);
   assert.equal(c.addProduct({name:'Invalid component',p:0,f:0,c:0,kcal:0,'micro-vitaminA':0,'micro-upper-retinol':1}),null);
@@ -120,10 +177,11 @@ test('quality keeps missing values unknown, scales eggs by edible weight, and us
   const {nutrition:n,nutritionQuality:q,nutritionQualityData:data,nutritionCustom:custom}=setup();
   const eggs=q.getValues(n.getFoodById('eggs'),3);
   assert.equal(eggs.sodiumMg,data.eggs.ready.per100.sodiumMg*1.5);
-  const incomplete=q.summarize([{items:[{id:'eggs',amount:3},{id:'cottage_cheese',amount:100}]}]);
+  const blank=custom.addProduct({name:'Unknown quality label',p:10,f:5,c:15,kcal:145});
+  const incomplete=q.summarize([{items:[{id:'eggs',amount:3},{id:blank.id,amount:100}]}]);
   assert.equal(incomplete.sodiumMg.complete,false);
   assert.equal(incomplete.sodiumMg.knownTotal,eggs.sodiumMg);
-  assert.deepEqual(plain(incomplete.sodiumMg.missingFoods.map(food=>food.id)),['cottage_cheese']);
+  assert.deepEqual(plain(incomplete.sodiumMg.missingFoods.map(food=>food.id)),[blank.id]);
   const selections=n.buildEmptyMealSelections(targets);selections.lunch.carb={rice:75};
   n.buildSelectedDaySummary({...targets,weightMode:'raw'},selections,n.getDefaultSelection());
   assert.equal(q.getValues(n.getFoodById('rice'),75).fibreG,data.rice.raw.per100.fibreG*0.75);
@@ -213,18 +271,18 @@ test('restricted auto menus never add unselected or diet-excluded foods or claim
 
 test('quality references carry matching FDC records and recipe nutrients preserve incomplete coverage', () => {
   const {nutrition:n,nutritionQualityData:data,nutritionQuality:q,nutritionCustom:custom,nutritionRender:r}=setup();
-  assert.equal(Object.keys(data).length,81);
+  assert.equal(Object.keys(data).length,113);
   for(const item of Object.values(data))for(const reference of Object.values(item)) {
-    assert.match(reference.sourceUrl,/^https:\/\/fdc\.nal\.usda\.gov\/food-details\/\d+\/nutrients$/);
+    assert.match(reference.sourceUrl,/^https:\/\/(fdc\.nal\.usda\.gov|blsdb\.prod\.se\.ble\.de)\//);
     for(const key of q.keys)assert.ok(reference.per100[key]===null || Number.isFinite(reference.per100[key])&&reference.per100[key]>=0);
   }
   const selected=n.getDefaultSelection();selected.protein.push('cottage_cheese');
   const selections=n.buildEmptyMealSelections(targets);selections.lunch.carb={rice:150};selections.lunch.protein={cottage_cheese:100};
   const meal=n.buildSelectedDaySummary(targets,selections,selected).meals.find(item=>item.mealKey==='lunch');
   const recipe=custom.addRecipe('Unknown recipe quality',250,'protein',meal);
-  assert.equal(recipe.qualityPer100.sodiumMg,null);
+  assert.ok(recipe.qualityPer100.sodiumMg>0);
   const markup=r.buildQualityMarkup(targets,{meals:[meal],totals:meal.totals});
-  assert.match(markup,/data-quality-status="incomplete"/);
+  assert.doesNotMatch(markup,/data-quality-status="incomplete"/);
   assert.match(markup,/Сир кисломолочний/);
 });
 

@@ -1,4 +1,4 @@
-// USDA SR Legacy quality references; grams of fibre/saturated fat, milligrams of sodium.
+// USDA / BLS 4.0 and fixed-mixture references; see docs/nutrition-micronutrients.md for attribution and units.
 (function () {
   const system = window.VitalRiseSystem || {};
   system.nutritionQualityData = {
@@ -1106,6 +1106,829 @@
       "reference": true
     }
   },
+  "hard_cheese": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 18.867,
+        "sodiumMg": 653.0
+      },
+      "macrosPer100": {
+        "c": 3.37,
+        "kcal": 403.0,
+        "p": 22.87,
+        "f": 33.31
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/173414/nutrients",
+      "description": "Cheese, cheddar (Includes foods for USDA's Food Distribution Program)",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Твердий сир чедер",
+        "en": "Cheddar cheese",
+        "ru": "Твёрдый сыр чеддер"
+      }
+    }
+  },
+  "beef": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 2.99,
+        "sodiumMg": 56.0
+      },
+      "macrosPer100": {
+        "f": 7.49,
+        "c": 0.0,
+        "kcal": 177.0,
+        "p": 27.51
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/174004/nutrients",
+      "description": "Beef, loin, tenderloin roast, boneless, separable lean only, trimmed to 0\" fat, all grades, cooked, roasted",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Яловича вирізка без видимого жиру",
+        "en": "Lean beef tenderloin",
+        "ru": "Говяжья вырезка без видимого жира"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 1.956,
+        "sodiumMg": 44.0
+      },
+      "macrosPer100": {
+        "p": 21.94,
+        "f": 5.74,
+        "c": 0.0,
+        "kcal": 139.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/171765/nutrients",
+      "description": "Beef, loin, tenderloin roast, boneless, separable lean only, trimmed to 0\" fat, all grades, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Яловича вирізка без видимого жиру",
+        "en": "Lean beef tenderloin",
+        "ru": "Говяжья вырезка без видимого жира"
+      }
+    }
+  },
+  "tuna": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 0.205,
+        "sodiumMg": 54.0
+      },
+      "macrosPer100": {
+        "p": 29.15,
+        "f": 0.59,
+        "c": 0.0,
+        "kcal": 130.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/172006/nutrients",
+      "description": "Fish, tuna, yellowfin, fresh, cooked, dry heat",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Тунець жовтоперий",
+        "en": "Yellowfin tuna",
+        "ru": "Тунец желтопёрый"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 0.172,
+        "sodiumMg": 45.0
+      },
+      "macrosPer100": {
+        "f": 0.49,
+        "kcal": 109.0,
+        "p": 24.4,
+        "c": 0.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/175159/nutrients",
+      "description": "Fish, tuna, fresh, yellowfin, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Тунець жовтоперий",
+        "en": "Yellowfin tuna",
+        "ru": "Тунец желтопёрый"
+      }
+    }
+  },
+  "chicken_thigh": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 2.311,
+        "sodiumMg": 106.0
+      },
+      "macrosPer100": {
+        "p": 24.76,
+        "f": 8.15,
+        "kcal": 179.0,
+        "c": 0.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/172388/nutrients",
+      "description": "Chicken, broilers or fryers, thigh, meat only, cooked, roasted",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Куряче стегно без шкіри й кістки",
+        "en": "Boneless skinless chicken thigh",
+        "ru": "Куриное бедро без кожи и кости"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 1.097,
+        "sodiumMg": 95.0
+      },
+      "macrosPer100": {
+        "kcal": 121.0,
+        "f": 4.12,
+        "p": 19.66,
+        "c": 0.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/173627/nutrients",
+      "description": "Chicken, broilers or fryers, dark meat, thigh, meat only, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Куряче стегно без шкіри й кістки",
+        "en": "Boneless skinless chicken thigh",
+        "ru": "Куриное бедро без кожи и кости"
+      }
+    }
+  },
+  "whey_protein": {
+    "ready": {
+      "per100": {
+        "fibreG": 3.1,
+        "saturatedFatG": 0.781,
+        "sodiumMg": 156.0
+      },
+      "macrosPer100": {
+        "p": 78.13,
+        "f": 1.56,
+        "c": 6.25,
+        "kcal": 352.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/173180/nutrients",
+      "description": "Beverages, Protein powder whey based",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Сироватковий протеїн · довідковий склад",
+        "en": "Whey protein · reference formula",
+        "ru": "Сывороточный протеин · справочный состав"
+      }
+    }
+  },
+  "butter": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 50.489,
+        "sodiumMg": 11.0
+      },
+      "macrosPer100": {
+        "kcal": 717.0,
+        "f": 81.11,
+        "c": 0.06,
+        "p": 0.85
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/173430/nutrients",
+      "description": "Butter, without salt",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Вершкове масло без солі",
+        "en": "Unsalted butter",
+        "ru": "Сливочное масло без соли"
+      }
+    }
+  },
+  "peanut_butter": {
+    "ready": {
+      "per100": {
+        "fibreG": 5.0,
+        "saturatedFatG": 10.325,
+        "sodiumMg": 17.0
+      },
+      "macrosPer100": {
+        "p": 22.21,
+        "f": 51.36,
+        "c": 22.31,
+        "kcal": 598.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/172470/nutrients",
+      "description": "Peanut butter, smooth style, without salt",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Арахісова паста гладка, без солі",
+        "en": "Smooth unsalted peanut butter",
+        "ru": "Арахисовая паста гладкая, без соли"
+      }
+    }
+  },
+  "nuts": {
+    "ready": {
+      "per100": {
+        "fibreG": 9.6,
+        "saturatedFatG": 4.964,
+        "sodiumMg": 1.5
+      },
+      "macrosPer100": {
+        "p": 18.19,
+        "f": 57.57,
+        "c": 17.63,
+        "kcal": 616.5
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/",
+      "description": "Calculated fresh mixture: almonds 50%, walnuts 50%; no added oil or salt",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Горіховий мікс: мигдаль і волоські 1:1",
+        "en": "Nut mix: almonds and walnuts 1:1",
+        "ru": "Ореховый микс: миндаль и грецкие 1:1"
+      }
+    }
+  },
+  "seeds": {
+    "ready": {
+      "per100": {
+        "fibreG": 7.3,
+        "saturatedFatG": 6.557,
+        "sodiumMg": 8.0
+      },
+      "macrosPer100": {
+        "p": 25.505,
+        "f": 50.255,
+        "c": 15.355,
+        "kcal": 571.5
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/",
+      "description": "Calculated fresh mixture: sunflower_seeds 50%, pumpkin_seeds 50%; no added oil or salt",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Насіння: соняшникове й гарбузове 1:1",
+        "en": "Seeds: sunflower and pumpkin 1:1",
+        "ru": "Семена: подсолнечные и тыквенные 1:1"
+      }
+    }
+  },
+  "shrimp": {
+    "ready": {
+      "per100": {
+        "fibreG": null,
+        "saturatedFatG": 0.056,
+        "sodiumMg": 111.0
+      },
+      "macrosPer100": {
+        "p": 23.98,
+        "f": 0.28,
+        "c": 0.2,
+        "kcal": 99.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/175180/nutrients",
+      "description": "Crustaceans, shrimp, cooked",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Креветки очищені, варені без солі",
+        "en": "Peeled shrimp, cooked without salt",
+        "ru": "Креветки очищенные, варёные без соли"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": null,
+        "saturatedFatG": 0.101,
+        "sodiumMg": 119.0
+      },
+      "macrosPer100": {
+        "f": 0.51,
+        "c": 0.0,
+        "kcal": 85.0,
+        "p": 20.1
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/175179/nutrients",
+      "description": "Crustaceans, shrimp, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Креветки очищені, сирі",
+        "en": "Peeled shrimp, raw",
+        "ru": "Креветки очищенные, сырые"
+      }
+    }
+  },
+  "pork_tenderloin": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 1.198,
+        "sodiumMg": 57.0
+      },
+      "macrosPer100": {
+        "p": 26.17,
+        "f": 3.51,
+        "kcal": 143.0,
+        "c": 0.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/168250/nutrients",
+      "description": "Pork, fresh, loin, tenderloin, separable lean only, cooked, roasted",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Свиняча вирізка без видимого жиру",
+        "en": "Lean pork tenderloin",
+        "ru": "Свиная вырезка без видимого жира"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 0.698,
+        "sodiumMg": 53.0
+      },
+      "macrosPer100": {
+        "f": 2.17,
+        "p": 20.95,
+        "kcal": 109.0,
+        "c": 0.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/168249/nutrients",
+      "description": "Pork, fresh, loin, tenderloin, separable lean only, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Свиняча вирізка без видимого жиру",
+        "en": "Lean pork tenderloin",
+        "ru": "Свиная вырезка без видимого жира"
+      }
+    }
+  },
+  "berries": {
+    "ready": {
+      "per100": {
+        "fibreG": 6.5,
+        "saturatedFatG": 0.019,
+        "sodiumMg": 1.0
+      },
+      "macrosPer100": {
+        "c": 11.94,
+        "kcal": 52.0,
+        "f": 0.65,
+        "p": 1.2
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/167755/nutrients",
+      "description": "Raspberries, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Малина свіжа",
+        "en": "Fresh raspberries",
+        "ru": "Малина свежая"
+      },
+      "weightState": "fresh"
+    }
+  },
+  "rice_cakes": {
+    "ready": {
+      "per100": {
+        "fibreG": 4.2,
+        "saturatedFatG": 0.57,
+        "sodiumMg": 26.0
+      },
+      "macrosPer100": {
+        "f": 2.8,
+        "c": 81.5,
+        "kcal": 387.0,
+        "p": 8.2
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/170250/nutrients",
+      "description": "Snacks, rice cakes, brown rice, plain, unsalted",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Рисові хлібці цільнозернові без солі",
+        "en": "Plain unsalted brown rice cakes",
+        "ru": "Рисовые хлебцы цельнозерновые без соли"
+      }
+    }
+  },
+  "honey": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.2,
+        "saturatedFatG": 0.0,
+        "sodiumMg": 4.0
+      },
+      "macrosPer100": {
+        "p": 0.3,
+        "f": 0.0,
+        "c": 82.4,
+        "kcal": 304.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169640/nutrients",
+      "description": "Honey",
+      "unitGrams": null,
+      "reference": true
+    }
+  },
+  "jam": {
+    "ready": {
+      "per100": {
+        "fibreG": 1.1,
+        "saturatedFatG": 0.01,
+        "sodiumMg": 32.0
+      },
+      "macrosPer100": {
+        "p": 0.37,
+        "f": 0.07,
+        "c": 68.86,
+        "kcal": 278.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169641/nutrients",
+      "description": "Jams and preserves",
+      "unitGrams": null,
+      "reference": true
+    }
+  },
+  "dates": {
+    "ready": {
+      "per100": {
+        "fibreG": 8.0,
+        "saturatedFatG": 0.032,
+        "sodiumMg": 2.0
+      },
+      "macrosPer100": {
+        "c": 75.03,
+        "kcal": 282.0,
+        "f": 0.39,
+        "p": 2.45
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/171726/nutrients",
+      "description": "Dates, deglet noor",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Фініки деглет нур",
+        "en": "Deglet Noor dates",
+        "ru": "Финики деглет нур"
+      }
+    }
+  },
+  "raisins": {
+    "ready": {
+      "per100": {
+        "fibreG": 4.5,
+        "saturatedFatG": 0.094,
+        "sodiumMg": 26.0
+      },
+      "macrosPer100": {
+        "p": 3.3,
+        "f": 0.25,
+        "c": 79.32,
+        "kcal": 299.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/168165/nutrients",
+      "description": "Raisins, dark, seedless (Includes foods for USDA's Food Distribution Program)",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Родзинки темні без кісточок",
+        "en": "Dark seedless raisins",
+        "ru": "Изюм тёмный без косточек"
+      }
+    }
+  },
+  "tortilla": {
+    "ready": {
+      "per100": {
+        "fibreG": 2.4,
+        "saturatedFatG": 1.225,
+        "sodiumMg": 742.0
+      },
+      "macrosPer100": {
+        "f": 7.58,
+        "c": 49.27,
+        "kcal": 297.0,
+        "p": 8.01
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/167535/nutrients",
+      "description": "Tortillas, ready-to-bake or -fry, flour, shelf stable",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Тортилья пшенична",
+        "en": "Wheat flour tortilla",
+        "ru": "Тортилья пшеничная"
+      }
+    }
+  },
+  "fruit_juice": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.20964694,
+        "saturatedFatG": 0.02515763,
+        "sodiumMg": 1.0482347
+      },
+      "macrosPer100": {
+        "p": 0.73376429,
+        "f": 0.20964694,
+        "c": 10.90164092,
+        "kcal": 47.17056167
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169098/nutrients",
+      "description": "Orange juice, raw (Includes foods for USDA's Food Distribution Program); per 100 ml (USDA fluid-ounce mass conversion)",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Апельсиновий сік свіжий",
+        "en": "Fresh orange juice",
+        "ru": "Апельсиновый сок свежий"
+      }
+    }
+  },
+  "pumpkin_seeds": {
+    "ready": {
+      "per100": {
+        "fibreG": 6.0,
+        "saturatedFatG": 8.659,
+        "sodiumMg": 7.0
+      },
+      "macrosPer100": {
+        "c": 10.71,
+        "kcal": 559.0,
+        "p": 30.23,
+        "f": 49.05
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/170556/nutrients",
+      "description": "Seeds, pumpkin and squash seed kernels, dried",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Гарбузове насіння очищене, сушене",
+        "en": "Dried pumpkin seed kernels",
+        "ru": "Тыквенные семечки очищенные, сушёные"
+      }
+    }
+  },
+  "dark_chocolate": {
+    "ready": {
+      "per100": {
+        "fibreG": 10.9,
+        "saturatedFatG": 24.489,
+        "sodiumMg": 20.0
+      },
+      "macrosPer100": {
+        "f": 42.63,
+        "c": 45.9,
+        "kcal": 598.0,
+        "p": 7.79
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/170273/nutrients",
+      "description": "Chocolate, dark, 70-85% cacao solids",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Чорний шоколад 70–85%",
+        "en": "Dark chocolate 70–85% cacao",
+        "ru": "Тёмный шоколад 70–85%"
+      }
+    }
+  },
+  "green_peas": {
+    "ready": {
+      "per100": {
+        "fibreG": 5.5,
+        "saturatedFatG": 0.039,
+        "sodiumMg": 3.0
+      },
+      "macrosPer100": {
+        "c": 15.63,
+        "kcal": 84.0,
+        "f": 0.22,
+        "p": 5.36
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/170420/nutrients",
+      "description": "Peas, green, cooked, boiled, drained, without salt",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Зелений горошок варений без солі",
+        "en": "Green peas, boiled without salt",
+        "ru": "Зелёный горошек варёный без соли"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 5.7,
+        "saturatedFatG": 0.071,
+        "sodiumMg": 5.0
+      },
+      "macrosPer100": {
+        "c": 14.45,
+        "kcal": 81.0,
+        "p": 5.42,
+        "f": 0.4
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/170419/nutrients",
+      "description": "Peas, green, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Зелений горошок сирий",
+        "en": "Green peas, raw",
+        "ru": "Зелёный горошек сырой"
+      }
+    }
+  },
+  "tempeh": {
+    "ready": {
+      "per100": {
+        "fibreG": null,
+        "saturatedFatG": 3.4,
+        "sodiumMg": 14.0
+      },
+      "macrosPer100": {
+        "p": 19.91,
+        "c": 7.62,
+        "kcal": 195.0,
+        "f": 11.38
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/172467/nutrients",
+      "description": "Tempeh, cooked",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Темпе готовий",
+        "en": "Cooked tempeh",
+        "ru": "Темпе готовый"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": null,
+        "saturatedFatG": 2.539,
+        "sodiumMg": 9.0
+      },
+      "macrosPer100": {
+        "p": 20.29,
+        "c": 7.64,
+        "kcal": 192.0,
+        "f": 10.8
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/174272/nutrients",
+      "description": "Tempeh",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Темпе сирий",
+        "en": "Raw tempeh",
+        "ru": "Темпе сырой"
+      }
+    }
+  },
+  "asparagus": {
+    "ready": {
+      "per100": {
+        "fibreG": 2.1,
+        "saturatedFatG": 0.04,
+        "sodiumMg": 2.0
+      },
+      "macrosPer100": {
+        "p": 2.2,
+        "c": 3.88,
+        "kcal": 20.0,
+        "f": 0.12
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/168389/nutrients",
+      "description": "Asparagus, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Спаржа свіжа",
+        "en": "Fresh asparagus",
+        "ru": "Спаржа свежая"
+      },
+      "weightState": "fresh"
+    }
+  },
+  "green_beans": {
+    "ready": {
+      "per100": {
+        "fibreG": 3.2,
+        "saturatedFatG": 0.064,
+        "sodiumMg": 1.0
+      },
+      "macrosPer100": {
+        "c": 7.88,
+        "kcal": 35.0,
+        "p": 1.89,
+        "f": 0.28
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169141/nutrients",
+      "description": "Beans, snap, green, cooked, boiled, drained, without salt",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Стручкова квасоля варена без солі",
+        "en": "Green beans, boiled without salt",
+        "ru": "Стручковая фасоль варёная без соли"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 2.7,
+        "saturatedFatG": 0.05,
+        "sodiumMg": 6.0
+      },
+      "macrosPer100": {
+        "f": 0.22,
+        "p": 1.83,
+        "c": 6.97,
+        "kcal": 31.0
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/169961/nutrients",
+      "description": "Beans, snap, green, raw",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Стручкова квасоля сира",
+        "en": "Green beans, raw",
+        "ru": "Стручковая фасоль сырая"
+      }
+    }
+  },
+  "frozen_vegetables": {
+    "ready": {
+      "per100": {
+        "fibreG": 4.4,
+        "saturatedFatG": 0.031,
+        "sodiumMg": 35.0
+      },
+      "macrosPer100": {
+        "c": 13.09,
+        "kcal": 65.0,
+        "p": 2.86,
+        "f": 0.15
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/170472/nutrients",
+      "description": "Vegetables, mixed, frozen, cooked, boiled, drained, without salt",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Овочева суміш варена без солі · кукурудза, бобові, морква",
+        "en": "Mixed vegetables, boiled without salt · corn, beans, peas, carrots",
+        "ru": "Овощная смесь варёная без соли · кукуруза, бобовые, морковь"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 4.0,
+        "saturatedFatG": 0.098,
+        "sodiumMg": 47.0
+      },
+      "macrosPer100": {
+        "c": 13.47,
+        "kcal": 72.0,
+        "f": 0.52,
+        "p": 3.33
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/food-details/170471/nutrients",
+      "description": "Vegetables, mixed, frozen, unprepared",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Овочева суміш сира · кукурудза, бобові, морква",
+        "en": "Mixed vegetables, raw · corn, beans, peas, carrots",
+        "ru": "Овощная смесь сырая · кукуруза, бобовые, морковь"
+      }
+    }
+  },
   "milk_whole": {
     "ready": {
       "per100": {
@@ -1845,6 +2668,179 @@
       "description": "Celery, raw",
       "unitGrams": null,
       "reference": false
+    }
+  },
+  "cottage_cheese": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 2.762,
+        "sodiumMg": 35.0
+      },
+      "macrosPer100": {
+        "p": 12.245,
+        "f": 5.1,
+        "c": 3.04,
+        "kcal": 110.0
+      },
+      "sourceUrl": "https://blsdb.prod.se.ble.de/download",
+      "description": "Max Rubner-Institut, BLS 4.0 (2025), CC BY 4.0, DOI 10.25826/Data20251217-134202-0; M713300: Quark 20 % fat in dry matter",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Сир кисломолочний ≈5% (кварк)",
+        "en": "Quark ≈5% fat",
+        "ru": "Творог ≈5% (кварк)"
+      }
+    }
+  },
+  "cottage_cheese_lowfat": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.0,
+        "saturatedFatG": 0.114,
+        "sodiumMg": 33.6
+      },
+      "macrosPer100": {
+        "p": 11.85,
+        "f": 0.18,
+        "c": 3.68,
+        "kcal": 66.0
+      },
+      "sourceUrl": "https://blsdb.prod.se.ble.de/download",
+      "description": "Max Rubner-Institut, BLS 4.0 (2025), CC BY 4.0, DOI 10.25826/Data20251217-134202-0; M713100: Quark < 10 % fat in dry matter",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Сир кисломолочний ≈0,2% (кварк)",
+        "en": "Quark ≈0.2% fat",
+        "ru": "Творог ≈0,2% (кварк)"
+      }
+    }
+  },
+  "skyr": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.18,
+        "saturatedFatG": 0.47,
+        "sodiumMg": 33.3
+      },
+      "macrosPer100": {
+        "p": 10.35,
+        "f": 0.84,
+        "c": 3.19,
+        "kcal": 64.0
+      },
+      "sourceUrl": "https://blsdb.prod.se.ble.de/download",
+      "description": "Max Rubner-Institut, BLS 4.0 (2025), CC BY 4.0, DOI 10.25826/Data20251217-134202-0; M710100: Skyr Icelandic style strained yogurt < 10 % fat in dry matter",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Скір натуральний ≈0,8%",
+        "en": "Plain skyr ≈0.8% fat",
+        "ru": "Скир натуральный ≈0,8%"
+      }
+    }
+  },
+  "seitan": {
+    "ready": {
+      "per100": {
+        "fibreG": 2.1,
+        "saturatedFatG": 0.651,
+        "sodiumMg": 652.5
+      },
+      "macrosPer100": {
+        "p": 28.4,
+        "f": 7.2,
+        "c": 4.0,
+        "kcal": 199.0
+      },
+      "sourceUrl": "https://blsdb.prod.se.ble.de/download",
+      "description": "Max Rubner-Institut, BLS 4.0 (2025), CC BY 4.0, DOI 10.25826/Data20251217-134202-0; C558000: Meat substitute containing gluten (seitan)",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Сейтан · довідковий склад",
+        "en": "Seitan · reference formula",
+        "ru": "Сейтан · справочный состав"
+      }
+    }
+  },
+  "soy_mince": {
+    "ready": {
+      "per100": {
+        "fibreG": 5.31,
+        "saturatedFatG": 0.28,
+        "sodiumMg": 2.3
+      },
+      "macrosPer100": {
+        "p": 14.17,
+        "f": 1.8,
+        "c": 3.96,
+        "kcal": 99.0
+      },
+      "sourceUrl": "https://blsdb.prod.se.ble.de/download",
+      "description": "Max Rubner-Institut, BLS 4.0 (2025), CC BY 4.0, DOI 10.25826/Data20251217-134202-0; H765082: Plant-based mince, made from texturised soya protein, plain, soaked, fried without fat (pan)",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Соєвий фарш розмочений, готовий без олії",
+        "en": "Textured soy mince, hydrated, cooked without oil",
+        "ru": "Соевый фарш размоченный, готовый без масла"
+      },
+      "rawNames": {
+        "uk": "Соєвий фарш сухий (текстурат)",
+        "en": "Dry textured soy mince",
+        "ru": "Соевый фарш сухой (текстурат)"
+      },
+      "weightState": "cooked"
+    },
+    "raw": {
+      "per100": {
+        "fibreG": 18.05,
+        "saturatedFatG": 1.048,
+        "sodiumMg": 1.6
+      },
+      "macrosPer100": {
+        "p": 50.2,
+        "f": 6.74,
+        "c": 13.46,
+        "kcal": 351.0
+      },
+      "sourceUrl": "https://blsdb.prod.se.ble.de/download",
+      "description": "Max Rubner-Institut, BLS 4.0 (2025), CC BY 4.0, DOI 10.25826/Data20251217-134202-0; H765000: Plant-based mince, made from texturised soya protein, plain, dry",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Соєвий фарш сухий (текстурат)",
+        "en": "Dry textured soy mince",
+        "ru": "Соевый фарш сухой (текстурат)"
+      }
+    }
+  },
+  "vegetables": {
+    "ready": {
+      "per100": {
+        "fibreG": 0.985,
+        "saturatedFatG": 0.03555,
+        "sodiumMg": 11.05
+      },
+      "macrosPer100": {
+        "p": 0.9745,
+        "f": 0.1785,
+        "c": 3.747,
+        "kcal": 17.15
+      },
+      "sourceUrl": "https://fdc.nal.usda.gov/",
+      "description": "Calculated fresh mixture: cucumber 45%, tomato 45%, spinach 10%; no added oil or salt",
+      "unitGrams": null,
+      "reference": true,
+      "names": {
+        "uk": "Салат: огірок 45%, томат 45%, шпинат 10%",
+        "en": "Salad: cucumber 45%, tomato 45%, spinach 10%",
+        "ru": "Салат: огурец 45%, томат 45%, шпинат 10%"
+      },
+      "weightState": "fresh"
     }
   }
 };

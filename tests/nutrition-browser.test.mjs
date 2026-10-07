@@ -48,8 +48,13 @@ test('replacement preview changes only the confirmed food; quality coverage, sav
     const audit=page.locator('#nutrition-result [data-nutrition-disclosure="micronutrients"]');
     await audit.locator('summary').first().click();
     assert.equal(await audit.locator('[data-micronutrient]').count(),29);
-    assert.equal(await audit.locator('[data-micronutrient="chloride"]').getAttribute('data-micro-status'),'unknown');
-    assert.match(await audit.locator('[data-micronutrient="chloride"] > summary').innerText(),/—/);
+    assert.equal(await audit.locator('[data-micronutrient="chloride"]').getAttribute('data-micro-status'),'incomplete');
+    assert.match(await audit.locator('[data-micronutrient="chloride"] > summary').innerText(),/≥/);
+    assert.equal(await audit.locator('[data-micronutrient="b7"]').getAttribute('data-micro-status'),'incomplete');
+    await audit.locator('[data-nutrition-disclosure="micronutrient-sources"] > summary').click();
+    assert.match(await audit.innerText(),/BLS.*4\.0|Bundeslebensmittelschlüssel 4\.0/);
+    assert.match(await audit.innerText(),/CC BY 4\.0/);
+    await audit.locator('[data-nutrition-disclosure="micronutrient-sources"] > summary').click();
     const d=page.locator('#nutrition-result [data-micronutrient="vitaminD"]');
     assert.equal(await d.getAttribute('data-micro-status'),'below');
     await d.locator('summary').click();

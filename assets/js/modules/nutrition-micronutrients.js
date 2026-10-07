@@ -23,8 +23,8 @@
     vitamins:['Вітаміни · 13','Vitamins · 13','Витамины · 13'], minerals:['Мінерали · 15','Minerals · 15','Минералы · 15'], other:['Інші необхідні речовини','Other essential nutrients','Другие необходимые вещества'],
     below:['Нижче орієнтира','Below reference','Ниже ориентира'], meets:['Досягнуто орієнтира','Reference reached','Ориентир достигнут'], incomplete:['Неповні дані','Incomplete data','Неполные данные'], unknown:['Немає даних','No data','Нет данных'], over:['Вище верхньої межі','Above upper limit','Выше верхнего предела'], profile:['Потрібні вік і стать','Age and sex required','Нужны возраст и пол'], reference:['Орієнтир','Reference','Ориентир'], upper:['Верхня межа · UL','Upper limit · UL','Верхний предел · UL'], source:['Джерела та методика','Sources and method','Источники и методика'], missing:['Не враховано повністю','Not fully accounted for','Учтено не полностью'], foods:['Продукти для перегляду раціону','Foods to consider for your menu','Продукты для пересмотра рациона'], optionsHint:['Це варіанти для заміни. Обери продукт і перерахуй раціон; не додавай ці порції поверх плану.','These are replacement ideas. Choose a food and recalculate; do not add these portions on top of the plan.','Это варианты для замены. Выбери продукт и пересчитай рацион; не добавляй эти порции поверх плана.'],
     basis:['Норми NASEM DRI для здорових людей за віком і статтю, поза вагітністю та лактацією. RDA — рекомендована кількість, AI — адекватне споживання. Менше AI не доводить недостатність. Один день раціону не визначає дефіцит в організмі.','NASEM DRI references for healthy people by age and sex, excluding pregnancy and lactation. RDA is a recommended allowance; AI is an adequate intake. Below AI does not establish inadequacy. One day of food does not diagnose a deficiency.','Нормы NASEM DRI для здоровых людей по возрасту и полу, вне беременности и лактации. RDA — рекомендуемое количество, AI — адекватное потребление. Меньше AI не доказывает недостаточность. Один день рациона не определяет дефицит в организме.'],
-    known:['Знак ≥ показує лише відому частину. Невідоме значення не дорівнює нулю; відсоток — частка добового орієнтира, а не засвоєння.','≥ indicates the known portion only. Unknown is not zero; percentages compare with the daily reference, not absorption.','Знак ≥ показывает только известную часть. Неизвестное значение не равно нулю; процент — доля суточного ориентира, а не усвоение.'],
-    limitations:['Дані довідкові: сорт, виробник, країна та приготування змінюють склад. K враховано за K1; інші форми можуть не входити. Біотин, йод, хром, молібден і хлорид мають прогалини. Воду, додану сіль і добавки враховано лише якщо внесені як продукти. Для сірки, кобальту та інших елементів без окремої DRI добову норму не вигадуємо.','Reference values vary with variety, manufacturer, country and preparation. K uses K1; other forms may be missing. Biotin, iodine, chromium, molybdenum and chloride have data gaps. Water, added salt and supplements count only when entered as foods. No separate daily target is invented for sulfur, cobalt or elements without a DRI.','Справочные данные зависят от сорта, производителя, страны и приготовления. K учитывается по K1; другие формы могут отсутствовать. Для биотина, йода, хрома, молибдена и хлорида есть пробелы. Вода, добавленная соль и добавки учитываются только если внесены как продукты. Для серы, кобальта и элементов без отдельной DRI суточную норму не придумываем.'],
+    known:['≈ — довідкова оцінка з розрахунковими значеннями; ≥ — лише відома частина за неповних даних. Відсоток показує частку добового орієнтира, а не засвоєння.','≈ is a reference estimate including calculated values; ≥ is the known portion when data are incomplete. Percentages compare with the daily reference, not absorption.','≈ — справочная оценка с расчётными значениями; ≥ — только известная часть при неполных данных. Процент показывает долю суточного ориентира, а не усвоение.'],
+    limitations:['Склад зіставлено за продуктом і станом у USDA, BLS 4.0, CoFID 2021 та MEXT 2023. Джерела включають вимірювання й опубліковані розрахунки; їх походження наведене нижче. Сорт, виробник і приготування змінюють склад. K враховано за K1. Воду, додану сіль і добавки враховано лише якщо внесені як продукти. Невизначені речовини показано окремо в відповідних рядках.','Food and preparation states are matched across USDA, BLS 4.0, CoFID 2021 and MEXT 2023. Sources include measurements and published calculations, with provenance below. Variety, brand and cooking change composition. K uses K1. Water, added salt and supplements count only when entered as foods. Undetermined nutrients are listed in their respective rows.','Продукт и состояние сопоставлены в USDA, BLS 4.0, CoFID 2021 и MEXT 2023. Источники включают измерения и опубликованные расчёты; их происхождение приведено ниже. Сорт, производитель и приготовление меняют состав. K учитывается по K1. Вода, добавленная соль и добавки учитываются только если внесены как продукты. Неопределённые вещества указаны в соответствующих строках.'],
     ulNote:['UL стосується ретинолу для A; фолієвої кислоти для B9; доданих форм для B3 та E. Межа магнію з добавок не застосовується до їжі. Відсутність UL не означає необмежену безпеку. Загальне надходження з добавками тут не перевірено.','UL uses retinol for A, folic acid for B9, and added forms for B3 and E. The supplement magnesium limit does not apply to food. No established UL does not mean unlimited safety. Total intake including supplements is not assessed here.','UL относится к ретинолу для A, фолиевой кислоте для B9, добавленным формам для B3 и E. Предел магния из добавок не применяется к пище. Отсутствие UL не означает неограниченную безопасность. Общее потребление с добавками здесь не проверено.'],
     foodMg:['Для магнію з їжі UL не встановлено','No food magnesium UL established','Для магния из пищи UL не установлен'], noUL:['UL не встановлено','No UL established','UL не установлен'], unassessed:['Даних для перевірки UL недостатньо','Insufficient data to assess UL','Недостаточно данных для проверки UL'],
     sodiumNote:['AI натрію не є ціллю додавання солі. Верхній орієнтир WHO показано у перевірці якості.','Sodium AI is not a target for adding salt. The WHO upper guideline appears in the quality check.','AI натрия не является целью добавления соли. Верхний ориентир WHO показан в проверке качества.'],
@@ -44,7 +44,7 @@
     return data.profiles[profile.sex].find(function (p) { return age >= p.minAge && age <= p.maxAge; }) || null;
   }
   function getValues(food, amount) {
-    const result = {values:{}, upper:{}, partialKeys:[], sources:[]};
+    const result = {values:{}, upper:{}, partialKeys:[], estimatedKeys:[], sources:[]};
     if (!food || !(amount > 0) || !Number.isFinite(amount)) return result;
     const mode = food.weightState === 'raw' ? 'raw' : 'ready';
     const reference = data.foods[food.id] && data.foods[food.id][mode];
@@ -56,18 +56,29 @@
     upperKeys.forEach(function (key) { const value = own ? upper && upper[key] : reference && reference.upperPer100[key]; result.upper[key] = valid(value) && Number.isFinite(factor) ? value*factor : null; });
     result.partialKeys = reference && !own ? reference.partialKeys : [];
     if (quality && !own) result.sources.push({url:quality.sourceUrl,description:quality.description});
-    if (reference && !own) Object.keys(reference.extraSources).forEach(function (key) { result.sources.push({url:reference.extraSources[key].url,description:reference.extraSources[key].description,key:key,rangePer100:reference.extraSources[key].rangePer100}); });
+    if (reference && !own) Object.keys(reference.extraSources).forEach(function (key) {
+      const source = reference.extraSources[key];
+      if (source.estimate) result.estimatedKeys.push(key);
+      result.sources.push({url:source.url,description:source.description,key:key,method:source.method,license:source.license,doi:source.doi,rangePer100:source.rangePer100});
+    });
     return result;
   }
   function summarize(meals, profile) {
     const reference = getReference(profile), rows = {}, upper = {}, sources = new Map(); let count = 0;
-    keys.concat(upperKeys).forEach(function (key) { (keys.includes(key)?rows:upper)[key] = {knownTotal:0,knownCount:0,missingFoods:[],complete:false}; });
+    keys.concat(upperKeys).forEach(function (key) { (keys.includes(key)?rows:upper)[key] = {knownTotal:0,knownCount:0,missingFoods:[],estimated:false,complete:false}; });
     (meals || []).forEach(function (meal) { (meal.items || []).forEach(function (item) {
       const amount = Number(item.amount); if (!(amount > 0) || !Number.isFinite(amount)) return; count++;
       const food = system.nutrition.getFoodById(item.id), values = getValues(food,amount);
-      values.sources.forEach(function (s) { sources.set(item.id+'|'+s.url+'|'+(s.key||''),Object.assign({id:item.id,name:food.name},s)); });
+      values.sources.forEach(function (s) {
+        const id = item.id+'|'+s.url+'|'+s.description;
+        if (!sources.has(id)) sources.set(id,Object.assign({id:item.id,name:food.name,keys:[],methods:[]},s));
+        const source = sources.get(id);
+        if (s.key && !source.keys.includes(s.key)) source.keys.push(s.key);
+        if (s.method && !source.methods.includes(s.method)) source.methods.push(s.method);
+      });
       keys.concat(upperKeys).forEach(function (key) {
         const row = rows[key] || upper[key], v = (rows[key] ? values.values : values.upper)[key];
+        if (values.estimatedKeys.includes(key)) row.estimated = true;
         if (valid(v)) { row.knownTotal += v; row.knownCount++; }
         if (!valid(v) || values.partialKeys.includes(key)) {
           if (!row.missingFoods.some(function (f) { return f.id === item.id; })) row.missingFoods.push({id:item.id,name:food?food.name:item.name});
@@ -105,7 +116,7 @@
     const groups = ['vitamins','minerals','other'].map(function (group) {
       return '<h4 class="nw-micro-heading">'+t(group)+'</h4>'+definitions.filter(function (d) { return d.group===group; }).map(function (d) {
         const row = audit.rows[d.key];
-        const amount = row.knownCount ? (row.complete?'':'≥ ')+format(row.knownTotal)+' '+unit(d.unit) : '—';
+        const amount = row.knownCount ? (row.complete?(row.estimated?'≈ ':''):'≥ ')+format(row.knownTotal)+' '+unit(d.unit) : '—';
         const ref = row.reference ? format(row.reference.value)+' '+unit(d.unit)+' · '+row.reference.type : t('profile');
         const ulUnit = d.key==='b3'?'mg':d.key==='b9'||d.key==='vitaminA'?'µg':d.key==='vitaminE'?'mg':d.unit;
         const ul = valid(row.upperLimit) ? t('upper')+': '+format(row.upperLimit)+' '+unit(ulUnit)+(row.upperValue.complete?' · '+format(row.upperValue.knownTotal)+' '+unit(ulUnit):' · '+t('unassessed')) : t(d.key==='magnesium'?'foodMg':'noUL');
@@ -114,7 +125,7 @@
         return '<details class="nw-micro-row" data-micronutrient="'+d.key+'" data-micro-status="'+row.status+'"><summary><strong>'+escape(d.names[index()])+'</strong><span class="nw-micro-amount">'+amount+'</span><span class="nw-micro-status">'+t(row.status)+(row.knownCount&&row.percent!==null?' · '+(row.complete?'':'≥ ')+format(row.percent)+'%':'')+'</span></summary><div class="nw-micro-detail"><p>'+t('reference')+': '+ref+'</p><p>'+ul+'</p>'+missing+(d.key==='sodium'?'<p>'+t('sodiumNote')+'</p>':'')+(ideas.length?'<p>'+t('foods')+':</p><ul>'+ideas.map(function (idea) { return '<li><span>'+escape(labelFood(idea.food))+'</span> · <span>'+format(idea.amount)+' '+(idea.food.unitType==='piece'?(language()==='en'?'pcs':'шт'):(language()==='en'?'g':'г'))+'</span> → <span>'+format(idea.value)+' '+unit(d.unit)+'</span> · <span>'+format(idea.kcal)+' '+(language()==='en'?'kcal':'ккал')+'</span></li>'; }).join('')+'</ul><p>'+t('optionsHint')+'</p>':'')+'</div></details>';
       }).join('');
     }).join('');
-    const sources = audit.sources.map(function (s) { return '<li><a href="'+escape(s.url)+'" target="_blank" rel="noopener noreferrer">'+escape(labelFood(s))+'</a>: '+escape(s.description)+(s.rangePer100?' · I: '+format(s.rangePer100[0])+'–'+format(s.rangePer100[1])+' µg/100 g':'')+'</li>'; }).join('');
+    const sources = audit.sources.map(function (s) { return '<li><a href="'+escape(s.url)+'" target="_blank" rel="noopener noreferrer">'+escape(labelFood(s))+'</a>: '+escape(s.description)+(s.keys.length?' · '+s.keys.map(function (key) { return escape(definitions.find(function(d) { return d.key===key; }).names[index()]); }).join(', '):'')+(s.methods.length?' · '+escape(s.methods.join(', ')):'')+(s.license?' · '+escape(s.license):'')+(s.doi?' · DOI '+escape(s.doi):'')+(s.rangePer100?' · I: '+format(s.rangePer100[0])+'–'+format(s.rangePer100[1])+' µg/100 g':'')+'</li>'; }).join('');
     const profile = audit.reference ? '<p class="nw-help">'+escape(String(targets.referenceProfile.age))+' · <span>'+escape(targets.referenceProfile.sex==='male'?['Чоловік','Male','Мужчина'][index()]:['Жінка','Female','Женщина'][index()])+'</span> · NASEM DRI</p>' : '<p class="nw-help">'+t('profile')+'</p>';
     const recipe = plan.meals.some(function (meal) { return meal.items.some(function (item) { const food = system.nutrition.getFoodById(item.id); return food && food.recipe; }); });
     return '<details class="nw-disclosure nw-micronutrients" data-nutrition-disclosure="micronutrients"><summary>'+t('title')+'</summary><div class="nw-disclosure-body"><p class="nw-micro-overview">'+summary+'</p>'+profile+'<p class="nw-help">'+t('known')+'</p>'+(recipe?'<p class="nw-help">'+t('recipeNote')+'</p>':'')+groups+'<details class="nw-disclosure" data-nutrition-disclosure="micronutrient-sources"><summary>'+t('source')+'</summary><div class="nw-disclosure-body"><p>'+t('basis')+' <a href="'+data.sourceUrl+'" target="_blank" rel="noopener noreferrer">NASEM DRI</a></p><p>'+t('ulNote')+'</p><p>'+t('limitations')+'</p><ul class="nw-quality-sources">'+sources+'</ul></div></details></div></details>';

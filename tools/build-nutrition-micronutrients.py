@@ -97,6 +97,43 @@ def build(archive_path, tables_path, iodine_path):
                 p['iodine'] = match['value']
                 extras['iodine'] = {'url':IODINE_SOURCE,'description':match['description'], 'rangePer100':[match['min'],match['max']]}
             output[food][mode] = {'per100':p,'upperPer100':{k:v.get(i) for i,k in AUX.items()},'partialKeys':partial,'extraSources':extras}
+    supplements = json.loads((ROOT/'tools/data/nutrition-reference-supplements.json').read_text(encoding='utf-8'))
+    matches = json.loads((ROOT/'tools/data/nutrition-reference-matches.json').read_text(encoding='utf-8'))
+    for food in matches['blsPrimary']:
+        output[food] = {mode:{'per100':dict.fromkeys(KEYS),'upperPer100':dict.fromkeys(AUX.values()),'partialKeys':[],'extraSources':{}}
+                        for mode,code in zip(('ready','raw'),matches['bls'][food]) if code}
+    # Preserve existing exact USDA / measured / NIH values; supplement missing fields
+    # with individually reviewed matches. Record the published method for every fill.
+    for source in ('bls','cofid','mext'):
+        metadata = supplements['sources'][source]
+        for food, pair in matches[source].items():
+            for mode, code in zip(('ready','raw'),pair):
+                if not code or mode not in output.get(food,{}): continue
+                record = output[food][mode]
+                extra = supplements[source][code]
+                for key,value in extra['per100'].items():
+                    if value is None or (record['per100'][key] is not None and key not in record['partialKeys']):continue
+                    record['per100'][key] = value
+                    record['partialKeys'] = [k for k in record['partialKeys'] if k != key]
+                    provenance = extra['provenance'][key]
+                    record['extraSources'][key] = {'url':metadata['url'], 'description':metadata['title']+'; '+code+': '+extra['description'],
+                        'method':provenance['method'],'published':provenance['published'],'reference':provenance.get('reference'),
+                        'license':metadata['license'],'doi':metadata.get('doi'),
+                        'estimate':source == 'cofid' or provenance['method'] in ('Formelberechnung','Rezeptberechnung','Übernommener Wert','Published estimate')}
+                for key,value in extra.get('upperPer100',{}).items():
+                    if record['upperPer100'][key] is None and value is not None:record['upperPer100'][key]=value
+    density = 31/29.5735295625
+    juice = output['fruit_juice']['ready']
+    for field in ('per100','upperPer100'):
+        juice[field] = {k:round(v*density,8) if v is not None else None for k,v in juice[field].items()}
+    for food,parts in matches['mixtures'].items():
+        sourceRecords=[output[f]['ready'] for f in parts]
+        p={k:round(sum((output[f]['ready']['per100'][k] or 0)*w for f,w in parts.items()),8) if any(r['per100'][k] is not None for r in sourceRecords) else None for k in KEYS}
+        incomplete=[k for k in KEYS if any(r['per100'][k] is None or k in r['partialKeys'] for r in sourceRecords)]
+        upper={k:round(sum(output[f]['ready']['upperPer100'][k]*w for f,w in parts.items()),8) if all(r['upperPer100'][k] is not None for r in sourceRecords) else None for k in AUX.values()}
+        description='Calculated fresh mixture: '+', '.join(f'{f} {w*100:g}%' for f,w in parts.items())+'; ingredient references USDA / BLS / MEXT'
+        extras={k:{'url':'https://fdc.nal.usda.gov/','description':description,'estimate':True} for k in KEYS if p[k] is not None}
+        output[food]={'ready':{'per100':p,'upperPer100':upper,'partialKeys':incomplete,'extraSources':extras}}
     tables = json.loads(Path(tables_path).read_text(encoding='utf-8'))
     profiles = {}
     row_groups = {'male':range(8,14),'female':range(15,21),'pregnancy':range(22,25),'lactation':range(26,29)}
@@ -121,7 +158,8 @@ def build(archive_path, tables_path, iodine_path):
             idx = len(profiles[group])
             profiles[group].append({'minAge':ages[idx], 'maxAge': ages[idx+1]-1 if idx+1<len(ages) else (120 if group in ('male','female') else 50),'references':refs,'upper':upper})
     target = ROOT/'assets/js/modules/nutrition-micronutrient-data.js'
-    payload = {'sourceUrl':DRI_SOURCE,'framework':'NASEM DRI (including 2019 sodium/potassium)','profiles':profiles,'foods':output}
+    coverage = {mode:{k:sum(record.get(mode,{}).get('per100',{}).get(k) is not None for record in output.values()) for k in KEYS} for mode in ('ready','raw')}
+    payload = {'sourceUrl':DRI_SOURCE,'framework':'NASEM DRI (including 2019 sodium/potassium)','profiles':profiles,'foods':output,'sources':supplements['sources'],'coverage':coverage}
     target.write_text('// Generated reference facts; see tools/build-nutrition-micronutrients.py and docs/nutrition-micronutrients.md.\n(function () {\n const system = window.VitalRiseSystem || {};\n system.nutritionMicronutrientData = '+json.dumps(payload,ensure_ascii=False,indent=2)+';\n window.VitalRiseSystem = system;\n})();\n',encoding='utf-8')
     print(f'Generated {len(KEYS)} nutrient definitions, {len(output)} food profiles; unknowns preserved')
 
