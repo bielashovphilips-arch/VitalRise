@@ -120,6 +120,7 @@
 .nutrition-workspace .nw-meal-food-name { grid-column: 1; }
 .nutrition-workspace .nw-meal-food > [data-nutrition-disclosure^="swap-"]:not([open]) { grid-column: 2; grid-row: 1; }
 .nutrition-workspace .nw-auto-food { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 8px; align-items: start; }
+.nutrition-workspace .nw-auto-food-label { min-width: 0; overflow-wrap: anywhere; }
 .nutrition-workspace .nw-auto-food > [data-nutrition-disclosure^="swap-"][open] { grid-column: 1 / -1; }
 .nutrition-workspace [data-nutrition-disclosure^="swap-"] { border: 0; margin: 0; }
 .nutrition-workspace [data-nutrition-disclosure^="swap-"] > summary { color: #f0d675; font-size: 12px; font-weight: 500; min-height: 44px; padding: 8px 0; }

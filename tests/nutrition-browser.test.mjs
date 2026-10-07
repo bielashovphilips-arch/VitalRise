@@ -19,7 +19,7 @@ test('replacement preview changes only the confirmed food; quality coverage, sav
     const quality=page.locator('#nutrition-result [data-nutrition-disclosure="quality"]');
     await quality.locator('summary').first().click();
     assert.equal(await quality.locator('[data-quality]').count(),3);
-    assert.ok(await quality.locator('[data-quality-status="incomplete"]').count()>0);
+    assert.equal(await quality.locator('[data-quality-status="withinGuide"]').count(),3);
     const swap=page.locator('#nutrition-result [data-nutrition-disclosure="swap-lunch-chicken"]');
     const before=await page.locator('#nutrition-result .auto-meal-card').nth(1).locator('.nw-auto-food-label').allTextContents();
     await swap.locator('summary').first().click();
@@ -46,6 +46,10 @@ test('replacement preview changes only the confirmed food; quality coverage, sav
     assert.equal(await page.locator('#nutrition-result [data-nutrition-eaten="lunch"]').isChecked(),false);
     const after=await page.locator('#nutrition-result .auto-meal-card').nth(1).locator('.nw-auto-food-label').allTextContents();
     assert.deepEqual(after.slice(1),before.slice(1),'Other lunch foods stay unchanged');
+    await page.goto(preview.url+'/nutrition.html?access=admin',{waitUntil:'networkidle'});
+    assert.equal(await page.locator('#nutrition-result .auto-meal-card').count(),4);
+    assert.deepEqual(await page.locator('#nutrition-result .auto-meal-card').nth(1).locator('.nw-auto-food-label').allTextContents(),after,'Reload preserves the exact swapped menu');
+    assert.equal(await page.locator('#nutrition-result [data-nutrition-eaten="breakfast"]').isChecked(),true);
     await page.locator('#nutrition-result [data-action="use-generated-menu"]').click();
     const portion=page.locator('#nutrition-result .nutrition-portion-input[data-meal="lunch"][data-id="turkey"]');
     const amount=await portion.inputValue();assert.ok(Number(amount)>0);
@@ -58,10 +62,13 @@ test('replacement preview changes only the confirmed food; quality coverage, sav
     await page.locator('#nutrition-menu-template-select').selectOption('Swapped plan');
     await page.locator('[data-action="load-nutrition-menu-template"]').click();
     assert.equal(await portion.inputValue(),amount);
+    await page.goto(preview.url+'/nutrition.html?access=admin',{waitUntil:'networkidle'});
+    assert.equal(await portion.inputValue(),amount,'Exact adopted portions survive reload in the editor');
     await page.setViewportSize({width:1440,height:1000});
     for(const [lang,title] of [['en','Nutritional quality'],['ru','Пищевая ценность'],['uk','Поживна якість']]) {
       await page.locator('[data-lang-switch="'+lang+'"]').first().click();
       assert.match(await page.locator('#nutrition-result [data-nutrition-disclosure="quality"] > summary').innerText(),new RegExp(title));
+      assert.ok((await page.locator('#nutrition-result .nw-meal-food-name').allTextContents()).some(text=>text.includes({en:'Atlantic cod',ru:'Треска атлантическая',uk:'Тріска атлантична'}[lang])));
     }
     await page.locator('[data-print-target="nutrition-result"]').click();
     assert.equal(await page.locator('#mobile-report-phone [data-nutrition-disclosure^="swap-"]').count(),0);
@@ -159,6 +166,7 @@ test('nutrition page: search, exact portions, multiple foods, favorites, recipes
     await page.reload({waitUntil:'networkidle'});
     assert.deepEqual(await page.evaluate(()=>window.VitalRiseSystem.nutritionCustom.getFavorites()),[pearId]);
     await page.goto(preview.url+'/nutrition.html?access=admin',{waitUntil:'networkidle'});
+    await page.locator('#nutrition-reset').evaluate(button=>{button.closest('details').open=true;button.click();});
     await page.locator('#nutrition-form').evaluate(form=>{
       form.closest('details').open=true;
       for (const [id,value] of Object.entries({age:'28',height:'178',weight:'80'})) form.querySelector('#'+id).value=value;
@@ -206,6 +214,14 @@ test('ready menu is primary; daily meal check survives editing exact generated p
     await amount.fill(String(initial+1)); await amount.press('Tab');
     assert.equal(await page.locator('#nutrition-result [data-nutrition-eaten="'+mealKey+'"]').isChecked(),false);
     assert.match(await page.locator('#nutrition-result .nw-adherence-summary').innerText(),/0 \/ 4/);
+    const exactGrams=page.locator('#nutrition-result .nutrition-portion-input[data-meal="'+mealKey+'"][data-category="carb"]').first();
+    await exactGrams.fill('151.7');await exactGrams.press('Tab');
+    await page.goto(preview.url+'/nutrition.html?access=admin',{waitUntil:'networkidle'});
+    assert.equal(await exactGrams.inputValue(),'151.7','Manual decimal grams must never be regenerated on reload');
+    await page.locator('#nutrition-reset').evaluate(button=>{button.closest('details').open=true;button.click();});
+    await page.reload({waitUntil:'networkidle'});
+    assert.equal(await page.locator('#nutrition-result .auto-meal-card, #nutrition-result .nutrition-portion-input').count(),0,'Reset clears the active menu');
+    assert.equal(await page.evaluate(()=>localStorage.getItem('vitalrise:nutrition:active-menu')),null);
     assert.deepEqual(errors,[]);
     await context.close();
   } finally {await browser.close();preview.server.closeAllConnections();await new Promise(resolve=>preview.server.close(resolve));}

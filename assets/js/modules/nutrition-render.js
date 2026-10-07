@@ -925,7 +925,7 @@
   function buildElectrolyteNoteMarkup(targets) {
     const protocol = targets && targets.hydrationProtocol ? targets.hydrationProtocol : null;
     const protocolWater = protocol ? protocol.waterLiters + " " + unitLabel("л") : "";
-    const protocolSalt = protocol ? protocol.saltGrams + " " + unitLabel("г") : "";
+    const protocolSalt = protocol ? (targets.saltLimitExclusive ? "&lt; " : "") + protocol.saltGrams + " " + unitLabel("г") : "";
 
     return (
       '<div class="electrolyte-note">' +

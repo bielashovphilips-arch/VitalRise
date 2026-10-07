@@ -198,7 +198,12 @@ foreach ($file in $htmlFiles) {
 $nutritionModulePath = Join-Path $root "assets/js/modules/nutrition.js"
 if (Test-Path $nutritionModulePath) {
   $nutritionModule = Get-FileText $nutritionModulePath
-  $foodIds = [regex]::Matches($nutritionModule, 'id:\s*"([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
+  $foodIds = @([regex]::Matches($nutritionModule, 'id:\s*"([^"]+)"') | ForEach-Object { $_.Groups[1].Value })
+  $nutritionCatalogPath = Join-Path $root "assets/js/modules/nutrition-catalog.js"
+  if (Test-Path $nutritionCatalogPath) {
+    $nutritionCatalog = Get-FileText $nutritionCatalogPath
+    $foodIds += @([regex]::Matches($nutritionCatalog, '"id"\s*:\s*"([^"]+)"') | ForEach-Object { $_.Groups[1].Value })
+  }
   $duplicateFoodIds = $foodIds | Group-Object | Where-Object { $_.Count -gt 1 }
 
   foreach ($duplicate in $duplicateFoodIds) {

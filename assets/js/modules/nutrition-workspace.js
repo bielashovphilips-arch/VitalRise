@@ -16,7 +16,16 @@
     needsReview: ['Потрібна корекція порцій', 'Portions need adjustment', 'Нужна коррекция порций'],
     produce: ['Овочі та фрукти', 'Vegetables and fruit', 'Овощи и фрукты'],
     goalCheck: ['Відповідність цілі', 'Target check', 'Соответствие цели'],
-    reviewHint: ['Зіставлення калорій і БЖВ з розрахунком; повна оцінка вітамінів, клітковини та якості жирів потребує додаткових даних.', 'Compares calories and macros with the calculation; a full assessment of vitamins, fibre and fat quality needs more data.', 'Сопоставление калорий и БЖУ с расчётом; полная оценка витаминов, клетчатки и качества жиров требует дополнительных данных.'],
+    reviewHint: ['Калорії та БЖВ зіставляються з твоєю ціллю. Клітковина, насичені жири й натрій перевіряються окремо нижче. Ці перевірки не охоплюють усі вітаміни й мінерали.', 'Calories and macros are compared with your target. Fibre, saturated fat and sodium are checked separately below. These checks do not cover all vitamins and minerals.', 'Калории и БЖУ сопоставляются с твоей целью. Клетчатка, насыщенные жиры и натрий проверяются отдельно ниже. Эти проверки не охватывают все витамины и минералы.'],
+    savedLocally: ['Раціон і точні порції зберігаються автоматично в цьому браузері.', 'Your menu and exact portions are saved automatically in this browser.', 'Рацион и точные порции сохраняются автоматически в этом браузере.'],
+    menuRestored: ['Продовжуй свій раціон: збережені порції відновлено.', 'Continue your menu: saved portions restored.', 'Продолжай свой рацион: сохранённые порции восстановлены.'],
+    qualityPassed: ['3 показники в межах орієнтирів', '3 checks within guidelines', '3 показателя в пределах ориентиров'],
+    qualityReview: ['є відхилення', 'needs attention', 'есть отклонения'],
+    codName: ['Тріска атлантична', 'Atlantic cod', 'Треска атлантическая'],
+    yogurtName: ['Грецький йогурт натуральний 5%', 'Plain Greek yogurt 5%', 'Греческий йогурт натуральный 5%'],
+    tofuName: ['Тофу твердий (сульфат кальцію)', 'Firm tofu (calcium sulfate)', 'Тофу твёрдый (сульфат кальция)'],
+    bakedOilFree: ['Запечене без доданої олії', 'Baked without added oil', 'Запечённое без добавленного масла'],
+    waterCooked: ['Варена на воді', 'Cooked with water', 'Варёная на воде'],
     category: ['Категорія', 'Category', 'Категория'],
     origin: ['Походження', 'Origin', 'Происхождение'],
     plant: ['Рослинний', 'Plant-based', 'Растительный'],
@@ -74,6 +83,7 @@
     selectNote: ['Залиш продукти, які хочеш використовувати. У прийомі можна поєднувати кілька продуктів.', 'Choose foods you want to use. Each meal can contain several foods.', 'Оставь продукты, которые хочешь использовать. В приёме можно сочетать несколько продуктов.'],
     meals: ['Складено прийомів', 'Meals started', 'Составлено приёмов'],
     water: ['Вода', 'Water', 'Вода'], salt: ['Сіль', 'Salt', 'Соль'],
+    saltLimit: ['Сіль: менше 5 г/день загалом', 'Salt: less than 5 g/day in total', 'Соль: менее 5 г/день всего'],
     emptyMeal: ['Додай перший продукт до цього прийому.', 'Add the first food to this meal.', 'Добавь первый продукт в этот приём.'],
     protein: ['М’ясо, риба та інші білкові', 'Meat, fish and other proteins', 'Мясо, рыба и другие белковые'],
     carb: ['Крупи, гарніри та фрукти', 'Grains, sides and fruit', 'Крупы, гарниры и фрукты'],
@@ -98,6 +108,8 @@
   function t(key) { const value = copy[key]; return value ? value[{uk:0,en:1,ru:2}[language()] || 0] : key; }
   function name(food) {
     if (food.names && food.names[language()]) return food.names[language()];
+    if (language() === 'en' && food.nameEn) return food.nameEn;
+    if (language() === 'ru' && food.nameRu) return food.nameRu;
     return window.VitalRiseI18n ? window.VitalRiseI18n.translateText(food.name) : food.name;
   }
   function translate(value) { return window.VitalRiseI18n ? window.VitalRiseI18n.translateText(value) : value; }
@@ -138,6 +150,7 @@
     if (!quality.itemCount) return '';
     const definitions = [{key:'fibreG',label:'fibre',guide:'fibreGuide',limit:25,min:true},{key:'saturatedFatG',label:'saturatedFat',guide:'saturatedGuide',limit:Math.max(0,Number(plan.totals.kcal))*0.1/9},{key:'sodiumMg',label:'sodium',guide:'sodiumGuide',limit:2000,strict:true}];
     const incomplete = definitions.some(function (row) { return !quality[row.key].complete; });
+    const within = !incomplete && definitions.every(function (row) { const v = quality[row.key].knownTotal; return row.min ? v >= row.limit : row.strict ? v < row.limit : v <= row.limit; });
     const rows = definitions.map(function (row) {
       const value = quality[row.key];
       const over = !row.min && (row.strict ? value.knownTotal >= row.limit : value.knownTotal > row.limit);
@@ -145,7 +158,7 @@
       return '<div class="nw-quality-row" data-quality="' + row.key + '"><div><strong>' + t(row.label) + '</strong><span>' + (value.complete ? '' : '≥ ') + format(value.knownTotal) + ' ' + (row.key === 'sodiumMg' ? (language() === 'en' ? 'mg' : 'мг') : (language() === 'en' ? 'g' : 'г')) + '</span></div><p>' + t(row.guide) + (row.key === 'saturatedFatG' ? ' · ' + format(row.limit) + ' ' + (language() === 'en' ? 'g' : 'г') : '') + '</p><small data-quality-status="' + status + '">' + t(status) + '</small>' + (!value.complete ? '<p>' + t('missingQuality') + ': ' + value.missingFoods.map(function (food) { const record = nutrition.getFoodById(food.id); return escape(record ? name(record) : food.name); }).join(', ') + '</p>' : '') + '</div>';
     }).join('');
     const sources = quality.sources.map(function (entry) { return '<li><a href="' + escape(entry.reference.sourceUrl) + '" target="_blank" rel="noopener noreferrer">' + escape(name(entry.food)) + '</a>: ' + escape(entry.reference.description) + '</li>'; }).join('');
-    return disclosure(t('quality') + (incomplete ? ' · ' + t('incomplete') : ''), (incomplete ? '<p class="nw-help">' + t('knownOnly') + '</p>' : '') + rows + '<p class="nw-help">' + t('sodiumHint') + '</p><p class="nw-help">' + t('qualityBasis') + ' <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" rel="noopener noreferrer">WHO</a></p>' + (sources ? disclosure(t('source') + ': USDA', '<ul class="nw-quality-sources">' + sources + '</ul>', 'quality-sources') : ''), 'quality');
+    return disclosure(t('quality') + ' · ' + t(incomplete ? 'incomplete' : within ? 'qualityPassed' : 'qualityReview'), (incomplete ? '<p class="nw-help">' + t('knownOnly') + '</p>' : '') + rows + '<p class="nw-help">' + t('sodiumHint') + '</p><p class="nw-help">' + t('qualityBasis') + ' <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" rel="noopener noreferrer">WHO</a></p>' + (sources ? disclosure(t('source') + ': USDA', '<ul class="nw-quality-sources">' + sources + '</ul>', 'quality-sources') : ''), 'quality');
   };
   render.buildCustomQualityFieldsMarkup = function () {
     return disclosure(t('optionalQuality'), '<p class="nw-help">' + t('qualityInputHint') + '</p>' + [{name:'fibreG',label:'fibre',max:100},{name:'saturatedFatG',label:'saturatedFat',max:100},{name:'sodiumMg',label:'sodium',max:100000}].map(function (field) { return '<label class="nw-field">' + t(field.label) + ' (' + (field.name === 'sodiumMg' ? (language() === 'en' ? 'mg' : 'мг') : (language() === 'en' ? 'g' : 'г')) + ')<input type="number" name="' + field.name + '" min="0" max="' + field.max + '" step="0.1" inputmode="decimal"></label>'; }).join(''), 'custom-quality');
@@ -261,7 +274,7 @@
   render.buildMealConstructorMarkup = function (view, formatters) {
     const targets = view.activeTargets;
     return '<div class="final-nutrition-result nw-menu"><div class="nw-menu-head"><h3 class="result-title">' + t('menu') + '</h3><button type="button" class="builder-main-btn secondary" data-action="back-constructor">' + t('edit') + '</button></div>' +
-      view.macroTrackerMarkup + (view.reviewMarkup || '') + '<p class="nw-swap-status" role="status" aria-live="polite"></p>' + (view.adherenceMarkup || '') + '<p class="nw-meta">' + t('meals') + ': ' + view.filledMealsCount + ' / ' + view.mealsCount + ' · ' + t('water') + ': ' + formatters.formatLiters(targets.waterLiters) + ' · ' + t('salt') + ': ' + formatters.formatGrams(targets.saltGrams) + '</p>' +
+      view.macroTrackerMarkup + (view.reviewMarkup || '') + '<p class="nw-swap-status" role="status" aria-live="polite"></p>' + (view.adherenceMarkup || '') + '<p class="nw-meta">' + t('meals') + ': ' + view.filledMealsCount + ' / ' + view.mealsCount + ' · ' + t('water') + ': ' + formatters.formatLiters(targets.waterLiters) + ' · ' + t('saltLimit') + '</p>' +
       '<div class="meal-constructor-grid compact-meal-grid">' + view.mealCardsMarkup + '</div>' +
       view.menuTemplateToolsMarkup + (view.shoppingMarkup || '') + guidance(targets, (view.accuracyMarkup || '') + (view.electrolyteMarkup || '') + (view.phaseMarkup || '')) +
       disclosure(t('details'), '<div class="auto-meal-grid compact-summary-grid">' + view.selectedMealsMarkup + '</div>', 'summary') + '</div>';
@@ -284,7 +297,7 @@
   render.buildFinalNutritionMarkup = function (title, targets, plan, formatters, selected) {
     return '<div class="final-nutrition-result nw-menu"><h3 class="result-title">' + escape(translate(title)) + '</h3>' + render.buildMacroTrackerMarkup(targets, plan.totals, formatters) +
       render.buildPlanReviewMarkup(targets,plan) + '<p class="nw-swap-status" role="status" aria-live="polite"></p>' + render.buildAdherenceSummaryMarkup(plan.meals,targets.weightMode) +
-      '<p class="nw-meta">' + t('water') + ': ' + formatters.formatLiters(targets.waterLiters) + ' · ' + t('salt') + ': ' + formatters.formatGrams(targets.saltGrams) + '</p><div class="auto-meal-grid compact-summary-grid">' +
+      '<p class="nw-meta">' + t('water') + ': ' + formatters.formatLiters(targets.waterLiters) + ' · ' + t('saltLimit') + '</p><div class="auto-meal-grid compact-summary-grid">' +
       plan.meals.map(function (meal) { return '<div class="nw-ready-meal">' + originals.buildMealCardMarkup(meal, formatters, {targets:targets, items:meal.items, selected:selected, day:'stable'}) + render.buildAdherenceMealMarkup(meal,targets.weightMode) + '</div>'; }).join('') + '</div>' +
       render.buildShoppingListMarkup(plan.meals) + guidance(targets, originals.buildElectrolyteNoteMarkup(targets) + originals.buildPhaseRecommendationMarkup(targets,formatters)) +
       '<button type="button" class="builder-main-btn primary" data-action="use-generated-menu">' + t('usePlan') + '</button></div>';
@@ -323,7 +336,7 @@
     if (!form || !form.querySelector('#age') || !form.querySelector('#weight-mode-toggle')) return;
     panel.classList.add('nutrition-workspace');
     const css = document.createElement('link');
-    css.rel = 'stylesheet'; css.href = 'assets/css/nutrition-workspace.css?v=nutrition-20261006-1';
+    css.rel = 'stylesheet'; css.href = 'assets/css/nutrition-workspace.css?v=nutrition-20261007-1';
     document.head.appendChild(css);
     const parameterDetails = document.createElement('details');
     parameterDetails.className = 'nw-parameters'; parameterDetails.open = true;

@@ -289,6 +289,7 @@
     [
       "vitalrise:nutrition:active-correction",
       "vitalrise:nutrition:last-targets",
+      "vitalrise:nutrition:active-menu",
       "vitalrise:progress:history"
     ].forEach(function (key) {
       try {
@@ -502,6 +503,69 @@
   readySelections: null,
   selected: getDefaultNutritionSelection()
 };
+  const ACTIVE_MENU_KEY = 'vitalrise:nutrition:active-menu';
+
+  function menuSelectionsFromPlan(plan, targets) {
+    const selections = buildEmptyMealSelections(targets);
+    plan.meals.forEach(function (meal) {
+      meal.items.forEach(function (item) {
+        const food = getNutritionFoodById(item.id);
+        if (food && selections[meal.mealKey]) selections[meal.mealKey][food.category][food.id] = item.amount;
+      });
+    });
+    return selections;
+  }
+
+  function saveActiveNutritionMenu() {
+    if (!nutritionState.targets || !nutritionResult) return;
+    const editing = !!nutritionResult.querySelector('.meal-constructor-grid');
+    const ready = nutritionState.readySelections || menuSelectionsFromPlan(buildAutoMealPlan(nutritionState.targets),nutritionState.targets);
+    const saved = window.VitalRiseSystem.storage.setJson(ACTIVE_MENU_KEY, {
+      version:1, targets:nutritionState.targets, baseFormData:nutritionState.baseFormData,
+      selected:nutritionState.selected, readySelections:ready,
+      mealSelections:nutritionState.mealSelections, mode:nutritionState.mode,
+      editing:editing, activeGroup:nutritionState.activeGroup
+    });
+    const workspace = window.VitalRiseSystem.nutritionWorkspace;
+    const status = document.createElement('p');
+    status.className = 'nw-help nw-session-status';
+    status.textContent = workspace.t(saved ? 'savedLocally' : 'storageError');
+    nutritionResult.prepend(status);
+  }
+
+  function restoreActiveNutritionMenu() {
+    if (!nutritionForm || !nutritionResult) return;
+    const saved = window.VitalRiseSystem.storage.getJson(ACTIVE_MENU_KEY,null);
+    if (!saved || saved.version !== 1 || !saved.targets || !saved.baseFormData || !saved.selected || !saved.readySelections || !saved.mealSelections) return;
+    if (!['calories','protein','fat','carbs','mealsCount'].every(function (key) { return typeof saved.targets[key] === 'number' && Number.isFinite(saved.targets[key]) && saved.targets[key] >= 0; })) return;
+    try {
+      nutritionState.targets = saved.targets;
+      nutritionState.baseFormData = saved.baseFormData;
+      nutritionState.selected = nutritionModule.filterSelectionForDiet(saved.selected,saved.targets.dietStyle);
+      nutritionState.readySelections = saved.readySelections;
+      nutritionState.mealSelections = saved.mealSelections;
+      nutritionState.dayTargets = {stable:saved.targets};
+      nutritionState.mode = saved.mode === 'manual' ? 'manual' : 'auto';
+      nutritionState.activeGroup = Object.hasOwn(nutritionState.selected,saved.activeGroup) ? saved.activeGroup : 'protein';
+      Object.entries(saved.baseFormData).forEach(function (entry) {
+        const field = nutritionForm.elements.namedItem(entry[0]);
+        if (field && typeof field.value === 'string') field.value = entry[1];
+      });
+      if (weightModeToggle) weightModeToggle.checked = saved.targets.weightMode === 'raw';
+      syncWeightMode();
+      syncProgressWeekVisibility();
+      updateNutritionMarkup(saved.editing ? buildMealConstructorMarkup(saved.targets) : buildNutritionConstructorMarkup());
+      nutritionResult.querySelector('.nw-session-status').textContent = window.VitalRiseSystem.nutritionWorkspace.t('menuRestored');
+      const parameters = nutritionForm.closest('details');
+      if (parameters) {
+        parameters.open = false;
+        const summary = parameters.querySelector('[data-nutrition-parameter-summary]');
+        if (summary) summary.textContent = saved.baseFormData.weight + ' ' + (window.VitalRiseI18n?.getLanguage() === 'en' ? 'kg' : 'кг') + ' · ' + goalField.selectedOptions[0].textContent;
+      }
+    } catch (error) {
+      resetNutritionState();
+    }
+  }
 
   const MEAL_NAMES = nutritionModule
     ? nutritionModule.getMealNames()
@@ -540,6 +604,7 @@
   }
 
  function resetNutritionState() {
+  window.VitalRiseSystem.storage.remove(ACTIVE_MENU_KEY);
   nutritionState.readySelections = null;
   nutritionState.targets = null;
   nutritionState.mode = "auto";
@@ -628,6 +693,7 @@
         if (selectionStart !== null && typeof node.setSelectionRange === "function" && ["search","text"].includes(node.type)) node.setSelectionRange(selectionStart, selectionEnd);
       }
     }
+    saveActiveNutritionMenu();
   }
 
   function buildMealCardMarkup(meal) {
@@ -1192,6 +1258,8 @@ function buildMealConstructorMarkup(targets) {
         '<div class="result-placeholder">Заповни поля та натисни «Розрахувати», щоб перейти до формування раціону.</div>';
     });
   }
+
+  restoreActiveNutritionMenu();
 
  if (nutritionResult) {
   nutritionResult.addEventListener("input", function (event) {

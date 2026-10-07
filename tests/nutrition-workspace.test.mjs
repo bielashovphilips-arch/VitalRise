@@ -22,10 +22,10 @@ test('quality keeps missing values unknown, scales eggs by edible weight, and us
   const {nutrition:n,nutritionQuality:q,nutritionQualityData:data,nutritionCustom:custom}=setup();
   const eggs=q.getValues(n.getFoodById('eggs'),3);
   assert.equal(eggs.sodiumMg,data.eggs.ready.per100.sodiumMg*1.5);
-  const incomplete=q.summarize([{items:[{id:'eggs',amount:3},{id:'white_fish',amount:100}]}]);
+  const incomplete=q.summarize([{items:[{id:'eggs',amount:3},{id:'cottage_cheese',amount:100}]}]);
   assert.equal(incomplete.sodiumMg.complete,false);
   assert.equal(incomplete.sodiumMg.knownTotal,eggs.sodiumMg);
-  assert.deepEqual(plain(incomplete.sodiumMg.missingFoods.map(food=>food.id)),['white_fish']);
+  assert.deepEqual(plain(incomplete.sodiumMg.missingFoods.map(food=>food.id)),['cottage_cheese']);
   const selections=n.buildEmptyMealSelections(targets);selections.lunch.carb={rice:75};
   n.buildSelectedDaySummary({...targets,weightMode:'raw'},selections,n.getDefaultSelection());
   assert.equal(q.getValues(n.getFoodById('rice'),75).fibreG,data.rice.raw.per100.fibreG*0.75);
@@ -52,20 +52,82 @@ test('replacement previews respect selected foods, diets, meal occupancy, portio
   assert.equal(swaps.getOptions('chicken',-1,targets,'lunch',[],selected).length,0);
 });
 
+test('cooked/raw calories and macros use the same USDA state as quality; automatic dry bounds scale while exact grams stay unchanged', () => {
+  const {nutrition:n,nutritionQualityData:data,nutritionWorkspace:w}=setup();
+  assert.equal(n.getFoodById('chicken').macrosPer100.kcal,165);
+  assert.equal(n.getFoodById('chicken').macrosPer100.p,31.02);
+  assert.equal(w.foodName(n.getFoodById('white_fish')),'Тріска атлантична');
+  for(const mode of ['ready','raw']) {
+    const selections=n.buildEmptyMealSelections(targets);selections.lunch.carb={rice:75};
+    const plan=n.buildSelectedDaySummary({...targets,weightMode:mode},selections,n.getDefaultSelection());
+    assert.equal(plan.meals.find(meal=>meal.mealKey==='lunch').items[0].amount,75);
+    for(const id of Object.keys(data)) {
+      const food=n.getFoodById(id), reference=data[id][food.weightState==='raw'?'raw':'ready'];
+      if(food.unitType!=='piece')assert.deepEqual(plain(food.macrosPer100),plain(reference.macrosPer100),id+':'+mode);
+      assert.equal(food.sourceUrl,reference.sourceUrl);
+    }
+    if(mode==='raw')assert.ok(n.getFoodById('rice').max<=130,'Automatic dry portions must not reuse cooked gram limits');
+  }
+});
+
+test('64 standard adult scenarios meet energy/macros, produce and sourced quality guides across goals, meal counts and weighing states', () => {
+  const {nutrition:n,nutritionQuality:q,nutritionRender:r}=setup();
+  let cases=0;
+  for(const gender of ['female','male'])for(const goal of ['cut','maintain','gain','recomp'])for(const count of [3,4,5,6])for(const mode of ['ready','raw']) {
+    const target=n.calculateNutrition({gender,age:28,height:gender==='male'?178:164,weight:gender==='male'?80:58,activity:1.55,goal,'meals-count':count,'diet-style':'standard','weight-mode':mode});
+    const selected=n.getDefaultSelection(), plan=n.buildAutoMealPlan(target,selected), values=q.summarize(plan.meals);
+    const label=[gender,goal,count,mode].join(':');
+    assert.equal(plan.meals.length,count,label);
+    for(const [key,targetKey,tolerance] of [['kcal','calories',.05],['p','protein',.08],['f','fat',.08],['c','carbs',.08]])assert.ok(Math.abs(plan.totals[key]-target[targetKey])<=target[targetKey]*tolerance,label+':'+key);
+    assert.ok(n.getProduceAmount(plan.meals)>=400,label);
+    assert.ok(values.fibreG.complete && values.fibreG.knownTotal>=25,label+':fibre');
+    assert.ok(values.saturatedFatG.complete && values.saturatedFatG.knownTotal<=plan.totals.kcal/90,label+':saturated');
+    assert.ok(values.sodiumMg.complete && values.sodiumMg.knownTotal<2000,label+':sodium');
+    for(const meal of plan.meals) {
+      assert.ok(meal.items.length>0 && meal.items.length<=6,label);
+      assert.equal(new Set(meal.items.map(item=>item.id)).size,meal.items.length,label);
+      for(const item of meal.items) {
+        const food=n.getFoodById(item.id);
+        assert.ok(selected[food.category].includes(item.id),label+':selected');
+        assert.ok(!food.allowedMeals || food.allowedMeals.includes(meal.mealKey),label+':meal');
+      }
+    }
+    assert.match(r.buildPlanReviewMarkup(target,plan),/Відповідає розрахунковій цілі/,label);
+    cases++;
+  }
+  assert.equal(cases,64);
+});
+
+test('restricted auto menus never add unselected or diet-excluded foods or claim a complete healthy menu', () => {
+  const {nutrition:n,nutritionRender:r}=setup();
+  const selected={protein:['chicken'],carb:[],extra_carb:[],fat:[],vegetable:[]};
+  const plan=n.buildAutoMealPlan(targets,selected);
+  assert.ok(plan.meals.flatMap(meal=>meal.items).every(item=>item.id==='chicken'));
+  assert.doesNotMatch(r.buildPlanReviewMarkup(targets,plan),/Відповідає розрахунковій цілі/);
+  for(const diet of ['vegan','keto','carnivore']) {
+    const filtered=n.filterSelectionForDiet(n.getDefaultSelection(),diet);
+    const result=n.buildAutoMealPlan({...targets,dietStyle:diet},filtered);
+    for(const item of result.meals.flatMap(meal=>meal.items))assert.ok(n.isFoodAllowedForDiet(n.getFoodById(item.id),diet));
+  }
+  const heavy=n.calculateNutrition({gender:'male',age:28,height:190,weight:120,activity:1.55,goal:'gain',profile:'advanced','load-context':'heat'});
+  assert.equal(heavy.saltGrams,5);assert.equal(heavy.saltLimitExclusive,true);
+});
+
 test('quality references carry matching FDC records and recipe nutrients preserve incomplete coverage', () => {
   const {nutrition:n,nutritionQualityData:data,nutritionQuality:q,nutritionCustom:custom,nutritionRender:r}=setup();
-  assert.equal(Object.keys(data).length,76);
+  assert.equal(Object.keys(data).length,79);
   for(const item of Object.values(data))for(const reference of Object.values(item)) {
     assert.match(reference.sourceUrl,/^https:\/\/fdc\.nal\.usda\.gov\/food-details\/\d+\/nutrients$/);
     for(const key of q.keys)assert.ok(reference.per100[key]===null || Number.isFinite(reference.per100[key])&&reference.per100[key]>=0);
   }
-  const selections=n.buildEmptyMealSelections(targets);selections.lunch.carb={rice:150};selections.lunch.protein={white_fish:100};
-  const meal=n.buildSelectedDaySummary(targets,selections,n.getDefaultSelection()).meals.find(item=>item.mealKey==='lunch');
+  const selected=n.getDefaultSelection();selected.protein.push('cottage_cheese');
+  const selections=n.buildEmptyMealSelections(targets);selections.lunch.carb={rice:150};selections.lunch.protein={cottage_cheese:100};
+  const meal=n.buildSelectedDaySummary(targets,selections,selected).meals.find(item=>item.mealKey==='lunch');
   const recipe=custom.addRecipe('Unknown recipe quality',250,'protein',meal);
   assert.equal(recipe.qualityPer100.sodiumMg,null);
   const markup=r.buildQualityMarkup(targets,{meals:[meal],totals:meal.totals});
   assert.match(markup,/data-quality-status="incomplete"/);
-  assert.match(markup,/white_fish|Біла риба/);
+  assert.match(markup,/Сир кисломолочний/);
 });
 
 test('adherence is per local day and exact meal: changed amounts, weight states and next day require a new check', () => {
@@ -140,7 +202,7 @@ test('raw-weight nutrients and visible weight state agree, including unsupported
   const selections = n.buildEmptyMealSelections(targets); selections.lunch.carb = {rice:75};
   n.buildSelectedDaySummary({...targets,weightMode:'raw'},selections,n.getDefaultSelection());
   const rice = n.getFoodById('rice');
-  assert.equal(rice.weightState,'raw'); assert.equal(rice.macrosPer100.kcal,350);
+  assert.equal(rice.weightState,'raw'); assert.equal(rice.macrosPer100.kcal,365);
   assert.equal(workspace.foodState(rice),'Сухий');
   const millet = n.getFoodById('millet'); assert.equal(millet.weightState,'cooked'); assert.match(millet.note,/Сирі/);
 });

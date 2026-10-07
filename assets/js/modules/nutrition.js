@@ -1,6 +1,7 @@
 ﻿(function () {
   const system = window.VitalRiseSystem || {};
   let activeWeightMode = "ready";
+  let activeAutoGoal = 'maintain';
 
   function normalizeWeightMode(value) {
     return String(value || "ready").toLowerCase() === "raw" ? "raw" : "ready";
@@ -8,6 +9,21 @@
 
   function applyWeightMode(food) {
     if (!food) return food;
+    const references = (system.nutritionQualityData || {})[food.id];
+    if (references && references.ready) {
+      const ready = references.ready;
+      if (food.unitType === 'piece') {
+        food.macrosPerUnit = Object.fromEntries(Object.entries(ready.macrosPer100).map(function (entry) { return [entry[0], +(entry[1] * ready.unitGrams / 100).toFixed(1)]; }));
+        // Display the conventional rounded energy for a 50 g edible egg.
+        food.macrosPerUnit.kcal = Math.round(food.macrosPerUnit.kcal);
+      } else {
+        food.macrosPer100 = clone(ready.macrosPer100);
+      }
+      food.sourceUrl = ready.sourceUrl;
+      if (['chicken','turkey','white_fish'].includes(food.id)) food.weightModeLabel = 'Запечене без доданої олії';
+      if (food.id === 'oatmeal') food.weightModeLabel = 'Варена на воді';
+      if (references.raw) food.rawMacrosPer100 = clone(references.raw.macrosPer100);
+    }
     const cookedIds = ["chicken", "turkey", "beef", "tuna", "white_fish", "mackerel", "salmon", "chicken_thigh", "shrimp", "pork_tenderloin", "oatmeal", "rice", "buckwheat", "potato", "pasta", "sweet_potato", "bulgur", "couscous", "quinoa", "lentils", "beans", "chickpeas", "mung_beans", "split_peas", "red_beans", "soy_mince", "beetroot"];
     const freshIds = ["banana", "berries", "apple", "avocado", "spinach", "cucumber", "tomato", "bell_pepper", "cabbage", "carrot", "onion"];
     food.weightState = food.weightState || (cookedIds.includes(food.id) ? "cooked" : freshIds.includes(food.id) ? "fresh" : "packaged");
@@ -15,16 +31,26 @@
     if (activeWeightMode !== "raw" || !food.rawMacrosPer100) return food;
 
     food.macrosPer100 = clone(food.rawMacrosPer100);
+    // Automatic bounds describe an edible cooked portion. Scale them for the
+    // corresponding raw/dry state; manual gram entries remain exact.
+    if (references && references.raw) {
+      const ratio = references.ready.macrosPer100.kcal / references.raw.macrosPer100.kcal;
+      food.min = Math.max(5, Math.round(food.min * ratio / 5) * 5);
+      food.max = Math.max(food.min, Math.round(food.max * ratio / 5) * 5);
+      food.defaultAmount = Math.max(food.min, Math.round(food.defaultAmount * ratio / 5) * 5);
+      food.portionStep = 5;
+      food.sourceUrl = references.raw.sourceUrl;
+    }
     food.weightModeLabel = food.rawWeightModeLabel || "Сирий / сухий";
     food.weightState = "raw";
     return food;
   }
 
   const defaultSelection = {
-    protein: ["eggs", "cottage_cheese", "chicken", "turkey", "white_fish", "greek_yogurt", "tofu"],
-    carb: ["oatmeal", "banana", "rice", "buckwheat", "potato", "apple"],
+    protein: ["eggs", "chicken", "turkey", "white_fish", "greek_yogurt", "tofu"],
+    carb: ["oatmeal", "banana", "rice", "buckwheat", "potato", "apple", "lentils"],
     extra_carb: ["whole_bread"],
-    fat: ["olive_oil", "avocado", "nuts"],
+    fat: ["olive_oil", "avocado", "almonds"],
     vegetable: ["cucumber", "tomato", "broccoli", "carrot", "cabbage"]
   };
 
@@ -143,7 +169,10 @@
     },
     {
       id: "white_fish",
-      name: "Біла риба (хек / мінтай / тріска / морський окунь)",
+      name: "Тріска атлантична",
+      nameEn: "Atlantic cod",
+      nameRu: "Треска атлантическая",
+      aliases: ["Біла риба", "тріска", "cod"],
       category: "protein",
       unitType: "grams",
       unitLabel: "г",
@@ -219,7 +248,7 @@
       unitLabel: "г",
       portionStep: 25,
       min: 100,
-      max: 250,
+      max: 350,
       defaultAmount: 150,
       allowedMeals: ["lunch", "dinner"],
       macrosPer100: { p: 2.7, f: 0.3, c: 28, kcal: 130 },
@@ -234,7 +263,7 @@
       unitLabel: "г",
       portionStep: 25,
       min: 100,
-      max: 250,
+      max: 350,
       defaultAmount: 150,
       allowedMeals: ["lunch", "dinner"],
       macrosPer100: { p: 4.5, f: 1.6, c: 21, kcal: 110 },
@@ -249,7 +278,7 @@
       unitLabel: "г",
       portionStep: 50,
       min: 150,
-      max: 350,
+      max: 450,
       defaultAmount: 250,
       allowedMeals: ["lunch", "dinner"],
       macrosPer100: { p: 2, f: 0.4, c: 17, kcal: 77 }
@@ -324,7 +353,9 @@
 },
 {
   id: "greek_yogurt",
-  name: "Грецький йогурт",
+  name: "Грецький йогурт натуральний 5%",
+  nameEn: "Plain Greek yogurt 5%",
+  nameRu: "Греческий йогурт натуральный 5%",
   category: "protein",
   unitType: "grams",
   unitLabel: "г",
@@ -454,7 +485,9 @@
 },
 {
   id: "tofu",
-  name: "Тофу",
+  name: "Тофу твердий (сульфат кальцію)",
+  nameEn: "Firm tofu (calcium sulfate)",
+  nameRu: "Тофу твёрдый (сульфат кальция)",
   category: "protein",
   unitType: "grams",
   unitLabel: "г",
@@ -1898,23 +1931,16 @@ const autoMealTemplates = {
       })
       .map(getFoodById)
       .filter(function (food) {
-        return food && isFoodAllowedForDiet(food, context && context.dietStyle);
+        return food && isFoodAllowedForDiet(food, context && context.dietStyle) && isFoodAllowedForGoal(food, activeAutoGoal) && (!food.allowedMeals || food.allowedMeals.includes(mealKey));
       });
 
     if (selectedAllowed.length) {
       return selectedAllowed[0];
     }
 
-    const fallback = allowedTemplateIds
-      .map(getFoodById)
-      .filter(function (food) {
-        return food && isFoodAllowedForDiet(food, context && context.dietStyle);
-      });
-
-    if (fallback.length) return fallback[0];
-
-    return getFoodsByCategory(category).find(function (food) {
-      return isFoodAllowedForDiet(food, context && context.dietStyle) &&
+    return selectedIds.map(getFoodById).find(function (food) {
+      return food && isFoodAllowedForDiet(food, context && context.dietStyle) && isFoodAllowedForGoal(food, activeAutoGoal) &&
+        !(context && context.fermentedDairyUsed && isFermentedDairyId(food.id)) &&
         (!food.allowedMeals || !food.allowedMeals.length || food.allowedMeals.includes(mealKey));
     }) || null;
   }
@@ -1922,9 +1948,11 @@ const autoMealTemplates = {
   function isFoodAvailableForPreset(food, mealKey, selected, dietStyle) {
     if (!food) return false;
     if (!isFoodAllowedForDiet(food, dietStyle)) return false;
+    if (food.allowedMeals && !food.allowedMeals.includes(mealKey)) return false;
 
     const selectedIds = (selected && selected[food.category]) || [];
-    if (selectedIds.length && !selectedIds.includes(food.id)) return false;
+    if (!selectedIds.includes(food.id)) return false;
+    if (!isFoodAllowedForGoal(food, activeAutoGoal)) return false;
 
     return true;
   }
@@ -2086,6 +2114,7 @@ const autoMealTemplates = {
 
   function buildAutoMealPlan(targets, selected) {
     activeWeightMode = normalizeWeightMode(targets && targets.weightMode);
+    activeAutoGoal = targets.goal;
     const distribution = getMealDistribution(targets.mealsCount);
     const context = { fermentedDairyUsed: false, dietStyle: targets.dietStyle };
 
@@ -2102,7 +2131,9 @@ const autoMealTemplates = {
       });
       meals.forEach(function (meal, index) {
         if (!missing || !vegetables.length) return;
-        const food = vegetables[index % vegetables.length];
+        const available = vegetables.filter(function (food) { return !food.allowedMeals || food.allowedMeals.includes(meal.mealKey); });
+        if (!available.length) return;
+        const food = available[index % available.length];
         const existing = meal.items.find(function (item) { return item.id === food.id; });
         const amount = Math.min(missing, Math.max(0, food.max - (existing ? existing.amount : 0)), 200);
         if (amount > 0) {
@@ -2113,14 +2144,113 @@ const autoMealTemplates = {
       });
     }
 
+    rebalancePlan(meals, targets);
+    balanceAutoMenu(meals, targets, selected);
     return {
       meals: meals,
-      totals: rebalancePlan(meals, targets)
+      totals: calculatePlanTotals(meals)
     };
   }
 
+  // Bounded coordinate search over selected foods and practical weighed portions.
+  // This applies only to generation, never to an edited or adopted exact menu.
+  function balanceAutoMenu(meals, targets, selected) {
+    const quality = system.nutritionQuality;
+    if (!quality) return;
+    const desired = [targets.calories, targets.protein, targets.fat, targets.carbs];
+    const profiles = new Map();
+    const ids = Object.values(selected || {}).flat();
+    ids.forEach(function (id) {
+      const food = getFoodById(id);
+      if (!food || !isFoodAllowedForDiet(food, targets.dietStyle) || !isFoodAllowedForGoal(food, targets.goal)) return;
+      const unit = food.unitType === 'piece' ? 1 : 100;
+      const macros = getFoodMacros(food, unit);
+      const values = quality.getValues(food, unit);
+      const produce = getProduceAmount([{items:[{id:id, amount:unit}]}]);
+      const vector = [macros.kcal, macros.p, macros.f, macros.c, values.fibreG || 0, values.saturatedFatG || 0, values.sodiumMg || 0, produce].map(function (v) { return v / unit; });
+      const rawGrain = food.weightState === 'raw' && ['carb','extra_carb'].includes(food.category);
+      const step = food.unitType === 'piece' ? 1 : food.category === 'vegetable' ? 25 : food.category === 'fat' || rawGrain ? 5 : 10;
+      const min = food.unitType === 'piece' ? 1 : food.category === 'vegetable' ? 50 : food.category === 'fat' ? Math.min(food.min, 5) : rawGrain ? 15 : Math.min(food.min, 50);
+      const max = Math.max(min, food.max);
+      profiles.set(id, {food:food, vector:vector, min:min, max:max, step:step});
+    });
+    function portion(profile, amount) {
+      return Math.max(profile.min, Math.min(profile.max, Math.round(amount / profile.step) * profile.step));
+    }
+    function item(profile, amount) {
+      return {id:profile.food.id, name:profile.food.name, category:profile.food.category, amount:amount, unitLabel:profile.food.unitLabel, unitType:profile.food.unitType, macros:getFoodMacros(profile.food,amount)};
+    }
+    const rows = [];
+    meals.forEach(function (meal) {
+      meal.items.forEach(function (entry) {
+        const profile = profiles.get(entry.id);
+        if (profile) rows.push({meal:meal, entry:entry, profile:profile});
+      });
+    });
+    function sum() {
+      const total = Array(8).fill(0);
+      rows.forEach(function (row) { row.profile.vector.forEach(function (v,i) { total[i] += v * row.entry.amount; }); });
+      return total;
+    }
+    function loss(total) {
+      let score = desired.reduce(function (value, target, i) { return value + (i === 0 ? 3 : 2) * Math.pow((total[i] - target) / Math.max(target, i ? 30 : 500), 2); }, 0);
+      if (targets.dietStyle !== 'carnivore') {
+        // A small margin keeps rounded portions above the 25 g guide.
+        score += 4 * Math.pow(Math.max(0, 26 - total[4]) / 26, 2);
+        score += 4 * Math.pow(Math.max(0, 400 - total[7]) / 400, 2);
+      }
+      score += 4 * Math.pow(Math.max(0, total[5] * 90 / Math.max(total[0], 1) - 1), 2);
+      // Leave some room for added salt/condiments, which are not in this menu.
+      score += 4 * Math.pow(Math.max(0, total[6] / 1750 - 1), 2);
+      return score;
+    }
+    function allowed(profile, meal) {
+      return !profile.food.allowedMeals || profile.food.allowedMeals.includes(meal.mealKey);
+    }
+    let total = sum();
+    for (let pass = 0; pass < 350; pass += 1) {
+      let best = null;
+      let bestLoss = loss(total);
+      function consider(row, profile, amount, added) {
+        const candidate = total.map(function (v,i) { return v - (row ? row.profile.vector[i] * row.entry.amount : 0) + profile.vector[i] * amount; });
+        const cost = loss(candidate) + (added ? 0.012 : 0);
+        if (cost < bestLoss - 0.000001) { bestLoss = cost; best = {row:row, profile:profile, amount:amount, added:added, total:candidate}; }
+      }
+      rows.forEach(function (row) {
+        [-3,-1,1,3].forEach(function (direction) { consider(row,row.profile,portion(row.profile,row.entry.amount + direction * row.profile.step),false); });
+        // Keep the chosen main protein. Change a starch, vegetable or fat only
+        // when it materially improves the whole day's targets or quality.
+        if (row.profile.food.category === 'protein') return;
+        profiles.forEach(function (profile) {
+          if (profile.food.category !== row.profile.food.category || !allowed(profile,row.meal) || row.meal.items.some(function (entry) { return entry.id === profile.food.id; })) return;
+          const key = profile.food.category === 'carb' || profile.food.category === 'extra_carb' ? 3 : profile.food.category === 'fat' ? 2 : 0;
+          const equivalent = row.profile.vector[key] * row.entry.amount / Math.max(profile.vector[key],0.01);
+          [row.entry.amount,equivalent].forEach(function (amount) { consider(row,profile,portion(profile,amount),false); });
+        });
+      });
+      meals.forEach(function (meal) {
+        if (meal.items.length >= 6) return;
+        profiles.forEach(function (profile) {
+          if (!allowed(profile,meal) || meal.items.some(function (entry) { return entry.category === profile.food.category; })) return;
+          [profile.min, profile.food.defaultAmount].forEach(function (amount) { consider(null,profile,portion(profile,amount),meal); });
+        });
+      });
+      if (!best) break;
+      if (best.added) {
+        const entry = item(best.profile,best.amount);
+        best.added.items.push(entry);
+        rows.push({meal:best.added,entry:entry,profile:best.profile});
+      } else {
+        Object.assign(best.row.entry,item(best.profile,best.amount));
+        best.row.profile = best.profile;
+      }
+      total = best.total;
+    }
+    calculatePlanTotals(meals);
+  }
+
   function getProduceAmount(meals) {
-    const fruitIds = new Set(['apple','banana','pear','orange','mandarin','peach','plum','grapes','strawberry','blueberry','cherry','apricot','kiwi','avocado']);
+    const fruitIds = new Set(['apple','banana','pear','orange','mandarin','peach','plum','grapes','strawberry','blueberry','cherry','sweet_cherry','apricot','kiwi','avocado']);
     return (meals || []).reduce(function (sum, meal) {
       return sum + (meal.items || []).reduce(function (grams, item) {
         const food = getFoodById(item.id);
@@ -2171,7 +2301,7 @@ const autoMealTemplates = {
       return food.id !== "vegetables";
     });
 
-    return preferred || selectedVegetables[0] || getFoodById("vegetables");
+    return preferred || selectedVegetables[0] || null;
   }
 
   function addSelectedVegetableToMeal(meal, mealKey, selected, goal, used, dietStyle) {
@@ -3027,12 +3157,9 @@ const autoMealTemplates = {
   if (loadContext === "heat") waterLiters += 0.6;
   waterLiters = +waterLiters.toFixed(1);
 
-  let saltGrams = weight * 0.050;
-  if (goal === "gain") saltGrams = weight * 0.055;
-  if (profile === "athlete" || profile === "advanced") saltGrams *= 1.05;
-  if (loadContext === "heavy") saltGrams += 0.8;
-  if (loadContext === "heat") saltGrams += 1.2;
-  saltGrams = +saltGrams.toFixed(1);
+  // WHO adult total-intake upper guide, not a dose to add to meals.
+  // Sweat-related replacement cannot be inferred from body weight alone.
+  const saltGrams = 5;
 
   const hydrationProtocol = getHydrationProtocol(loadContext, waterLiters, saltGrams);
 
@@ -3043,6 +3170,7 @@ const autoMealTemplates = {
     carbs,
     waterLiters,
     saltGrams,
+    saltLimitExclusive: true,
     goal,
     profile,
     dietStyle,
@@ -3063,7 +3191,7 @@ const autoMealTemplates = {
   }
 
   function getFoods() {
-    return clone(getAllFoods());
+    return getAllFoods().map(function (food) { return applyWeightMode(clone(food)); });
   }
 
   function getMealNames() {
