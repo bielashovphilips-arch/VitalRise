@@ -1,0 +1,161 @@
+/* Homepage tariff cards. Keep the shared site theme and original flip module. */
+#pricing .pricing-grid {
+  column-gap: 18px;
+  row-gap: 14px;
+}
+
+#pricing .pricing-card-flip,
+#pricing .pricing-card-inner {
+  min-height: 0;
+}
+
+#pricing .pricing-card-face {
+  gap: 14px;
+  padding: 22px;
+}
+
+#pricing .pricing-card-head {
+  min-height: 38px;
+}
+
+#pricing .pricing-card-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+#pricing .pricing-badge {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: .65rem;
+  line-height: 1.2;
+  letter-spacing: .04em;
+}
+
+#pricing .pricing-card-head strong {
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+#pricing .pricing-card h3,
+#pricing .pricing-card p {
+  margin: 0;
+}
+
+#pricing .pricing-card h3 {
+  line-height: 1.35;
+}
+
+#pricing .pricing-card-copy {
+  font-size: .94rem;
+  line-height: 1.55;
+}
+
+#pricing .pricing-card ul {
+  align-content: start;
+  gap: 10px;
+  font-size: .94rem;
+}
+
+#pricing .pricing-card li {
+  line-height: 1.45;
+}
+
+#pricing .pricing-card .btn {
+  min-height: 48px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  white-space: normal;
+  text-align: center;
+}
+
+#pricing .pricing-card-back {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+#pricing .pricing-card-back > * {
+  flex-shrink: 0;
+}
+
+#pricing .pricing-card-flip:hover .pricing-card-inner,
+#pricing .pricing-card-flip:focus-within .pricing-card-inner,
+#pricing .pricing-card-flip:focus .pricing-card-inner {
+  transform: none;
+}
+
+#pricing .pricing-card-flip.is-flipped .pricing-card-inner {
+  transform: rotateY(180deg);
+}
+
+#pricing .pricing-card-flip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 5px;
+  border-radius: var(--radius-md);
+}
+
+/* Share the five comparison rows, including when cards wrap into two columns. */
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 641px) {
+    #pricing .pricing-card-flip {
+      display: grid;
+      grid-row: span 5;
+      grid-template-rows: subgrid;
+    }
+
+    #pricing .pricing-card-inner {
+      grid-row: 1 / -1;
+      grid-template-rows: subgrid;
+      height: auto;
+    }
+
+    #pricing .pricing-card-front {
+      display: grid;
+      grid-column: 1;
+      grid-row: 1 / -1;
+      grid-template-rows: subgrid;
+      align-items: start;
+    }
+
+    #pricing .pricing-card-front .btn {
+      align-self: stretch;
+      margin-top: 0;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  #pricing .pricing-grid {
+    row-gap: 16px;
+  }
+
+  #pricing .pricing-card-face {
+    gap: 12px;
+    padding: 20px;
+  }
+
+  #pricing .pricing-card-head {
+    min-height: 32px;
+  }
+
+  #pricing .pricing-card-copy,
+  #pricing .pricing-card ul {
+    font-size: .94rem;
+  }
+
+  #pricing .pricing-card-front .btn {
+    margin-top: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #pricing .pricing-card-inner {
+    transition: none;
+  }
+}

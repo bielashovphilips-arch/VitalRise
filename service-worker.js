@@ -1,6 +1,8 @@
-const CACHE_NAME = "vitalrise-nutrition-20261007-3";
-const RUNTIME_CACHE_NAME = "vitalrise-runtime-nutrition-20261007-3";
+const CACHE_NAME = "vitalrise-pricing-20261007-1";
+const RUNTIME_CACHE_NAME = "vitalrise-runtime-pricing-20261007-1";
 const APP_SHELL = [
+  "./assets/css/pricing-cards.css?v=pricing-20261007-1",
+  "./assets/js/modules/pricing-cards.js?v=pricing-20261007-1",
   "./assets/js/modules/lab-evidence.js?v=release-20261004-1",
   "./assets/css/training-session.css?v=release-20261004-1",
   "./assets/js/modules/training-adaptation.js?v=release-20261004-1",
